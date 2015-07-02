@@ -1,0 +1,11 @@
+INSTALLATION
+
+    To install Perl::Mogrify give the following commands 
+    to your favorite shell:
+
+        tar -zxf Perl-Mogrify-1.123.tar.gz
+        cd Perl-Mogrify-1.123
+        perl Build.pl
+        ./Build
+        ./Build test
+        ./Build install

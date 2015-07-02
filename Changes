@@ -1,0 +1,2167 @@
+Revision history for Perl module Perl::Mogrify
+
+1.125 2015-03-02
+
+    [Bug Fixes]
+    * Corrected dependency on List::Util::any() to List::MoreUtils::any()
+
+    [Miscellanea]
+    * Revised and updated documentation.
+
+1.124 2015-02-27
+
+    [Enforcer Changes]
+    * The ProhibitUnusedPrivateSubroutines policy can now ignore files that
+      use particular modules with 'skip_when_using' option allows of, for
+      example, skipping the policy for roles.  Thanks to Mark Fowler.
+
+    * The RequireUseStrict and RequireUseWarnings policies now regard Moose,
+      Moo, Mouse, Dancer, Mojolicious, and several other modules as equivalent
+      to the strict and warnings pragma.
+
+    [Bug Fixes]
+    * The RequireChecked* family of policies has been fixed to accommodate
+      version numbers when use-ing the autodie pragma. GH #612. Thanks citrin.
+
+1.123 2014-11-11
+
+    [Dependencies]
+    * Now requires PPI-1.220 which has numerous bug fixes. This may 
+      eliminate the need for some "## no critic" markers you inserted to
+      work around those bugs. The "ProhibitUselessNoCritic" policy should
+      help you find them.
+
+    [Miscellanea]
+    * Fixed a typo in the Variables::ProhibitPerl4PackageNames message.
+
+1.122 2014-08-25
+
+    [Dependencies]
+    * Now requires PPI-1.218 which has numerous enahncements and bug fixes.
+      Also now requires Readonly-2.00, which obviates the need for Readonly::XS
+      to get fast constants.
+
+    * File::HomeDir, File::Which, and Term::ANSIColor are all required now
+      instead of being optional or recommended. This simplifies our test code
+      and ensures consistent optimal behavior for all users.
+
+    [New Policies]
+    * Added two new policies: BuiltinFunctions::ProhibitUselessTopic and
+      RegularExpressions::ProhibitUselessTopic.
+
+    [Miscellanea]
+    * Updated the perlcritic.el script to use modern Emacs hooks.
+      Thanks to @intrigeri and the Debian team for the patch.  Fixes GH #556.
+
+    * Removed all the internal RCS keyword boilerplate blocks that were never
+      getting expanded.
+
+1.121_01 2013-11-17
+
+    * Changes summarized above under 1.122
+
+1.121 2013-11-02
+
+    [New Features]
+    * Added new themes based on CERT guidelines. Thanks Kirk Kimmel.
+
+    [Administrative Changes]
+    * The source code repository for Perl-Mogrify has been moved to GitHub
+      at http://github.com/Perl-Mogrify/Perl-Mogrify.  All tickets from the
+      RT queue have also been moved there.  Please use GitHub for submitting
+      any new bugs or corresponding about existing ones.  Huge thanks to
+      Tim Bunce, Andreas Marienborg, fREW Schmidt, and Graham Knop for
+      making this happen.
+
+    [Miscellanea]
+    * This change log was reformatted to comply with CPAN::Changes::Spec,
+      courtesy of Neil Bowers as part of a quest on http://questhub.io.
+      Does your change log comply?
+
+
+1.120_01 2013-10-29 *DEVELOPER RELEASE*
+
+    * Changes summarized above
+
+
+1.120 2013-10-25
+
+    [Bug Fixes]
+    * Corrected "Possible precedence issue with control flow operator"
+      warning.  This fixes RT #88866
+
+
+1.119 2013-09-25
+
+    [Bug Fixes]
+    * Tests were failing with Config::Tiny 2.17 or later, due to a
+      change in the error messages produced by that module.
+      This fixes #16 on Github,  #88679 & #88889 on RT.
+
+    [Enforcer Changes]
+    * BuiltinFunctions::ProhibitVoidGrep and ::ProhibitVoidMap: grep
+      and map called as functions are now allowed in slice operations.
+      RT #79289.  Thanks to Wade at Anomaly dot org for the patch.
+    * Subroutines::RequireArgUnpacking: Most tests of the size of @_
+      are now allowed.  RT #79138
+
+    [Other Changes]
+    * Modernized our usage of Exporter.  See RT #75300.  Thanks
+      to Olivier Mengué for the patch.
+
+
+1.118 2012-07-10
+
+    [Enforcer Changes]
+    * CodeLayout::RequireTidyCode: Revise to work with incompatible
+      changes in Perl::Tidy 20120619. RT #77977.
+    * TestingAndDebugging::ProhibitNoWarnings: Correct the parse of the
+      'no warnings' statement, so that 'no warnings "qw"' is recognized
+      as supressing just 'qw' warnings. RT #74647.
+    * Miscellanea::RequireRcsKeywords has been moved to the Perl-Mogrify-More
+      distribution,  RT #69546
+
+    [Other Changes]
+    * Make all unescaped literal "{" characters in regexps into
+      character classes. These are deprecated, and became noisy with
+      Perl 5.17.0.  RT #77510.
+
+
+1.117 2011-12-21 HAPPY HOLIDAYS!
+
+    [New Policies]
+    * Variables::ProhibitAugmentedAssignmentInDeclaration reports
+      constructs like 'my $x += 1'. Contributed by Mike O'Regan.
+
+    [Enforcer Changes]
+    * BuiltinFunctions::ProhibitLvalueSubstr: Add explicit 'use version'.
+      RT #68498.
+    * CodeLayout::ProhibitHardTabs: Add 'pbp' to the default_themes list.
+      RT #71093.
+    * ControlStructures::ProhibitMutatingListFunctions now understands that
+      tr///r (introduced in 5.13.7) does not change its operand.
+    * ControlStructures::ProhibitMutatingListFunctions now understands that
+      '//=', '<<=', and '>>=' are assignment operators. RT #70901.
+    * ErrorHandling::RequireCheckingReturnValueOfEval now allows things
+      like grep { eval $_ }. RT #69489.
+    * Modules::RequireExplicitPackage now has configuration option
+      allow_import_of, to allow the import of specified modules before
+      the package statement. RT #72660.
+    * RegularExpressions::ProhibitEnumeratedClasses no longer thinks
+      that [A-Za-z_] matches \w. RT #69322.
+    * RegularExpressions::ProhibitUnusedCaptures now skips the first
+      block of an 'if' or 'elsif' if the regular expression is bound to
+      its operand with the '!~' operator. RT #69867.
+    * RegularExpressions::ProhibitUnusedCaptures now looks into lists
+      and blocks in the replacement portion of the regular expression if
+      /e is asserted. RT #72086.
+    * RegularExpressions::RequireDotMatchAnything,
+      RegularExpressions::RequireExtendedFormatting and
+      RegularExpressions::RequireLineBoundaryMatching now honor defaults
+      set with 'use re "/modifiers"'. RT #72151.
+    * Subroutines::ProhibitManyArgs now recognizes '+' as a prototype
+      character.
+    * Variables::ProhibitPunctuationVars now recognizes bracketed
+      variables embedded in interpolated strings (e.g. "${$}"). For the
+      purpose of the 'allow' configuration, these are considered
+      equivalent to the unbracketed form. RT #72910.
+
+    [Other Changes]
+    * Corrected POD in Perl::Mogrify::PPI::Utils. RT #68898.
+    * Perl::Mogrify::Violation source() method now returns the line
+      containing the violation (not the first line) when the statement
+      containing the violation spans multiple lines.
+
+
+1.116 2011-05-15
+
+    [Enforcer Changes]
+    * BuiltInFunctions::ProhibitLvalueSubstr does not report violations
+      if the document contains an explicit 'use n.nnn;' where the
+      version is before 5.005.  RT #59112
+    * Documentation::RequirePodSections no longer blows up on code
+      having POD but no =head1. This problem was introduced with RT
+      #59268. RT #67231
+    * RegularExpressions::ProhibitUnusedCapture should more reliably
+      find things like s/(a)/${1}2/.  RT #67273.
+    * ValuesAndExpressions::ProhibitMagicNumbers and
+      Module::RequireVersionVar now treat versions passed as the second
+      argument of a 'package' statement the same as versions declared as
+      'our $VERSION ...'.  RT #67159
+    * Variables::RequireLexicalLoopIterators does not report violations
+      if the document contains an explicit 'use n.nnn;' where the
+      version is before 5.004.  RT #67760
+
+
+1.115 2011-03-31
+
+    [Minor Changes]
+    * Fatal error in RegularExpressions::ProhibitUnusedCapture here
+      document check.  RT #67116.
+    * Internal POD error in Documentation::RequirePodLinksIncludeText.  Patch
+      by Salvatore Bonaccorso.  RT #67012
+
+
+1.114 2011-03-26
+
+    [Enforcer Changes]
+    * Documentation::RequirePodLinksIncludeText now handles nested POD
+      formatting. RT #65569
+    * Clarified relation of severity numbers to names in Perl::Mogrify
+      POD. RT #66017
+    * Removed caveats from Variables::RequireLocalizedPunctuationVars,
+      no longer necessary with PPI 1.208. RT #65514
+    * Have InputOutput::RequireBriefOpen attempt to expand scope as
+      necessary to deal with the case where the open() and the
+      corresponding close() are not in the same scope. RT #64437
+    * RegularExpressions::ProhibitUnusedCapture now looks inside
+      double-quotish things. RT #38942.
+    * RegularExpressions::ProhibitUnusedCapture now takes logical
+      alternation into account, so that (e.g.)
+          if ( /(a)/ || /(b)/ ) {
+              say $1;
+          }
+      is not a violation. RT #38942.
+    * ValuesAndExpressions::ProhibitCommaSeparatedStatements now
+      recognizes 'return { foo => 1, bar => 2 }' as containing a hash
+      constructor, not a block. This was fixed by PPI 1.215. RT #61301.
+    * ValuesAndExpressions::ProhibitCommaSeparatedStatements now
+      recognizes 'bless { foo => 1, bar => 2 }' as containing a hash
+      constructor, not a block. This was fixed by PPI 1.215. RT #64132.
+
+
+1.113 2011-02-14
+
+    [New Policies]
+    * InputOutput::RequireEncodingWithUTF8Layer recommends
+      ':encoding(utf8)' over ':utf8' in open() and binmode(). It is severity 5
+      because of the bad things that can happen if invalid UTF8 gets loose in
+      your code.
+    * Modules::ProhibitConditionalUseStatements prohibits
+      'use module' inside a conditional, since the statement is executed
+      unconditionally at compile time.  Thanks to Peter Guzis for submitting
+      the policy and tests in RT #59065.
+
+    [Enforcer Changes]
+    * CodeLayout::RequireConsistentNewlines produces multiple undefined
+      value errors when a violation is found. RT #65663
+    * ControlStructures::ProhibitMutatingListFunctions allows s///r,
+      which was introduced in 5.13.2.
+    * ControlStructures::ProhibitPostfixControls now looks for "when".  It is
+      treated in the same way as "if".
+    * Documentation::RequirePodSections now honors '## no critic'
+      annotation anywhere before the '__END__', '__DATA__', or first
+      '=head1', whichever comes first.  The line number of the offending
+      '=head1 NAME' was added to the violation description.  RT #59268.
+    * RegularExpressions::ProhibitUnusedCapture now takes account of the
+      use of $- and $+ (and their English equivalents under 'use
+      English') provided the subscripts are literal integers.
+    * RegularExpressions::ProhibitUnusedCapture now takes account of the
+      use of capture variables in the replacement portion of
+      s/.../.../e.
+    * Subroutines::ProhibitUnusedPrivateSubroutines now looks inside
+      regular expressions.
+    * ValuesAndExpressions::ProhibitMagicNumbers now supports Const::Fast.
+    * ValuesAndExpressions::ProhibitMagicNumbers now has a
+      constant_creator_subroutines parameter to allow the user to
+      configure the names of subroutines that create constants. RT #62562.
+    * ValuesAndExpressions::ProhibitMismatchedOperators didn't handle file
+      test operators properly.  Patch by H.Merijn Brand.  RT #58751
+    * Variables::ProhibitUnusedVariables now looks inside regular
+      expressions.
+    * ValuesAndExpressions::RequireInterpolationOfMetachars now detects
+      and complains about "\b" and "\l" as documented in perlop, and
+      "\1" through "\7", which are not documented there, but were found
+      in toke.c.
+
+    [New Developer Features]
+    * uses_module(), namespaces(), and subdocuments_for_namespace() methods on
+      Perl::Mogrify::Document.
+    * Perl::Mogrify::Document->new() now accepts a -filename-override argument
+      for setting the filename when the source code comes from something
+      other than an actual file.
+
+    [Other Changes]
+    * Test::Perl::Mogrify::Enforcer no longer exports by default.
+    * Build phase now requires Test::Deep.
+    * Added example using Try::Tiny to documentation of
+      ErrorHandling::RequireCheckingReturnValueOfEval. Suggested by Andy
+      Lester on the developers mailing list.
+    * In order to get more consistent behavior across all installations of
+      Perl::Mogrify, IPC::Open2 (which actually is part of core), PPIx::Regexp,
+      Perl::Tidy, Pod::Spell, and Text::ParseWords are no longer optional
+      prerequisites.
+    * Now depends upon PPIx::Utilities v1.1.0.
+
+    [Bug Fixes]
+    * Build.PL/Makefile.PL didn't specify a minimum version of version.pm, but
+      TestingAndDebugging::RequireUseStrict did.  RT #58952
+    * Perl::Mogrify::Annotation needs to look inside the __END__ statement to
+      find the true end of the document, otherwise POD policies may give false
+      positives.  RT #59176
+    * BuiltinFunctions::ProhibitStringyEval no longer dies on eval
+      "#...".  RT #60179
+    * RegularExpressions::ProhibitUnusedCapture now takes account of the
+      %LAST_PAREN_MATCH as well as %+ if English has been loaded.  RT #60002
+    * Subroutines::ProhibitManyArgs now interprets prototype groups (e.g.
+      \[$@%]) as representing a single argument.
+    * Require Exporter version 5.63 (versus version 0) to get sane handling of
+      export tags.  RT# 61071
+    * Prevent Subroutines::ProhibitUnusedPrivateSubroutines from failing
+      on &_subroutine().  RT #61311
+    * Subroutines::ProhibitAmpersandSigils now allows references of the
+      form \( &sub1, &sub2 ).  RT #49609
+
+1.112_002 2011-02-09
+1.112_001 2010-12-14
+
+    * Changes summarized into 1.113 above.
+      For exact details, see Changes on BackPAN.
+
+
+1.111 2010-12-14
+
+    [Bug Fixes]
+    * TestingAndDebugging::ProhibitNoStrict and ProhibitNoWarnings no longer
+      rely on the behavior of all() when the list is empty due to change in
+      List::MoreUtils 0.28.  RT #63816
+
+
+1.110_001 2010-11-30
+
+    * Changes summarized into 1.113 above.
+      For exact details, see Changes on BackPAN.
+      (Yes, all of this stuff was not in 1.111.)
+
+
+1.109 2010-08-29
+
+    [Bug Fixes]
+    * ValuesAndExpressions::RequireInterpolationOfMetachars fix due to changes
+      in Email::Address 1.890.  Note that this may find problems in code that
+      it didn't before, e.g. q<'@foo'>.
+
+
+1.108 2010-06-22
+
+    [Dedication]
+    * This is the "Give Shawn Moore what we promised him a year ago and hurry
+      up and get this out before Brad Oaks gives his YAPC::NA talk" release.
+
+    [New Policies]
+    * Documentation::RequirePodLinksIncludeText
+    * Subroutines::ProhibitUnusedPrivateSubroutines
+
+    [New Features]
+    * There is a new global configuration item, 'program-extensions', which
+      configures Perl::Mogrify's idea of which file name extensions represent
+      programs.  The desired extensions are specified as a space-separated list,
+      with leading '.' on each if that is desired.  Files whose names end in
+      '.PL' will always be considered programs.  This can be overridden by
+      command option --programs-extensions, which can be specified multiple
+      times.
+    * There is now a perlcritic --allow-unsafe switch.  Without this switch,
+      Perl::Mogrify will silently refuse to load any Enforcer that is marked
+      unsafe.  Unsafe Policies are usually ones that may compile or execute
+      untrusted code (see Perl::Mogrify::DynamicPolicy for an example); Enforcer
+      authors can mark their policies as unsafe by overriding the is_safe()
+      method.
+    * The framework that we use to test Perl::Mogrify Policies has been
+      packaged into a convenient module that you can use to test your own
+      Policies.  See Test::Perl::Mogrify::Enforcer and Perl::Mogrify::TestUtils
+      for details.
+
+    [Enforcer Changes]
+    * BuiltInFunctions::ProhibitLvalueSubstr no longer complains when there
+      is a low-precedence operator between the substr() and the assignment
+      operator.
+    * CodeLayout::ProhibitParensWithBuiltins now allows 'state ($foo)'.  RT
+      #52029
+    * ErrorHandling::RequireCarping now has an
+      allow_in_main_if_not_in_subroutine option to allow "die" directly in
+      the default namespace.
+    * InputOutput::RequireBriefOpen now recognizes CORE::open(),
+      CORE::close(), CORE::GLOBAL::open(), and CORE::GLOBAL::close().  RT
+      #52391
+    * Modules::ProhibitEvilModules now complains by default about the modules
+      deprecated by the Perl 5 Porters in 5.12.
+    * Modules::RequireVersionVar documentation updated to make clear that "my
+      $VERSION" does not work as a module version declaration.  RT #56667
+    * The RegularExpressions::* policies have been converted from using
+      Regexp::Parser to using PPIx::Regexp for their heavy lifting.
+    * RegularExpressions::ProhibitCaptureWithoutTest now allows capture
+      variables inside when() {}.  RT #36081.
+    * RegularExpressions::ProhibitUnusedCapture now checks for unused named
+      captures.
+    * Subroutines::ProhibitManyArgs revised to count only characters in the
+      prototype that represent arguments.  RT #56627
+    * Subroutines::ProhibitNestedSubs no longer complains about scheduled
+      blocks (BEGIN, etc.) inside subroutines and vice versa.
+    * Subroutines::RequireFinalReturn should now understand a final given/when
+      statement, and declare an error if there is no 'default' block or if any
+      branch does not return.
+    * TestingAndDebugging::RequireUseStrict now accepts 'use 5.011' or greater
+      as equivalent to 'use strict'.
+    * ValuesAndExpressions::ProhibitMismatchedOperators false positive with
+      "'foo' x 15 . 'bar'".  RT #54524
+    * Variables::ProhibitPunctuationVars gave false positives on qr// regexp's
+      ending in '$'.  RT #55604
+
+    [Bug Fixes]
+    * The "## no critic" annotations now respect #line directives.
+    * Annotations on statements spanning more than one line (e.g.
+            my $foo =
+                '$bar'; ## no critic (RequireInterpolationOfMetachars)
+      ) are now handled as single-line annotations, not block annotations.
+    * All instances of L<Foo> in the POD have been changed to L<Foo|Foo>.
+      L</bar> and L<Foo/bar> were allowed to stand.  RT #37485
+    * Spaces are now allowed immediately inside the enclosing parentheses in
+      "## no critic ( Foo )".  RT #52038
+    * With the introduction of PPIx::Regexp, Perl::Mogrify no longer dies
+      when it encounters a Perl 5.010 regexp.  RT #49442.
+    * DEVELOPER.pod typo in link to
+      ValuesAndExpressions::ProhibitConstantPragma policy. RT #57818
+    * Spelling errors in documentation.  RT #57375
+    * "die" used instead of "croak".  RT #56619
+    * Fixed regex test that caused test failures on every Perl 5.11
+      (credit Tom Wyant).
+    * t/20_policy_pod_spelling.t now works (or at least no longer fails)
+      in non-English locales (again).  RT #43291 and RT #48986.
+    * Perldoc has broken link for McCabe score definition.  RT #53219
+    * RT #33935 and #49679 were fixed by upgrading to PPI 1.208
+
+    [Other Changes]
+    * Perl::Mogrify::Utils::is_unchecked_call() updated to include chmod in the
+      set of things covered by autodie (this happened in autodie v2.08).  The
+      primary effect of this is on InputOutput::RequireCheckedSyscalls.
+    * Now depends upon Task::Weaken to ensure that we only install with perls
+      where Scalar::Util::weaken() works.
+    * Email::Address was optional, but is now required.  So everyone
+      gets the optimal behavior from RequireInterpolationOfMetachars.
+    * Some infrastructure has been extracted to the new PPIx-Utilities
+      distro.  It is also a required dependency here.  Over time a good
+      portion of Perl::Mogrify::Utils* will be migrated to this distribution.
+    * Perl::Mogrify::Utils::PPI::get_constant_name_element_from_declaring_statement()
+      is deprecated because it doesn't handle multiple constants being
+      declared within a single "use constant" statement.  Use
+      PPIx::Utilities::Statement::get_constant_name_elements_from_declaring_statement()
+      instead.
+    * Removed all uses of Perl::Mogrify::Utils::PPIRegep.  Since the
+      PPIx::Regexp update, Perl::Mogrify only used get_match_string() and
+      friends, which were superseded by the corresponding PPI methods.
+      Perl::Mogrify now depends on PPI-1.208 or newer.
+    * Moved Perl::Mogrify::Utils::PPIRegexp to the Perl-Mogrify-Deprecated.
+    * The PolicySummary.pod file is now generated when the distribution
+      is created, rather than when you install it.  This ensures the file
+      will be available on http://search.cpan.org.  Thanks to Bear Longyear
+      for bringing this to our attention.
+
+
+1.107_001 2010-06-20
+
+    * Changes summarized into 1.108 above.
+      For exact details, see Changes on BackPAN.
+
+
+1.106 2010-05-10
+
+    [Bug Fixes]
+    * NamingConventions::Capitalization fix for PPI 1.212.  RT #57348
+
+
+1.105_03 2010-03-21
+1.105_02 2010-01-23
+1.105_01 2010-01-16
+
+    * Changes summarized into 1.108 above.
+      For exact details, see Changes on BackPAN.
+
+
+1.105 2009-09-07
+
+    [Bug Fixes]
+    * Variables::ProhibitPunctuationVars would complain about "%-" appearing
+      anywhere in a string.  RT #49016
+
+    [Enforcer Changes]
+    * InputOutput::RequireCheckedSyscalls now complains about unchecked "say"
+      by default.  RT #37487
+
+
+1.104 2009-08-23
+
+    [Dedication]
+    * This release is dedicated to Tom Wyant in appreciation of the amount of
+      effort he put into the enhancements and bug fixes in this release, for
+      having the patience to wait for the amount of time that it took to get
+      them out, and for overall awesomeness.  Thank you, Tom.
+
+    [New Policies]
+    * Objects::ProhibitIndirectSyntax
+    * ValuesAndExpressions::ProhibitComplexVersion
+    * ValuesAndExpressions::RequireConstantVersion
+
+    [New Optional Requirement]
+    * Email::Address, if you want
+      ValuesAndExpressions::ProhibitInterpolationOfLiterals to properly ignore
+      email addresses.
+
+    [New Features]
+    * Perlcritic will list the names of files with violations if given the
+      --files-with-violations option, or the names of files without
+      violations if given the --files-without-violations options. These
+      have synonyms -l and -L respectively.
+    * Perlcritic has a new --list-enabled option, which lists the Policies
+      that will be enforced, given the current configuration.  This is
+      useful if you've written a complex command-line or modified your
+      .perlcriticrc file and you want to see which Policies *would*
+      be used with the current configuration, if you were actually going
+      to critique a file with it.
+    * Perl::Mogrify::Violation now takes #line directives into account in the
+      %F, %f, and %l formats.  You can get the old values via the new %G, %g,
+      and %L formats.
+
+    [Enforcer Changes]
+    * CodeLayout::ProhibitParensWithBuiltins was complaining in certain cases
+      where parentheses are required due to operator precedence.  RT #46862.
+    * ControlStructures::ProhibitMutatingListFunctions no longer complains
+      about uses of tr/// that don't modify the operand.  Reported by EDAVIS,
+      RT #44515.
+    * Miscellanea::RequireRcsKeywords now accepts "qw$Keyword: ...$".  RT
+      #45196.
+    * Modules::RequireFilenameMatchesPackage now respects logical filenames
+      defined by the "#line" directives.  This allows the Enforcer to work
+      properly with IDEs and code generators.
+    * NamingConventions::Capitalization now allows fully qualified subroutine
+      declarations ( e.g. "sub Foo::Bar::baz {...}" ).  However, the
+      non-package part of the subroutine name must still conform to whatever
+      capitalization rule you have chosen.
+    * RegularExpressions::ProhibitCaptureWithoutTest no longer complains if
+      the regex is followed by an "or die" or similar.  Reported by EDAVIS,
+      RT #36081.
+    * RegularExpressions::ProhibitComplexRegexes no longer counts variable
+      substitutions in the length.   Reported by EDAVIS, RT #36098.
+    * RegularExpressions::ProhibitUnusedCapture now considers the body of
+      while loops and not just their condition.  Reported by EDAVIS, RT
+      #38942.
+    * ValuesAndExpressions::ProhibitVersionStrings was getting confused by
+      comments.  Reported by Kevin Ryde,  RT #44986.
+    * ValuesAndExpressions::RequireInterpolationOfMetachars now allows sigils
+      in the arguments to "use vars".  Contributed by Kevin Ryde, RT #47318.
+    * ValuesAndExpressions::RequireInterpolationOfMetachars now properly
+      ignores email addresses, if you have Email::Address installed.  Inspired
+      by the Kevin Ryde contribution in RT #47318.
+    * Variables::ProhibitPunctuationVars gained the ability to look inside
+      interpolated strings.  Doing this correctly is challenging and things
+      may not work out right; how the policy does this can be controlled via
+      the new "string_mode" option.  Contributed by Edgar Whipple
+      <perlmonk at misterwhipple dot com>.
+    * Variables::ProhibitPunctuationVars now ignores $] by default since there
+      is no English.pm equivalent.
+
+    [Other Bug Fixes]
+    * Perl::Mogrify::Utils::parse_arg_list() was slurping up the "or die ..."
+      portion of "open my $foo, 'somefile' or die ...", causing
+      InputOutput::ProhibitTwoArgOpen to not complain about this example.
+      Reported by Alexandr Ciornii,  RT #44554.
+
+    [Minor Changes]
+    * The line count emitted by the --statistics option is further broken down
+      by line content.
+
+    [Minor Documentation Fixes]
+    * ValuesAndExpressions::ProhibitInterpolationOfLiterals.  Reported by
+      Debian in http://bugs.debian.org/542814,  RT #48936
+
+    [Build Fixes]
+    * There wasn't a specific version given for the List::MoreUtils dependency
+      and we're using features that weren't available until 0.19.  So, we now
+      require version 0.19.  Noticed by John J. Trammell,  RT #48917.
+    * Some tests were tied to the specific "true" and "false" values that some
+      functions were returning.  Reported by Michael Schwern,  RT #43910.
+
+    [Other News]
+    * Komodo version 5.1.1 now has built-in support for Perl-Mogrify,
+      if you have the Perl::Mogrify and criticism modules installed.
+      Both should be available through the ActiveState Perl Package
+      Manager ppm(1).
+
+
+1.103 2009-08-03
+
+    * Fix configure_requires prerequisite on Module::Build 0.34_02.
+
+
+1.102 2009-08-03
+
+    [Bug Fixes]
+    * Works with PPI 1.205.  Yay for 5.10 support!
+    * Variables::RequireLexicalLoopIterators didn't work correctly on foreach
+      loops with labels.
+
+
+1.101_003 2009-07-22
+1.101_002 2009-07-21
+1.101_001 2009-07-21
+
+    * Changes summarized into 1.102 above.
+      For exact details, see Changes on BackPAN.
+
+
+1.100 2009-07-17
+
+    * This is a POD fix release to deal with issues identified by Test::POD
+      1.40.  There is no functional difference between this release and 1.098.
+      This is the last release of Perl::Mogrify that will be compatible with PPI
+      1.203.  PPI's parsing of for(each)? loops is changing in its next release
+      in an incompatible manner and there will be a release in the near future
+      to make Perl::Mogrify compatible with that change.
+
+
+1.099_002 2009-06-27
+1.099_001 2009-06-25
+
+    * Experimental releases.  For exact details, see Changes on BackPAN.
+
+
+1.098 2009-03-07
+
+    [Some Exciting News]
+    * The Perl Development Kit (PDK 8.0) from ActiveState now includes a
+      very slick graphical interface to Perl-Mogrify.  I highly recommend
+      that you check it out.  Here's a link to screenshots and docs:
+      http://docs.activestate.com/pdk/8.0/PerlCritic_gui.html
+
+    [New Features]
+    * Violation coloring is now configurable via command line or profile. The
+      profile entries are color-severity-highest, -high, -medium, -low, or
+      -lowest. Numbers are accepted in lieu of named severities (e.g.
+      'color-severity-5' for 'color-severity-highest'), and 'colour' is
+      accepted in lieu of 'color'.
+    * Handling of unrecognized policy configuration items is now controlled by
+      the profile_strictness. The default is to warn about them. The previous
+      default was that they were fatal.
+    * -p is now a synonym for --profile.
+    * The --verbose option for perlcritic now supports a %C format that will
+      displays the class of PPI::Element that caused the violation.
+
+    [Enforcer Changes]
+    * ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions
+      didn't include "pbp" in its default themes even though it is derived
+      from the book.  Now it does.  :]
+    * ErrorHandling::RequireCarping now allows a here document as the last
+      element if the "allow_messages_ending_with_newlines" option is true.
+    * Fix Subroutines::ProhibitAmpersandSigils so it allows "defined(&x)" as
+      well as "defined &x".  Patch from Kevin Ryde, RT #38855.
+    * Subroutines::ProtectPrivateSubs now has an "allow" option to specify
+      subroutines which are exempt from this policy.  RT #38678.
+      Additionally, a "private_name_regex" option has been added that allows
+      you to specify what a private subrouting name looks like.
+    * Subroutines::RequireArgUnpacking now has an "allow_subscripts" option
+      to allow array slices and elements.  RT #34009.
+    * Subroutines::RequireArgUnpacking now has an "allow_delegation_to" option
+      to allow the usual delegation idiom. Delegation to 'SUPER::' and
+      'NEXT::' are allowed by default.  RT #33839.
+    * Subroutines::RequireArgUnpacking no longer generates a false positive
+      for '$$_[]', which is an obfuscated way of saying '$_->[]'.  RT #37713.
+    * ValuesAndExpressions::ProhibitMagicNumbers now has an
+      allow_to_the_right_of_a_fat_comma option, which defaults to true.  Note
+      that it currently only works /directly/ to the right of a fat comma.
+    * Variables::ProhibitMatchVars had its default themes changed to "core
+      performance pbp", instead of "core bugs pbp" because, while the match
+      variables make regular expressions slow, it doesn't cause them to not
+      work correctly.
+    * Variables::ProhibitPackageVars has had FindBin and Log::Log4perl added
+      to the default exemptions.
+    * Variables::ProhibitReusedNames now has an "allow" option to specify
+      names that can be reused.  It defaults to enabling $self and $class.  RT
+      #42767.
+    * Variables::RequireLocalizedPunctuationVars has a customizable set of
+      exemptions via the "allow" option.
+
+    [New Developer Features]
+    * The guts of perlcritic have been moved to Perl::Mogrify::Command.  You
+      can invoke Perl::Mogrify::Command::run() to get the equivalent of running
+      the command.  (Note, however, this interface WILL change, so don't count
+      on the current one.)
+    * Modules have had a "INTERFACE SUPPORT" section added which states
+      whether the Perl::Mogrify developers consider the particular module is
+      public or not.  Any removal of functionality from a public module will
+      go through a deprecation cycle.  Non-public modules may have their
+      interfaces changed without notice.
+    * P::C::Enforcer now has an is_enabled() method.
+    * P::C::Violation now has an element_class() method.
+
+    [Bug Fixes]
+    * CodeLayout::ProhibitTrailingWhitespace didn't notice cases where PPI
+      would produce instances of PPI::Token::Whitespace that contained
+      multiple lines.
+    * Subroutines::ProtectPrivateSubs no longer regards the exportable POSIX
+      subroutines whose names begin with underscore as private.  RT #38678.
+    * Subroutines::RequireArgUnpacking mishandled a complicated situation with
+      $_ being an array reference.  RT #39601.
+    * Variables::RequireLocalizedPunctuationVars now applies to subscripted
+      names.  RT #29384.
+
+    [Internals]
+    * The guts of Build.PL and Makefile.PL have been rearranged.
+
+
+1.097_002 2009-03-01
+1.097_001 2009-03-01
+
+    * Changes summarized into 1.098 above.
+      For exact details, see Changes on BackPAN.
+
+
+1.096 2009-02-01
+
+    [New Policies]
+    * ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator
+
+    [Enforcer Changes]
+    * Documentation::PodSpelling now has a stop_words_file option.
+    * Modules::ProhibitEvilModules now has a modules_file option.
+
+    [Bug Fixes]
+    * ErrorHandling::RequireCarping will now allow a literal newline
+      as well as "\n".  Fixed by Kyle Hasselbacher, RT #25046
+    * Fix InputOutput::ProhibitTwoArgOpen so it allows '-|' or '|-' as the
+      second of two arguments.  Patches from Kyle Hasselbacher and Leland
+      Johnson, RT #42384.
+    * InputOutput::RequireBracedFileHandleWithPrint applies to printf as well
+      as print.  Fixed by Kyle Hasselbacher, RT #42537.
+    * TestingAndDebugging::RequireUseStrict and
+      TestingAndDebugging::RequireUseWarnings are no longer fooled by a
+      block-scoped pragma.  RT #42310.
+    * ValuesAndExpressions::RequireInterpolationOfMetachars allows for escaped
+      backslashes.  Fixed by Tom Wyant, RT #38530.
+    * Fix for problem in P::C::Document in dealing with underscores in
+      expressions like "use 5.009_001".  Patch by Kevin Ryde, RT #36570 and
+      #42089.
+    * Fix in extras/perlcritic.el for a radio button.  Patch by Kevin Ryde, RT
+      #42190.
+    * Fix distclean target in Makefile.PL.  Patch by Richard Soderberg,
+      RT #42088.
+    * Fix temporary files not being cleaned up after tests.  Patch by Kyle
+      Hasselbacher, RT #41443.
+    * Deal with changes in Pod::Parser v1.36 in test in t/05_utils_pod.t.
+
+    [Minor Changes]
+    * Documentation improvements contributed by Mark Grimes in response to RT
+      #41942.
+
+
+1.095_001 2009-01-18
+
+    * Changes summarized into 1.096 above.
+      For exact details, see Changes on BackPAN.
+
+
+1.094001 2009-01-01
+
+    [Bug Fixes]
+    * Tests would fail on systems without Regexp::Parser installed.
+
+
+1.094 2009-01-01
+
+    [Incompatible Changes]
+    * The way that "## no critic" markers was refactored.  As
+      a result, we discovered that the syntax for the markers was pretty
+      vague.  If you didn't do it just right, it would disable all policies,
+      and not just the specific ones that you wanted.  So we've tightened this
+      up a bit.  If you followed the examples that have been in the docs for
+      the last couple years, then you should be fine.  But if you've been
+      using certain other variations in your "## no critic" markers, then you
+      might suddenly find yourself violating the new
+      ProhibtUnrestrictedNoCritic policy.  To fix this, just make sure your
+      Enforcer names appear in parentheses:
+
+        ## no critic Foo, Bar, Baz     # wrong!
+        ## no critic Foo Bar Baz       # wrong!
+
+
+        ## no critic (Foo, Bar, Baz)   # ok!
+        ## no critic qw(Foo Bar Baz)   # also ok!
+
+    * The deprecated $FORMAT variables for Perl::Mogrify::Enforcer and
+      Perl::Mogrify::Violation no longer exist.  Use the corresponding
+      get_format() and set_format() functions instead.
+
+    [New Policies]
+    * Miscellanea::ProhibitUnrestrictedNoCritic
+    * Miscellanea::ProhibitUselessNoCritic
+    * NamingConventions::Capitalization
+    * Subroutines::ProhibitReturnSort
+    * Variables::ProhibitReusedNames
+
+    [Removed Policies]
+    * NamingConventions::ProhibitMixedCaseSubs and
+      NamingConventions::ProhibitMixedCaseVars have been moved to a separate
+      Perl-Mogrify-Deprecated distribution.  The
+      NamingConventions::Capitalization policy does everything they do, plus
+      more.
+
+    [Enforcer Changes]
+    * BuiltinFunctions::ProhibitStringyEval now has an allow_includes option
+      that makes it behave (mostly) like Ricardo SIGNES'
+      Perl::Mogrify::Enforcer::Lax::ProhibitStringyEval::ExceptForRequire.
+    * InputOutput::RequireCheckedClose, InputOutput::RequireCheckedOpen, and
+      InputOutput::RequireCheckedSyscalls now all support autodie.
+      Unfortunately, autodie is currently treated like a module and not a
+      pragma, which means that the lexical scoping is not taken into account.
+    * InputOutput::RequireCheckedSyscalls now has an exclude_functions
+      parameter.
+    * Modules::ProhibitEvilModules now allows you to specify what the
+      description of a use of a bad module should be, to, say, suggest that
+      people use autodie instead of Fatal.
+    * Subroutine::ProhibitExcessComplexity violation descriptions now include
+      the name of the subroutine, thanks to Andreas Koenig, RT #40070.
+    * TestingAndDebugging::RequireUseStrict and
+      TestingAndDebugging::RequireUseWarnings now have equivalent_modules
+      parameters that allow you to designate other modules as being equivalent
+      to the strict and warnings pragmata.  This one is for all you Moose fans
+      out there.  :]
+
+    [Bug Fixes]
+    * ControlStructures::ProhibitUnreachableCode would treat package
+      statements as unreachable.  Fixed by Kevin Ryde.  RT #41734
+    * Fix warning from InputOutput::ProhibitOneArgSelect when select was
+      called with no arguments.  RT #41926
+    * Miscellanea::RequireRcsKeywords couldn't find keywords after __END__
+      that didn't look like part of POD.
+    * Modules::RequireFilenameMatchesPackage would incorrectly complain about
+      programs.  Yet more greatness contributed by Schwern.  RT #39024.
+    * If a perlcriticrc file referred to a policy that wasn't installed and
+      the profile-strictness option was set to "fatal",
+      Perl::Mogrify::PolicyFactory fell over instead of reporting the
+      problematic policy name.
+
+    [Miscellanea]
+    * Perl::Mogrify::Violation will automatically strip trailing periods
+      from your Enforcer description and explanation strings.  This ensures that
+      the punctuation is consistent with the format specified by the user via
+      the -verbose formatting options.
+
+    [New Developer Features]
+    * Perl::Mogrify::Enforcer::prepare_to_scan_document() is now checked and a
+      Enforcer can disable itself for just a single document, which can speed
+      things up.
+
+
+1.093_03 2008-12-11
+1.093_02 2008-10-30
+1.093_01 2008-09-07
+
+    * Changes summarized into 1.094 above.
+      For exact details, see Changes in 1.093_003 on BackPAN.
+
+
+1.092 2008-09-02
+
+    [Bug Fixes]
+    * Fixed POD errors that were causing build failures.  Sorry
+      about that.
+
+
+1.091 2008-09-01
+
+    [New Policies]
+    * RegularExpressions::RequireDotMatchAnything
+
+    [New Features]
+    * perlcritic now supports a -pager option, so you can more easily
+      send the output to your favorite pager.  You can set this option
+      on the command-line or in your .perlcriticrc file.  See the
+      perlcritic perldoc for more details.  Credit to Michael Schwern.
+    * The output from "perlcritic -doc PATTERN" will be automatically
+      sent to your pager if you have set the -pager option.
+
+    [Enforcer Changes]
+    * CodeLayout::ProhibitQuotedWordLists no longer applies if the list
+      contains any non-words, by default.  A non-word is anything that does
+      not match /[\w-]+/.  You can restore the former behavior by setting the
+      "strict" option.  RT #37886.
+    * CodeLayout::ProhibitQuotedWordLists also now applies to the import
+      arguments of a C<use> statement.  RT #24467.
+    * ErrorHandling::RequireCheckingReturnValueOfEval now recognizes ternary
+      left-sides as valid checks.
+    * RegularExpressions::RequireExtendedFormatting gains a
+      minimum_regex_length_to_complain_about option.  Also, regexes that
+      contain only word and whitespace characters are now exempt from this
+      policy, by default; you can make it complain about them by turning on
+      the new strict option.  Contributed by Michael Schwern.  RT #38531.
+    * TestingAndDebugging::ProhibitNoWarnings now supports a
+      allow_with_category_restriction option, thanks to Michael Schwern.
+      RT #38514.
+    * CodeLayout::ProhibitHardTabs now allows leading tabs in qw() word lists
+      and regexes with the /x modifier.  You can still configure this
+      policy to forbid all hard tabs, if you like.  RT #32440
+
+    [Bug Fixes]
+    * perlcritic should now work under PAR.  RT #38380.
+    * URL for our repository in META.yml now works for anonymous
+      checkout.  The password is "" (empty).  RT #38628.
+    * color for high-severity violations is now magenta because
+      it is more redable than yellow on white backgrounds.  RT #38511.
+
+
+1.090 2008-07-22
+
+    [Bug Fixes]
+    * Test was incorrectly failing when Regexp::Parser wasn't installed.
+
+
+1.089 2008-07-21
+
+    [Minor Enhancements]
+    * -s is now a synonym for --single-policy.
+
+    [Enforcer Changes]
+    * Subroutines::ProhibitBuiltinHomonyms now also prohibits subroutines
+      with the same name as a Perl keyword (e.g. if, foreach, while).
+      Inspired by RT #37632.
+    * Subroutines::ProtectPrivateSubs now allows expressions like
+      "shift->_some_private_method();".  Note that this *only* applies
+      to the "shift" function -- a private method call on the right of any
+      other bareword still causes a violation.  RT #34713.
+    * Subroutines::RequireFinalReturn now includes exec in the set of things
+      that mark a successful return.  RT #37672
+    * ValuesAndExpressions::ProhibitInterpolationOfLiterals now takes a
+      allow_if_string_contains_single_quote option.  Contributed by Ed
+      Avis <ed@membled.com>.  RT #36125.
+    * ValuesAndExpressions::RequireInterpolationOfMetachars now supports a
+      rcs_keywords option to allow for the common case where those require
+      dollar signs.
+
+    [Bug Fixes]
+    * BuiltinFunctions::ProhibitSleepViaSelect would complain if there were
+      three undefs as arguments to select(), but one of them was the timeout.
+      RT #37416.
+    * Reduced false positives in
+      RegularExpressions::ProhibitSingleCharAlternation.  Thanks to
+      Andy Lester and Elliot Shank test cases.
+    * RegularExpressions::ProhibitUnusedCapture would complain if there were
+      multiple captures used in a substitution, e.g. s/(.)(.)/$2$1/.
+    * Subroutines::ProhibitAmpersandSigils no longer complains about
+      "sort &foo(...)".
+    * Makefile.PL, Build.PL and other ".PL" scripts which typically do not
+      have a shebang are no longer mistaken as modules.  This prevents
+      spurious warnings from Modules::RequireEndWithOne.  RT #20481.
+
+    [Internals]
+    * Tests are now self compliant.
+
+
+1.088 2008-07-04
+
+    [New Policies]
+    * ErrorHandling::RequireCheckingReturnValueOfEval
+
+    [Enforcer Changes]
+    * ValuesAndExpressions::ProhibitLeadingZeros now accepts octal numbers
+      for the Unix permissions argument to chmod, dbmopen, mkdir, sysopen, or
+      umask, by default.  Use the "strict" option to get the old behavior.
+      RT #31977.
+    * Due to the consensus at YAPC::NA 2008,
+      Variables::ProhibitUnusedVariables default severity has been raised to
+      medium/3.
+
+    [Minor Changes]
+    * The perlcritic "--Version" option is now "--version" in order to act
+      like the rest of the world.
+
+
+1.087 2008-06-21
+
+    [Enforcer Changes]
+    * CodeLayout::ProhibitParensWithBuiltins no longer complains about
+      sort(foo(@x)).
+    * TestingAndDebugging::RequireUseWarnings will not complain about files
+      that contain a "use 5.005" statement or similar for perls prior to 5.6.
+      Lesson of the day: computer conferences where you can meet in the real
+      world can clarify conversations greatly.  Good to finally meet you Adam.
+    * InputOutput::ProhibitTwoArgOpen similarly will not complain if there's
+      a "use/require 5.005" statement in the file.  RT #34385.
+
+    [Bug Fixes]
+    * Perl::Mogrify can now critique a file named "0".  However, PPI will give
+      a parse error until the next version comes out.  Fixes RT #36127.
+    * Moved detection of the lack of any enabled Policies from P::C::Config
+      to Perl::Mogrify.  This was causing the perlcritic.t in Parrot to fail.
+      Note, however, there are plans afoot to change how Perl::Mogrify is
+      configured and things that depend upon that may break.  Please contact
+      users@perlcritic.tigris.org and tell us how you're using P::C::Config
+      directly so that we can take your needs into account.
+
+
+1.086 2008-06-12
+
+    [Enforcer Changes]
+    * NamingConventions::ProhibitAmbiguousNames now specifies the name that
+      it had problems with in its violation descriptions.
+
+    [Bug Fixes]
+    * The color option wasn't being correctly set from a .perlcriticrc.
+      RT #36569.
+
+    [Minor Changes]
+    * --colour is now a synonym for --color.
+
+
+1.085 2008-06-07
+
+    [New Policies]
+    * Documentation::RequirePackageMatchesPodName
+
+    [Enforcer Changes]
+    * Variables::ProhibitUnusedVariables detects a few more cases.  It's
+      still very limited, though.
+
+    [Bug Fixes]
+    * ControlStructures::ProhibitUnreachableCode didn't notice "until" was an
+      conditional expression.
+
+    [Minor Changes]
+    * Documentation updates.
+
+
+1.084 2008-05-24
+
+    [New Features]
+    * perlcritic now supports a --list-themes option.
+    * You can specify the maximum number of violations you want per Enforcer
+      per document.  Developers can give a default value for this for a
+      Enforcer by overriding default_maximum_violations_per_document().
+      See RequireUseStrict and ProhibitMagicNumbers for examples.
+
+    [Enforcer Moved]
+    * The ValuesAndExpressions::ProhibitMagicNumbers policy has been moved
+      from Perl::Mogrify::More into the primary Perl::Mogrify distribution.
+
+    [New Policies]
+    * Variables::ProhibitUnusedVariables (very dumb, limited initial
+      implementation.)
+    * ControlStructures::ProhibitLabelsWithSpecialBlockNames
+      Contributed by Mike O'Regan.  Kickin' ass, Mike.
+
+    [Enforcer Changes]
+    * ControlStructures::ProhibitUnreachableCode now handles the perl 5.10
+      "//" and "err" operators.  RT #36080
+    * InputOutput::RequireBriefOpen now ignores opens of STDIN, STDOUT,
+      and STDERR.  You're generally trying to make long-lasting global
+      effects when manipulating these.  (RT #35774)
+    * RegularExpressions::ProhibitUnusualDelimiters now supports an
+      "allow_all_brackets" option.
+    * RegularExpressions::RequireBracesForMultiline now supports an
+      "allow_all_brackets" option.
+    * TestingAndDebugging::RequireUseStrict now accepts "use Moose::Role"
+      as equivalent to "use strict".  (RT #34838)
+    * TestingAndDebugging::RequireUseWarnings now accepts "use Moose::Role"
+      as equivalent to "use warnings".  (RT #34838)
+    * ValuesAndExpressions::ProhibitMagicNumbers now accepts constant
+      subroutines.
+    * Variables::ProhibitMatchVars no longer detects "use English;".
+      This problem is detected in a more clear way by
+      Modules::RequireNoMatchVarsWithUseEnglish.
+    * Variables::ProhibitPerl4PackageNames no longer complains about
+      $'/$POSTMATCH.  RT #36059
+    * Variables::RequireLocalizedPunctuationVars now allows the use of "my".
+      RT #33937
+
+    [Bug Fixes]
+    * No longer falls over if a single file has a parse error.
+
+    [New Developer Features]
+    * If a document specifies a minimum perl version, e.g. "use 5.008003",
+      P::C::Document::highest_explicit_perl_version() will tell you what it
+      is.
+    * The parameter to P::C::Enforcer::initialize_if_enabled is now a
+      P::C::PolicyConfig object instead of a hash reference.
+
+    [Minor Changes]
+    * LOTS of documentation updates.
+    * A few more statistics are emitted by perlcritic with the --statistics
+      option.
+    * perlcritic --profile-proto now includes policy abstracts in its
+      output.
+
+    [Prerequisites]
+    * Now depends upon PPI 1.203.
+    * New dependency upon version.
+
+
+1.083_006 2008-05-20
+1.083_005 2008-05-19
+1.083_004 2008-05-18
+1.083_003 2008-05-17
+1.083_002 2008-05-17
+1.083_001 2008-04-13
+
+    * Changes summarized into 1.084 above.
+      For exact details, see Changes in 1.083_006 on BackPAN.
+
+
+1.082 2008-03-08
+
+    [New Features]
+    * A new metadata system for defining policy parameters/options has been
+      added.  This makes the life of policy authors easier because
+      configuration validation and parsing can be taken care of
+      automatically, in most cases.  This allows greater integration with
+      IDEs and allows the perlcritic "--profile-proto" option to produce
+      better output.
+
+      Note: This change does NOT REQUIRE ANY CHANGES to policies outside of
+      this distribution; they should continue to work as is.  However, use
+      of this facility can reduce the size of your code and provide the
+      means for tools to discover more about your policy.  If this change
+      does break any of your policies, please let us know.
+
+      To learn how to take advantage of this facility, read
+      Perl::Mogrify::DEVELOPER and look at the source of any of the
+      configurable policies included in this distribution.
+
+      There is a discussion of the design considerations for this facility in
+      the source repository under doc/PolicyParameter_Notes.pod.
+    * Added support for "criticism-fatal" option in your perlcriticrc
+      file.  This will be used by the criticism pragma to cause execution
+      to abort if the file contains any violations.
+
+    [New Enforcer]
+    * Module::RequireNoMatchVarsWithUseEnglish
+
+    [Enforcer Changes]
+    * Added an allow_last_statement_to_be_comma_separated_in_map_and_grep
+      option to ValuesAndExpressions::ProhibitCommaSeparatedStatements.
+      Partial response to http://rt.cpan.org/Public/Bug/Display.html?id=27654.
+    * ControlStructures::ProhibitPostfixControls gains the ability to have
+      the flow control statements allowed to be modified.  This in response
+      to RT #29540.
+    * TestingAndDebugging::RequireUseStrict now accepts "use Moose" as
+      equivalent to "use strict".
+    * TestingAndDebugging::RequireUseWarnings now accepts "use Moose" as
+      equivalent to "use warnings".
+
+    [Bug Fixes]
+    * RT #31281 perlcritic doesn't recognize "#!/bin/env perl" shebang
+    * Replace usage of Unicode property escapes with POSIX character classes
+      order to restore 5.6 compatability.
+    * RT #30388 ValuesAndExpressions::ProhibitVersionStrings complained
+      about numbered directories in "use lib".
+    * Fixed handling of badly behaved spelling programs in PodSpelling.
+
+
+1.081_006 2008-03-02
+1.081_005 2007-12-29
+1.081_004 2007-12-20
+1.081_003 2007-12-16
+1.081_002 2007-12-16
+1.081_001 2007-12-15
+
+    * Changes summarized into 1.082 above.
+      For exact details, see Changes in 1.081_006 on BackPAN.
+
+
+1.080 2007-11-11
+
+    [New Features]
+    * Allow a "## no critic" statement after a shebang on line 1 of a
+      file.  This allows users to block violations that apply to
+      whole files and still allow shebangs.
+
+    [New Policies - funded by a Perl Foundation grant]
+    * InputOutput::ProhibitExplicitStdin
+    * RegularExpressions::ProhibitFixedStringMatches
+    * RegularExpressions::RequireBracesForMultiline
+    * RegularExpressions::ProhibitUnusualDelimiters
+    * RegularExpressions::ProhibitUnusedCapture
+    * RegularExpressions::ProhibitComplexRegexes
+    * RegularExpressions::ProhibitSingleCharAlternation
+    * RegularExpressions::ProhibitEscapedMetacharacters
+    * RegularExpressions::ProhibitEnumeratedClasses
+    * InputOutput::RequireBriefOpen
+    * InputOutput::RequireCheckedSyscalls
+
+    [Other New Policies]
+    * ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions
+
+    [Enforcer Changes]
+    * Variables::ProhibitConditionalDeclarations now permits you to local-ize
+      variables in conditional declarations.  This makes sense, since
+      C<local> is actually a variable modifier, rather than a declaration.
+      Thanks to David Golden for reporting this.
+
+    [New Developer Features]
+    * Perl::Mogrify::Utils::PPIRegexp encapsulates interaction with
+      the PPI Regexp token classes.  Those classes have very sparse
+      APIs, so this package hides away the ugly fiddling with PPI
+      internals.
+    * Added a new optional_modules parameter for the .run syntax.
+
+    [Bug Fixes]
+    * PPI::Structure::List can now contain multiple children,
+      so P::C::Utils::parse_arg_list() needs to handle it.
+      This was done in the process of fixing
+      http://rt.cpan.org/Ticket/Display.html?id=24924, which was a problem
+      with TestingAndDebugging::RequireTestLabels.
+    * ValuesAndExpressions::ProhibitLongChainsOfMethodCalls wasn't resetting
+      chain length when it ran into the end of a sub-expression.
+      http://rt.cpan.org/Public/Bug/Display.html?id=30040
+    * ValuesAndExpressions::ProhibitCommaSeparatedStatements was reporting
+      false positives when builtins which accept both no and multiple
+      arguments were involved.
+      http://rt.cpan.org/Public/Bug/Display.html?id=27654
+
+    [Internals]
+    * Removed all use of Carp in favor of exceptions.
+
+    [Prerequisites]
+    * Now requires PPI 1.201.  A number of workarounds for PPI bugs have been
+      removed.
+    * New dependency upon Exception::Class.
+
+    [Installation]
+    * Use Devel::CheckOS to see whether Perl::Mogrify is being installed on
+      a Solaris system and warn about tar(1) chopping file names off if it
+      is.
+
+
+1.079_003 2007-10-22
+1.079_002 2007-10-21
+1.079_001 2007-10-09
+
+    * Changes summarized into 1.080 above.  For exact details, see Changes in
+      1.079_003 on BackPAN.
+
+
+1.078 2007-09-19
+
+    * Restore Perl::Mogrify::TestUtils::should_skip_author_tests() and
+      get_author_test_skip_message().  Some Perl::Mogrify add-on distributions
+      are using them.
+
+
+1.077 2007-09-15
+
+    * Note: if you don't have any problems installing Perl::Mogrify 1.076, there
+      is no need to upgrade to this version.  There are no functionality
+      changes.  This release only contains changes related to installation that
+      a few people were experiencing.
+
+    [Minor Changes]
+    * Removed build-time use of Readonly, again, due to problems some people
+      were having when trying to compile the code by hand, rather than using
+      CPAN(PLUS)?.
+    * Don't run author tests if there's a .svn directory present because
+      users who grabbed the code from the source repository were executing
+      them and getting failures.
+    * Don't generate optional, module-hiding test wrappers if author tests
+      are not enabled.
+
+
+1.076 2007-09-07
+
+    * It appears from reports on the 1.075_001 release that the subroutine
+      sigils were indeed the problem.  Release to the general populace.
+
+
+1.075_001 2007-09-06
+
+    [Bug Fixes]
+    * Undo the changes in 1.073 and 1.074.  Instead, stop using the subroutine
+      sigil in import and export lists.  It is suspected that the problem lies
+      with Exporter stripping off ampersands.
+
+
+1.074 2007-09-04
+
+    [Bug Fixes]
+    * Repeat the Makefile.PL change on
+      t/generate_without_optional_dependencies_wrappers.PL.
+      I love CPAN Testers.
+
+
+1.073 2007-09-04
+
+    [Bug Fixes]
+    * Work around problems with the combination of Exporter & Readonly in
+      Makefile.PL on some machines.
+
+
+1.072 2007-09-03
+
+    [Bug Fixes]
+    * The Makefile generated by Makefile.PL was not syntactically correct
+      according to some versions of Solaris.  Thanks to Diab Jerius
+      (DJERIUS) for discovery and testing.
+    * Fixed mis-definition of "quiet" value for the "--profile-strictness"
+      option.
+    * Enhanced testing with the absence of optional modules.
+
+
+1.071 2007-08-24
+
+    * The "Brown Paper Bag" Release
+
+    [Bug Fixes]
+    * Tests would not pass in environments that did not have all optional
+      dependencies installed.
+
+
+1.07 2007-08-21
+
+    [New Policies - funded by a Perl Foundation grant]
+    * BuiltinFunctions::ProhibitBooleanGrep
+    * BuiltinFunctions::ProhibitComplexMappings
+    * Documentation::PodSpelling
+    * InputOutput::ProhibitJoinedReadline
+    * Subroutines::ProhibitManyArgs
+    * Subroutines::RequireArgUnpacking
+    * ValuesAndExpressions::ProhibitImplicitNewlines
+    * Variables::RequireLocalizedPunctuationVars
+
+    [Other New Policies]
+    * Subroutines::ProhibitNestedSubs
+
+    [New Features]
+    * The "perlcritic --profile-proto" output now includes the "add_themes"
+      parameter for each policy.
+    * The perlcritic "--strict-profile" option has been replaced with a
+      "--profile-strictness" option.  This new option takes values of "warn"
+      (the default), "fatal", and "quiet", which controls what happens with
+      ignorable problems in a .perlcriticrc file.
+
+    [New Developer Features]
+    * Perl::Mogrify::Enforcer now has an overridable initialize_if_enabled()
+      method which allows a Enforcer to perform expensive initialization after
+      it has been determined whether the user has it enabled or not.  Also,
+      this method allows a Enforcer to say that it should be disabled
+      regardless of what the user says.
+
+      Actually, use of this method is now encouraged over using a
+      constructor.
+
+    [Other Stuff]
+    * Now requires the Readonly module in order to be more self-compliant.
+
+
+1.061 2007-07-24
+
+    [Bug Fixes]
+    * Fix P::C::Theme-- Exporter in Perl 5.6 does not export import(), so you
+      must subclass it.  *sigh*
+    * Fix P::C::Config::_validate_and_save_theme()-- eval of an empty string
+      does not reset $@/$EVAL_ERROR in Perl 5.6.
+    * Big thanks to Anirvan Chatterjee for identifying and helping debug these
+      issues.
+
+
+1.06 2007-06-27
+
+    [New Features]
+    * perlcritic now emits errors for all the problems it can find for the
+      global options in the command-line parameters and .perlcriticrc file,
+      rather than bailing on the first one it encounters.
+    * perlcritic now has a "--strict-profile" option which will make warnings
+      about problems in a profile fatal.
+    * perlcritic now has a "--statistics-only" option which suppresses the
+      display of individual violations and only shows the additional output
+      produced by the "--statistics" option.
+
+    [Feature requests]
+    * A value for "color" can now be specified in a .perlcriticrc.
+      http://rt.cpan.org/Ticket/Display.html?id=24877
+
+    [New Policies]
+    * ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters
+      As suggested in http://rt.cpan.org/Ticket/Display.html?id=23290.
+    * ValuesAndExpressions::ProhibitLongChainsOfMethodCalls
+    * Modules::ProhibitExcessMainComplexity
+      As suggested in http://rt.cpan.org/Ticket/Display.html?id=24699
+
+    [Minor Changes]
+    * The perlcritic "--profile-proto" option now emits the short names for
+      policies, rather than the full ones.
+    * The "-profileproto" and "-singlepolicy" options have been renamed to
+      "-profile-proto" and "-single-policy" in order to make the growing
+      number of command-line options comprehensible.  The change of
+      "singlepolicy" also affects your F<.perlcriticrc> file.
+
+
+1.053 2007-06-02 *DEVELOPMENT RELEASE*
+
+    [Bug Fixes]
+    * Fixed bug in 15_statistics.t test script, which caused the build
+      to fail on machines that don't have Perl::Tidy installed.
+
+
+1.052 2007-06-01 *DEVELOPMENT RELEASE*
+
+    [New Features]
+    * perlcritic now emits a summary about the scanned code when enabled by
+      the "-statistics" option.
+
+    [Enforcer Enhancements]
+    * InputOutput::ProhibitBacktickOperators can now be configured to only
+      check in void contexts.
+
+    [Bug Fixes]
+    * 27073: False positive in RequireUpperCaseHeredocTerminator
+    * 27065: CodeLayout::ProhibitTrailingWhitespace breaks under Perl 5.6.1
+    * 26462: ControlStructures::ProhibitCascadingIfElse pod typo
+    * ValuesAndExpressions::ProhibitCommaSeparatedStatements was complaining
+      about multiple values in the list to be iterated over by a foreach loop.
+    * Corrected PBP page numbers for some policies (Quinn Weaver).
+
+
+1.051 2007-04-12 *DEVELOPMENT RELEASE*
+
+    * No new policies.
+    * No particular bug fixes.
+
+    [Internals]
+    * Added several new utility functions to support the StricterSubs distro.
+      Also, some of the existing functions in Perl-Mogrify-Utils have
+      changed in ways that might break your custom policies.
+
+    [Miscellanea]
+    * Updated Emacs plugin (Courtesy Josh ben Jore).
+      See extras/perlcritic.el for details.
+    * Added copy of BBEdit plugin (Courtesy of Josh Clark).
+      See extras/perl_critic_for_bbedit-1_0.zip for details
+
+
+1.05 2007-03-19
+
+    [Bug Fixes]
+    * 25557: t/20_policy_prohibittrailingwhitespace.t fails on Perl 5.8.0
+
+
+1.04 2007-03-18
+
+    [Bug Fixes]
+    * 25008: Subroutines::RequireFinalReturn should allow "throw"
+    * 25085: False Positive - Heredoc terminator must be quoted
+    * 18423: VERSION check does not notice Readonly::Scalar version
+    * 25449: Proposal of $VERSION declaration (DUPLICATE)
+
+    [New Policies]
+    * CodeLayout::ProhibitTrailingWhitespace
+    * ValuesAndExpressions::ProhibitCommaSeparatedStatements
+    * Variables::ProhibitPerl4PackageNames
+
+    [Enforcer Enhancements]
+    * Subroutines::RequireFinalReturn can now be configured to recognize
+      your custom functions that behave like "die" or "exit".
+    * Documentation::RequirePodSections can be configured to match
+      Module::Starter:PBP or to really match the PBP book.
+
+
+1.03 2007-02-13
+
+    [Bug Fixes]
+    * Fixed a few more problems with the %f, %F, and %r format escapes.
+    * I forgot to put Conway's perlcriticrc file in the MANIFEST. Sorry.
+
+    [Interface Changes]
+    * Perl::Mogrify::Utils automatically exports everything.  However,
+      this is deprecated.  In the future, you must request your exports.
+
+    [Enforcer Changes]
+    * Duplicate violations of RequireExcplicitPackage are now squelched,
+      in the same way as RequireUseStrict and RequireUseWarnings.
+
+
+1.02 2007-02-11
+
+    [Bug Fixes]
+    * "undef" incorrectly triggered ProhibitMutatingListFunctions.
+    * 24876: %f and %F escapes not working in custom "verbose" format strings.
+    * 24875: Documentation bug in TestingAndDebugging::ProhibitNoStrict
+
+    [New Policies]
+    * InputOutput::RequireCheckedOpen
+    * InputOutput::RequireCheckedClose
+
+    [Other Cool Stuff]
+    * Added Conway's own suggested Perl::Mogrify configuration as
+      examples/perlcriticrc-conway.
+    * See the examples/ directory for some neat demonstrations of using
+      the Perl::Mogrify API. Contributed by Elliot Shank.
+
+    [Interface Changes]
+    * Perl::Mogrify::Utils no longer exports anything by default.  Policies
+      outside the distribution will need to specify what exactly they need
+      from this module.  There are a number of tags that can be used in
+      addition to individual imports.
+
+
+1.01 2007-01-24
+
+    * PRODUCTION RELEASE:  You may now consider the public Perl::Mogrify
+      API as "stable."  Future minor releases will focus on bug fixes,
+      new policies, and internal refactoring.
+
+    [Bug Fixes]
+    * Fixed memory leak.  This was reported by the Parrot team at
+      http://rt.perl.org/rt3/Ticket/Display.html?id=41230
+
+
+0.23 2007-01-19
+
+    [Bug Fixes]
+    * 23994: Test 56 in t/05_utils.t of Perl::Mogrify v0.22 fails
+    * 24005: test 95 in t/13_bundled_policies fails in 0.22
+
+    [Groovy New Features]
+    * Added '%F' to the Violation format specifications.  This will
+      give you just the name of file where the violation occurred
+      (i.e. without the path).
+    * Improved validation of .perlcriticrc file.  An invalid
+      default setting will now cause a fatal exception. A
+      strange-looking policy name will cause a warning.
+
+    [Interface Changes]
+    * The syntax for theme expressions has changed.  Instead of using
+      mathematical operators qw(+ * -) you must now use the logical
+      operators qw(|| && !).  See the Perl::Mogrify docs for more info.
+    * The @GLOBALS and @BUILTINS variables are no longer exported by
+      Perl::Mogrify::Utils.  Use the is_perl_global() and is_perl_builtin()
+      functions instead.
+    * Perl::Mogrify::Enforcer::policy_parameters() has bee renamed to
+      Perl::Mogrify::Enforcer::supported_paramters().  This was an
+      undocumented feature anyway, so it shouldn't affect anyone.
+
+    [Other Internal Changes]
+    * Perl::Mogrify now requires B::Keywords v1.05 or newer.
+    * A few internal classes have been refactored.  As a result,
+      Set::Scalar is no longer a required dependency.
+
+
+0.22 2006-12-15
+
+    [New Features]
+    * Introduced named severity levels: gentle, stern, harsh, cruel, brutal
+      You can use these named levels instead of the numeric ones.
+      For example: "perlcritic --severity=cruel MyModule.pm"
+      Or just:     "perlcritic --cruel MyModule.pm"
+    * For perlcritic, the "-List" option has been renamed to
+      "-profileproto".  The output now includes the names of the
+      parameters that each Enforcer supports, if any.
+    * Improved validation of Enforcer parameters in your F<.perlcriticrc>
+      Any invalid parameter now causes a fatal exception.
+
+    [Major Changes]
+    * Reassigned themes for most policies.  Now there are fewer
+      themes and they are organized around programming concepts
+      instead of severity levels.  If you have assigned your own
+      themes to any Policies, they should still work as expected.
+
+    [Enforcer Changes]
+    * ErrorHandling::RequireCarping will not complain if it can figure
+      out that the die or warn message will always end in a newline
+      ("\n").  The idea is that, if you put the newline there, you
+      don't indend for there to be any file/line/stack information
+      emitted, in which case you really don't want carp/croak.
+
+      You can restore the old strict behavior by giving the policy
+      a false value for "allow_messages_ending_with_newlines" in your
+      configuration.
+
+    [Misc Changes]
+    * Added single-letter uppercase alternatives for some perlcritic options.
+
+
+0.21_01 2006-12-03
+
+    [New Policies]
+    * TestingAndDebugging::ProhibitProlongedStrictureOverride
+    * ControlStructures::ProhibitMutatingListFunctions
+
+    [New Features]
+    * Say "perlcritic -List" to get an expanded listing of all Policies.
+      The format is suitable for use as your .perlcriticrc file.
+    * Say "perlcritic -doc PATTERN" to get the documentation for all
+      Policies that match m/PATTERN/imx.  This is a little easier than
+      typing in the full name of the Enforcer module with "perldoc".
+    * Say "perlcritic --singlepolicy PATTERN" to use one and only one
+      policy.
+    * Can now specify exceptions to Variables::ProhibitPackageVars,
+      for packages like File::Find that only interface through
+      package variables.
+
+    [Bug Fixes]
+    * 21713 false positive for parens used with substr and unpack.
+    * 22890 allow Rcs keywords in POD.
+
+    [Internals]
+    * Testing system overhauled.  Details on the Enforcer/subtest
+      framework is in t/run.t.
+    * Added Perl::Mogrify::Utils::words_from_string.  This is safer
+      than plain old C<split /\s+/>.
+
+
+0.21 2006-11-05
+
+    [New Policies]
+    * BuiltinFunctions::ProhibitReverseSortBlock
+    * BuiltinFunctions::ProhibitVoidGrep
+    * BuiltinFunctions::ProhibitVoidMap
+    * CodeLayout::RequireConsistentNewlines
+    * Modules::RequireFilenameMatchesPackage
+    * TestingAndDebugging::RequireTestLabels
+    * ValuesAndExpressions::ProhibitMismatchedOperators
+
+    [New Features]
+    * Introduced policy "themes."  Themes are arbitrary names that can
+      be used to identify a group of related Policies.  You can select
+      your favorite policies by combining themes in a mathematic expression
+      such as "pbp * (danger + risky)".  See POD for details.
+    * perlcritic output is colorized if you have Term::ANSIColor.  This
+      only works on non-Win32 platforms.  Use -nocolor switch to disable.
+    * Say "perlcritic -count" to get just the the total number of
+      violations per file.  Use this feature to quickly identify hot-spots.
+    * Use the -only switch to choose only from policies mentioned in your
+      .perlcriticrc file.  This is useful if you usually only want to
+      work with a small subset of the policies.
+    * Default values for most of the perlcritic and Perl::Mogrify options
+      can now be defined in your .perlcriticrc file.  See POD for details.
+
+    [Bug Fixes]
+    * 21236: wrong page number for "printing to filehandles"
+    * 21916: File handle ... wrong page reference in PBP [DUPE]
+    * 21714: false positive for capture var used in ternary condition
+    * 21718: No skip for File::Slurp in includes.t
+    * ProhibitBarewordFilehandles doesn't complain if you open
+      STDIN, STDOUT or STDERR.
+    * Parrot 40564: Subroutines::RequireFinalReturn should allow die,
+      exit, etc.
+    * Each "for" and "foreach" loop now adds one point to the McCabe
+      complexity score.
+
+    [Other Stuff]
+    * The internals of Perl::Mogrify have been significantly refactored,
+      but should still be compatible with existing third-party Policies.
+    * Added author-only tests to the release, but disabled by default
+    * New Perl::Mogrify::Utils::shebang_line() method
+    * Support for filename-based policies
+    * Additional prerequisite: Set::Scalar
+    * Now requires PPI version 1.118
+
+
+0.20 2006-09-10
+
+    * Perl::Mogrify now requires PPI version 1.117, which fixes
+      several bugs that were introduced in version 1.116.
+
+    [Bug Fixes]
+    * 21079: grep clears @SITE_POLICIES
+    * 21352: Test failures with PPI 1.117
+    * 11365: sub DESTROY detected as a builtin homonym
+
+
+0.19 2006-08-20
+
+    [New Policies]
+    * BuiltinFunctions::ProhibitStringySplit
+    * ControlStructures::ProhibitDeepNests
+    * RegularExpressions::ProhibitCaptureWithoutTest
+    * Variables::RequireLexicalLoopIterator
+
+    [New Features]
+    * "perlcritic -quiet" suppresses the "source OK" message.
+    * Variables::ProhibitPunctuationVars is now configurable.
+
+    [Bug Fixes]
+    * 20965: "Hard tabs used at" shouldn't check __DATA__
+    * 21070: ProhibitNoisyQuotes hates overload
+    * Punctuation variables are now exempt from ProhibitLocalVars
+
+    [Other Stuff]
+    * Test coverage is now over 95%
+
+
+0.18_01 2006-08-06
+
+    [New Policies]
+    * Variables::RequireNegativeIndices
+    * InputOutput::ProhibitInteractiveTest
+    * ErrorHandling::RequireCarping
+
+    [Bug Fixes]
+    * RequireTidyCode tests fail if user has custom .perltidyrc file
+    * 20612: RequirePerlTidy was ignoring HEREDOCs
+    * 20659: __END__ statement considered "unreachable"
+    * Fix for PPI::XS (no C<use overload '""'> support)
+    * Support for 'goto' in ProhibitAmpersandSigils and
+      Subroutines::RequireFinalReturn
+
+    [Performance Enhancements]
+    * Introduced Perl::Mogrify::Document class.  This is a facade for
+      PPI::Document which internally caches search results.  This
+      reduces the running time by about 35%.  The facade should be
+      invisible, unless you are doing something really sneaky.
+    * Extraction of the 'diagnostics' information is postponed
+      until it is really needed.  Speedup has not been measured.
+    * Calls to helper-subs have been reordered for maximum efficiency.
+
+    [Other Cool Stuff]
+    * Includes updated version of perlcritic mode for emacs.  See
+      "extras/perlcritic.el" for details.
+
+
+0.18 2006-07-16
+
+    [Bug Fixes]
+    * 14855: Home discovery is dangerously naive.
+    * 20060: Incorrect page numbers in ProhibitLeadingZeros
+      and RequireNumberSeparator policies.
+    * 20068: .perlrc file - inconsistent documentation
+    * 20254: "use vars qw(@EXPORT_OK)" not recognized
+    * 20463: No-case heredoc terminator incorrectly detected as lower case.
+    * ProhibitOneArgBless doesn't understand "bless {} => $class;"
+    * ProhibitExcessComplexity doesn't count 'while' and 'until' stmnts
+    * ProhibitLeadingZeros was falsely hits '.0456'
+
+    [Enhancements]
+    * If File::HomeDir is available, we use it to locate the
+      .perlcriticrc file.  This should help make Perl::Mogrify
+      more portable to Win32 platforms.  If File::HomeDir is
+      not installed, we resort to looking at the usual
+      environment variables.
+
+    [Other Stuff]
+    * Added "perlcritic.el", which is a super-cool emacs minor-mode
+      that runs perl-critic on the current buffer and returns the
+      results in a sexy hot-linked "compiler" window.  You can run
+      it on demand, or have it run automatically every time you
+      save the buffer.  You can find this in the extras/ directory.
+      Thanks to Josh ben Jore for contributing this.
+    * Moved "Perl::Mogrify::TestUtils" into the installed build.  This
+      module is only used for unit-testing Perl::Mogrify, but we
+      are putting it in the installation so folks who want to
+      extend Perl::Mogrify can make use of it.
+
+
+0.17 2006-06-13
+
+    [Bug Fixes]
+    * 19836: Perl-Critic0.16 fails tests during install.  This was
+      caused by a bug in version 3.01 of Module::Pluggable.  See
+      http://rt.cpan.org/Ticket/Display.html?id=19857 for details.
+    * Fixed bug in no-critic pragma parser.
+
+    [New Policies]
+    * ValuesAndExpressions::ProhibitEscapedCharacters
+    * BuiltinFunctions::RequireSimpleSortBlock
+
+    [Enhancements]
+    * Perl::Mogrify can export critique() as a static function.  This
+      may appeal to folks who dislike the object-oriented interface.
+
+
+0.16 2006-05-14
+
+    [Enhancements]
+    * Perl::Mogrify->critique() now accepts a PPI::Document as the
+      argument.  This feature creates an additional dependency on
+      Scalar::Util, but that shouldn't be a problem because it is
+      included with List::Util, which we already use.
+
+    [Miscellanea]
+    * Increased PPI dependency from v1.110 to v1.112
+
+
+0.15_03 2006-05-07
+
+    [Bug Fixes]
+    * The "## no critic" feature is now implemented without eval-ing
+      the code.  This keeps Perl::Mogrify pure and safe :)
+    * 19082: Page number for AUTOLOAD is incorrect
+
+    [New Policies]
+    * ControlStructures::ProhibitUnreachableCode (by Peter Guzis)
+    * Modules::ProhibitAutomaticExportation
+    * ValuesAndExpressions::ProhibitVersionStrings
+
+
+0.15_02 2006-04-26
+
+    [Bug Fixes]
+    * Reimplemented the '##no critic' pragmas to have effect on the
+      line where the violation is reported, not on the line where
+      the candidate element lives.  This is because some policies
+      may report violations that are nowhere near the element that
+      is being evaluated.
+    * RequireUseStrict, RequireUseWarnings, and RequireExplcitPackage
+      all emit violations for _every_ statement that violates the
+      Enforcer.  This closes a loophole that allowed you to circumvent
+      the Enforcer by using '## no critic' on just the first statement
+      that violated the policy.
+    * Fixed the workaround for the magic shebang that is inserted
+      by EU::MM and M::B.  This had stopped working around version 13.
+    * Fixed -noprofile option on 'perlcritic'.  This also had stopped
+      working at some point.
+
+
+0.15_01 2006-04-16
+
+    [Enhancements]
+    * Added diagnostic messages if the .perlcriticrc contains entries
+      for Enforcer modules that don't seem to exist.
+    * Now you can specify which policies to disable with the
+      "## no critic" pseudo-pragmas.  This feature is still
+      experimental.  See docs for details.
+    * perlcritic's directory searching now skips backup files, such
+      as *.swp, *.bak and *~.  It also ignores version control system
+      directories, and the blib directory in module build directories.
+
+    [Bug Fixes]
+    * 18386: Bad example in POD for Documentation::RequirePodSections
+    * 18670: Test failure if Perl::Tidy is not installed
+    * 18698: Enforcer idea ProhibitUniversalFunctions (see New Policies)
+    * RequireInterpolationOfMetachars falsely hit strings like 'foo=s@'
+      which are commonly used with Getopt::Long.
+
+    [New Policies]
+    * BuiltinFunctions::ProhibitUniversalCan (by Chris Dolan)
+    * BuiltinFunctions::ProhibitUniversalIsa (by Chris Dolan)
+
+    [Miscellanea]
+    * All spurrious options for `perlcritic` are now fatal.
+    * Changed several of the -verbose formats to be more readable.
+    * Explicit -severity option now overrides -[12345] shortcuts instead
+      of being the other way around.
+
+
+0.15 2006-03-26
+
+    [Bug Fixes]
+    * 17964: Insists my code is not tidy (may not be fixed for all cases)
+
+
+0.14_02 2006-03-19
+
+    [Bug Fixes]
+    * 15653: False positive in OneArgSelect (fixed for real this time)
+
+    [New Policies]
+    * ClassHierarchies::ProhibitAutoloading
+    * Documentation::RequirePodSections
+    * InputOutput::RequireBracedFileHandleWithPrint
+    * ValuesAndExpressions::ProhibitMixedBooleanOperators
+    * Variables::RequireInitializationForLocalVars
+
+
+0.14_01 2006-03-05
+
+    [Bug Fixes]
+    * 14731: False positive: Builtin function called with parens
+    * 17554: False positive in CodeLayout::RequireTrailingCommas
+
+    [New Policies]
+    * ClassHierarchies::ProhibitExplicitISA
+    * InputOutput::ProhibitReadlineInForLoop
+    * Miscellanea::ProhibitFormats
+    * Miscellanea::ProhibitTies
+    * Variables::ProhibitConditionalDeclarations
+
+
+0.14 2006-01-29
+
+    * More documentation edits.
+
+    [New Policies]
+    * Documentation::RequirePodAtEnd
+    * Subroutines::ProtectPrivateSubs
+    * Variables::ProhibitMatchVars
+    * Variables::ProtectPrivateVars
+
+    [Bug Fixes]
+    * 15295: "## no critic" pragmas too aggresive on compound statements.
+    * t/01_config.t failed in the presence of third-party policies
+    * Implemented workaround for failing pod_coverage tests.
+    * 16906:  tr/// created false-postives with RegularExpression polices.
+
+
+0.13_04 2005-12-31
+
+    * Moved DEVELOPER.pod file into the Perl/Mogrify dir.
+    * More documentation edits.
+
+
+0.13_03 2005-12-30
+
+    * perlcritic now prints 'source OK' if it doesn't find any
+      violations.  This gives folks a warm fuzzy feeling.
+    * Tweaked some test cases that were failing on my Solaris
+      environment at work.
+
+
+0.13_02 2005-12-29
+
+    * Fixed Config to recognize fully-qualified module names in the
+      .perlcriticrc file.
+    * Various documentation edits.
+
+
+0.13_01 2005-12-28
+
+    * Replaced 'priority' concept with 'severity'.  Now each Enforcer module
+      has a predefined severity level ranging from 1 to 5.  By default,
+      perlcritic only reports the most severe violations.  You can adjust
+      the severity threshold at the command line, and you can change
+      the severity for any Enforcer using the config file.
+    * Chris implemented the applies_to() mechanism, which allows each Enforcer
+      class to declare the types of PPI elements that it wants to examine.
+      When traversing the document, Perl::Mogrify invokes the Enforcer only
+      for elements that are of the correct type.  This improves performance
+      by about 33%.
+    * Perl::Mogrify now uses a Plugin architecture to automatically
+      discover Enforcer modules.  So if you have custom Policies, all you
+      have to do is install them in the Perl::Mogrify::Enforcer namespace --
+      no need to add anything to your .perlcriticrc file.  If you write
+      policies in a different namespace, you can configure that too.  See
+      the Perl::Mogrify::Config docs for details.
+
+    [New Policies]
+    * Modules::RequireEndWithOne
+    * NamingConventions::ProhibitAmbiguousNames
+    * References::ProhibitDoubleSigils
+    * Subroutines::RequireFinalReturn
+    * Subroutines::ProhibitAmpersandSigils
+    * Subroutines::ProhibitExcessComplexity
+    * TestingAndDebugging::ProhibitNoStrict
+    * TestingAndDebugging::ProhibitNoWarnings
+
+    [Bug Fixes]
+    * 15101: Plugin architecture improves support for 3rd-party code
+    * 16319: Fixed incorrect PBP page number in ProhibitBarwordFilehandle
+    * 16321: Lists of empty quotes are now allowed by ProhibitQuotedWordLists
+    * 16288: Empty lists caused a fatal error RequireTrailingCommas
+    * 15653: Fixed false positive in OneArgSelect.
+
+
+0.13 2005-10-31
+
+    * Renamed -Enforcer option to -include.  Added -exclude to give the
+      opposite effect.
+    * Refactored constructor of Perl::Mogrify.  Now, most of the work
+      is delegated to Perl::Mogrify::Config.  I'm not sure I like how
+      this turned out, but we'll see how it goes.
+    * Renamed some Enforcer modules to be a bit more comprehensible.  Note
+      that you may need to change your .perlcriticrc file accordingly.
+      I also suggest removing your current Perl::Mogrify installation
+      before installing this one.
+    * Improved error message when Perl::Mogrify dies because PPI can't
+      parse the input code.
+    * Changed output of -help to be more terse.
+    * Added -Enforcer option to perlcritic.  The idea is to provide a
+      compact interface for selecting Enforcer modules at the command-line.
+      This feature is experimental and subject to change.
+    * Added a warning message if -verbose value looks strange.  In most
+      applications, the -verbose option does not require a value, so people
+      might be puzzled when they write 'perlcritic -verbose my_file.pm' and
+      nothing seems to happen.
+    * Command-line options to perlcritic are now case-sensitive.  This
+      makes it easier to abbreviate options that start with the same letters
+      (e.g. 'Version' and 'verbose')
+    * Fixed the new Enforcer modules that were misnamed and misplaced in the
+      previous distribution.
+    * Rewrote some of the ControlStructures and BuiltinFunction
+      policies to be simpler (and probably a little faster).
+    * Edited POD.  Fixed some typos.  Added PREREQUISITES section
+      to Perl::Mogrify documentation.
+    * Fixed the -verbose FORMAT option so that you can put metachars
+      in the FORMAT specification.  If using perlcritic, be careful to
+      protect them from getting munged by the shell first.
+    * Replaced ProhibitRequireStatements with RequireBarewordIncludes
+      module. Courtesy of Chris Dolan <cdolan@cpan.org>
+    * Added configuration to ProhibitInterpolationOfLiterals so that
+      certain flavors of quotes can be exempt.  This is for folks who
+      have configured their editor to use special syntax highlighting
+      for certain kinds of strings (SQL, for example).
+    * perlcritic now accepts multiple file arguments, so now you can
+      critique your entire distribution in one shot.  As a result, the
+      output-formats have changed slightly.
+
+    [New Policies]
+    * BuiltinFunctions::ProhibitLvalueSubstr
+    * BuiltinFunctions::ProhibitSleepViaSelect
+    * ClassHierarchies::ProhibitOneArgBless
+    * CodeLayout::RequireTrailingCommas
+    * CodeLayout::RequireQuotedWordLists
+    * InputOutput::ProhibitTwoArgOpen
+    * InputOutput::ProhibitOneArgSelect
+    * InputOutput::ProhibitBarewordFileHandles
+    * Miscellanea::RequireRcsKeywords
+    * Modules::RequireVersionVar
+    * RegularExpressions::RequireExtendedFormatting
+    * RegularExpressions::RequireLineBoundaryMatching
+
+    [Name Changes]
+    * ProhibitUnpackagedCode => RequireExplicitPackage
+    * RequireQuotedWords     => ProhibitQuotedWordLists
+
+    [Bug Fixes]
+    14923: 'require' is now permitted. See RequireBarewordIncludes.
+    15022: Fixed false-positives when keywords are used as hash keys.
+    15023: Fixed spurious Violations by removing magic shebang.
+    15031: Fixed spelling mistakes (and probably added some new ones).
+    15233: Postfix 'if' is now allowed with 'die', 'croak', etc.
+
+
+0.12 2005-10-10
+
+    * The internal dynamics and API of Perl::Mogrify have changed
+      considerably.  The result is a 300% increase in performance.
+      See the POD in Perl::Mogrify::Enforcer for details.
+    * Redesigned the 'verbose' feature.  Now the output format
+      can be user-defined using a sprintf-like specification.
+      perlciritc also has a predefined output format that is
+      compatible with grep mode in editors like vim and emacs.
+    * 'return' is now exempt from ProhibitParensWithBuiltins.  I may
+      extend this exemption to all unary functions.
+    * Edited POD. Added a super brief description of each policy
+      in the main Perl::Mogrify documentation.  Added details about
+      editor integration.
+
+    [New Features]
+    * Added -verbose option to put more stuff in the output.  In the
+      extreme, you can get the POD from Enforcer attached to each
+      and every violation.
+
+    [Additional Prerequisites]
+    * String::Format
+    * IO::String
+    * Pod::PlainText
+
+
+0.10 2005-10-05
+
+    * Fixed stupid bug in newest Enforcer modules.  They were returning
+      PPI objects instead of Perl::Mogrify::Violation objects.  Doh!
+    * Fixed test scripts to prevent failures if the user already has a
+      .perlcriticrc file.
+    * 'ProhibitHardTabs' now allows leading tabs by default.
+    * Put the Changes file in reverse-chronological order, so the most
+      recent stuff is easy to find at the top of the file
+
+
+0.09 2005-10-04
+
+    * Changed the syntax for the magic comments.  Adam had the
+      idea of using a pragma-like notation.  I liked it.
+
+    [Bug Fixes]
+    * 14810: Now you are allowed to create your own 'import' function,
+             since this is frequently done with fancy modules.
+    * 14817: Parens, brackets, and braces are now excluded from
+             'ProhibitNoisyQuotes' since they look better in quotes anyway.
+    * 14787: $1..$9 and '_' are exempt from ProhibitPunctuationVars
+    * 14899: Object methods with the same name as a built-in can
+             be called with parens (ProhibitParensWithBuiltins).
+    * 14901: Normalized the exit status of perlcritic to 0, 1, or 2.
+             See documentation for explanation.
+    * 14855: Partially fixed home directory discovery.  Still not
+             completely portable, but at least doesn't create warnings.
+
+    [New features]
+    * 14734: Limit for number separators is now configurable
+
+    [New Enforcer modules]
+    * CodeLayout::ProhibitHardTabs
+    * ControlStructures::ProhibitUnlessBlocks
+    * ControlStructures::ProhibitUntilBlocks
+    * ControlStructures::ProhibitCStyleForLoops
+
+
+0.08_2 2005-09-27
+
+    * Fixed problems with Perl::Mogrify::Config that caused File::Spec
+      to emit 'uninitialized value' warnings during the build.
+    * Added 1 Enforcer module contributed by Graham TerMarsch
+    * Switched from File::Spec::Functions to plain File::Spec because
+      I think its usage is more common.
+    * Removed 'FindBin' from the test files so I can be sure that the
+      right libraries are getting loaded.  This means I'll have to
+      use the -l option with C<prove>.
+    * Fixed "ProhibitParensWithBuiltins" to allow parens to be used with
+      object method calls that have the same name as a builtin functions.
+    * Introduced magical comments that allow developers to configure
+      Perl::Mogrify on-the-fly from within their code.
+    * Added META.yml files and POD tests to the build.  I did this
+      mostly just to boost the Kwalitee score on CPANTS.
+    * Switched from "Config::Std" to "Config::Tiny" because it doesn't
+      require those fancy Damian modules that don't seem to work on
+      some older versions of Perl.
+    * Edited more POD.
+
+
+0.07 2005-09-21
+
+    * Fixed bugs in the ProhibitCascadingIfElse policy.
+    * Added ProhibitExplicitReturnUndef policy
+    * Made ProhibitUnpackagedCode configurable so you can exempt scripts,
+      which typically don't have an explicit 'package' statement.
+    * ProhibitPackageVars policy now exempts vars in ALL_CAPS.  This
+      is to permit common package variables like @EXPORT and $VERSION.
+    * Renamed "ProhibitStringyGrep and "ProhibitStringyMap" because
+      the so-called string form doesn't really exist.  Now called
+      "RequireBlockGrep" and "RequireBlockMap"
+    * Corrected documentation on defining Enforcer names within the
+      configuration file.  This still isn't very clear and needs
+      to be rewritten.
+    * Perl::Mogrify now requires PPI version 1.003, which has a few bug
+      fixes of its own.
+    * Rewrite some code just to make Perl::Mogrify more self-compliant.
+    * Added test cases to verify the configuration functionality.  These
+      are not completely thorough and need more work.
+
+
+0.06 2005-09-17
+
+    * Now called 'Perl::Mogrify'.
+    * Added 4 new policy modules.
+    * Fixed bugs in build process.
+    * Added support for Module::Build.
+
+
+0.05 2005-09-17
+
+    * End of 'Perl::Review' releases.  I have changed the name to
+      'Perl::Mogrify' to avoid possible confusion with "The Perl Review"
+      magazine.
+
+
+0.04 2005-09-14
+
+    * Version 0.03 was a bust because I uploaded the wrong tarball to PAUSE.
+
+
+0.03 2005-09-13
+
+    * Fixed some POD links.
+    * Removed test cases for missing policy module.
+
+
+0.02 2005-09-13
+
+    * Major overhaul based on feedback from Perl community.
+    * Factored coding standards into separate modules (known as
+      Policies).  The idea here is to allow other developers to easily
+      contribute additional coding standards.
+    * Reworked Perl::Review into a simple engine for loading and running
+      Enforcer modules.
+    * Gave perlreview a command-line interface and configuration file
+      for selecting which Enforcer modules to use.
+
+
+0.01 2005-08-16
+
+    * Initial version.
+
+
+# ex: set ts=8 sts=4 sw=4 tw=78 ft= expandtab shiftround :

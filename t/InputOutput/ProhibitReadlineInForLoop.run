@@ -1,0 +1,31 @@
+## name basic failures
+## failures 6
+## cut
+for my $foo (<FH>) {}
+for $foo (<$fh>) {}
+for (<>) {}
+
+foreach my $foo (<FH>) {}
+foreach $foo (<$fh>) {}
+foreach (<>) {}
+
+#-----------------------------------------------------------------------------
+
+## name basic passes
+## failures 0
+## cut
+for my $foo (@lines) {}
+while( my $foo = <> ){}
+while( $foo = <> ){}
+while( <> ){}
+
+#-----------------------------------------------------------------------------
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

@@ -1,0 +1,37 @@
+## name Basic passing
+## failures 0
+## cut
+
+my $self = bless {}, 'foo';
+my $self = bless( {}, 'foo' );
+my $self = bless [], 'foo';
+my $self = bless( [], 'foo' );
+my $self = bless {} => 'foo';
+
+$baz{bless}; # not a function call
+$bar->bless('foo'); # method call
+
+$data{"attachment_$index"} = bless([ $files->[$i] ], "Attachment");
+
+#-----------------------------------------------------------------------------
+
+## name Basic failure
+## failures 4
+## cut
+
+my $self = bless {};
+my $self = bless [];
+
+my $self = bless( {} );
+my $self = bless( [] );
+
+#-----------------------------------------------------------------------------
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

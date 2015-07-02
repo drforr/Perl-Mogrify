@@ -1,0 +1,226 @@
+## name 1 statement before warnings
+## failures 1
+## cut
+
+$foo = $bar;
+use warnings;
+
+#-----------------------------------------------------------------------------
+
+## name several statements before warnings
+## failures 1
+## cut
+
+$foo = $bar;   ## This one violates.
+$baz = $nuts;  ## no critic;  This one is exempted
+$blamo;        ## This one should be squelched
+use warnings;
+
+#-----------------------------------------------------------------------------
+
+## name several statements before warnings with maximum violations changed
+## failures 2
+## parms { maximum_violations_per_document => 2 }
+## cut
+
+$foo = $bar;   ## This one violates.
+$baz = $nuts;  ## This one violates.
+$blamo;        ## This one should be squelched
+use warnings;
+
+#-----------------------------------------------------------------------------
+
+## name no warnings at all
+## failures 1
+## cut
+
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name no warnings at all with "use 5.005"
+## failures 0
+## cut
+
+$foo = $bar;
+use 5.005;
+
+#-----------------------------------------------------------------------------
+
+## name no warnings at all with "use 5.006"
+## failures 1
+## cut
+
+$foo = $bar;
+use 5.006;
+
+#-----------------------------------------------------------------------------
+
+## name require warnings
+## failures 1
+## cut
+
+require warnings;
+1;
+
+#-----------------------------------------------------------------------------
+
+## name warnings used, but no code
+## failures 0
+## cut
+
+use warnings;
+
+#-----------------------------------------------------------------------------
+
+## name -w used, but no code
+## failures 0
+## cut
+
+#!perl -w
+
+#-----------------------------------------------------------------------------
+
+## name -W used, but no code
+## failures 0
+## cut
+
+#!perl -W
+
+#-----------------------------------------------------------------------------
+
+## name no warnings at all, w/END
+## failures 1
+## cut
+
+$foo = $bar;
+
+#Should not find the rest of these
+
+__END__
+
+=head1 NAME
+
+Foo - A Foo factory class
+
+=cut
+
+#-----------------------------------------------------------------------------
+
+## name no warnings at all, w/DATA
+## failures 1
+## cut
+
+$foo = $bar;
+
+#Should not find the rest of these
+
+__DATA__
+
+Fred
+Barney
+Wilma
+
+
+#-----------------------------------------------------------------------------
+
+## name warnings used
+## failures 0
+## cut
+
+use warnings;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Other module included before warnings
+## failures 0
+## cut
+
+use Module;
+use warnings;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name package statement before warnings
+## failures 0
+## cut
+
+package FOO;
+use warnings;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Work around a PPI bug that doesn't return a location for C<({})>.
+## failures 1
+## cut
+
+({})
+
+#-----------------------------------------------------------------------------
+
+## name Moose support
+## failures 0
+## cut
+
+use Moose;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Moose::Role support
+## failures 0
+## cut
+
+use Moose::Role;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Built-in equivalent modules
+## failures 0
+## cut
+
+use Moose::Util::TypeConstraints;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Custom configured equivalent modules
+## failures 0
+## parms { equivalent_modules => 'Foo' }
+## cut
+
+use Foo;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name "use warnings" in lexical context (BEGIN block) RT #42310
+## failures 1
+## cut
+
+BEGIN { use warnings }  # notice this is first statement in file
+$this_is_not_covered_by_warnings;
+
+#-----------------------------------------------------------------------------
+
+## name "use warnings" in lexical context (subroutine) RT #42310
+## failures 1
+## cut
+
+sub foo { use warnings }  # notice this is first statement in file
+$this_is_not_covered_by_warnings;
+
+
+#-----------------------------------------------------------------------------
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

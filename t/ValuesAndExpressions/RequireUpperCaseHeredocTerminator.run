@@ -1,0 +1,46 @@
+## name Basic passing
+## failures 0
+## cut
+
+print <<"QUOTE_1";
+Four score and seven years ago...
+QUOTE_1
+
+#-----------------------------------------------------------------------------
+
+## name Quoted failure
+## failures 1
+## cut
+
+print <<"endquote";
+Four score and seven years ago...
+endquote
+
+#-----------------------------------------------------------------------------
+
+## name Bareword failure
+## failures 1
+## cut
+
+print <<endquote;
+Four score and seven years ago...
+endquote
+
+#-----------------------------------------------------------------------------
+
+## name RT #27073: Spaces before HEREDOC token
+## failures 0
+## cut
+
+print <<  'END_QUOTE';
+The only thing we have to fear is fear itself...
+END_QUOTE
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

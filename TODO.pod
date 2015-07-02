@@ -1,0 +1,682 @@
+# best viewed via "perldoc TODO.pod"
+
+=pod
+
+=for stopwords API LHS RHS REFACTORINGS FH SVN stopwords
+
+=head1 NAME
+
+Perl::Mogrify::TODO - Things for Perl::Mogrify developers to do
+
+=head1 SEE ALSO
+
+Perl-Mogrify-More is a separate distribution for less-widely-accepted
+policies.  It contains its own TODO.pod.
+
+=head1 NEW FEATURES
+
+=over
+
+=item * Report PBP and Safari sections in addition to PBP page numbers.
+
+Something like
+
+    Readonly::Scalar my $EXPL => {
+        pbp_pages       => [ 57 ],
+        pbp_section     => '5.2',
+        safari_section  => something,
+    };
+
+=item * Include PBP references and Safari sections in the documentation.
+
+Perhaps these could be injected into the POD at build time, based on the data
+in the code.  But that data is not entirely static, so I'm not sure how it
+would work for Policies that dynamically determine the PBP references.
+
+Perhaps it would be good enough to just create a one-off tool that would
+inject the PBP and/or Safari references into the POD one time, and we could
+manually deal with Policies that behave oddly.
+
+Much better would be to put the information in the POD in a structured manner
+and parse it out in the code, something along the lines of
+
+    =head1 METADATA
+
+    =over
+
+    =item Default Themes
+
+    core bugs pbp
+
+    =item Default Severity
+
+    3
+
+    =item Perl Best Practices Page Numbers
+
+    193, 195
+
+    =back
+
+and so on.
+
+
+=item * Add a file Parameter::Behavior.
+
+
+=item * Allow values of (at least) string-list Parameters to be specified in a file.
+
+For the benefit of PodSpelling, etc.
+
+
+=item * Enhance string-list Behavior to allow specification of delimiters.
+
+For things like RequirePodSections.
+
+
+=item * Add queries to --list option to F<perlcritic>.
+
+List Policies based upon severity, theme, and (what I want this second)
+applies_to.
+
+=item * Add formatting of --list output.
+
+Support Jeff Bisbee's use case (he dumps all the policies in severity order
+with full descriptions and other metadata).
+
+=item * Support for C<#line 123 "filename"> directives.
+
+For code generators and template languages that allow inline Perl code.
+
+Yes, somebody has an in-house templating system where they've written a custom
+test module that extracts the perl code from a template and critiques it.
+
+Actually, this would be useful for programs: Module::Build "fixes" shebang
+lines so that there's the bit about invoking perl if the program is attempted
+to be run by a Bourne shell, which throws the line numbers off when using
+Test::P::C on the contents of a C<blib> directory.
+
+This has been implemented in PPI, but hasn't been released yet.  When it does
+come out, we need to change the line and file reported by Violations.
+
+
+=item * Enhance statistics.
+
+- Blank line count
+
+- POD line count
+
+- Comment line count
+
+- Data section count
+
+Proposed implementation committed 15-Mar-2007 by wyant, about revision 3240.
+
+
+=item * Detect 5.10 source and enable stuff for that.
+
+For example, treat C<say> as equivalent to C<print>.
+
+=item * Detect 5.12 source and enable stuff for that.
+
+Yes, this is long-term, and is really a list of stuff from 5.011 to enable if
+it makes it into 5.12, gleaned from the perl511xdelta files:
+
+'use 5.011;' implies 'use strict;' and 'use feature qw{ :5.11 };' per
+perl5110delta.
+
+'sub foo { ... }' (yes, with the subroutine body being an elipsis a.k.a. the
+'yada yada' operator) compiles but fails at runtime per perl5110delta. PPI
+seems to parse this sanely as of 1.206.
+
+'package Foo 1.23;' is equivalent to 'package Foo; our $VERSION = 1.23;' per
+perl5111delta. PPI seems to parse this sanely as of 1.206.
+
+Nothing additional found in perl5112delta, which is the most recent as of the
+addition of this item.
+
+=item * Detect 5.14 source and enable stuff for that.
+
+5.13.7 allows references in many places where arrays or hashes used to
+be required (e.g. C<push $stack, 'foo'> where C<$stack> is an array
+ref). Not sure what policies are affected.
+
+Lexical regular expression modifier defaults via (e.g.)
+C<use re '/smx'>). This also interacts with
+C<use feature 'unicode_strings'>. 5.13.7.
+
+=item * Support a means of failing if a Enforcer isn't installed.
+
+For example, the self compliance test now depends upon a Enforcer in the More
+distribution.
+
+Something like using a "+" sign in front of the Enforcer name in its
+configuration block, analogous to the "-" sign used for disabling a policy,
+e.g. "C<[+Example::Enforcer]>".
+
+
+=item * Threading
+
+Pretty obviously, Perl::Mogrify is readily parallelizable, just do a document per
+thread.  ("readily" being conceptual, not necessarily practical)  Although
+there's now C<Enforcer::prepare_to_scan_document()>, given perl's thread data
+sharing model, this shouldn't be an issue.
+
+
+=item * Add support in .run files for regexes for violation descriptions.
+
+=item * Add support for "## use critic (blah)".
+
+If I've got:
+
+    ## no critic (SomePolicy)
+
+    ...
+
+    ## no critic (ADifferentPolicy)
+
+    ...
+
+    ## no critic (YetAnotherPolicy)
+
+If I want to turn C<YetAnotherPolicy> back on but neither C<SomePolicy> nor
+C<ADifferentPolicy>, I've got to do this:
+
+    ## use critic
+    ## no critic (SomePolicy, ADifferentPolicy)
+
+Why can't I do this:
+
+    ## use critic (SomeOtherPolicy)
+
+
+=item * Make color work on Windows.
+
+Use L<Win32::Console::ANSI> like L<App::Ack>.
+
+
+=item * Create P::C::Node and make P::C::Document a subclass and make use of PPIx::Utilities::Node::split_ppi_node_by_namespace() to provide per-namespace caching of lookups that are now on P::C::Document.
+
+This is necessary to get P::C::Moose Policies correct.
+
+
+=item * Use L<version|version> to declare C<$VERSION> numbers throughout P::C
+
+PBP recommends using the L<version|version> module.  I chose not to follow that
+recommendation because L<version|version> didn't work with the Perl v5.6.1 that I had
+at $work at that time (and I really wanted to use Perl::Mogrify at work).
+But now the L<version|version> has been updated and those bugs may have been fixed,
+or perhaps we just don't care about running on Perl v5.6.1 any more.  So
+maybe now we can go ahead and use L<version|version>.
+
+=back
+
+
+=head1 BUGS/LIMITATIONS
+
+Document bugs for individual Policies in the Policies themselves.  Users
+should be aware of limitations.  (And, hey, we might get patches that way.)
+
+
+=head1 OTHER PBP POLICIES THAT SEEM FEASIBLE TO IMPLEMENT
+
+=over
+
+=item * Modules::RequireUseVersion [405-406]
+
+=item * Modules::RequireThreePartVersion [405-406]
+
+
+=item * NamingConventions::RequireArrayAndHashReferenceVariablesEndWith_Ref [41-42]
+
+Check for C<$variable = [...]>, C<$variable = {...}>, C<< $variable->[...] >>, and
+C<< $variable->{...} >>.
+
+
+=item * Objects::ProhibitRestrictedHashes [322-323]
+
+Look for use of the bad methods in Hash::Util.
+
+
+=item * Objects::ProhibitLValueAccessors [346-349]
+
+Look for the C<:lvalue> subroutine attribute.
+
+
+=back
+
+
+=head1 NON-PBP POLICIES WANTED
+
+=over
+
+=item * Subroutines::RequireArgumentValidation
+
+Enforce the use of Params::Validate or Params::Util or some other
+argument validation mechanism.  This could be one Enforcer that
+can be configured for different validation mechanisms, or we could
+have a separate Enforcer for each mechanism, and let the user choose
+which one they want to use (I think I prefer the later).
+
+
+=item * NamingConventions::ProhibitMisspelledSymbolNames
+
+The idea behind this policy is to encourage better names for variables
+and subroutines by enforcing correct spelling and prohibiting the use of
+home-grown abbreviations.  Assuming that the author uses underscores or
+camel-case, it should be possible to split symbols into words, and then look
+them up in a dictionary (see PodSpelling).  This policy should probably have
+a similar stopwords feature as well.
+
+
+=item * Documentation::RequireModuleAbstract
+
+Require a C<=head1 NAME> POD section with content that matches
+C<\A \s* [\w:]+ \s+ - \s+ \S>.  The single hyphen is the important bit.  Also,
+must be a single line.
+
+
+=item * Expressions::RequireFatCommasInHashConstructors
+
+=item * ErrorHandling::RequireLocalizingGlobalErrorVariablesInDESTROY
+
+Prevent C<$.>, C<$@>, C<$!>, C<$^E>, and C<$?> from being cleared unexpectedly
+by DESTROY methods.
+
+    package Foo;
+
+    sub DESTROY {
+        die "Died in Foo::DESTROY()";
+    }
+
+    package main;
+
+    eval {
+        my $foo = Foo->new();
+
+        die "Died in eval."
+    }
+    print $@;   # "Died in Foo::DESTROY()", not "Died in eval.".
+
+See L<http://use.perl.org/~Ovid/journal/36767> and
+L<http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-06/msg00542.html>.
+
+
+=item * Expressions::ProhibitDecimalWithBitwiseOperator
+
+=item * Expressions::ProhibitStringsWithBitwiseOperator
+
+
+=item * InputOutput::ProhibitMagicDiamond
+
+Steal the idea from L<B::Lint|B::Lint>.
+
+
+=item * NamingConventions::RequireArrayAndHashReferenceVariablesEndWith_Ref
+
+
+=item * Programs::RequireShebang
+
+Anything that is a program should have a shebang line.  This includes .t
+files.
+
+
+=item * Modules::RequirePackageDeclarationAsFirstStatementInModule
+
+See L<http://blog.woobling.org/2009/11/scoping-of-current-package.html>.
+Ouch.
+
+
+=item * BuiltInFunctions::RequireConstantSprintfFormat
+
+
+=item * BuiltInFunctions::RequireConstantUnpackFormat
+
+L<http://diotalevi.isa-geek.net/~josh/yapc-lint/slides/slide5.html>
+
+
+=item * Miscellanea::ProhibitObnoxiousComments
+
+Forbid excessive hash marks e.g. "#### This is a loud comment ####".
+Make the obnoxious pattern configurable
+
+
+=item * ValuesAndExpressions::RequireNotOperator
+
+Require the use of "not" instead of "!", except when this would contradict
+ProhibitMixedBooleanOperators.  This may be better suited for
+Perl::Mogrify::More.
+
+
+=item * ValuesAndExpressions::ProhibitUnusedReadonlyConstants
+
+We'll only be able to look at lexicals.  For similar reasons, we can't do
+anything about L<constant>.
+
+
+=item * Modules::RequireExplicitImporting
+
+Require every C<use> statement to have an explicit import list.  You could
+still get around this by calling C<import> directly.
+
+
+=item * Modules::ForbidImporting
+
+Require every C<use> to have an explicitly empty import list.  This is for
+folks who like to see fully-qualified function names.  Should probably provide
+a list of exempt modules (like FindBin);
+
+
+=item * ControlStructures::ProhibitIncludeViaDo
+
+Forbid C<do "foo.pl">.  Not sure about this policy name.
+
+
+=item * Variables::ProhibitUseVars
+
+Disallow C<use vars qw(...)> and require C<our $foo> instead.  This
+contradicts Miscellanea::Prohibit5006isms.  Maybe verify C<use 5.6> before
+applying this policy.  Low severity.
+
+
+=item * VariablesAndExpressions::ProhibitQuotedHashKeys
+
+Forbid quotes around hash keys, unless they are really needed.  This is
+against what Damian says.  Suggested by Adam Kennedy.  Low severity.
+
+
+=item * CodeLayout::ProhibitFunctionalNew
+
+Good: C<< Foo::Bar->new >>, Bad: C<< new Foo::Bar >>
+
+
+=item * RegularExpressions::ProhibitSWSWSW
+
+Require C<split> instead of C<m/\s*\w*\s*\w*\s*/>.  From MJD's Red Flags.
+
+
+=item * Documentation::RequireSynopsis
+
+
+=item * Documentation::RequireLicense
+
+These are simplified versions of Documentation::RequirePodSections.
+
+
+=item * Documentation::RequireValidSynopsis
+
+The Synopsis section must be all indented and must be syntactically valid Perl
+(as validated by PPI).
+
+
+=item * Documentation::ProhibitEmptySections
+
+Any C<=headN> and C<=over> sections must not be empty.  This helps catch
+boilerplate (although Test::Pod should catch empty C<=over> blocks).
+
+On the other hand, C<=item ...> sections can be empty, since the item label is
+content.
+
+
+=item * Miscellaneous::ProhibitBoilerplate
+
+Complain about copy-and-paste code or docs from h2xs, Module::Starter::*, etc.
+
+Here's a non-PPI implementation:
+L<http://search.cpan.org/src/JJORE/Carp-Clan-5.8/t/04boilerplate.t>
+
+
+=item * NamingConventions::ProhibitPackagesSubroutinesAndBarewordFileHandlesWithTheSameNames
+
+See
+L<http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2009-01/msg00685.html>.
+
+
+=item * BuiltinFunctions::ProhibitExtraneousScalarCall
+
+Recommend that C<if (scalar @array)> be rewritten as C<if (@array)>.
+
+
+=item * RegularExpressions::ProhibitMixedDelimiters
+
+Ban s{foo}(bar)
+
+
+=item * RegularExpressions::ProhibitScalarAsRegexp
+
+Ban naked strings as regexps, like:
+
+    print 1 if $str =~ $regexp;
+
+Instead, it should be:
+
+    print 1 if $str =~ m/$regexp/;
+
+or
+
+    print 1 if $str =~ m/$regexp/xms;
+
+
+=item * ValuesAndExpressions::RequireInterpolatedStringyEval
+
+Ensure that the argument to a stringy eval is not a constant string.  That's
+just wasteful.  Real world examples include:
+
+  eval 'use Optional::Module';
+
+which is better written as
+
+  eval { require Optional::Module; Optional::Module->import };
+
+for performance gains and compile-time syntax checking.
+
+Question: This is very similar to BuiltInFunctions::ProhibitStringyEval. What
+does the new policy buy us? Could we get the same thing with an option on the
+latter to forbid un-interpolated includes even if C<allow_includes> is turned
+on?
+
+
+=item * RegularExpressions::ProhibitUnnecessaryEscapes
+
+Complain if user puts a backslash escape in front of non-special characters.
+For example:
+
+   m/\!/;
+
+Make exceptions for C<\">, C<\'> and C<\`> since those are often inserted to
+workaround bugs in syntax highlighting.
+
+Note that this is different inside character classes, where only C<^>, C<]>
+and C<-> need to be escaped, I think.  Caret only needs to be escaped at the
+beginning, and dash does NOT need to be escaped at the beginning and end.  See
+L<perlreref|perlreref>.
+
+
+=item * Steal ideas from L<Dunce::Files|Dunce::Files>.
+
+Can someone expand this entry, please?
+
+=item * ControlStructures::ProhibitAssigmentInConditional
+
+=item * ValuesAndExpressions::RequireConstantBeforeEquals
+
+=item * ValuesAndExpressions::RequireConstantBeforeOperator
+
+L<http://use.perl.org/~stu42j/journal/36412>
+
+Just about everyone has been bitten by C<if ($x = 10) { ... }> when they meant
+to use C<==>.  A safer style is C<10 == $x> because omitting the second C<=>
+yields a noisy compile-time failure instead of silent runtime error.
+
+ProhibitAssigmentInConditional complains if the condition of a while, until,
+if or unless is solely an assignment.  If it's anything more complex (like
+C<if (($x=10)){}> or C<while ($x=$y=$z){}>), there is no warning.
+
+RequireConstantBeforeEquals complains if the left side of an C<==> is a
+variable while the right side is a constant.
+
+RequireConstantBeforeOperator complains if the left side of any comparison
+operator (C<==>, C<eq>, C<&lt;>, etc) is a variable while the right side is a
+constant.
+
+
+=item * InputOutput::ProhibitUTF8IOLayer
+
+http://www.perlfoundation.org/perl5/index.cgi?the_utf8_perlio_layer
+
+
+=item * BuiltinFunctions::ProhibitExit(?:InModules)?
+
+Forbid C<exit()> in files that lack a shebang.  Inspired by
+L<http://use.perl.org/~Ovid/journal/36746> and an analogous checker in
+FindBugs.
+
+
+=item * Modules::ProhibitRedundantLoading
+
+Don't allow a package to "use" the same module more than once, unless
+there is a "no <module>" between them.
+
+See https://rt.cpan.org/Ticket/Display.html?id=38074.
+
+
+=item * ErrorHandling::RequireLocalizingEVAL_ERRORInDESTROY
+
+The opposite side of ErrorHandling::RequireCheckingReturnValueOfEval.
+
+
+=back
+
+
+=head1 REFACTORINGS and ENHANCEMENTS
+
+=over
+
+=item * Reformat all the POD to use 78 columns instead of 70.
+
+This thing of having different widths for the documentation and the code is
+rediculous.  Don't do this until after the next non-dev release.  Elliot is
+considering doing a special release only including this change so that the
+search.cpan.org diff tool doesn't entirely break.
+
+
+=item * Eliminate use of IO::String
+
+I'm pretty sure that opening references to scalars is in 5.6, so IO::String
+isn't necessary.
+
+
+=item * Give L<Perl::Mogrify::Command> a proper API.
+
+Now that we've got the guts of L<perlcritic> in there, we should make the
+it available to users.
+
+
+=item * Create constants for the PPI location array elements.
+
+=item * Some means of detecting "runaway" C<##no critic>
+
+Elliot was talking to a couple of users at ETech and one of their major
+concerns was that they were using C<##no critic> and forgetting to do a
+C<##use critic> after the problematic section.  Perhaps an option to
+F<perlcritic> to scan for such things is in order.
+
+
+=item * Change API to use named parameters
+
+Most of the methods on the public classes use named parameters for passing
+arguments.  I'd like to extend that pattern to include all object-methods.
+Static methods can still use positional parameters.
+
+
+=item * Enhance P::C::critique() to accept files, directories, or code strings
+
+Just like F<bin/perlcritic> does now.
+
+
+=item * Add C<-cache> flag to F<bin/perlcritic>
+
+If enabled, this turns on L<PPI::Cache|PPI::Cache>:
+
+    require PPI::Cache;
+    my $cache_path = "/tmp/test-perl-critic-cache-$ENV{USER}";
+    mkdir $cache_path, oct 700 if (! -d $cache_path);
+    PPI::Cache->import(path => $cache_path);
+
+This cache directory should perhaps include the PPI version number!  At least
+until PPI incorporates its own version number in the cache.
+
+(see F<t/40_criticize.t> for a more robust implementation)
+
+
+=item * Use hash-lookup instead of C<List::MoreUtils::any> function.
+
+In several places, Perl::Mogrify uses C<List::MoreUtils::any> to see if a
+string is a member of a list.  Instead, I suggest using a named subroutine
+that does a hash-lookup like this:
+
+    my %logical_ops = hashify( qw( ! || && ||= &&= and or not ) );
+    sub is_logical_op { return exists $logical_ops{ $_[0] }; }
+
+Question: Why?
+
+Answer: Readability, mostly.  Performance, maybe.
+
+
+=back
+
+=head1 PPI BUGS
+
+We're waiting on the following bugs to get fixed in a CPAN release of PPI:
+
+
+=over
+
+=item PPI::Token::descendant_of()
+
+Exists in svn.  Replace _descendant_of() in RequireCheckingReturnValueOfEval
+with that, once it is released, because it's faster and native.
+
+
+=item Newlines
+
+PPI does not preserve newlines.  That makes
+CodeLayout::RequireConsistentNewlines impossible to implement under PPI.  For
+now, it's implemented by pulling the source out of the file and skipping PPI.
+
+It's unlikely that PPI will support mixed newlines anytime soon.
+
+
+=item Operators
+
+ValuesAndExpressions::ProhibitMismatchedOperators has two workarounds for PPI
+bugs with parsing operators.  Many of these bugs have been fixed in PPI, so it
+would be good to check if those workarounds are still needed.
+
+
+=item Regexp methods
+
+Not strictly a bug -- the PPI Regexp classes have a dearth of accessor methods
+as of v1.118, meaning that we have to do messy digging into internals.  I
+wrote Perl::Mogrify:Utils::PPIRegexp to encapsulate this messiness, but it
+would be nicer to have an official interface in PPI.
+
+
+=item QuoteLike::Words in the place of a ForLoop
+
+PPI incorrectly parses C<<for qw<blah> {}>>.
+
+
+=back
+
+=cut
+
+##############################################################################
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=pod expandtab shiftround :

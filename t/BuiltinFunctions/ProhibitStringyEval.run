@@ -1,0 +1,128 @@
+## name Basic passing
+## failures 0
+## cut
+
+eval { some_code() };
+eval( {some_code() } );
+eval();
+{eval}; # for Devel::Cover
+
+#-----------------------------------------------------------------------------
+
+## name Basic failure
+## failures 3
+## cut
+
+eval "$some_code";
+eval( "$some_code" );
+eval( 'sub {'.$some_code.'}' );
+
+#-----------------------------------------------------------------------------
+
+## name Things that might look like an eval, but aren't
+## failures 0
+## cut
+
+$hash1{eval} = 1;
+%hash2 = (eval => 1);
+
+#-----------------------------------------------------------------------------
+
+## name Eval of include statement without allow_includes set
+## failures 20
+## cut
+
+eval 'use Foo';
+eval 'require Foo';
+eval 'use Foo 1.2';
+eval 'require Foo 1.2';
+eval 'use Foo qw< blah >';
+eval 'require Foo qw< blah >';
+eval 'use Foo 1.2 qw< blah >';
+eval 'require Foo 1.2 qw< blah >';
+
+eval 'use Foo; 1;';
+eval 'require Foo; 1;';
+eval 'use Foo 1.2; 1;';
+eval 'require Foo 1.2; 1;';
+eval 'use Foo qw< blah >; 1;';
+eval 'require Foo qw< blah >; 1;';
+eval 'use Foo 1.2 qw< blah >; 1;';
+eval 'require Foo 1.2 qw< blah >; 1;';
+
+eval "use $thingy;";
+eval "require $thingy;";
+eval "use $thingy; 1;";
+eval "require $thingy; 1;";
+
+#-----------------------------------------------------------------------------
+
+## name Eval of include statement with allow_includes set
+## failures 0
+## parms { allow_includes => 1 }
+## cut
+
+eval 'use Foo';
+eval 'require Foo';
+eval 'use Foo 1.2';
+eval 'require Foo 1.2';
+eval 'use Foo qw< blah >';
+eval 'require Foo qw< blah >';
+eval 'use Foo 1.2 qw< blah >';
+eval 'require Foo 1.2 qw< blah >';
+
+eval 'use Foo; 1;';
+eval 'require Foo; 1;';
+eval 'use Foo 1.2; 1;';
+eval 'require Foo 1.2; 1;';
+eval 'use Foo qw< blah >; 1;';
+eval 'require Foo qw< blah >; 1;';
+eval 'use Foo 1.2 qw< blah >; 1;';
+eval 'require Foo 1.2 qw< blah >; 1;';
+
+eval "use $thingy;";
+eval "require $thingy;";
+eval "use $thingy; 1;";
+eval "require $thingy; 1;";
+
+#-----------------------------------------------------------------------------
+
+## name Eval of include statement with allow_includes set but extra stuff afterwards
+## failures 3
+## parms { allow_includes => 1 }
+## cut
+
+eval 'use Foo; blah;';
+eval 'require Foo; 2; 1;';
+eval 'use $thingy;';
+
+#-----------------------------------------------------------------------------
+
+## name Eval of "no" include statement with allow_includes set
+## failures 1
+## parms { allow_includes => 1 }
+## cut
+
+eval 'no Foo';
+
+#-----------------------------------------------------------------------------
+
+## name Eval a comment (RT #60179)
+## failures 1
+## parms { allow_includes => 1 }
+## cut
+
+# Note that absent the desired fix, the following is a fatal error.
+
+eval("#" . substr($^X, 0, 0));
+
+#-----------------------------------------------------------------------------
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

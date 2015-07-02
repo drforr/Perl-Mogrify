@@ -1,0 +1,75 @@
+## name basic failures
+## failures 7
+## cut
+
+&function_call();
+&my_package::function_call();
+&function_call( $args );
+&my_package::function_call( %args );
+&function_call( &other_call( @foo ), @bar );
+&::function_call();
+
+#-----------------------------------------------------------------------------
+
+## name basic passing
+## failures 0
+## cut
+exists &function_call;
+defined &function_call;
+\ &function_call;
+\&function_call;
+exists &my_package::function_call;
+defined &my_package::function_call;
+\ &my_package::function_call;
+\&my_package::function_call;
+$$foo; # for Devel::Cover; skip non-backslash casts
+
+#-----------------------------------------------------------------------------
+
+## name RT #38855 passing with parens
+## failures 0
+## cut
+
+defined( &function_call );
+exists( &function_call );
+
+#-----------------------------------------------------------------------------
+
+## name RT #49609 recognize reference-taking distributes over parens
+## failures 0
+## cut
+
+\( &function_call );
+\( &function_call, &another_function );
+
+#-----------------------------------------------------------------------------
+
+## name more passing
+## failures 0
+## cut
+function_call();
+my_package::function_call();
+function_call( $args );
+my_package::function_call( %args );
+function_call( other_call( @foo ), @bar );
+\&my_package::function_call;
+\&function_call;
+goto &foo;
+
+#-----------------------------------------------------------------------------
+
+## name handle that the first bareword after "sort" is the comparator function
+## failures 0
+## cut
+
+sort &foo($x)
+
+#-----------------------------------------------------------------------------
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

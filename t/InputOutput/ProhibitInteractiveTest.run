@@ -1,0 +1,25 @@
+## name basic failures
+## failures 2
+## cut
+
+-t;
+if (-t) { }
+
+#-----------------------------------------------------------------------------
+
+## name basic passes
+## failures 0
+## cut
+-toomany;
+-f _;
+
+#-----------------------------------------------------------------------------
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

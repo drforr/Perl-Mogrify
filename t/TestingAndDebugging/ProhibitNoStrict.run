@@ -1,0 +1,106 @@
+## name strictures disabled
+## failures 1
+## cut
+
+package foo;
+no strict;
+
+#-----------------------------------------------------------------------------
+
+## name selective strictures disabled
+## failures 1
+## cut
+
+package foo;
+no strict 'refs', 'vars';
+
+#-----------------------------------------------------------------------------
+
+## name selective strictures disabled
+## failures 1
+## cut
+
+package foo;
+no strict qw(vars refs subs);
+
+#-----------------------------------------------------------------------------
+
+## name allowed no strict
+## failures 0
+## parms { allow => 'vars refs subs' }
+## cut
+
+package foo;
+no strict qw(vars refs subs);
+
+#-----------------------------------------------------------------------------
+
+## name allowed no strict
+## failures 0
+## parms { allow => 'vars refs subs' }
+## cut
+
+package foo;
+no strict "vars", "refs", "subs";
+
+#-----------------------------------------------------------------------------
+
+## name partially allowed no strict
+## failures 1
+## parms {allow => 'VARS SUBS'}
+# Note wrong case!
+## cut
+
+package foo;
+no strict "vars", "refs", 'subs';
+
+#-----------------------------------------------------------------------------
+
+## name partially allowed no strict
+## failures 1
+## parms {allow => 'VARS SUBS'}
+# Note wrong case!
+## cut
+
+package foo;
+no strict qw(vars refs subs);
+
+#-----------------------------------------------------------------------------
+
+## name allow no strict, mixed case config
+## parms {allow => 'RefS SuBS'}
+## failures 0
+## cut
+
+package foo;
+no strict qw(refs subs);
+
+#-----------------------------------------------------------------------------
+
+## name allow no strict, comma-delimimted config
+## parms {allow => 'refs,subs'}
+## failures 0
+## cut
+
+package foo;
+no strict "refs", "subs";
+
+#-----------------------------------------------------------------------------
+
+## name wrong case, funky config
+## parms { allow => 'REfs;vArS' }
+## failures 1
+## cut
+
+package foo;
+no strict "refs", 'vars', "subs";
+
+#-----------------------------------------------------------------------------
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

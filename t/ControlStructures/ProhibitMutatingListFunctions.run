@@ -1,0 +1,208 @@
+## name Assignment and op-assignment
+## failures 4
+## cut
+
+# TODO: PPI as of 1.215 doesn't parse all of the augmented assignment
+# operators, so we can't do exhaustive testing. 
+@bar = map {$_ = 1} @foo;
+@bar = map {$_ *= 2} @foo;
+@bar = map {$_++} @foo;
+@bar = map {$_--} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name ++ and -- operators
+## failures 2
+## cut
+
+@bar = map {++$_} @foo;
+@bar = map {--$_} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Explicit regexes
+## failures 3
+## cut
+
+@bar = map {$_ =~ s/f/g/} @foo;
+@bar = map {$_ =~ tr/f/g/} @foo;
+@bar = map {$_ =~ y/f/g/} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Simple implicit regexps
+## failures 3
+## cut
+
+@bar = map {s/f/g/} @foo;
+@bar = map {tr/f/g/} @foo;
+@bar = map {y/f/g/} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name "Hidden" implicit regexps
+## failures 3
+## cut
+
+@bar = map {my $c = s/f/g/g; $c} @foo;
+@bar = map {my $c = tr/f/g/g; $c} @foo;
+@bar = map {my $c = y/f/g/g; $c} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Implicit chomp-ish builtins
+## failures 2
+## cut
+
+@bar = map {chop} @foo;
+@bar = map {chomp} @foo;
+@bar = map {undef} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Explicit chomp-ish builtins
+## failures 3
+## cut
+
+@bar = map {chop $_} @foo;
+@bar = map {chomp $_} @foo;
+@bar = map {undef $_} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name substr
+## failures 1
+## cut
+
+@bar = map {substr $_, 0, 1, 'f'} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Non-mutators
+## failures 0
+## cut
+
+@bar = map {$_} @foo;
+@bar = map {$_ => 1} @foo;
+@bar = map {m/4/} @foo;
+@bar = map {my $s=$_; chomp $s; $s} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Value given for list_funcs passing
+## failures 0
+## parms {list_funcs => ' foo bar '}
+## cut
+
+@bar = map {$_=1} @foo;
+@bar = foo {$_} @foo;
+@bar = baz {$_=1} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Value given for list_funcs failure
+## failures 1
+## parms {list_funcs => ' foo bar '}
+## cut
+
+@bar = foo {$_=1} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Value given for add_list_funcs
+## failures 2
+## parms {add_list_funcs => ' foo bar '}
+## cut
+
+@bar = map {$_=1} @foo;
+@bar = foo {$_=1} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Accept non-mutating tr/// function. RT 44515
+## failures 0
+## cut
+
+@bar = map {$_ =~ tr/f//} @foo;
+@bar = map {$_ =~ tr/f//c} @foo;
+@bar = map {$_ =~ tr/f/f/} @foo;
+@bar = map {$_ =~ tr/f/f/d} @foo;
+@bar = map {$_ =~ y/f//} @foo;
+@bar = map {$_ =~ y/f//c} @foo;
+@bar = map {$_ =~ y/f/f/} @foo;
+@bar = map {$_ =~ y/f/f/d} @foo;
+@bar = map {tr/f//} @foo;
+@bar = map {tr/f//c} @foo;
+@bar = map {tr/f/f/} @foo;
+@bar = map {tr/f/f/d} @foo;
+@bar = map {y/f//} @foo;
+@bar = map {y/f//c} @foo;
+@bar = map {y/f/f/} @foo;
+@bar = map {y/f/f/d} @foo;
+@bar = map {my $c = tr/f//; $c} @foo;
+@bar = map {my $c = tr/f//c; $c} @foo;
+@bar = map {my $c = tr/f/f/; $c} @foo;
+@bar = map {my $c = tr/f/f/d; $c} @foo;
+@bar = map {my $c = y/f//; $c} @foo;
+@bar = map {my $c = y/f//c; $c} @foo;
+@bar = map {my $c = y/f/f/; $c} @foo;
+@bar = map {my $c = y/f/f/d; $c} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Recognize mutating tr/// function. RT 44515
+## failures 24
+## cut
+
+@bar = map {$_ =~ tr/f//d} @foo;
+@bar = map {$_ =~ tr/f/f/c} @foo;
+@bar = map {$_ =~ tr/f//s} @foo;
+@bar = map {$_ =~ tr/f/f/s} @foo;
+@bar = map {$_ =~ y/f//d} @foo;
+@bar = map {$_ =~ y/f/f/c} @foo;
+@bar = map {$_ =~ y/f//s} @foo;
+@bar = map {$_ =~ y/f/f/s} @foo;
+@bar = map {tr/f//d} @foo;
+@bar = map {tr/f/f/c} @foo;
+@bar = map {tr/f//s} @foo;
+@bar = map {tr/f/f/s} @foo;
+@bar = map {y/f//d} @foo;
+@bar = map {y/f/f/c} @foo;
+@bar = map {y/f//s} @foo;
+@bar = map {y/f/f/s} @foo;
+@bar = map {my $c = tr/f//d; $c} @foo;
+@bar = map {my $c = tr/f/f/c; $c} @foo;
+@bar = map {my $c = tr/f//s; $c} @foo;
+@bar = map {my $c = tr/f/f/s; $c} @foo;
+@bar = map {my $c = y/f//d; $c} @foo;
+@bar = map {my $c = y/f/f/c; $c} @foo;
+@bar = map {my $c = y/f//s; $c} @foo;
+@bar = map {my $c = y/f/f/s; $c} @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Recognize non-mutating s///r function introduced in 5.13.2.
+## failures 0
+## cut
+
+@bar = map { s/cat/dog/r } @foo;
+
+#-----------------------------------------------------------------------------
+
+## name Recognize non-mutating tr///r function introduced in 5.13.7.
+## failures 0
+## cut
+
+@bar = map { tr/cat/dog/r } @foo;
+@bar = map { y/cat/dog/r } @foo;
+
+#-----------------------------------------------------------------------------
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

@@ -1,0 +1,197 @@
+## name passes by assigning error variable
+## failures 0
+## cut
+
+my $error = open( $filehandle, $mode, $filename );
+my $error = open  $filehandle, $mode, $filename;
+my $error = open  OPEN, $open, 'open';
+my $error = open  OR, $or, 'or';
+
+#-----------------------------------------------------------------------------
+
+## name passes by "or die"
+## failures 0
+## cut
+
+open  $filehandle, $mode, $filename   or die 'could not open';
+open( $filehandle, $mode, $filename ) or die 'could not open';
+open( $filehandle, $mode, $filename ) or croak 'could not open';
+
+#-----------------------------------------------------------------------------
+
+## name passes by "|| die"
+## failures 0
+## cut
+
+open  $filehandle, $mode, $filename   or die 'could not open';
+open( $filehandle, $mode, $filename ) || die 'could not open';
+open( $filehandle, $mode, $filename ) || croak 'could not open';
+
+#-----------------------------------------------------------------------------
+
+## name passes by "unless"
+## failures 0
+## cut
+
+die unless open( $filehandle, $mode, $filename );
+die unless open  $filehandle, $mode, $filename;
+
+croak unless open( $filehandle, $mode, $filename );
+croak unless open  $filehandle, $mode, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name passes by "if not"
+## failures 0
+## cut
+
+die if not open( $filehandle, $mode, $filename );
+die if not open  $filehandle, $mode, $filename;
+
+croak if not open( $filehandle, $mode, $filename );
+croak if not open  $filehandle, $mode, $filename;
+
+die if !open( $filehandle, $mode, $filename );
+die if !open  $filehandle, $mode, $filename;
+
+croak if !open( $filehandle, $mode, $filename );
+croak if !open  $filehandle, $mode, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name passes with "if" statement
+## failures 0
+## cut
+
+if ( open( $filehandle, $mode, $filename ) ) { dosomething(); };
+
+#-----------------------------------------------------------------------------
+
+## name Basic failure with parens
+## failures 2
+## cut
+
+open( $filehandle, $mode, $filename );
+open( $filehandle, $filename );
+
+#-----------------------------------------------------------------------------
+
+## name Basic failure no parens
+## failures 2
+## cut
+
+open $filehandle, $mode, $filename;
+open $filehandle, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name Fatal.pm on
+## failures 0
+## cut
+
+use Fatal qw(open);
+open $filehandle, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name Fatal.pm on
+## failures 0
+## cut
+
+use Fatal 'open';
+open $filehandle, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name Fatal.pm on
+## failures 0
+## cut
+
+use Fatal ('open');
+open $filehandle, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name Fatal::Exception on
+## failures 0
+## cut
+
+use Fatal::Exception 'Exception' => qw(open);
+open $filehandle, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name Fatal.pm off
+## failures 1
+## cut
+
+use Fatal qw(close);
+open $filehandle, $filename;
+
+#-----------------------------------------------------------------------------
+
+## name autodie on via no parameters
+## failures 0
+## cut
+
+use autodie;
+open $filehandle;
+
+#-----------------------------------------------------------------------------
+
+## name autodie on via pragma with numeric version number (GH #612)
+## failures 0
+## cut
+
+use autodie 2.14;
+open $filehandle;
+
+#-----------------------------------------------------------------------------
+
+## name autodie on via pragma with vstring version (GH #612)
+## failures 0
+## cut
+
+use autodie v2.14.8;
+open $filehandle;
+
+#-----------------------------------------------------------------------------
+
+## name autodie on via :io
+## failures 0
+## cut
+
+use autodie qw< :io >;
+open $filehandle;
+
+#-----------------------------------------------------------------------------
+
+## name autodie off
+## failures 1
+## cut
+
+use autodie qw< :system >;
+open $filehandle;
+
+#-----------------------------------------------------------------------------
+
+## name autodie on and off
+## failures 1
+## TODO need to handle autodie lexically.
+## cut
+
+use autodie;
+{
+    no autodie;
+
+    open $filehandle;
+}
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

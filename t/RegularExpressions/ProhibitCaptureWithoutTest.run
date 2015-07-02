@@ -1,0 +1,333 @@
+## name use without regex
+## failures 3
+## cut
+my $foo = $1;
+my @matches = ($1, $2);
+
+#-----------------------------------------------------------------------------
+
+## name void use without regex
+## failures 1
+## cut
+$1
+
+#-----------------------------------------------------------------------------
+
+## name regex but no check on success
+## failures 1
+## cut
+'some string' =~ m/(s)/;
+my $s = $1;
+
+#-----------------------------------------------------------------------------
+
+## name inside a checkblock, but another regex overrides
+## failures 1
+## cut
+if (m/(.)/) {
+   'some string' =~ m/(s)/;
+   my $s = $1;
+}
+
+#-----------------------------------------------------------------------------
+
+## name good passes
+## failures 0
+## cut
+if ($str =~ m/(.)/) {
+   return $1;
+}
+elsif ($foo =~ s/(b)//) {
+   $bar = $1;
+}
+
+if ($str =~ m/(.)/) {
+   while (1) {
+      return $1;
+   }
+}
+
+while ($str =~ m/\G(.)/cg) {
+   print $1;
+}
+
+print $0; # not affected by policy
+print $_; # not affected by policy
+print $f1; # not affected by policy
+
+my $result = $str =~ m/(.)/;
+if ($result) {
+   return $1;
+}
+
+#-----------------------------------------------------------------------------
+
+## name ternary passes
+## failures 0
+## cut
+print m/(.)/ ? $1 : 'undef';
+print !m/(.)/ ? 'undef' : $1;
+print s/(.)// ? $1 : 'undef';
+print !s/(.)// ? 'undef' : $1;
+$foo = m/(.)/ && $1;
+$foo = !m/(.)/ || $1;
+$foo = s/(.)// && $1;
+$foo = !s/(.)// || $1;
+
+#-----------------------------------------------------------------------------
+
+## name Regression for PPI::Statement::Expressions
+## failures 0
+## cut
+
+if (m/(\d+)/xms) {
+   $foo = ($1);
+}
+
+#-----------------------------------------------------------------------------
+
+## name Regression for ternaries with structures
+## failures 0
+## cut
+
+$str =~ m/(.)/xms ? foo($1) : die;
+$str =~ m/(.)/xms ? [$1] : die;
+$str =~ m/(.)/xms ? { match => $1 } : die;
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match throws exception - RT 36081.
+## failures 0
+## cut
+
+m/(foo)/ or die;
+print $1, "\n";
+m/(foo)/ or croak;
+print $1, "\n";
+m/(foo)/ or confess;
+print $1, "\n";
+m/(foo)/ || die;
+print $1, "\n";
+m/(foo)/ || croak;
+print $1, "\n";
+m/(foo)/ || confess;
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match throws exception (regex in outer block) - RT 36081.
+## failures 0
+## cut
+
+m/(foo)/ or die;
+{
+    print $1, "\n";
+}
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match throws exception (regex in inner block) - RT 36081.
+## failures 1
+## cut
+
+{
+    m/(foo)/ or die;
+}
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name Boolean 'or' without known exception source is an error - RT 36081
+## failures 1
+## cut
+
+m/(foo)/ or my_exception_source( 'bar' );
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name Recognize alternate exception sources if told about them - RT 36081
+## parms { exception_source => 'my_exception_source' }
+## failures 0
+## cut
+
+m/(foo)/ or my_exception_source( 'bar' );
+print $1, "\n";
+m/(foo)/ or $self->my_exception_source( 'bar' );
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match causes transfer of control - RT 36081.
+## failures 0
+## cut
+
+m/(foo)/ or next;
+print $1, "\n";
+m/(foo)/ or last;
+print $1, "\n";
+m/(foo)/ or redo;
+print $1, "\n";
+m/(foo)/ or goto FOO;
+print $1, "\n";
+m/(foo)/ or return;
+print $1, "\n";
+m/(foo)/ || next;
+print $1, "\n";
+m/(foo)/ || last;
+print $1, "\n";
+m/(foo)/ || redo;
+print $1, "\n";
+m/(foo)/ || goto FOO;
+print $1, "\n";
+m/(foo)/ || return;
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match causes transfer of control (regex in outer block) - RT 36081.
+## failures 0
+## cut
+
+m/(foo)/ or return;
+{
+    print $1, "\n";
+}
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match causes transfer of control (regex in inner block) - RT 36081.
+## failures 1
+## cut
+
+{
+    m/(foo)/ or return;
+}
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name Failure to match does not cause transfer of control (regex in inner block) - RT 36081.
+## failures 1
+## cut
+
+{
+    m/(foo)/;
+}
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name goto that transfers around capture - RT 36081.
+## failures 0
+## cut
+
+{
+    m/(foo)/ or goto BAR;
+    print $1, "\n";
+    BAR:
+    print "Baz\n";
+}
+
+{
+BAR: m/(foo)/ or goto BAR;
+    print $1, "\n";
+}
+
+{
+    m/(foo)/ or goto &bar;
+    print $1, "\n";
+}
+
+#-----------------------------------------------------------------------------
+
+## name goto that does not transfer around capture - RT 36081.
+## failures 1
+## cut
+
+{
+    m/(foo)/ or goto BAR;
+BAR : print $1, "\n";
+}
+
+#-----------------------------------------------------------------------------
+
+## name goto that can not be disambiguated - RT 36081.
+## failures 1
+## cut
+
+{
+FOO: m/(foo)/ or goto (qw{FOO BAR BAZ})[$i];
+BAR: print $1, "\n";
+BAZ:
+}
+
+#-----------------------------------------------------------------------------
+
+## name regex in suffix control
+## failures 0
+## cut
+
+die unless m/(foo)/;
+print $1, "\n";
+last unless m/(foo)/;
+print $1, "\n";
+die "Arrrgh" unless m/(foo)/;
+print $1, "\n";
+
+#-----------------------------------------------------------------------------
+
+## name regex in loop with capture in nested if
+## failures 0
+## cut
+
+foreach (qw{foo bar baz}) {
+    next unless m/(foo)/;
+    if ($1) {
+        print "Foo!\n";
+    }
+}
+
+#-----------------------------------------------------------------------------
+
+## name regex in while, capture in loop
+## failures 0
+## cut
+
+while (m/(foo)/) {
+    print $1, "\n";
+}
+
+#-----------------------------------------------------------------------------
+
+## name Regex followed by "and do {...}" RT #50910
+## failures 0
+## cut
+
+m/^commit (.*)/xsm and do {
+     $commit = $1;
+     next;
+};
+
+#-----------------------------------------------------------------------------
+
+## name regex inside when(){} RT #36081
+## failures 0
+## cut
+
+use 5.010;
+
+given ( 'abc' ) {
+    when ( m/(a)/ ) {
+        say $1;
+    }
+}
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

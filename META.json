@@ -1,0 +1,888 @@
+{
+   "abstract" : "Critique Perl source code for best-practices.",
+   "author" : [
+      "Jeffrey Thalhammer <jeff@imaginative-software.com>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.421",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Perl-Mogrify",
+   "no_index" : {
+      "directory" : [
+         "doc",
+         "inc",
+         "tools",
+         "xt"
+      ],
+      "file" : [
+         "TODO.pod"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::Deep" : "0",
+            "Test::More" : "0",
+            "lib" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.4024"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "B::Keywords" : "1.05",
+            "Carp" : "0",
+            "Config::Tiny" : "2",
+            "Email::Address" : "1.889",
+            "English" : "0",
+            "Exception::Class" : "1.23",
+            "Exporter" : "5.63",
+            "File::Basename" : "0",
+            "File::Find" : "0",
+            "File::HomeDir" : "0",
+            "File::Path" : "0",
+            "File::Spec" : "0",
+            "File::Spec::Unix" : "0",
+            "File::Temp" : "0",
+            "File::Which" : "0",
+            "Getopt::Long" : "0",
+            "IO::String" : "0",
+            "IPC::Open2" : "1",
+            "List::MoreUtils" : "0.19",
+            "List::Util" : "0",
+            "Module::Pluggable" : "3.1",
+            "PPI" : "1.220",
+            "PPI::Document" : "1.220",
+            "PPI::Document::File" : "1.220",
+            "PPI::Node" : "1.220",
+            "PPI::Token::Quote::Single" : "1.220",
+            "PPI::Token::Whitespace" : "1.220",
+            "PPIx::Regexp" : "0.027",
+            "PPIx::Utilities::Node" : "1.001",
+            "PPIx::Utilities::Statement" : "1.001",
+            "Perl::Tidy" : "0",
+            "Pod::Parser" : "0",
+            "Pod::PlainText" : "0",
+            "Pod::Select" : "0",
+            "Pod::Spell" : "1",
+            "Pod::Usage" : "0",
+            "Readonly" : "2",
+            "Scalar::Util" : "0",
+            "String::Format" : "1.13",
+            "Task::Weaken" : "0",
+            "Term::ANSIColor" : "2.02",
+            "Test::Builder" : "0.92",
+            "Text::ParseWords" : "3",
+            "base" : "0",
+            "charnames" : "0",
+            "overload" : "0",
+            "strict" : "0",
+            "version" : "0.77",
+            "warnings" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "Perl::Mogrify" : {
+         "file" : "lib/Perl/Mogrify.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Annotation" : {
+         "file" : "lib/Perl/Mogrify/Annotation.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Command" : {
+         "file" : "lib/Perl/Mogrify/Command.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Config" : {
+         "file" : "lib/Perl/Mogrify/Config.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Document" : {
+         "file" : "lib/Perl/Mogrify/Document.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception" : {
+         "file" : "lib/Perl/Mogrify/Exception.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::AggregateConfiguration" : {
+         "file" : "lib/Perl/Mogrify/Exception/AggregateConfiguration.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Generic" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Generic.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::NonExistentEnforcer" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/NonExistentEnforcer.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option::Global" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Global.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option::Global::ExtraParameter" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Global/ExtraParameter.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option::Global::ParameterValue" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Global/ParameterValue.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option::Enforcer" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Enforcer.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option::Enforcer::ExtraParameter" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Enforcer/ExtraParameter.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Configuration::Option::Enforcer::ParameterValue" : {
+         "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Enforcer/ParameterValue.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Fatal" : {
+         "file" : "lib/Perl/Mogrify/Exception/Fatal.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Fatal::Generic" : {
+         "file" : "lib/Perl/Mogrify/Exception/Fatal/Generic.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Fatal::Internal" : {
+         "file" : "lib/Perl/Mogrify/Exception/Fatal/Internal.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Fatal::EnforcerDefinition" : {
+         "file" : "lib/Perl/Mogrify/Exception/Fatal/EnforcerDefinition.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::IO" : {
+         "file" : "lib/Perl/Mogrify/Exception/IO.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Exception::Parse" : {
+         "file" : "lib/Perl/Mogrify/Exception/Parse.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::OptionsProcessor" : {
+         "file" : "lib/Perl/Mogrify/OptionsProcessor.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer" : {
+         "file" : "lib/Perl/Mogrify/Enforcer.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitBooleanGrep" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitBooleanGrep.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitComplexMappings" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitComplexMappings.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitLvalueSubstr" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitLvalueSubstr.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitReverseSortBlock" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitReverseSortBlock.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitSleepViaSelect" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitSleepViaSelect.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitStringyEval" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitStringyEval.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitStringySplit" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitStringySplit.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitUniversalCan" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitUniversalCan.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitUniversalIsa" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitUniversalIsa.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitUselessTopic" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitUselessTopic.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitVoidGrep" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitVoidGrep.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitVoidMap" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitVoidMap.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::RequireBlockGrep" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireBlockGrep.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::RequireBlockMap" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireBlockMap.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::RequireGlobFunction" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireGlobFunction.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::BuiltinFunctions::RequireSimpleSortBlock" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireSimpleSortBlock.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ClassHierarchies::ProhibitAutoloading" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ClassHierarchies/ProhibitAutoloading.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ClassHierarchies::ProhibitExplicitISA" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ClassHierarchies/ProhibitExplicitISA.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ClassHierarchies::ProhibitOneArgBless" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ClassHierarchies/ProhibitOneArgBless.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::ProhibitHardTabs" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitHardTabs.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::ProhibitParensWithBuiltins" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitParensWithBuiltins.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitQuotedWordLists.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::ProhibitTrailingWhitespace" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitTrailingWhitespace.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::RequireConsistentNewlines" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/RequireConsistentNewlines.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::RequireTidyCode" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/RequireTidyCode.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::CodeLayout::RequireTrailingCommas" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/CodeLayout/RequireTrailingCommas.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitCStyleForLoops" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitCStyleForLoops.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitCascadingIfElse" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitCascadingIfElse.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitDeepNests" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitDeepNests.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitLabelsWithSpecialBlockNames" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitLabelsWithSpecialBlockNames.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitMutatingListFunctions" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitMutatingListFunctions.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitNegativeExpressionsInUnlessAndUntilConditions.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitPostfixControls" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitPostfixControls.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitUnlessBlocks" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitUnlessBlocks.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitUnreachableCode" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitUnreachableCode.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ControlStructures::ProhibitUntilBlocks" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitUntilBlocks.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Documentation::PodSpelling" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Documentation/PodSpelling.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Documentation::RequirePackageMatchesPodName" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Documentation/RequirePackageMatchesPodName.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Documentation::RequirePodAtEnd" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Documentation/RequirePodAtEnd.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Documentation::RequirePodLinksIncludeText" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Documentation/RequirePodLinksIncludeText.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Documentation::RequirePodSections" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Documentation/RequirePodSections.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ErrorHandling::RequireCarping" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ErrorHandling/RequireCarping.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ErrorHandling::RequireCheckingReturnValueOfEval" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ErrorHandling/RequireCheckingReturnValueOfEval.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitBacktickOperators" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitBacktickOperators.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitBarewordFileHandles" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitBarewordFileHandles.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitExplicitStdin" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitExplicitStdin.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitInteractiveTest" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitInteractiveTest.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitJoinedReadline" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitJoinedReadline.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitOneArgSelect" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitOneArgSelect.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitReadlineInForLoop" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitReadlineInForLoop.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::ProhibitTwoArgOpen" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitTwoArgOpen.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::RequireBracedFileHandleWithPrint" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/RequireBracedFileHandleWithPrint.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::RequireBriefOpen" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/RequireBriefOpen.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::RequireCheckedClose" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/RequireCheckedClose.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::RequireCheckedOpen" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/RequireCheckedOpen.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::RequireCheckedSyscalls" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/RequireCheckedSyscalls.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::InputOutput::RequireEncodingWithUTF8Layer" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/InputOutput/RequireEncodingWithUTF8Layer.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Miscellanea::ProhibitFormats" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitFormats.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Miscellanea::ProhibitTies" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitTies.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Miscellanea::ProhibitUnrestrictedNoCritic" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitUnrestrictedNoCritic.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Miscellanea::ProhibitUselessNoCritic" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitUselessNoCritic.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::ProhibitAutomaticExportation" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/ProhibitAutomaticExportation.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::ProhibitConditionalUseStatements" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/ProhibitConditionalUseStatements.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::ProhibitEvilModules" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/ProhibitEvilModules.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::ProhibitExcessMainComplexity" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/ProhibitExcessMainComplexity.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::ProhibitMultiplePackages" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/ProhibitMultiplePackages.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::RequireBarewordIncludes" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/RequireBarewordIncludes.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::RequireEndWithOne" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/RequireEndWithOne.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::RequireExplicitPackage" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/RequireExplicitPackage.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::RequireFilenameMatchesPackage" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/RequireFilenameMatchesPackage.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::RequireNoMatchVarsWithUseEnglish" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/RequireNoMatchVarsWithUseEnglish.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Modules::RequireVersionVar" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Modules/RequireVersionVar.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::NamingConventions::Capitalization" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/NamingConventions/Capitalization.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::NamingConventions::ProhibitAmbiguousNames" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/NamingConventions/ProhibitAmbiguousNames.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Objects::ProhibitIndirectSyntax" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Objects/ProhibitIndirectSyntax.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::References::ProhibitDoubleSigils" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/References/ProhibitDoubleSigils.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitCaptureWithoutTest" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitCaptureWithoutTest.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitComplexRegexes" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitComplexRegexes.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitEnumeratedClasses" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitEnumeratedClasses.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitEscapedMetacharacters" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitEscapedMetacharacters.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitFixedStringMatches" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitFixedStringMatches.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitSingleCharAlternation" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitSingleCharAlternation.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitUnusedCapture" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitUnusedCapture.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitUnusualDelimiters" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitUnusualDelimiters.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::ProhibitUselessTopic" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitUselessTopic.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::RequireBracesForMultiline" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireBracesForMultiline.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::RequireDotMatchAnything" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireDotMatchAnything.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::RequireExtendedFormatting" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireExtendedFormatting.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::RegularExpressions::RequireLineBoundaryMatching" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireLineBoundaryMatching.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitAmpersandSigils" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitAmpersandSigils.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitBuiltinHomonyms" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitBuiltinHomonyms.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitExcessComplexity" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitExcessComplexity.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitExplicitReturnUndef" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitExplicitReturnUndef.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitManyArgs" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitManyArgs.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitNestedSubs" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitNestedSubs.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitReturnSort" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitReturnSort.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitSubroutinePrototypes" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitSubroutinePrototypes.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProhibitUnusedPrivateSubroutines" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitUnusedPrivateSubroutines.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::ProtectPrivateSubs" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/ProtectPrivateSubs.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::RequireArgUnpacking" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/RequireArgUnpacking.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Subroutines::RequireFinalReturn" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Subroutines/RequireFinalReturn.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::TestingAndDebugging::ProhibitNoStrict" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/TestingAndDebugging/ProhibitNoStrict.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::TestingAndDebugging::ProhibitNoWarnings" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/TestingAndDebugging/ProhibitNoWarnings.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::TestingAndDebugging::ProhibitProlongedStrictureOverride" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/TestingAndDebugging/ProhibitProlongedStrictureOverride.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::TestingAndDebugging::RequireTestLabels" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/TestingAndDebugging/RequireTestLabels.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::TestingAndDebugging::RequireUseStrict" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/TestingAndDebugging/RequireUseStrict.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::TestingAndDebugging::RequireUseWarnings" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/TestingAndDebugging/RequireUseWarnings.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitCommaSeparatedStatements" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitCommaSeparatedStatements.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitComplexVersion" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitComplexVersion.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitConstantPragma" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitConstantPragma.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitEmptyQuotes" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitEmptyQuotes.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitEscapedCharacters" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitEscapedCharacters.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitImplicitNewlines" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitImplicitNewlines.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitInterpolationOfLiterals" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitInterpolationOfLiterals.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitLeadingZeros" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitLeadingZeros.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitLongChainsOfMethodCalls" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitLongChainsOfMethodCalls.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitMagicNumbers" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitMagicNumbers.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitMismatchedOperators" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitMismatchedOperators.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitMixedBooleanOperators" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitMixedBooleanOperators.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitNoisyQuotes" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitNoisyQuotes.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitQuotesAsQuotelikeOperatorDelimiters.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitSpecialLiteralHeredocTerminator.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitVersionStrings" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitVersionStrings.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireConstantVersion" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireConstantVersion.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireInterpolationOfMetachars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireInterpolationOfMetachars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireNumberSeparators" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireNumberSeparators.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireQuotedHeredocTerminator" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireQuotedHeredocTerminator.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireUpperCaseHeredocTerminator" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireUpperCaseHeredocTerminator.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitAugmentedAssignmentInDeclaration" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitAugmentedAssignmentInDeclaration.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitConditionalDeclarations" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitConditionalDeclarations.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitEvilVariables" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitEvilVariables.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitLocalVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitLocalVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitMatchVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitMatchVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitPackageVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitPackageVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitPerl4PackageNames" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitPerl4PackageNames.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitPunctuationVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitPunctuationVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitReusedNames" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitReusedNames.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProhibitUnusedVariables" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProhibitUnusedVariables.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::ProtectPrivateVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/ProtectPrivateVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::RequireInitializationForLocalVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/RequireInitializationForLocalVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::RequireLexicalLoopIterators" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/RequireLexicalLoopIterators.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::RequireLocalizedPunctuationVars" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/RequireLocalizedPunctuationVars.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Enforcer::Variables::RequireNegativeIndices" : {
+         "file" : "lib/Perl/Mogrify/Enforcer/Variables/RequireNegativeIndices.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerConfig" : {
+         "file" : "lib/Perl/Mogrify/EnforcerConfig.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerFactory" : {
+         "file" : "lib/Perl/Mogrify/EnforcerFactory.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerListing" : {
+         "file" : "lib/Perl/Mogrify/EnforcerListing.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter::Behavior" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter/Behavior.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter::Behavior::Boolean" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter/Behavior/Boolean.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter::Behavior::Enumeration" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter/Behavior/Enumeration.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter::Behavior::Integer" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter/Behavior/Integer.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter::Behavior::String" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter/Behavior/String.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::EnforcerParameter::Behavior::StringList" : {
+         "file" : "lib/Perl/Mogrify/EnforcerParameter/Behavior/StringList.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::ProfilePrototype" : {
+         "file" : "lib/Perl/Mogrify/ProfilePrototype.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Statistics" : {
+         "file" : "lib/Perl/Mogrify/Statistics.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::TestUtils" : {
+         "file" : "lib/Perl/Mogrify/TestUtils.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Theme" : {
+         "file" : "lib/Perl/Mogrify/Theme.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::ThemeListing" : {
+         "file" : "lib/Perl/Mogrify/ThemeListing.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::UserProfile" : {
+         "file" : "lib/Perl/Mogrify/UserProfile.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils" : {
+         "file" : "lib/Perl/Mogrify/Utils.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::Constants" : {
+         "file" : "lib/Perl/Mogrify/Utils/Constants.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::DataConversion" : {
+         "file" : "lib/Perl/Mogrify/Utils/DataConversion.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::McCabe" : {
+         "file" : "lib/Perl/Mogrify/Utils/McCabe.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::POD" : {
+         "file" : "lib/Perl/Mogrify/Utils/POD.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::POD::ParseInteriorSequence" : {
+         "file" : "lib/Perl/Mogrify/Utils/POD/ParseInteriorSequence.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::PPI" : {
+         "file" : "lib/Perl/Mogrify/Utils/PPI.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Utils::Perl" : {
+         "file" : "lib/Perl/Mogrify/Utils/Perl.pm",
+         "version" : "1.125"
+      },
+      "Perl::Mogrify::Violation" : {
+         "file" : "lib/Perl/Mogrify/Violation.pm",
+         "version" : "1.125"
+      },
+      "Test::Perl::Mogrify::Enforcer" : {
+         "file" : "lib/Test/Perl/Mogrify/Enforcer.pm",
+         "version" : "1.125"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Perl-Mogrify/Perl-Mogrify/issues"
+      },
+      "homepage" : "http://perlcritic.com",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "url" : "git://github.com/Perl-Mogrify/Perl-Mogrify.git"
+      },
+      "x_MailingList" : "http://perlcritic.tigris.org/servlets/SummarizeList?listName=users"
+   },
+   "version" : "1.125",
+   "x_authority" : "cpan:CRITICRE"
+}

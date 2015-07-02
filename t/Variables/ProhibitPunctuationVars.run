@@ -1,0 +1,430 @@
+## name Basic failure
+## failures 3
+## cut
+
+$/ = undef;
+$| = 1;
+$> = 3;
+
+#-----------------------------------------------------------------------------
+
+## name Basic failure (needs to be merged into prior test once PPI knows how to parse '%-'
+## failures 1
+## cut
+
+%- = (foo => 1);
+
+#-----------------------------------------------------------------------------
+
+## name English is nice
+## failures 0
+## cut
+
+$RS                     = undef;
+$INPUT_RECORD_SEPARATOR = "\n";
+$OUTPUT_AUTOFLUSH       = 1;
+print $foo, $baz;
+
+#-----------------------------------------------------------------------------
+
+## name Permitted variables
+## failures 0
+## cut
+
+$string =~ /((foo)bar)/;
+$foobar = $1;
+$foo    = $2;
+$3;
+$stat = stat(_);
+@list = @_;
+my $line = $_;
+
+my $perl_version = $];
+
+#-----------------------------------------------------------------------------
+
+## name Configuration
+## parms { allow => '$@ $!' }
+## failures 0
+## cut
+
+print $@;
+print $!;
+
+#-----------------------------------------------------------------------------
+
+## name PPI::Token::Quote::Double Interpolation: violations
+## parms { allow => '$@ $!' }
+## failures 7
+## cut
+
+print "$+";
+print "This is my $+. is it not nifty?";
+print "This is my $+. is it not $@?";
+print "this \n should $+\n violate";
+print "as \n$+ should this";
+print "${\($$)}";
+print "${[$$]}";
+
+## name PPI::Token::Quote::Double Interpolation: non-violations
+## parms { allow => '$@ $!' }
+## failures 0
+## cut
+
+print "\$+";
+print "$@";
+print "$!";
+print "no magic here";
+print "This is my $@; is it not nifty?";
+print "but not \n\$+ this";
+
+## name PPI::Token::Quote::Interpolate Interpolation: violations
+## failures 3
+## cut
+
+print qq<$+>;
+print qq<\\$+>;
+print qq<\\\\$+>;
+
+## name PPI::Token::Quote::Interpolate Interpolation: non-violations
+## failures 0
+## cut
+
+print qq<\$+>;
+print qq<\\\$+>;
+
+## name PPI::Token::QuoteLike::Command: violations
+## failures 1
+## cut
+
+print qx<$+>;
+
+## name PPI::Token::QuoteLike::Command: non-violations
+## failures 0
+## cut
+
+print qx<\$+>;
+
+## name PPI::Token::QuoteLike::Backtick: violations
+## failures 1
+## cut
+
+print `$+`;
+
+## name PPI::Token::QuoteLike::Backtick: non-violations
+## failures 0
+## cut
+
+print `\$+`;
+
+## name PPI::Token::QuoteLike::Regexp: violations
+## failures 1
+## cut
+
+print qr<$+>;
+
+## name PPI::Token::QuoteLike::Regexp: non-violations
+## failures 0
+## cut
+
+print qr<\$+>;
+
+## name PPI::Token::QuoteLike::Readline: violations
+## failures 1
+## cut
+
+while (<$+>) { 1; }
+
+## name PPI::Token::QuoteLike::Readline: non-violations
+## failures 0
+## cut
+
+while (<\$+>) { 1; }
+
+#-----------------------------------------------------------------------------
+
+## name Heredoc Interpolation: violations
+## parms { allow => '$@ $!' }
+## failures 8
+## cut
+
+print <<DEFAULT;    # default, implied "" context
+$+
+DEFAULT
+
+print <<DEFAULT;    # default, implied "" context
+$+
+fred
+wilma
+DEFAULT
+
+print <<DEFAULT;    # default, implied "" context
+barney
+$+
+betty
+DEFAULT
+
+print <<DEFAULT;    # default, implied "" context
+$+
+pebbles
+bambam
+DEFAULT
+
+print <<"DOUBLE_QUOTE";    # explicit "" context
+$$
+DOUBLE_QUOTE
+
+print <<"DQ_VERYVERYVERY_LONG_HEREDOC_EOT_IDENTIFIER";   # explicit "" context
+$+
+DQ_VERYVERYVERY_LONG_HEREDOC_EOT_IDENTIFIER
+
+print <<"MULTI_MATCHES";                                 # explicit "" context
+$$
+$+
+$\
+$^A
+MULTI_MATCHES
+
+print <<`BACKTICK`;                                      # backtick context
+$+
+BACKTICK
+
+## name Heredoc Interpolation: non-violations
+## parms { allow => '$@ $!' }
+## failures 0
+## cut
+
+print <<DEFAULT_ALLOWED;    # default, implied "" but allowed var; should pass
+$@
+DEFAULT_ALLOWED
+
+print <<'SINGLE_QUOTE';     # '' context; should pass
+$@
+SINGLE_QUOTE
+
+#-----------------------------------------------------------------------------
+
+## name Quoted String Interpolation wart cases
+## TODO debug wart cases from String Interpolation exhaustive
+## failures 0
+## cut
+
+print "$"";      # 2 of 59
+print "$\";      # 28 of 59
+
+#-----------------------------------------------------------------------------
+
+## name Quoted String Interpolation - ignored magic vars
+## parms { string_mode => 'simple' }
+## failures 0
+## cut
+print "$#";    # 3 of 59  Exception made for $#
+print "$$";    # 6 of 59  Exception made for $$
+print "$'";    # 9 of 59  Exception made for $'
+print "$:";    # 19 of 59  Exception made for $:
+
+#-----------------------------------------------------------------------------
+
+## name Quoted String Interpolation - exhaustive tests
+## failures 52
+## cut
+
+print "$!";    # 1 of 54
+
+#print "$"";      # 2 of 54  BROKEN, copied to TODO
+print "$#";      # 3 of 54
+print "$#+";     # 4 of 54
+print "$#-";     # 5 of 54
+print "$$";      # 6 of 54
+print "$%";      # 7 of 54
+print "$&";      # 8 of 54
+print "$'";      # 9 of 54
+print "$(";      # 10 of 54
+print "$)";      # 11 of 54
+print "$*";      # 12 of 54
+print "$+";      # 13 of 54
+print "$,";      # 14 of 54
+print "$-";      # 15 of 54
+print "$.";      # 16 of 54
+print "$/";      # 17 of 54
+print "$0";      # 18 of 54
+print "$:";      # 19 of 54
+print "$::|";    # 20 of 54
+print "$;";      # 21 of 54
+print "$<";      # 22 of 54
+print "$=";      # 23 of 54
+print "$>";      # 24 of 54
+print "$?";      # 25 of 54
+print "$@";      # 26 of 54
+print "$[";      # 27 of 54
+
+#print "$\\";      # 28 of 54  BROKEN, copied to TODO
+print "$^";      # 29 of 54
+print "$^A";     # 30 of 54
+print "$^C";     # 31 of 54
+print "$^D";     # 32 of 54
+print "$^E";     # 33 of 54
+print "$^F";     # 34 of 54
+print "$^H";     # 35 of 54
+print "$^I";     # 36 of 54
+print "$^L";     # 37 of 54
+print "$^M";     # 38 of 54
+print "$^N";     # 39 of 54
+print "$^O";     # 40 of 54
+print "$^P";     # 41 of 54
+print "$^R";     # 42 of 54
+print "$^S";     # 43 of 54
+print "$^T";     # 44 of 54
+print "$^V";     # 45 of 54
+print "$^W";     # 46 of 54
+print "$^X";     # 47 of 54
+print "$`";      # 48 of 54
+print "$|";      # 49 of 54
+print "$}";      # 50 of 54
+print "$~";      # 51 of 54
+print "@*";      # 52 of 54
+print "@+";      # 53 of 54
+print "@-";      # 54 of 54
+
+#-----------------------------------------------------------------------------
+
+## name String Interpolation - 'disable' mode
+## failures 0
+## parms { string_mode => 'disable' }
+## cut
+
+print "$!";
+
+## name String Interpolation - explicit 'simple' mode
+## parms { string_mode => 'simple' }
+## failures 5
+## cut
+
+print "$+";
+print "This is my $+. is it not nifty?";
+print "This is my $+. is it not $@?";
+print "this \n should $+\n violate";
+print "as \n$+ should this";
+
+#-----------------------------------------------------------------------------
+
+## name String Interpolation - thorough-mode violations
+## failures 4
+## parms { string_mode => 'thorough' }
+## cut
+
+print "$!";
+print "this \n should $+\n violate";
+print <<"DOUBLE_QUOTE";    # explicit "" context
+$+with stuff
+$!more stuff
+$/thingy
+$$ $; $= $/
+DOUBLE_QUOTE
+print "blahblah ${\($$))}" # sneaky scalar dereference syntax
+
+#-----------------------------------------------------------------------------
+
+
+## name String Interpolation - thorough-mode special case violations
+## failures 16
+## parms { string_mode => 'thorough' }
+## cut
+
+# related to $', $:, and $_
+print "$' ralph";
+print "$'3";
+print "$:";
+print "$: ";
+print "$:fred";
+print "$: something else";
+
+# related to $#
+print "$#";
+
+
+# related to $$
+print "$$";
+print "$$ foovar";
+print "$$(foovar";
+
+# related to $^
+print "$^";
+print "$^M";    # violates $^M
+print "$^G";    # violates $^ (there is no $^G)
+print "$^ foovar";
+print "$^(foovar";
+
+# sneakier combos
+print "$::foo then $' followed by $'3"; # violates for $'
+
+#-----------------------------------------------------------------------------
+
+## name String Interpolation - thorough-mode mixed multiple violations
+## failures 1
+## parms { string_mode => 'thorough' }
+## cut
+
+print "$::foo then $' followed by $'3 and $+ and $]";
+
+#-----------------------------------------------------------------------------
+
+## name String Interpolation - thorough-mode special case non-violations
+## failures 0
+## parms { string_mode => 'thorough' }
+## cut
+
+# related to $', $:, and $_
+print "$'global_symbol";
+print "$::global_symbol";
+print "$::";
+print "$:: ";
+print "$:: something else";
+
+print "$_varname";
+
+# related to $#
+print "$#foovar";
+print "$#$";
+print "$#{";
+
+# related to $$
+print "$$foovar";
+
+# related to $^
+#print "$^WIDE_SYSTEM_CALLS;
+
+#-----------------------------------------------------------------------------
+
+## name sprintf formats - RT #49016
+## failures 0
+## cut
+
+sprintf "%-03f\n", $foo;
+
+#-----------------------------------------------------------------------------
+
+## name trailing dollar sign is not a punctuation variable - RT #55604
+## failures 0
+## cut
+
+qr/foo$/
+
+#-----------------------------------------------------------------------------
+
+## name detect bracketed punctuation variables - RT #72910
+## failures 0
+## parms { allow => '$$' }
+## cut
+
+"${$}";
+
+#-----------------------------------------------------------------------------
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

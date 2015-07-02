@@ -1,0 +1,38 @@
+# Test that all the problems in an rc file get reported and not just the first
+# one that is found.
+
+# Purposely bad values
+severity = 6
+theme = &&
+include = *
+exclude = *
+single-policy = *
+profile-strictness = silly
+top = -1
+verbose = 2095
+color-severity-highest  = chartreuse
+color-severity-high     = fuschia
+color-severity-medium   = aquamarine
+color-severity-low      = paisley
+color-severity-lowest   = they've gone to plaid
+
+# This profile is used by t/01_config_color_severity.t to load invalid
+# severity colors
+
+# Test non-existent parameter
+[BuiltinFunctions::RequireBlockGrep]
+# No test, since this is now a warning.
+# no_such_parameter = foo
+
+# Test invalid parameter value
+[Documentation::RequirePodSections]
+source = Zen_and_the_Art_of_Motorcycle_Maintenance
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=conf expandtab shiftround :

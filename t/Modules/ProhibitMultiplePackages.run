@@ -1,0 +1,33 @@
+## name basic pass, no package
+## failures 0
+## cut
+
+#no package
+$some_code = $foo;
+
+#-----------------------------------------------------------------------------
+
+## name basic failure
+## failures 2
+## cut
+package foo;
+package bar;
+package nuts;
+$some_code = undef;
+
+#-----------------------------------------------------------------------------
+
+## name basic pass, with code
+## failures 0
+## cut
+package foo;
+$some_code = undef;
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

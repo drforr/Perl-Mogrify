@@ -1,0 +1,212 @@
+## name one statement before strict
+## failures 1
+## cut
+
+$foo = $bar;
+use strict;
+
+#-----------------------------------------------------------------------------
+
+## name several statements before strict
+## failures 1
+## cut
+
+$foo = $bar;   ## This one violates.
+$baz = $nuts;  ## no critic;  This one is exempted
+$blamo;        ## This one should be squelched
+use strict;
+
+#-----------------------------------------------------------------------------
+
+## name several statements before strict with maximum violations changed
+## failures 2
+## parms { maximum_violations_per_document => 2 }
+## cut
+
+$foo = $bar;   ## This one violates.
+$baz = $nuts;  ## This one violates.
+$blamo;        ## This one should be squelched
+use strict;
+
+#-----------------------------------------------------------------------------
+
+## name no strict at all
+## failures 1
+## cut
+
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name require strict
+## failures 1
+## cut
+
+require strict;
+1;
+
+#-----------------------------------------------------------------------------
+
+## name strictures used, but no code
+## failures 0
+## cut
+
+use strict;
+
+#-----------------------------------------------------------------------------
+
+## name no strict at all, w/END
+## failures 1
+## cut
+
+$foo = $bar;
+
+#Should not find the rest of these
+
+__END__
+
+=head1 NAME
+
+Foo - A Foo factory class
+
+=cut
+
+#-----------------------------------------------------------------------------
+
+## name no strict at all, w/DATA
+## failures 1
+## cut
+
+$foo = $bar;
+
+#Should not find the rest of these
+
+__DATA__
+
+Fred
+Barney
+Wilma
+
+
+#-----------------------------------------------------------------------------
+
+## name strictures used OK
+## failures 0
+## cut
+
+use strict;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name other module included before strict
+## failures 0
+## cut
+
+use Module;
+use strict;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name package statement before strict
+## failures 0
+## cut
+
+package FOO;
+use strict;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Work around a PPI bug that doesn't return a location for C<({})>.
+## failures 1
+## cut
+
+({})
+
+#-----------------------------------------------------------------------------
+
+## name Moose support
+## failures 0
+## cut
+
+use Moose;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Moose::Role support
+## failures 0
+## cut
+
+use Moose::Role;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Built-in equivalent modules
+## failures 0
+## cut
+
+use Moose::Util::TypeConstraints;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+
+## name Custom configured equivalent modules
+## failures 0
+## parms { equivalent_modules => 'Foo' }
+## cut
+
+use Foo;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+## name "use strict" in lexical context (BEGIN block) RT #42310
+## failures 1
+## cut
+
+BEGIN{ use strict }  # notice this is first statement in file
+$this_is_not_strict
+
+#-----------------------------------------------------------------------------
+## name "use strict" in lexical context (subroutine) RT #42310
+## failures 1
+## cut
+
+sub foo { use strict }  # notice this is first statement in file
+$this_is_not_strict
+
+#-----------------------------------------------------------------------------
+## name "use perl-version" equivalent to strict as of 5.011
+## failures 0
+## cut
+
+use 5.011;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+## name "use perl-version" equivalent to strict as of 5.11.0
+## failures 0
+## cut
+
+use 5.11.0;
+$foo = $bar;
+
+#-----------------------------------------------------------------------------
+## name "use perl-version" in lexical context
+## failures 1
+## cut
+
+sub foo { use 5.011 };
+$this_is_not_strict
+
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

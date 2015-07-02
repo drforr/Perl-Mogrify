@@ -1,0 +1,38 @@
+## name Basic
+## failures 9
+## cut
+
+use English qw($PREMATCH);
+use English qw($MATCH);
+use English qw($POSTMATCH);
+$`;
+$&;
+$';
+$PREMATCH;
+$MATCH;
+$POSTMATCH;
+
+
+## name Ignore case handled by RequireNoMatchVarsWithUseEnglish
+## failures 0
+## cut
+
+use English;
+
+
+## name no_match_vars
+## failures 0
+## cut
+
+use English qw(-no_match_vars);
+use English qw($EVAL_ERROR);
+
+#-----------------------------------------------------------------------------
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :

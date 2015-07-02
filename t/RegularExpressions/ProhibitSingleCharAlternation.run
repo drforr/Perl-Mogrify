@@ -1,0 +1,52 @@
+## name basic passes
+## failures 0
+## cut
+
+m/\A [adiqrwx] \z/xms;
+m/\A (?: qq | qr | qx | [qsy] | tr ) \z/xms;
+m/\A (?: q[qrx] | [qsy] | tr ) \z/xms;
+
+m/\A (?: a ) \z/xms;   # bad form, but not a violation of this policy
+m/\A (?: [a] ) \z/xms; # bad form, but not a violation of this policy
+
+## name warnings reported by users (App::Ack)
+## failures 1
+## cut
+
+return ('shell',TEXT)  if $header =~ /\b(?:ba|c|k|z)?sh\b/;
+
+## name metacharacters
+## failures 0
+## cut
+
+m/(?: ^ | . | \d | $ )/xms;
+
+## name allowed to have one single character alternation
+## failures 0
+## cut
+
+m/\A (?: a | do | in | queue | rue | woe | xray ) \z/xms;
+return 1 if $file =~ m/ [.] (?: p (?: l x? | m ) | t | PL ) \z /xms;
+
+## name basic failures
+## failures 2
+## cut
+
+m/\A (?: a | d | i | q | r | w | x ) \z/xms;
+m/\A (?: qq| qr | qx | q | s | y | tr ) \z/xms;
+
+## name failing regexp with syntax error
+## failures 0
+## cut
+
+m/\A (?: a | d | i | q | r | w | x ) ( \z/xms;
+
+#-----------------------------------------------------------------------------
+# Local Variables:
+#   mode: cperl
+#   cperl-indent-level: 4
+#   fill-column: 78
+#   indent-tabs-mode: nil
+#   c-indentation-style: bsd
+# End:
+# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
