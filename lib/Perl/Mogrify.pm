@@ -108,11 +108,12 @@ sub critique {  ## no critic (ArgUnpacking)
         )
     }
 
+    my @violations = $self->_gather_violations($doc);
     open my $fh, '>', $source_code . '.pl6'
         or die "Could not write to '$source_code.pl6': $!";
-        print $fh $doc->serialize;;
+        print $fh $doc->serialize;
     close $fh;
-    return $self->_gather_violations($doc);
+    return @violations;
 }
 
 #=============================================================================
