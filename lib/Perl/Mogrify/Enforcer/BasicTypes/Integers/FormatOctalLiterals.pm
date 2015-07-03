@@ -6,11 +6,10 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::DataConversion qw{ separate_number };
 
 use base 'Perl::Mogrify::Enforcer';
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
@@ -19,17 +18,7 @@ Readonly::Scalar my $EXPL => q{Format octal literals};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters {
-    return (
-        {
-            name => 'separators',
-            description => 'Number of octets between separators (0 for none, -1 for original)',
-            default_string => '-1',
-            behavior => 'integer',
-            integer_minimum => -1
-        },
-    )
-}
+sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           { return 'PPI::Document'   }
@@ -47,7 +36,7 @@ sub violates {
     my ($self, $elem, $doc) = @_;
 
     # 0o0123 --> :8<0123>
-    # 0o01234567 --> :8<0123_4567>
+    # 0o0123_4567 --> :8<0123_4567>
 
     my $octal_integers = $doc->find('PPI::Token::Number::Octal');
     if ( $octal_integers and ref $octal_integers ) {
@@ -59,10 +48,7 @@ sub violates {
             #
             $old_content =~ s{^0o}{}i;
 
-            my $new_content = ':8<';
-            $new_content .= separate_number(
-                $old_content, $self->{_separators} );
-            $new_content .= '>';
+            my $new_content = ':8<' . $old_content . '>';
             $token->set_content( $new_content );
         }
     }
@@ -93,20 +79,17 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 octal literals have the format ':8<0123_4567>'. This enforcer reformats Perl5 octal literals to the Perl6 specification. It also adds separators for readability every 4 nybbles, and lower-cases 'a'-'f'.
+Perl6 octal literals have the format ':8<0123_4567>'. This enforcer reformats Perl5 octal literals to the Perl6 specification:
 
   0o12      -> :8<12>
   0o1234    -> :8<1234>
-  0o123_45  -> :8<1234_5> # separator optional
+  0o123_45  -> :8<123_45>
 
 If an octal literal is used anywhere than as a standalone number, this enforcer does not apply.
 
 =head1 CONFIGURATION
 
-By default this Enforcer does not alter '_' separators. Specify 0 for no separators, or a non-negative value if you want separators inserted every N characters:
-
-    [BasicTypes::Integers::FormatOctalLiterals]
-    separators = 3
+This Enforcer is not configurable except for the standard options.
 
 =head1 AUTHOR
 

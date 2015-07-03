@@ -17,7 +17,6 @@ Readonly::Array our @EXPORT_OK => qw(
     boolean_to_number
     dor
     defined_or_empty
-    separate_number
 );
 
 #-----------------------------------------------------------------------------
@@ -42,24 +41,6 @@ sub defined_or_empty {  ## no critic (RequireArgUnpacking)
 }
 
 #-----------------------------------------------------------------------------
-
-sub separate_number {
-    my ( $value, $spacing ) = @_;
-    if ( $spacing == -1 ) {
-        return $value;
-    }
-    elsif ( $spacing == 0 ) {
-        $value =~ tr{_}{}d;
-        return $value;
-    }
-
-    my $final;
-    while ( $value ne '' ) {
-        $final = '_' . $final . substr( $value, -1, $spacing, '' );
-    }
-    $final =~ s/^_//;
-    return $final;
-}
 
 1;
 

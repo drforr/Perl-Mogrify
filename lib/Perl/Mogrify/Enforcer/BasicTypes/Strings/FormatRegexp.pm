@@ -14,7 +14,7 @@ our $VERSION = '1.125';
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC =>
-    q{qr{...} is now rx{...} - This does NOT convert to the new grammar.};
+    q{qr{...} is now rx{...} - This does NOT convert contents to the new grammar.};
 Readonly::Scalar my $EXPL =>
     q{Format qr{...} as rx{...}. Does not alter the contents to perl6};
 

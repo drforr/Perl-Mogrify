@@ -1,4 +1,4 @@
-package Perl::Mogrify::Enforcer::BasicTypes::Strings::FormatInterpolatedStrings;
+package Perl::Mogrify::Enforcer::Packages::FormatPackageDeclarations;
 
 use 5.006001;
 use strict;
@@ -9,13 +9,14 @@ use Perl::Mogrify::Utils qw{ :characters :severities };
 
 use base 'Perl::Mogrify::Enforcer';
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC =>
-    q{"${x}" in interpolated strings is now "{$x}"};
-Readonly::Scalar my $EXPL => q{Format "${x}" expressions correctly};
+    q{'package' is now 'class'};
+Readonly::Scalar my $EXPL =>
+    q{Replace 'package Foo;' with 'unit class Foo;'};
 
 #-----------------------------------------------------------------------------
 
@@ -26,41 +27,36 @@ sub applies_to           { return 'PPI::Document'   }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
-
-#-----------------------------------------------------------------------------
-
 sub violates {
     my ($self, $elem, $doc) = @_;
+    my $modified;
 
-    # "$x" --> "$x"
-    # "${x}" --> "{$x}"
-    # "\${x}" --> "\$\{x\}"
-
-    my $interpolated = $doc->find('PPI::Token::Quote::Interpolate');
-    my $double = $doc->find('PPI::Token::Quote::Double');
-
-    my $string = [ ];
-    push @{ $string }, @{ $interpolated }
-        if $interpolated and ref $interpolated;
-    push @{ $string }, @{ $double }
-        if $double and ref $double;
-
-    if ( $string and ref $string ) {
-        for my $token ( @{ $string } ) {
-            my $old_content = $token->content;
- 
-            $old_content =~ s{ (?: ^ | [^\\] ) \$\{(\w+)\} }{ '{$'.$1.'}' }gex;
- 
-            $token->set_content( $old_content );
+    my $tokens = $doc->find('PPI::Statement::Package');
+    if ( $tokens ) {
+        #
+        # 'package Foo;' --> 'unit class Foo;'
+        # 'package Foo { ... }' --> 'class Foo { ... }'
+        #
+        for my $package ( @{ $tokens } ) {
+            $modified = 1;
+            if ( $package->child(3)->isa('PPI::Token::Structure') and
+                 $package->child(3)->content eq ';' ) {
+                $package->first_element->set_content('class');
+                $package->first_element->insert_before(
+                    PPI::Token::Whitespace->new(' ')
+                );
+                $package->first_element->insert_before(
+                    PPI::Token::Word->new('unit')
+                );
+            }
+            else {
+                $package->first_element->set_content('class');
+            }
         }
     }
 
     return $self->violation( $DESC, $EXPL, $elem )
-        if $string and ref $string;
+        if $modified;
     return;
 }
 
@@ -74,7 +70,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Enforcer::BasicTypes::Strings::FormatInterpolatedStrings - Format C<${x}> correctly
+Perl::Mogrify::Enforcer::Packages::FormatPackageDeclarations - Format 'package Foo;' declarations
 
 
 =head1 AFFILIATION
@@ -85,13 +81,10 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 interpolation of variables lets you use C<{$x}> where the C<{}> can contain any expression. This enforcer reformats C<${x}> to C<{$x}> in your interpolated strings.
+The Perl6 equivalent of a Perl5 package is 'class'. Older Perl5 source uses C<package Foo;> while some more modern source uses C<package Foo { .. }> to delineate package boundaries. This enforcer formats both case correctly:
 
-  "The $x bit"      --> "The $x bit"
-  "The ${x}rd bit"  --> "The {$x}rd bit"
-  "The \${x}rd bit" --> "The \$\{x\}rd bit"
-
-This enforcer only operates in quoted strings, heredocs present another issue.
+  package Foo; --> unit class Foo;
+  package Foo { ... } --> class Foo { ... }
 
 =head1 CONFIGURATION
 

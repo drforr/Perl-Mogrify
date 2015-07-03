@@ -6,7 +6,7 @@ use warnings;
 
 use Readonly;
 
-use Scalar::Util qw< blessed readonly >;
+use Scalar::Util qw< blessed readonly looks_like_number >;
 
 use Exporter 'import';
 
@@ -20,7 +20,11 @@ our @EXPORT_OK = qw(
     is_ppi_statement_subclass
     is_ppi_simple_statement
     is_ppi_constant_element
+    is_module_name
+    is_version_number
+    is_pragma
     is_subroutine_declaration
+    is_version_number
     is_in_subroutine
     get_constant_name_element_from_declaring_statement
     get_next_element_in_same_simple_statement
@@ -112,6 +116,59 @@ sub is_ppi_constant_element {
             ||  $element->isa( 'PPI::Token::Quote::Interpolate' ) )
             &&  $element->string() !~ m< (?: \A | [^\\] ) (?: \\\\)* [\$\@] >smx
         ;
+}
+
+#-----------------------------------------------------------------------------
+
+sub is_module_name {
+    my $element = shift;
+
+    return if not $element;
+
+    return unless $element->isa('PPI::Token::Word');
+    my $content = $element->content;
+
+    return if looks_like_number($content);
+    return if $content =~ /^v\d+/;
+
+    return 1;
+}
+
+#-----------------------------------------------------------------------------
+
+sub is_version_number {
+    my $element = shift;
+
+    return if not $element;
+
+    return unless $element->isa('PPI::Token::Word') or
+                  $element->isa('PPI::Token::Number::Version') or
+                  $element->isa('PPI::Token::Number::Float');
+    my $content = $element->content;
+
+    return 1 if looks_like_number($content);
+    return 1 if $content =~ /^v\d+/;
+
+    return;
+}
+
+#-----------------------------------------------------------------------------
+
+sub is_pragma {
+    my $element = shift;
+
+    return if not $element;
+
+    return unless $element->isa('PPI::Token::Word');
+    my $content = $element->content;
+
+    return 1 if $content eq 'strict';
+    return 1 if $content eq 'warnings';
+    return 1 if $content eq 'overload';
+    return 1 if $content eq 'constant';
+    return 1 if $content eq 'utf8';
+
+    return;
 }
 
 #-----------------------------------------------------------------------------

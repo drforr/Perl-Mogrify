@@ -6,7 +6,6 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::DataConversion qw{ separate_number };
 
 use base 'Perl::Mogrify::Enforcer';
 
@@ -19,17 +18,7 @@ Readonly::Scalar my $EXPL => q{Format binary literals};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters {
-    return (
-        {
-            name => 'separators',
-            description => 'Number of bits between separators (0 for none, -1 for original)',
-            default_string => '-1',
-            behavior => 'integer',
-            integer_minimum => -1
-        },
-    )
-}
+sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           { return 'PPI::Document'   }
@@ -47,7 +36,7 @@ sub violates {
     my ($self, $elem, $doc) = @_;
 
     # 0b0101       --> :2<0101>
-    # 0b010_101_01 --> :2<0101_0101>
+    # 0b010_101_01 --> :2<010_101_01>
 
     my $binary_integers = $doc->find('PPI::Token::Number::Binary');
     if ( $binary_integers and ref $binary_integers ) {
@@ -59,10 +48,7 @@ sub violates {
             #
             $old_content =~ s{^0b}{}i;
 
-            my $new_content = ':2<';
-            $new_content .= separate_number(
-                $old_content, $self->{_separators} );
-            $new_content .= '>';
+            my $new_content = ':2<' . $old_content . '>';
             $token->set_content( $new_content );
         }
     }
@@ -87,26 +73,22 @@ Perl::Mogrify::Enforcer::BasicTypes::Integers::FormatBinaryLiterals - Format 0b0
 
 =head1 AFFILIATION
 
-This Enforcer is part of the core L<Perl::Mogrify|Perl::Mogrify>
-distribution.
+This Enforcer is part of the core L<Perl::Mogrify|Perl::Mogrify> distribution.
 
 
 =head1 DESCRIPTION
 
-Perl6 binary literals have the format ':2<01_01_01_01>'. This enforcer reformats Perl5 binary literals to the Perl6 specification. It also optionally adds separators for readability every 4 nybbles, and lower-cases 'a'-'f'.
+Perl6 binary literals have the format ':2<01_01_01_01>'. This enforcer reformats Perl5 binary literals to the Perl6 specification.
 
   0b01      -> :2<01>
   0b0101    -> :2<0101>
-  0b010_10    -> :2<0101_0> # separator optional
+  0b010_10    -> :2<010_10>
 
 If a binary literal is used anywhere than as a standalone number, this enforcer does not apply.
 
 =head1 CONFIGURATION
 
-By default this Enforcer does not alter '_' separators. Specify 0 for no separators, or a non-negative value if you want separators inserted every N characters:
-
-    [BasicTypes::Integers::FormatBinaryLiterals]
-    separators = 3
+This Enforcer is not configurable except for the standard options.
 
 =head1 AUTHOR
 

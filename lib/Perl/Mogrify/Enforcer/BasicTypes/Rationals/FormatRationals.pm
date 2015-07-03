@@ -6,7 +6,6 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::DataConversion qw{ separate_number };
 
 use base 'Perl::Mogrify::Enforcer';
 
@@ -20,17 +19,7 @@ Readonly::Scalar my $EXPL => q{Format floating-point numbers};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters {
-    return (
-        {
-            name => 'separators',
-            description => 'Number of digits between separators (0 for none, -1 for original)',
-            default_string => '-1',
-            behavior => 'integer',
-            integer_minimum => -1
-        },
-    )
-}
+sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           { return 'PPI::Document'   }
@@ -59,8 +48,6 @@ sub violates {
             my ( $lhs, $rhs ) = split( '\.', $old_content );
  
             $rhs = '0' if $rhs eq '';
-            $lhs = separate_number( $lhs, $self->{_separators} )
-                if $self->{_separators};
             my $new_content = $lhs . '.' . $rhs;
  
             $token->set_content( $new_content );
@@ -93,7 +80,7 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 floating-point values have the format '1.0' where a trailing digit is required. It also optionally adds separators every N digits before the decimal point.
+Perl6 floating-point values have the format '1.0' where a trailing digit is required.
 
   1.0 --> 1.0
   1.  --> 1.0 # Modified to perl6 standards
@@ -103,10 +90,7 @@ This enforcer only operates on stand-alone floating point numbers.
 
 =head1 CONFIGURATION
 
-By default this Enforcer does not alter '_' separators. Specify 0 for no separators, or a non-negative value if you want separators inserted every N digits:
-
-    [BasicTypes::Rationals::FormatRationals]
-    separators = 3
+This Enforcer is not configurable except for the standard options.
 
 =head1 AUTHOR
 
