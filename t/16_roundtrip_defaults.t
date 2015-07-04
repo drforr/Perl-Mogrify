@@ -6,7 +6,7 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify::Config;
 use Perl::Mogrify::ProfilePrototype;
 use Perl::Mogrify::Utils qw{ :characters :severities };
@@ -34,7 +34,7 @@ $policy_test_count = 4 * @default_policies;
 foreach my $policy (@default_policies) {
     if (
             $policy->parameter_metadata_available()
-        and not $policy->isa('Perl::Mogrify::Enforcer::CodeLayout::RequireTidyCode')
+        and not $policy->isa('Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode')
     ) {
         $policy_test_count += scalar @{$policy->get_parameters()};
     }
@@ -246,7 +246,7 @@ SKIP: {
 
         if (
                 $default_policy->parameter_metadata_available()
-            and not $default_policy->isa('Perl::Mogrify::Enforcer::CodeLayout::RequireTidyCode')
+            and not $default_policy->isa('Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode')
         ) {
             # Encapsulation violation alert!
             foreach my $parameter ( @{$default_policy->get_parameters()} ) {

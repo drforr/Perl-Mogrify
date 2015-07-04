@@ -7,8 +7,8 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Perl::Mogrify::UserProfile qw();
-use Perl::Mogrify::EnforcerFactory (-test => 1);
-use Perl::Mogrify::EnforcerParameter qw{ $NO_DESCRIPTION_AVAILABLE };
+use Perl::Mogrify::TransformerFactory (-test => 1);
+use Perl::Mogrify::TransformerParameter qw{ $NO_DESCRIPTION_AVAILABLE };
 use Perl::Mogrify::Utils qw( policy_short_name );
 use Perl::Mogrify::TestUtils qw(bundled_policy_names);
 
@@ -27,7 +27,7 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
 # the supported_parameters() method and, assuming that the policy is
 # configurable, that each parameter can parse its own default_string.
 #
-# This program also verifies that Perl::Mogrify::EnforcerFactory throws an
+# This program also verifies that Perl::Mogrify::TransformerFactory throws an
 # exception when we try to create a policy with bogus parameters.  However, it
 # is your responsibility to verify that valid parameters actually work as
 # expected.  You can do this by using the #parms directive in the *.run files.
@@ -56,7 +56,7 @@ sub test_supported_parameters {
 
     for my $param_specification ( @supported_params ) {
         my $parameter =
-            Perl::Mogrify::EnforcerParameter->new($param_specification);
+            Perl::Mogrify::TransformerParameter->new($param_specification);
         my $param_name = $parameter->get_name();
         my $description = $parameter->get_description();
 
@@ -88,7 +88,7 @@ sub test_invalid_parameters {
     my $policy = shift;
     my $bogus_params  = { bogus => 'shizzle' };
     my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $factory = Perl::Mogrify::EnforcerFactory->new(
+    my $factory = Perl::Mogrify::TransformerFactory->new(
         -profile => $profile, '-profile-strictness' => 'fatal' );
 
     my $policy_name = policy_short_name($policy);

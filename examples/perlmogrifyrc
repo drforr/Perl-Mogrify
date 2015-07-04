@@ -5,7 +5,7 @@
 # However, you can use the -profile option to tell Perl::Mogrify use a
 # different file in another location.
 #
-# The area before any of the [Perl::Mogrify::Enforcer] sections is used
+# The area before any of the [Perl::Mogrify::Transformer] sections is used
 # to set default values for the arguments to the Perl::Mogrify engine.
 # If you are using the "perlcritic" program, you can override these
 # settings at the command-line.  Or if you are using the Perl::Mogrify
@@ -36,7 +36,7 @@ force = 1
 #-----------------------------------------------------------------------------
 # only: Directs Perl::Mogrify to only choose from Policies that are
 # explicitly mentioned in this file.  Otherwise, Perl::Mogrify chooses
-# from all the Perl::Mogrify::Enforcer classes that are found on the
+# from all the Perl::Mogrify::Transformer classes that are found on the
 # local machine.  The default is 0.  If defined, this should be either
 # 1 or 0.
 
@@ -57,14 +57,14 @@ severity = 3
 theme = danger + risky - pbp
 
 #-----------------------------------------------------------------------------
-# top:  Directs Perl::Mogrify to only report the top N Enforcer violations,
+# top:  Directs Perl::Mogrify to only report the top N Transformer violations,
 # as ranked by their individual severity.  If defined, this should be
 # a positive integer.
 
 top = 50
 
 #-----------------------------------------------------------------------------
-# verbose: Sets the format for printing Enforcer violations.  If
+# verbose: Sets the format for printing Transformer violations.  If
 # defined, this should be either a format spcecification, or a numeric
 # verbosity level.  See the Perl::Mogrify POD for more details.
 
@@ -127,15 +127,15 @@ program-extensions =
 ##############################################################################
 # The rest of the file consists of several named blocks that contain
 # configuration parameters for each of the Policies.  The names of
-# each blocks correspond to the names of the Enforcer modules.  For
-# brevity, the "Perl::Mogrify::Enforcer" portion of the name can be
-# omitted.  See the POD for the appropriate Enforcer for a complete
+# each blocks correspond to the names of the Transformer modules.  For
+# brevity, the "Perl::Mogrify::Transformer" portion of the name can be
+# omitted.  See the POD for the appropriate Transformer for a complete
 # description of the configuration parameters that it supports.
 
 
 #-----------------------------------------------------------------------------
-# If you vehmently disagree with a particular Enforcer, putting a "-" in
-# front of the Enforcer name will effectively disables that Enforcer.  It
+# If you vehmently disagree with a particular Transformer, putting a "-" in
+# front of the Transformer name will effectively disables that Transformer.  It
 # will never be applied unless you use the "-include" option to apply
 # it explicitly.
 
@@ -143,8 +143,8 @@ program-extensions =
 [-TestingAndDebugging::RequireUseWarnings]
 
 #-----------------------------------------------------------------------------
-# If you agree with a Enforcer, but feel that it's severity level is not
-# appropriate, then you can change the severity for any Enforcer.  If
+# If you agree with a Transformer, but feel that it's severity level is not
+# appropriate, then you can change the severity for any Transformer.  If
 # defined this should be an integer from 1 to 5, where 5 is the
 # highest severity.
 
@@ -160,7 +160,7 @@ severity = 5
 #-----------------------------------------------------------------------------
 # Policies are also organized into themes.  Themes are just names for
 # arbitrary groups of Policies.  You can define new themes and add
-# them to any Enforcer.  If defined, this should be a string of
+# them to any Transformer.  If defined, this should be a string of
 # whitespace-delimited words.
 
 [RegularExpressions::RequireExtendedFormatting]
@@ -174,7 +174,7 @@ severity   = 3
 #-----------------------------------------------------------------------------
 # Some Policies also have specialized configuration parameters.  In
 # all cases, these are repsented as simple name=value pairs.  See the
-# POD for the appropriate Enforcer for a complete discussion of its
+# POD for the appropriate Transformer for a complete discussion of its
 # configuration parameters.
 
 [ControlStructures::ProhibitPostfixControls]

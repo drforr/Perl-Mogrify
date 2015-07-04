@@ -29,14 +29,14 @@ my $policy = 'Documentation::PodSpelling';
 my $can_podspell = can_determine_spell_command() && can_run_spell_command();
 
 sub can_determine_spell_command {
-    my $pol = Perl::Mogrify::Enforcer::Documentation::PodSpelling->new();
+    my $pol = Perl::Mogrify::Transformer::Documentation::PodSpelling->new();
     $pol->initialize_if_enabled();
 
     return $pol->_get_spell_command_line();
 }
 
 sub can_run_spell_command {
-    my $pol = Perl::Mogrify::Enforcer::Documentation::PodSpelling->new();
+    my $pol = Perl::Mogrify::Transformer::Documentation::PodSpelling->new();
     $pol->initialize_if_enabled();
 
     return $pol->_run_spell_command( <<'END_TEST_CODE' );
@@ -49,7 +49,7 @@ END_TEST_CODE
 }
 
 sub can_podspell {
-    return $can_podspell && ! Perl::Mogrify::Enforcer::Documentation::PodSpelling->got_sigpipe();
+    return $can_podspell && ! Perl::Mogrify::Transformer::Documentation::PodSpelling->got_sigpipe();
 }
 
 #-----------------------------------------------------------------------------

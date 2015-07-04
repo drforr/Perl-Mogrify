@@ -114,7 +114,7 @@ implement it.
 =head1 SEE ALSO
 
 L<Perl::Mogrify::Exception::Configuration::Option::Global|Perl::Mogrify::Exception::Configuration::Option::Global>
-L<Perl::Mogrify::Exception::Configuration::Option::Enforcer|Perl::Mogrify::Exception::Configuration::Option::Enforcer>
+L<Perl::Mogrify::Exception::Configuration::Option::Transformer|Perl::Mogrify::Exception::Configuration::Option::Transformer>
 
 
 =head1 AUTHOR

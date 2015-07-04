@@ -142,7 +142,7 @@ Perl::Mogrify::Theme - Construct thematic sets of policies.
 =head1 DESCRIPTION
 
 This is a helper class for evaluating theme expressions into sets of
-Enforcer objects.  There are no user-serviceable parts here.
+Transformer objects.  There are no user-serviceable parts here.
 
 
 =head1 INTERFACE SUPPORT
@@ -158,15 +158,15 @@ to change without notice.
 =item C<< new( -rule => $rule_expression ) >>
 
 Returns a reference to a new Perl::Mogrify::Theme object.  C<-rule> is
-a string expression that evaluates to true or false for each Enforcer..
+a string expression that evaluates to true or false for each Transformer..
 See L<"THEME RULES"> for more information.
 
 
 =item C<< policy_is_thematic( -policy => $policy ) >>
 
-Given a reference to a L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
+Given a reference to a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
 object, this method returns evaluates the rule against the themes that
-are associated with the Enforcer.  Returns 1 if the Enforcer satisfies the
+are associated with the Transformer.  Returns 1 if the Transformer satisfies the
 rule, 0 otherwise.
 
 
@@ -197,7 +197,7 @@ operators are:
    !           not            'pbp && ! (portability || complexity)
 
 See L<Perl::Mogrify/"CONFIGURATION"> for more information about
-customizing the themes for each Enforcer.
+customizing the themes for each Transformer.
 
 
 =head1 SUBROUTINES

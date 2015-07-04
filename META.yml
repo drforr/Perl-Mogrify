@@ -51,8 +51,8 @@ provides:
   Perl::Mogrify::Exception::Configuration::Generic:
     file: lib/Perl/Mogrify/Exception/Configuration/Generic.pm
     version: '1.125'
-  Perl::Mogrify::Exception::Configuration::NonExistentEnforcer:
-    file: lib/Perl/Mogrify/Exception/Configuration/NonExistentEnforcer.pm
+  Perl::Mogrify::Exception::Configuration::NonExistentTransformer:
+    file: lib/Perl/Mogrify/Exception/Configuration/NonExistentTransformer.pm
     version: '1.125'
   Perl::Mogrify::Exception::Configuration::Option:
     file: lib/Perl/Mogrify/Exception/Configuration/Option.pm
@@ -66,14 +66,14 @@ provides:
   Perl::Mogrify::Exception::Configuration::Option::Global::ParameterValue:
     file: lib/Perl/Mogrify/Exception/Configuration/Option/Global/ParameterValue.pm
     version: '1.125'
-  Perl::Mogrify::Exception::Configuration::Option::Enforcer:
-    file: lib/Perl/Mogrify/Exception/Configuration/Option/Enforcer.pm
+  Perl::Mogrify::Exception::Configuration::Option::Transformer:
+    file: lib/Perl/Mogrify/Exception/Configuration/Option/Transformer.pm
     version: '1.125'
-  Perl::Mogrify::Exception::Configuration::Option::Enforcer::ExtraParameter:
-    file: lib/Perl/Mogrify/Exception/Configuration/Option/Enforcer/ExtraParameter.pm
+  Perl::Mogrify::Exception::Configuration::Option::Transformer::ExtraParameter:
+    file: lib/Perl/Mogrify/Exception/Configuration/Option/Transformer/ExtraParameter.pm
     version: '1.125'
-  Perl::Mogrify::Exception::Configuration::Option::Enforcer::ParameterValue:
-    file: lib/Perl/Mogrify/Exception/Configuration/Option/Enforcer/ParameterValue.pm
+  Perl::Mogrify::Exception::Configuration::Option::Transformer::ParameterValue:
+    file: lib/Perl/Mogrify/Exception/Configuration/Option/Transformer/ParameterValue.pm
     version: '1.125'
   Perl::Mogrify::Exception::Fatal:
     file: lib/Perl/Mogrify/Exception/Fatal.pm
@@ -84,8 +84,8 @@ provides:
   Perl::Mogrify::Exception::Fatal::Internal:
     file: lib/Perl/Mogrify/Exception/Fatal/Internal.pm
     version: '1.125'
-  Perl::Mogrify::Exception::Fatal::EnforcerDefinition:
-    file: lib/Perl/Mogrify/Exception/Fatal/EnforcerDefinition.pm
+  Perl::Mogrify::Exception::Fatal::TransformerDefinition:
+    file: lib/Perl/Mogrify/Exception/Fatal/TransformerDefinition.pm
     version: '1.125'
   Perl::Mogrify::Exception::IO:
     file: lib/Perl/Mogrify/Exception/IO.pm
@@ -96,467 +96,467 @@ provides:
   Perl::Mogrify::OptionsProcessor:
     file: lib/Perl/Mogrify/OptionsProcessor.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer:
-    file: lib/Perl/Mogrify/Enforcer.pm
+  Perl::Mogrify::Transformer:
+    file: lib/Perl/Mogrify/Transformer.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitBooleanGrep:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitBooleanGrep.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitBooleanGrep:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitBooleanGrep.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitComplexMappings:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitComplexMappings.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitComplexMappings:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitComplexMappings.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitLvalueSubstr:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitLvalueSubstr.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitLvalueSubstr:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitLvalueSubstr.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitReverseSortBlock:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitReverseSortBlock.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitReverseSortBlock:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitReverseSortBlock.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitSleepViaSelect:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitSleepViaSelect.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitSleepViaSelect:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitSleepViaSelect.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitStringyEval:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitStringyEval.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitStringyEval:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitStringyEval.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitStringySplit:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitStringySplit.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitStringySplit:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitStringySplit.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitUniversalCan:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitUniversalCan.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitUniversalCan:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitUniversalCan.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitUniversalIsa:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitUniversalIsa.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitUniversalIsa:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitUniversalIsa.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitUselessTopic:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitUselessTopic.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitUselessTopic:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitUselessTopic.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitVoidGrep:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitVoidGrep.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitVoidGrep:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitVoidGrep.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::ProhibitVoidMap:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/ProhibitVoidMap.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitVoidMap:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitVoidMap.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::RequireBlockGrep:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireBlockGrep.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::RequireBlockGrep:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireBlockGrep.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::RequireBlockMap:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireBlockMap.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::RequireBlockMap:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireBlockMap.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::RequireGlobFunction:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireGlobFunction.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::RequireGlobFunction:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireGlobFunction.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::BuiltinFunctions::RequireSimpleSortBlock:
-    file: lib/Perl/Mogrify/Enforcer/BuiltinFunctions/RequireSimpleSortBlock.pm
+  Perl::Mogrify::Transformer::BuiltinFunctions::RequireSimpleSortBlock:
+    file: lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireSimpleSortBlock.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ClassHierarchies::ProhibitAutoloading:
-    file: lib/Perl/Mogrify/Enforcer/ClassHierarchies/ProhibitAutoloading.pm
+  Perl::Mogrify::Transformer::ClassHierarchies::ProhibitAutoloading:
+    file: lib/Perl/Mogrify/Transformer/ClassHierarchies/ProhibitAutoloading.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ClassHierarchies::ProhibitExplicitISA:
-    file: lib/Perl/Mogrify/Enforcer/ClassHierarchies/ProhibitExplicitISA.pm
+  Perl::Mogrify::Transformer::ClassHierarchies::ProhibitExplicitISA:
+    file: lib/Perl/Mogrify/Transformer/ClassHierarchies/ProhibitExplicitISA.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ClassHierarchies::ProhibitOneArgBless:
-    file: lib/Perl/Mogrify/Enforcer/ClassHierarchies/ProhibitOneArgBless.pm
+  Perl::Mogrify::Transformer::ClassHierarchies::ProhibitOneArgBless:
+    file: lib/Perl/Mogrify/Transformer/ClassHierarchies/ProhibitOneArgBless.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::ProhibitHardTabs:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitHardTabs.pm
+  Perl::Mogrify::Transformer::CodeLayout::ProhibitHardTabs:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitHardTabs.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::ProhibitParensWithBuiltins:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitParensWithBuiltins.pm
+  Perl::Mogrify::Transformer::CodeLayout::ProhibitParensWithBuiltins:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitParensWithBuiltins.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitQuotedWordLists.pm
+  Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitQuotedWordLists.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::ProhibitTrailingWhitespace:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/ProhibitTrailingWhitespace.pm
+  Perl::Mogrify::Transformer::CodeLayout::ProhibitTrailingWhitespace:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitTrailingWhitespace.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::RequireConsistentNewlines:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/RequireConsistentNewlines.pm
+  Perl::Mogrify::Transformer::CodeLayout::RequireConsistentNewlines:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/RequireConsistentNewlines.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::RequireTidyCode:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/RequireTidyCode.pm
+  Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/RequireTidyCode.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::CodeLayout::RequireTrailingCommas:
-    file: lib/Perl/Mogrify/Enforcer/CodeLayout/RequireTrailingCommas.pm
+  Perl::Mogrify::Transformer::CodeLayout::RequireTrailingCommas:
+    file: lib/Perl/Mogrify/Transformer/CodeLayout/RequireTrailingCommas.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitCStyleForLoops:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitCStyleForLoops.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitCStyleForLoops:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitCStyleForLoops.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitCascadingIfElse:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitCascadingIfElse.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitCascadingIfElse:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitCascadingIfElse.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitDeepNests:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitDeepNests.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitDeepNests:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitDeepNests.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitLabelsWithSpecialBlockNames:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitLabelsWithSpecialBlockNames.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitLabelsWithSpecialBlockNames:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitLabelsWithSpecialBlockNames.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitMutatingListFunctions:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitMutatingListFunctions.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitMutatingListFunctions:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitMutatingListFunctions.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitNegativeExpressionsInUnlessAndUntilConditions.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitNegativeExpressionsInUnlessAndUntilConditions.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitPostfixControls:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitPostfixControls.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitPostfixControls:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitPostfixControls.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitUnlessBlocks:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitUnlessBlocks.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitUnlessBlocks:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitUnlessBlocks.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitUnreachableCode:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitUnreachableCode.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitUnreachableCode:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitUnreachableCode.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ControlStructures::ProhibitUntilBlocks:
-    file: lib/Perl/Mogrify/Enforcer/ControlStructures/ProhibitUntilBlocks.pm
+  Perl::Mogrify::Transformer::ControlStructures::ProhibitUntilBlocks:
+    file: lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitUntilBlocks.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Documentation::PodSpelling:
-    file: lib/Perl/Mogrify/Enforcer/Documentation/PodSpelling.pm
+  Perl::Mogrify::Transformer::Documentation::PodSpelling:
+    file: lib/Perl/Mogrify/Transformer/Documentation/PodSpelling.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Documentation::RequirePackageMatchesPodName:
-    file: lib/Perl/Mogrify/Enforcer/Documentation/RequirePackageMatchesPodName.pm
+  Perl::Mogrify::Transformer::Documentation::RequirePackageMatchesPodName:
+    file: lib/Perl/Mogrify/Transformer/Documentation/RequirePackageMatchesPodName.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Documentation::RequirePodAtEnd:
-    file: lib/Perl/Mogrify/Enforcer/Documentation/RequirePodAtEnd.pm
+  Perl::Mogrify::Transformer::Documentation::RequirePodAtEnd:
+    file: lib/Perl/Mogrify/Transformer/Documentation/RequirePodAtEnd.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Documentation::RequirePodLinksIncludeText:
-    file: lib/Perl/Mogrify/Enforcer/Documentation/RequirePodLinksIncludeText.pm
+  Perl::Mogrify::Transformer::Documentation::RequirePodLinksIncludeText:
+    file: lib/Perl/Mogrify/Transformer/Documentation/RequirePodLinksIncludeText.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Documentation::RequirePodSections:
-    file: lib/Perl/Mogrify/Enforcer/Documentation/RequirePodSections.pm
+  Perl::Mogrify::Transformer::Documentation::RequirePodSections:
+    file: lib/Perl/Mogrify/Transformer/Documentation/RequirePodSections.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ErrorHandling::RequireCarping:
-    file: lib/Perl/Mogrify/Enforcer/ErrorHandling/RequireCarping.pm
+  Perl::Mogrify::Transformer::ErrorHandling::RequireCarping:
+    file: lib/Perl/Mogrify/Transformer/ErrorHandling/RequireCarping.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ErrorHandling::RequireCheckingReturnValueOfEval:
-    file: lib/Perl/Mogrify/Enforcer/ErrorHandling/RequireCheckingReturnValueOfEval.pm
+  Perl::Mogrify::Transformer::ErrorHandling::RequireCheckingReturnValueOfEval:
+    file: lib/Perl/Mogrify/Transformer/ErrorHandling/RequireCheckingReturnValueOfEval.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitBacktickOperators:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitBacktickOperators.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitBacktickOperators:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitBacktickOperators.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitBarewordFileHandles:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitBarewordFileHandles.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitBarewordFileHandles:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitBarewordFileHandles.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitExplicitStdin:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitExplicitStdin.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitExplicitStdin:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitExplicitStdin.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitInteractiveTest:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitInteractiveTest.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitInteractiveTest:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitInteractiveTest.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitJoinedReadline:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitJoinedReadline.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitJoinedReadline:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitJoinedReadline.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitOneArgSelect:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitOneArgSelect.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitOneArgSelect:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitOneArgSelect.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitReadlineInForLoop:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitReadlineInForLoop.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitReadlineInForLoop:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitReadlineInForLoop.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::ProhibitTwoArgOpen:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/ProhibitTwoArgOpen.pm
+  Perl::Mogrify::Transformer::InputOutput::ProhibitTwoArgOpen:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/ProhibitTwoArgOpen.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::RequireBracedFileHandleWithPrint:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/RequireBracedFileHandleWithPrint.pm
+  Perl::Mogrify::Transformer::InputOutput::RequireBracedFileHandleWithPrint:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/RequireBracedFileHandleWithPrint.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::RequireBriefOpen:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/RequireBriefOpen.pm
+  Perl::Mogrify::Transformer::InputOutput::RequireBriefOpen:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/RequireBriefOpen.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::RequireCheckedClose:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/RequireCheckedClose.pm
+  Perl::Mogrify::Transformer::InputOutput::RequireCheckedClose:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/RequireCheckedClose.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::RequireCheckedOpen:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/RequireCheckedOpen.pm
+  Perl::Mogrify::Transformer::InputOutput::RequireCheckedOpen:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/RequireCheckedOpen.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::RequireCheckedSyscalls:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/RequireCheckedSyscalls.pm
+  Perl::Mogrify::Transformer::InputOutput::RequireCheckedSyscalls:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/RequireCheckedSyscalls.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::InputOutput::RequireEncodingWithUTF8Layer:
-    file: lib/Perl/Mogrify/Enforcer/InputOutput/RequireEncodingWithUTF8Layer.pm
+  Perl::Mogrify::Transformer::InputOutput::RequireEncodingWithUTF8Layer:
+    file: lib/Perl/Mogrify/Transformer/InputOutput/RequireEncodingWithUTF8Layer.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Miscellanea::ProhibitFormats:
-    file: lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitFormats.pm
+  Perl::Mogrify::Transformer::Miscellanea::ProhibitFormats:
+    file: lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitFormats.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Miscellanea::ProhibitTies:
-    file: lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitTies.pm
+  Perl::Mogrify::Transformer::Miscellanea::ProhibitTies:
+    file: lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitTies.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Miscellanea::ProhibitUnrestrictedNoCritic:
-    file: lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitUnrestrictedNoCritic.pm
+  Perl::Mogrify::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic:
+    file: lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitUnrestrictedNoCritic.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Miscellanea::ProhibitUselessNoCritic:
-    file: lib/Perl/Mogrify/Enforcer/Miscellanea/ProhibitUselessNoCritic.pm
+  Perl::Mogrify::Transformer::Miscellanea::ProhibitUselessNoCritic:
+    file: lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitUselessNoCritic.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::ProhibitAutomaticExportation:
-    file: lib/Perl/Mogrify/Enforcer/Modules/ProhibitAutomaticExportation.pm
+  Perl::Mogrify::Transformer::Modules::ProhibitAutomaticExportation:
+    file: lib/Perl/Mogrify/Transformer/Modules/ProhibitAutomaticExportation.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::ProhibitConditionalUseStatements:
-    file: lib/Perl/Mogrify/Enforcer/Modules/ProhibitConditionalUseStatements.pm
+  Perl::Mogrify::Transformer::Modules::ProhibitConditionalUseStatements:
+    file: lib/Perl/Mogrify/Transformer/Modules/ProhibitConditionalUseStatements.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::ProhibitEvilModules:
-    file: lib/Perl/Mogrify/Enforcer/Modules/ProhibitEvilModules.pm
+  Perl::Mogrify::Transformer::Modules::ProhibitEvilModules:
+    file: lib/Perl/Mogrify/Transformer/Modules/ProhibitEvilModules.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::ProhibitExcessMainComplexity:
-    file: lib/Perl/Mogrify/Enforcer/Modules/ProhibitExcessMainComplexity.pm
+  Perl::Mogrify::Transformer::Modules::ProhibitExcessMainComplexity:
+    file: lib/Perl/Mogrify/Transformer/Modules/ProhibitExcessMainComplexity.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::ProhibitMultiplePackages:
-    file: lib/Perl/Mogrify/Enforcer/Modules/ProhibitMultiplePackages.pm
+  Perl::Mogrify::Transformer::Modules::ProhibitMultiplePackages:
+    file: lib/Perl/Mogrify/Transformer/Modules/ProhibitMultiplePackages.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::RequireBarewordIncludes:
-    file: lib/Perl/Mogrify/Enforcer/Modules/RequireBarewordIncludes.pm
+  Perl::Mogrify::Transformer::Modules::RequireBarewordIncludes:
+    file: lib/Perl/Mogrify/Transformer/Modules/RequireBarewordIncludes.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::RequireEndWithOne:
-    file: lib/Perl/Mogrify/Enforcer/Modules/RequireEndWithOne.pm
+  Perl::Mogrify::Transformer::Modules::RequireEndWithOne:
+    file: lib/Perl/Mogrify/Transformer/Modules/RequireEndWithOne.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::RequireExplicitPackage:
-    file: lib/Perl/Mogrify/Enforcer/Modules/RequireExplicitPackage.pm
+  Perl::Mogrify::Transformer::Modules::RequireExplicitPackage:
+    file: lib/Perl/Mogrify/Transformer/Modules/RequireExplicitPackage.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::RequireFilenameMatchesPackage:
-    file: lib/Perl/Mogrify/Enforcer/Modules/RequireFilenameMatchesPackage.pm
+  Perl::Mogrify::Transformer::Modules::RequireFilenameMatchesPackage:
+    file: lib/Perl/Mogrify/Transformer/Modules/RequireFilenameMatchesPackage.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::RequireNoMatchVarsWithUseEnglish:
-    file: lib/Perl/Mogrify/Enforcer/Modules/RequireNoMatchVarsWithUseEnglish.pm
+  Perl::Mogrify::Transformer::Modules::RequireNoMatchVarsWithUseEnglish:
+    file: lib/Perl/Mogrify/Transformer/Modules/RequireNoMatchVarsWithUseEnglish.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Modules::RequireVersionVar:
-    file: lib/Perl/Mogrify/Enforcer/Modules/RequireVersionVar.pm
+  Perl::Mogrify::Transformer::Modules::RequireVersionVar:
+    file: lib/Perl/Mogrify/Transformer/Modules/RequireVersionVar.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::NamingConventions::Capitalization:
-    file: lib/Perl/Mogrify/Enforcer/NamingConventions/Capitalization.pm
+  Perl::Mogrify::Transformer::NamingConventions::Capitalization:
+    file: lib/Perl/Mogrify/Transformer/NamingConventions/Capitalization.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::NamingConventions::ProhibitAmbiguousNames:
-    file: lib/Perl/Mogrify/Enforcer/NamingConventions/ProhibitAmbiguousNames.pm
+  Perl::Mogrify::Transformer::NamingConventions::ProhibitAmbiguousNames:
+    file: lib/Perl/Mogrify/Transformer/NamingConventions/ProhibitAmbiguousNames.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Objects::ProhibitIndirectSyntax:
-    file: lib/Perl/Mogrify/Enforcer/Objects/ProhibitIndirectSyntax.pm
+  Perl::Mogrify::Transformer::Objects::ProhibitIndirectSyntax:
+    file: lib/Perl/Mogrify/Transformer/Objects/ProhibitIndirectSyntax.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::References::ProhibitDoubleSigils:
-    file: lib/Perl/Mogrify/Enforcer/References/ProhibitDoubleSigils.pm
+  Perl::Mogrify::Transformer::References::ProhibitDoubleSigils:
+    file: lib/Perl/Mogrify/Transformer/References/ProhibitDoubleSigils.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitCaptureWithoutTest:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitCaptureWithoutTest.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitCaptureWithoutTest:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitCaptureWithoutTest.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitComplexRegexes:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitComplexRegexes.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitComplexRegexes:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitComplexRegexes.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitEnumeratedClasses:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitEnumeratedClasses.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitEnumeratedClasses:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitEnumeratedClasses.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitEscapedMetacharacters:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitEscapedMetacharacters.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitEscapedMetacharacters:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitEscapedMetacharacters.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitFixedStringMatches:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitFixedStringMatches.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitFixedStringMatches:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitFixedStringMatches.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitSingleCharAlternation:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitSingleCharAlternation.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitSingleCharAlternation:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitSingleCharAlternation.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitUnusedCapture:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitUnusedCapture.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitUnusedCapture:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitUnusedCapture.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitUnusualDelimiters:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitUnusualDelimiters.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitUnusualDelimiters:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitUnusualDelimiters.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::ProhibitUselessTopic:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/ProhibitUselessTopic.pm
+  Perl::Mogrify::Transformer::RegularExpressions::ProhibitUselessTopic:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitUselessTopic.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::RequireBracesForMultiline:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireBracesForMultiline.pm
+  Perl::Mogrify::Transformer::RegularExpressions::RequireBracesForMultiline:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/RequireBracesForMultiline.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::RequireDotMatchAnything:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireDotMatchAnything.pm
+  Perl::Mogrify::Transformer::RegularExpressions::RequireDotMatchAnything:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/RequireDotMatchAnything.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::RequireExtendedFormatting:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireExtendedFormatting.pm
+  Perl::Mogrify::Transformer::RegularExpressions::RequireExtendedFormatting:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/RequireExtendedFormatting.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::RegularExpressions::RequireLineBoundaryMatching:
-    file: lib/Perl/Mogrify/Enforcer/RegularExpressions/RequireLineBoundaryMatching.pm
+  Perl::Mogrify::Transformer::RegularExpressions::RequireLineBoundaryMatching:
+    file: lib/Perl/Mogrify/Transformer/RegularExpressions/RequireLineBoundaryMatching.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitAmpersandSigils:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitAmpersandSigils.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitAmpersandSigils:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitAmpersandSigils.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitBuiltinHomonyms:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitBuiltinHomonyms.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitBuiltinHomonyms:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitBuiltinHomonyms.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitExcessComplexity:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitExcessComplexity.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitExcessComplexity:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitExcessComplexity.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitExplicitReturnUndef:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitExplicitReturnUndef.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitExplicitReturnUndef:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitExplicitReturnUndef.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitManyArgs:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitManyArgs.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitManyArgs:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitManyArgs.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitNestedSubs:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitNestedSubs.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitNestedSubs:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitNestedSubs.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitReturnSort:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitReturnSort.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitReturnSort:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitReturnSort.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitSubroutinePrototypes:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitSubroutinePrototypes.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitSubroutinePrototypes:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitSubroutinePrototypes.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProhibitUnusedPrivateSubroutines:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProhibitUnusedPrivateSubroutines.pm
+  Perl::Mogrify::Transformer::Subroutines::ProhibitUnusedPrivateSubroutines:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProhibitUnusedPrivateSubroutines.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::ProtectPrivateSubs:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/ProtectPrivateSubs.pm
+  Perl::Mogrify::Transformer::Subroutines::ProtectPrivateSubs:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/ProtectPrivateSubs.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::RequireArgUnpacking:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/RequireArgUnpacking.pm
+  Perl::Mogrify::Transformer::Subroutines::RequireArgUnpacking:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/RequireArgUnpacking.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Subroutines::RequireFinalReturn:
-    file: lib/Perl/Mogrify/Enforcer/Subroutines/RequireFinalReturn.pm
+  Perl::Mogrify::Transformer::Subroutines::RequireFinalReturn:
+    file: lib/Perl/Mogrify/Transformer/Subroutines/RequireFinalReturn.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::TestingAndDebugging::ProhibitNoStrict:
-    file: lib/Perl/Mogrify/Enforcer/TestingAndDebugging/ProhibitNoStrict.pm
+  Perl::Mogrify::Transformer::TestingAndDebugging::ProhibitNoStrict:
+    file: lib/Perl/Mogrify/Transformer/TestingAndDebugging/ProhibitNoStrict.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::TestingAndDebugging::ProhibitNoWarnings:
-    file: lib/Perl/Mogrify/Enforcer/TestingAndDebugging/ProhibitNoWarnings.pm
+  Perl::Mogrify::Transformer::TestingAndDebugging::ProhibitNoWarnings:
+    file: lib/Perl/Mogrify/Transformer/TestingAndDebugging/ProhibitNoWarnings.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::TestingAndDebugging::ProhibitProlongedStrictureOverride:
-    file: lib/Perl/Mogrify/Enforcer/TestingAndDebugging/ProhibitProlongedStrictureOverride.pm
+  Perl::Mogrify::Transformer::TestingAndDebugging::ProhibitProlongedStrictureOverride:
+    file: lib/Perl/Mogrify/Transformer/TestingAndDebugging/ProhibitProlongedStrictureOverride.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::TestingAndDebugging::RequireTestLabels:
-    file: lib/Perl/Mogrify/Enforcer/TestingAndDebugging/RequireTestLabels.pm
+  Perl::Mogrify::Transformer::TestingAndDebugging::RequireTestLabels:
+    file: lib/Perl/Mogrify/Transformer/TestingAndDebugging/RequireTestLabels.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::TestingAndDebugging::RequireUseStrict:
-    file: lib/Perl/Mogrify/Enforcer/TestingAndDebugging/RequireUseStrict.pm
+  Perl::Mogrify::Transformer::TestingAndDebugging::RequireUseStrict:
+    file: lib/Perl/Mogrify/Transformer/TestingAndDebugging/RequireUseStrict.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::TestingAndDebugging::RequireUseWarnings:
-    file: lib/Perl/Mogrify/Enforcer/TestingAndDebugging/RequireUseWarnings.pm
+  Perl::Mogrify::Transformer::TestingAndDebugging::RequireUseWarnings:
+    file: lib/Perl/Mogrify/Transformer/TestingAndDebugging/RequireUseWarnings.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitCommaSeparatedStatements:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitCommaSeparatedStatements.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitCommaSeparatedStatements:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitCommaSeparatedStatements.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitComplexVersion:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitComplexVersion.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitComplexVersion:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitComplexVersion.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitConstantPragma:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitConstantPragma.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitConstantPragma:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitConstantPragma.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitEmptyQuotes:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitEmptyQuotes.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitEmptyQuotes:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitEmptyQuotes.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitEscapedCharacters:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitEscapedCharacters.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitEscapedCharacters:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitEscapedCharacters.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitImplicitNewlines:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitImplicitNewlines.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitImplicitNewlines:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitImplicitNewlines.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitInterpolationOfLiterals:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitInterpolationOfLiterals.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitInterpolationOfLiterals:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitInterpolationOfLiterals.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitLeadingZeros:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitLeadingZeros.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitLeadingZeros:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitLeadingZeros.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitLongChainsOfMethodCalls:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitLongChainsOfMethodCalls.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitLongChainsOfMethodCalls:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitLongChainsOfMethodCalls.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitMagicNumbers:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitMagicNumbers.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMagicNumbers:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitMagicNumbers.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitMismatchedOperators:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitMismatchedOperators.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMismatchedOperators:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitMismatchedOperators.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitMixedBooleanOperators:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitMixedBooleanOperators.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMixedBooleanOperators:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitMixedBooleanOperators.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitNoisyQuotes:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitNoisyQuotes.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitNoisyQuotes:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitNoisyQuotes.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitQuotesAsQuotelikeOperatorDelimiters.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitQuotesAsQuotelikeOperatorDelimiters.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitSpecialLiteralHeredocTerminator.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitSpecialLiteralHeredocTerminator.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::ProhibitVersionStrings:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/ProhibitVersionStrings.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitVersionStrings:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitVersionStrings.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireConstantVersion:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireConstantVersion.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::RequireConstantVersion:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireConstantVersion.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireInterpolationOfMetachars:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireInterpolationOfMetachars.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::RequireInterpolationOfMetachars:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireInterpolationOfMetachars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireNumberSeparators:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireNumberSeparators.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::RequireNumberSeparators:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireNumberSeparators.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireQuotedHeredocTerminator:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireQuotedHeredocTerminator.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::RequireQuotedHeredocTerminator:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireQuotedHeredocTerminator.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::ValuesAndExpressions::RequireUpperCaseHeredocTerminator:
-    file: lib/Perl/Mogrify/Enforcer/ValuesAndExpressions/RequireUpperCaseHeredocTerminator.pm
+  Perl::Mogrify::Transformer::ValuesAndExpressions::RequireUpperCaseHeredocTerminator:
+    file: lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireUpperCaseHeredocTerminator.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitAugmentedAssignmentInDeclaration:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitAugmentedAssignmentInDeclaration.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitAugmentedAssignmentInDeclaration:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitAugmentedAssignmentInDeclaration.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitConditionalDeclarations:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitConditionalDeclarations.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitConditionalDeclarations:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitConditionalDeclarations.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitEvilVariables:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitEvilVariables.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitEvilVariables:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitEvilVariables.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitLocalVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitLocalVars.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitLocalVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitLocalVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitMatchVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitMatchVars.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitMatchVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitMatchVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitPackageVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitPackageVars.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitPackageVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitPackageVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitPerl4PackageNames:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitPerl4PackageNames.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitPerl4PackageNames:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitPerl4PackageNames.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitPunctuationVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitPunctuationVars.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitPunctuationVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitPunctuationVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitReusedNames:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitReusedNames.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitReusedNames:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitReusedNames.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProhibitUnusedVariables:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProhibitUnusedVariables.pm
+  Perl::Mogrify::Transformer::Variables::ProhibitUnusedVariables:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProhibitUnusedVariables.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::ProtectPrivateVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/ProtectPrivateVars.pm
+  Perl::Mogrify::Transformer::Variables::ProtectPrivateVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/ProtectPrivateVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::RequireInitializationForLocalVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/RequireInitializationForLocalVars.pm
+  Perl::Mogrify::Transformer::Variables::RequireInitializationForLocalVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/RequireInitializationForLocalVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::RequireLexicalLoopIterators:
-    file: lib/Perl/Mogrify/Enforcer/Variables/RequireLexicalLoopIterators.pm
+  Perl::Mogrify::Transformer::Variables::RequireLexicalLoopIterators:
+    file: lib/Perl/Mogrify/Transformer/Variables/RequireLexicalLoopIterators.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::RequireLocalizedPunctuationVars:
-    file: lib/Perl/Mogrify/Enforcer/Variables/RequireLocalizedPunctuationVars.pm
+  Perl::Mogrify::Transformer::Variables::RequireLocalizedPunctuationVars:
+    file: lib/Perl/Mogrify/Transformer/Variables/RequireLocalizedPunctuationVars.pm
     version: '1.125'
-  Perl::Mogrify::Enforcer::Variables::RequireNegativeIndices:
-    file: lib/Perl/Mogrify/Enforcer/Variables/RequireNegativeIndices.pm
+  Perl::Mogrify::Transformer::Variables::RequireNegativeIndices:
+    file: lib/Perl/Mogrify/Transformer/Variables/RequireNegativeIndices.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerConfig:
-    file: lib/Perl/Mogrify/EnforcerConfig.pm
+  Perl::Mogrify::TransformerConfig:
+    file: lib/Perl/Mogrify/TransformerConfig.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerFactory:
-    file: lib/Perl/Mogrify/EnforcerFactory.pm
+  Perl::Mogrify::TransformerFactory:
+    file: lib/Perl/Mogrify/TransformerFactory.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerListing:
-    file: lib/Perl/Mogrify/EnforcerListing.pm
+  Perl::Mogrify::TransformerListing:
+    file: lib/Perl/Mogrify/TransformerListing.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter:
-    file: lib/Perl/Mogrify/EnforcerParameter.pm
+  Perl::Mogrify::TransformerParameter:
+    file: lib/Perl/Mogrify/TransformerParameter.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter::Behavior:
-    file: lib/Perl/Mogrify/EnforcerParameter/Behavior.pm
+  Perl::Mogrify::TransformerParameter::Behavior:
+    file: lib/Perl/Mogrify/TransformerParameter/Behavior.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter::Behavior::Boolean:
-    file: lib/Perl/Mogrify/EnforcerParameter/Behavior/Boolean.pm
+  Perl::Mogrify::TransformerParameter::Behavior::Boolean:
+    file: lib/Perl/Mogrify/TransformerParameter/Behavior/Boolean.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter::Behavior::Enumeration:
-    file: lib/Perl/Mogrify/EnforcerParameter/Behavior/Enumeration.pm
+  Perl::Mogrify::TransformerParameter::Behavior::Enumeration:
+    file: lib/Perl/Mogrify/TransformerParameter/Behavior/Enumeration.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter::Behavior::Integer:
-    file: lib/Perl/Mogrify/EnforcerParameter/Behavior/Integer.pm
+  Perl::Mogrify::TransformerParameter::Behavior::Integer:
+    file: lib/Perl/Mogrify/TransformerParameter/Behavior/Integer.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter::Behavior::String:
-    file: lib/Perl/Mogrify/EnforcerParameter/Behavior/String.pm
+  Perl::Mogrify::TransformerParameter::Behavior::String:
+    file: lib/Perl/Mogrify/TransformerParameter/Behavior/String.pm
     version: '1.125'
-  Perl::Mogrify::EnforcerParameter::Behavior::StringList:
-    file: lib/Perl/Mogrify/EnforcerParameter/Behavior/StringList.pm
+  Perl::Mogrify::TransformerParameter::Behavior::StringList:
+    file: lib/Perl/Mogrify/TransformerParameter/Behavior/StringList.pm
     version: '1.125'
   Perl::Mogrify::ProfilePrototype:
     file: lib/Perl/Mogrify/ProfilePrototype.pm
@@ -603,8 +603,8 @@ provides:
   Perl::Mogrify::Violation:
     file: lib/Perl/Mogrify/Violation.pm
     version: '1.125'
-  Test::Perl::Mogrify::Enforcer:
-    file: lib/Test/Perl/Mogrify/Enforcer.pm
+  Test::Perl::Mogrify::Transformer:
+    file: lib/Test/Perl/Mogrify/Transformer.pm
     version: '1.125'
 requires:
   B::Keywords: '1.05'

@@ -12,7 +12,7 @@ use Readonly;
 
 use Test::More;
 
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify;
 use Perl::Mogrify::Utils::Constants qw< $_MODULE_VERSION_TERM_ANSICOLOR >;
 

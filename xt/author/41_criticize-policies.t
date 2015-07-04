@@ -1,7 +1,7 @@
 #!perl
 
-# Extra self-compliance tests for Enforcer classes.  This just checks for
-# additional POD sections that we want in every Enforcer module.  See the
+# Extra self-compliance tests for Transformer classes.  This just checks for
+# additional POD sections that we want in every Transformer module.  See the
 # 41_perlcriticrc-policies file for the precise configuration.
 
 use strict;
@@ -49,7 +49,7 @@ Test::Perl::Mogrify->import( -profile => $rcfile );
 my $path =
     File::Spec->catfile(
         -e 'blib' ? 'blib/lib' : 'lib',
-        qw< Perl Mogrify Enforcer >,
+        qw< Perl Mogrify Transformer >,
     );
 all_critic_ok( $path );
 

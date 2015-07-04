@@ -44,7 +44,7 @@ sub new {
     my ( $class, $desc, $expl, $elem, $sev ) = @_;
 
     # Check arguments to help out developers who might
-    # be creating new Perl::Mogrify::Enforcer modules.
+    # be creating new Perl::Mogrify::Transformer modules.
 
     if ( @_ != $CONSTRUCTOR_ARG_COUNT ) {
         throw_internal 'Wrong number of args to Violation->new()';
@@ -251,7 +251,7 @@ sub to_string {
     my $self = shift;
 
     my $long_policy = $self->policy();
-    (my $short_policy = $long_policy) =~ s/ \A Perl::Mogrify::Enforcer:: //xms;
+    (my $short_policy = $long_policy) =~ s/ \A Perl::Mogrify::Transformer:: //xms;
 
     # Wrap the more expensive ones in sub{} to postpone evaluation
     my %fspec = (
@@ -329,7 +329,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Violation - A violation of a Enforcer found in some source code.
+Perl::Mogrify::Violation - A violation of a Transformer found in some source code.
 
 
 =head1 SYNOPSIS
@@ -348,10 +348,10 @@ Perl::Mogrify::Violation - A violation of a Enforcer found in some source code.
 =head1 DESCRIPTION
 
 Perl::Mogrify::Violation is the generic representation of an individual
-Enforcer violation.  Its primary purpose is to provide an abstraction
+Transformer violation.  Its primary purpose is to provide an abstraction
 layer so that clients of L<Perl::Mogrify|Perl::Mogrify> don't have to
 know anything about L<PPI|PPI>.  The C<violations> method of all
-L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer> subclasses must return a
+L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> subclasses must return a
 list of these Perl::Mogrify::Violation objects.
 
 
@@ -468,14 +468,14 @@ If you need to sort Violations by location, use this handy routine:
 =item C<diagnostics()>
 
 Returns a formatted string containing a full discussion of the
-motivation for and details of the Enforcer module that created this
+motivation for and details of the Transformer module that created this
 Violation.  This information is automatically extracted from the
-C<DESCRIPTION> section of the Enforcer module's POD.
+C<DESCRIPTION> section of the Transformer module's POD.
 
 
 =item C<policy()>
 
-Returns the name of the L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
+Returns the name of the L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
 that created this Violation.
 
 
@@ -538,8 +538,8 @@ characters are:
     %l        Logical line number where the violation occurred
     %L        Physical line number where the violation occurred
     %m        Brief description of the violation
-    %P        Full name of the Enforcer module that created the violation
-    %p        Name of the Enforcer without the Perl::Mogrify::Enforcer:: prefix
+    %P        Full name of the Transformer module that created the violation
+    %p        Name of the Transformer without the Perl::Mogrify::Transformer:: prefix
     %r        The string of source code that caused the violation
     %C        The class of the PPI::Element that caused the violation
     %s        The severity level of the violation

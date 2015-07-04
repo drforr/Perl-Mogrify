@@ -320,7 +320,7 @@ contains no information for individual Policies.
 
 Returns a reference to a list of the default exclusion patterns.  If
 onto by
-L<Perl::Mogrify::EnforceryParameter|Perl::Mogrify::EnforcerParameter>.  there
+L<Perl::Mogrify::TransformeryParameter|Perl::Mogrify::TransformerParameter>.  there
 are no default exclusion patterns, then the list will be empty.
 
 

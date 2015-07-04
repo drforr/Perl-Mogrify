@@ -32,7 +32,7 @@ use Test::Perl::Mogrify;
 #-----------------------------------------------------------------------------
 
 # Fall over if P::C::More isn't installed.
-use Perl::Mogrify::Enforcer::ErrorHandling::RequireUseOfExceptions;
+use Perl::Mogrify::Transformer::ErrorHandling::RequireUseOfExceptions;
 
 #-----------------------------------------------------------------------------
 # Set up PPI caching for speed (used primarily during development)

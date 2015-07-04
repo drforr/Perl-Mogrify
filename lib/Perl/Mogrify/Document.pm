@@ -404,13 +404,13 @@ sub line_is_disabled_for_policy {
     my ($self, $line, $policy) = @_;
     my $policy_name = ref $policy || $policy;
 
-    # HACK: This Enforcer is special.  If it is active, it cannot be
+    # HACK: This Transformer is special.  If it is active, it cannot be
     # disabled by a "## no critic" annotation.  Rather than create a general
-    # hook in Enforcer.pm for enabling this behavior, we chose to hack
+    # hook in Transformer.pm for enabling this behavior, we chose to hack
     # it here, since this isn't the kind of thing that most policies do
 
     return 0 if $policy_name eq
-        'Perl::Mogrify::Enforcer::Miscellanea::ProhibitUnrestrictedNoCritic';
+        'Perl::Mogrify::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic';
 
     return 1 if $self->{_disabled_line_map}->{$line}->{$policy_name};
     return 1 if $self->{_disabled_line_map}->{$line}->{ALL};
@@ -532,7 +532,7 @@ sub _disable_shebang_fix {
     # When you install a program using ExtUtils::MakeMaker or Module::Build, it
     # inserts some magical code into the top of the file (just after the
     # shebang).  This code allows people to call your program using a shell,
-    # like `sh my_script`.  Unfortunately, this code causes several Enforcer
+    # like `sh my_script`.  Unfortunately, this code causes several Transformer
     # violations, so we disable them as if they had "## no critic" annotations.
 
     my $first_stmnt = $self->schild(0) || return;

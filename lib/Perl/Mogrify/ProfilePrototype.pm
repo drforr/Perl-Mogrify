@@ -7,7 +7,7 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Perl::Mogrify::Config qw{};
-use Perl::Mogrify::Enforcer qw{};
+use Perl::Mogrify::Transformer qw{};
 use Perl::Mogrify::Utils qw{ :characters };
 use overload ( q{""} => 'to_string' );
 
@@ -159,7 +159,7 @@ sub to_string {
     $prototype .= q{program-extensions = };
     $prototype .= join $SPACE, $configuration->program_extensions();
 
-    Perl::Mogrify::Enforcer::set_format( $self->_proto_format() );
+    Perl::Mogrify::Transformer::set_format( $self->_proto_format() );
 
     my $policy_prototypes = join qq{\n}, map { "$_" } @{ $self->_get_policies() };
     $policy_prototypes =~ s/\s+ \z//xms; # Trim trailing whitespace
@@ -256,8 +256,8 @@ When a
 L<Perl::Mogrify::ProfilePrototype|Perl::Mogrify::ProfilePrototype> is
 evaluated in string context, it produces a multi-line summary of the
 policy name, default themes, and default severity for each
-L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer> object that was given to
-the constructor of this C<ProfilePrototype>.  If the Enforcer supports
+L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> object that was given to
+the constructor of this C<ProfilePrototype>.  If the Transformer supports
 an additional parameters, they will also be listed (but
 commented-out).  The format is suitable for use as a F<.perlcriticrc>
 file.

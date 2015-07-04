@@ -10,7 +10,7 @@ Revision history for Perl module Perl::Mogrify
 
 1.124 2015-02-27
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * The ProhibitUnusedPrivateSubroutines policy can now ignore files that
       use particular modules with 'skip_when_using' option allows of, for
       example, skipping the policy for roles.  Thanks to Mark Fowler.
@@ -98,7 +98,7 @@ Revision history for Perl module Perl::Mogrify
       change in the error messages produced by that module.
       This fixes #16 on Github,  #88679 & #88889 on RT.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * BuiltinFunctions::ProhibitVoidGrep and ::ProhibitVoidMap: grep
       and map called as functions are now allowed in slice operations.
       RT #79289.  Thanks to Wade at Anomaly dot org for the patch.
@@ -112,7 +112,7 @@ Revision history for Perl module Perl::Mogrify
 
 1.118 2012-07-10
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * CodeLayout::RequireTidyCode: Revise to work with incompatible
       changes in Perl::Tidy 20120619. RT #77977.
     * TestingAndDebugging::ProhibitNoWarnings: Correct the parse of the
@@ -133,7 +133,7 @@ Revision history for Perl module Perl::Mogrify
     * Variables::ProhibitAugmentedAssignmentInDeclaration reports
       constructs like 'my $x += 1'. Contributed by Mike O'Regan.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * BuiltinFunctions::ProhibitLvalueSubstr: Add explicit 'use version'.
       RT #68498.
     * CodeLayout::ProhibitHardTabs: Add 'pbp' to the default_themes list.
@@ -175,7 +175,7 @@ Revision history for Perl module Perl::Mogrify
 
 1.116 2011-05-15
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * BuiltInFunctions::ProhibitLvalueSubstr does not report violations
       if the document contains an explicit 'use n.nnn;' where the
       version is before 5.005.  RT #59112
@@ -204,7 +204,7 @@ Revision history for Perl module Perl::Mogrify
 
 1.114 2011-03-26
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Documentation::RequirePodLinksIncludeText now handles nested POD
       formatting. RT #65569
     * Clarified relation of severity numbers to names in Perl::Mogrify
@@ -242,7 +242,7 @@ Revision history for Perl module Perl::Mogrify
       unconditionally at compile time.  Thanks to Peter Guzis for submitting
       the policy and tests in RT #59065.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * CodeLayout::RequireConsistentNewlines produces multiple undefined
       value errors when a violation is found. RT #65663
     * ControlStructures::ProhibitMutatingListFunctions allows s///r,
@@ -282,7 +282,7 @@ Revision history for Perl module Perl::Mogrify
       other than an actual file.
 
     [Other Changes]
-    * Test::Perl::Mogrify::Enforcer no longer exports by default.
+    * Test::Perl::Mogrify::Transformer no longer exports by default.
     * Build phase now requires Test::Deep.
     * Added example using Try::Tiny to documentation of
       ErrorHandling::RequireCheckingReturnValueOfEval. Suggested by Andy
@@ -361,17 +361,17 @@ Revision history for Perl module Perl::Mogrify
       command option --programs-extensions, which can be specified multiple
       times.
     * There is now a perlcritic --allow-unsafe switch.  Without this switch,
-      Perl::Mogrify will silently refuse to load any Enforcer that is marked
+      Perl::Mogrify will silently refuse to load any Transformer that is marked
       unsafe.  Unsafe Policies are usually ones that may compile or execute
-      untrusted code (see Perl::Mogrify::DynamicPolicy for an example); Enforcer
+      untrusted code (see Perl::Mogrify::DynamicPolicy for an example); Transformer
       authors can mark their policies as unsafe by overriding the is_safe()
       method.
     * The framework that we use to test Perl::Mogrify Policies has been
       packaged into a convenient module that you can use to test your own
-      Policies.  See Test::Perl::Mogrify::Enforcer and Perl::Mogrify::TestUtils
+      Policies.  See Test::Perl::Mogrify::Transformer and Perl::Mogrify::TestUtils
       for details.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * BuiltInFunctions::ProhibitLvalueSubstr no longer complains when there
       is a low-precedence operator between the substr() and the assignment
       operator.
@@ -483,7 +483,7 @@ Revision history for Perl module Perl::Mogrify
     * Variables::ProhibitPunctuationVars would complain about "%-" appearing
       anywhere in a string.  RT #49016
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * InputOutput::RequireCheckedSyscalls now complains about unchecked "say"
       by default.  RT #37487
 
@@ -521,7 +521,7 @@ Revision history for Perl module Perl::Mogrify
       %F, %f, and %l formats.  You can get the old values via the new %G, %g,
       and %L formats.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * CodeLayout::ProhibitParensWithBuiltins was complaining in certain cases
       where parentheses are required due to operator precedence.  RT #46862.
     * ControlStructures::ProhibitMutatingListFunctions no longer complains
@@ -530,7 +530,7 @@ Revision history for Perl module Perl::Mogrify
     * Miscellanea::RequireRcsKeywords now accepts "qw$Keyword: ...$".  RT
       #45196.
     * Modules::RequireFilenameMatchesPackage now respects logical filenames
-      defined by the "#line" directives.  This allows the Enforcer to work
+      defined by the "#line" directives.  This allows the Transformer to work
       properly with IDEs and code generators.
     * NamingConventions::Capitalization now allows fully qualified subroutine
       declarations ( e.g. "sub Foo::Bar::baz {...}" ).  However, the
@@ -645,7 +645,7 @@ Revision history for Perl module Perl::Mogrify
     * The --verbose option for perlcritic now supports a %C format that will
       displays the class of PPI::Element that caused the violation.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions
       didn't include "pbp" in its default themes even though it is derived
       from the book.  Now it does.  :]
@@ -689,7 +689,7 @@ Revision history for Perl module Perl::Mogrify
       public or not.  Any removal of functionality from a public module will
       go through a deprecation cycle.  Non-public modules may have their
       interfaces changed without notice.
-    * P::C::Enforcer now has an is_enabled() method.
+    * P::C::Transformer now has an is_enabled() method.
     * P::C::Violation now has an element_class() method.
 
     [Bug Fixes]
@@ -719,7 +719,7 @@ Revision history for Perl module Perl::Mogrify
     [New Policies]
     * ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Documentation::PodSpelling now has a stop_words_file option.
     * Modules::ProhibitEvilModules now has a modules_file option.
 
@@ -776,7 +776,7 @@ Revision history for Perl module Perl::Mogrify
       using certain other variations in your "## no critic" markers, then you
       might suddenly find yourself violating the new
       ProhibtUnrestrictedNoCritic policy.  To fix this, just make sure your
-      Enforcer names appear in parentheses:
+      Transformer names appear in parentheses:
 
         ## no critic Foo, Bar, Baz     # wrong!
         ## no critic Foo Bar Baz       # wrong!
@@ -785,7 +785,7 @@ Revision history for Perl module Perl::Mogrify
         ## no critic (Foo, Bar, Baz)   # ok!
         ## no critic qw(Foo Bar Baz)   # also ok!
 
-    * The deprecated $FORMAT variables for Perl::Mogrify::Enforcer and
+    * The deprecated $FORMAT variables for Perl::Mogrify::Transformer and
       Perl::Mogrify::Violation no longer exist.  Use the corresponding
       get_format() and set_format() functions instead.
 
@@ -803,10 +803,10 @@ Revision history for Perl module Perl::Mogrify
       NamingConventions::Capitalization policy does everything they do, plus
       more.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * BuiltinFunctions::ProhibitStringyEval now has an allow_includes option
       that makes it behave (mostly) like Ricardo SIGNES'
-      Perl::Mogrify::Enforcer::Lax::ProhibitStringyEval::ExceptForRequire.
+      Perl::Mogrify::Transformer::Lax::ProhibitStringyEval::ExceptForRequire.
     * InputOutput::RequireCheckedClose, InputOutput::RequireCheckedOpen, and
       InputOutput::RequireCheckedSyscalls now all support autodie.
       Unfortunately, autodie is currently treated like a module and not a
@@ -840,13 +840,13 @@ Revision history for Perl module Perl::Mogrify
 
     [Miscellanea]
     * Perl::Mogrify::Violation will automatically strip trailing periods
-      from your Enforcer description and explanation strings.  This ensures that
+      from your Transformer description and explanation strings.  This ensures that
       the punctuation is consistent with the format specified by the user via
       the -verbose formatting options.
 
     [New Developer Features]
-    * Perl::Mogrify::Enforcer::prepare_to_scan_document() is now checked and a
-      Enforcer can disable itself for just a single document, which can speed
+    * Perl::Mogrify::Transformer::prepare_to_scan_document() is now checked and a
+      Transformer can disable itself for just a single document, which can speed
       things up.
 
 
@@ -878,7 +878,7 @@ Revision history for Perl module Perl::Mogrify
     * The output from "perlcritic -doc PATTERN" will be automatically
       sent to your pager if you have set the -pager option.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * CodeLayout::ProhibitQuotedWordLists no longer applies if the list
       contains any non-words, by default.  A non-word is anything that does
       not match /[\w-]+/.  You can restore the former behavior by setting the
@@ -918,7 +918,7 @@ Revision history for Perl module Perl::Mogrify
     [Minor Enhancements]
     * -s is now a synonym for --single-policy.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Subroutines::ProhibitBuiltinHomonyms now also prohibits subroutines
       with the same name as a Perl keyword (e.g. if, foreach, while).
       Inspired by RT #37632.
@@ -959,7 +959,7 @@ Revision history for Perl module Perl::Mogrify
     [New Policies]
     * ErrorHandling::RequireCheckingReturnValueOfEval
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * ValuesAndExpressions::ProhibitLeadingZeros now accepts octal numbers
       for the Unix permissions argument to chmod, dbmopen, mkdir, sysopen, or
       umask, by default.  Use the "strict" option to get the old behavior.
@@ -975,7 +975,7 @@ Revision history for Perl module Perl::Mogrify
 
 1.087 2008-06-21
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * CodeLayout::ProhibitParensWithBuiltins no longer complains about
       sort(foo(@x)).
     * TestingAndDebugging::RequireUseWarnings will not complain about files
@@ -998,7 +998,7 @@ Revision history for Perl module Perl::Mogrify
 
 1.086 2008-06-12
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * NamingConventions::ProhibitAmbiguousNames now specifies the name that
       it had problems with in its violation descriptions.
 
@@ -1015,7 +1015,7 @@ Revision history for Perl module Perl::Mogrify
     [New Policies]
     * Documentation::RequirePackageMatchesPodName
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Variables::ProhibitUnusedVariables detects a few more cases.  It's
       still very limited, though.
 
@@ -1031,12 +1031,12 @@ Revision history for Perl module Perl::Mogrify
 
     [New Features]
     * perlcritic now supports a --list-themes option.
-    * You can specify the maximum number of violations you want per Enforcer
+    * You can specify the maximum number of violations you want per Transformer
       per document.  Developers can give a default value for this for a
-      Enforcer by overriding default_maximum_violations_per_document().
+      Transformer by overriding default_maximum_violations_per_document().
       See RequireUseStrict and ProhibitMagicNumbers for examples.
 
-    [Enforcer Moved]
+    [Transformer Moved]
     * The ValuesAndExpressions::ProhibitMagicNumbers policy has been moved
       from Perl::Mogrify::More into the primary Perl::Mogrify distribution.
 
@@ -1046,7 +1046,7 @@ Revision history for Perl module Perl::Mogrify
     * ControlStructures::ProhibitLabelsWithSpecialBlockNames
       Contributed by Mike O'Regan.  Kickin' ass, Mike.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * ControlStructures::ProhibitUnreachableCode now handles the perl 5.10
       "//" and "err" operators.  RT #36080
     * InputOutput::RequireBriefOpen now ignores opens of STDIN, STDOUT,
@@ -1077,7 +1077,7 @@ Revision history for Perl module Perl::Mogrify
     * If a document specifies a minimum perl version, e.g. "use 5.008003",
       P::C::Document::highest_explicit_perl_version() will tell you what it
       is.
-    * The parameter to P::C::Enforcer::initialize_if_enabled is now a
+    * The parameter to P::C::Transformer::initialize_if_enabled is now a
       P::C::PolicyConfig object instead of a hash reference.
 
     [Minor Changes]
@@ -1129,10 +1129,10 @@ Revision history for Perl module Perl::Mogrify
       file.  This will be used by the criticism pragma to cause execution
       to abort if the file contains any violations.
 
-    [New Enforcer]
+    [New Transformer]
     * Module::RequireNoMatchVarsWithUseEnglish
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Added an allow_last_statement_to_be_comma_separated_in_map_and_grep
       option to ValuesAndExpressions::ProhibitCommaSeparatedStatements.
       Partial response to http://rt.cpan.org/Public/Bug/Display.html?id=27654.
@@ -1187,7 +1187,7 @@ Revision history for Perl module Perl::Mogrify
     [Other New Policies]
     * ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Variables::ProhibitConditionalDeclarations now permits you to local-ize
       variables in conditional declarations.  This makes sense, since
       C<local> is actually a variable modifier, rather than a declaration.
@@ -1334,10 +1334,10 @@ Revision history for Perl module Perl::Mogrify
       ignorable problems in a .perlcriticrc file.
 
     [New Developer Features]
-    * Perl::Mogrify::Enforcer now has an overridable initialize_if_enabled()
-      method which allows a Enforcer to perform expensive initialization after
+    * Perl::Mogrify::Transformer now has an overridable initialize_if_enabled()
+      method which allows a Transformer to perform expensive initialization after
       it has been determined whether the user has it enabled or not.  Also,
-      this method allows a Enforcer to say that it should be disabled
+      this method allows a Transformer to say that it should be disabled
       regardless of what the user says.
 
       Actually, use of this method is now encouraged over using a
@@ -1403,7 +1403,7 @@ Revision history for Perl module Perl::Mogrify
     * perlcritic now emits a summary about the scanned code when enabled by
       the "-statistics" option.
 
-    [Enforcer Enhancements]
+    [Transformer Enhancements]
     * InputOutput::ProhibitBacktickOperators can now be configured to only
       check in void contexts.
 
@@ -1452,7 +1452,7 @@ Revision history for Perl module Perl::Mogrify
     * ValuesAndExpressions::ProhibitCommaSeparatedStatements
     * Variables::ProhibitPerl4PackageNames
 
-    [Enforcer Enhancements]
+    [Transformer Enhancements]
     * Subroutines::RequireFinalReturn can now be configured to recognize
       your custom functions that behave like "die" or "exit".
     * Documentation::RequirePodSections can be configured to match
@@ -1469,7 +1469,7 @@ Revision history for Perl module Perl::Mogrify
     * Perl::Mogrify::Utils automatically exports everything.  However,
       this is deprecated.  In the future, you must request your exports.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * Duplicate violations of RequireExcplicitPackage are now squelched,
       in the same way as RequireUseStrict and RequireUseWarnings.
 
@@ -1530,8 +1530,8 @@ Revision history for Perl module Perl::Mogrify
     * The @GLOBALS and @BUILTINS variables are no longer exported by
       Perl::Mogrify::Utils.  Use the is_perl_global() and is_perl_builtin()
       functions instead.
-    * Perl::Mogrify::Enforcer::policy_parameters() has bee renamed to
-      Perl::Mogrify::Enforcer::supported_paramters().  This was an
+    * Perl::Mogrify::Transformer::policy_parameters() has bee renamed to
+      Perl::Mogrify::Transformer::supported_paramters().  This was an
       undocumented feature anyway, so it shouldn't affect anyone.
 
     [Other Internal Changes]
@@ -1549,8 +1549,8 @@ Revision history for Perl module Perl::Mogrify
       Or just:     "perlcritic --cruel MyModule.pm"
     * For perlcritic, the "-List" option has been renamed to
       "-profileproto".  The output now includes the names of the
-      parameters that each Enforcer supports, if any.
-    * Improved validation of Enforcer parameters in your F<.perlcriticrc>
+      parameters that each Transformer supports, if any.
+    * Improved validation of Transformer parameters in your F<.perlcriticrc>
       Any invalid parameter now causes a fatal exception.
 
     [Major Changes]
@@ -1559,7 +1559,7 @@ Revision history for Perl module Perl::Mogrify
       instead of severity levels.  If you have assigned your own
       themes to any Policies, they should still work as expected.
 
-    [Enforcer Changes]
+    [Transformer Changes]
     * ErrorHandling::RequireCarping will not complain if it can figure
       out that the die or warn message will always end in a newline
       ("\n").  The idea is that, if you put the newline there, you
@@ -1585,7 +1585,7 @@ Revision history for Perl module Perl::Mogrify
       The format is suitable for use as your .perlcriticrc file.
     * Say "perlcritic -doc PATTERN" to get the documentation for all
       Policies that match m/PATTERN/imx.  This is a little easier than
-      typing in the full name of the Enforcer module with "perldoc".
+      typing in the full name of the Transformer module with "perldoc".
     * Say "perlcritic --singlepolicy PATTERN" to use one and only one
       policy.
     * Can now specify exceptions to Variables::ProhibitPackageVars,
@@ -1597,7 +1597,7 @@ Revision history for Perl module Perl::Mogrify
     * 22890 allow Rcs keywords in POD.
 
     [Internals]
-    * Testing system overhauled.  Details on the Enforcer/subtest
+    * Testing system overhauled.  Details on the Transformer/subtest
       framework is in t/run.t.
     * Added Perl::Mogrify::Utils::words_from_string.  This is safer
       than plain old C<split /\s+/>.
@@ -1797,8 +1797,8 @@ Revision history for Perl module Perl::Mogrify
       is being evaluated.
     * RequireUseStrict, RequireUseWarnings, and RequireExplcitPackage
       all emit violations for _every_ statement that violates the
-      Enforcer.  This closes a loophole that allowed you to circumvent
-      the Enforcer by using '## no critic' on just the first statement
+      Transformer.  This closes a loophole that allowed you to circumvent
+      the Transformer by using '## no critic' on just the first statement
       that violated the policy.
     * Fixed the workaround for the magic shebang that is inserted
       by EU::MM and M::B.  This had stopped working around version 13.
@@ -1810,7 +1810,7 @@ Revision history for Perl module Perl::Mogrify
 
     [Enhancements]
     * Added diagnostic messages if the .perlcriticrc contains entries
-      for Enforcer modules that don't seem to exist.
+      for Transformer modules that don't seem to exist.
     * Now you can specify which policies to disable with the
       "## no critic" pseudo-pragmas.  This feature is still
       experimental.  See docs for details.
@@ -1821,7 +1821,7 @@ Revision history for Perl module Perl::Mogrify
     [Bug Fixes]
     * 18386: Bad example in POD for Documentation::RequirePodSections
     * 18670: Test failure if Perl::Tidy is not installed
-    * 18698: Enforcer idea ProhibitUniversalFunctions (see New Policies)
+    * 18698: Transformer idea ProhibitUniversalFunctions (see New Policies)
     * RequireInterpolationOfMetachars falsely hit strings like 'foo=s@'
       which are commonly used with Getopt::Long.
 
@@ -1909,19 +1909,19 @@ Revision history for Perl module Perl::Mogrify
 
 0.13_01 2005-12-28
 
-    * Replaced 'priority' concept with 'severity'.  Now each Enforcer module
+    * Replaced 'priority' concept with 'severity'.  Now each Transformer module
       has a predefined severity level ranging from 1 to 5.  By default,
       perlcritic only reports the most severe violations.  You can adjust
       the severity threshold at the command line, and you can change
-      the severity for any Enforcer using the config file.
-    * Chris implemented the applies_to() mechanism, which allows each Enforcer
+      the severity for any Transformer using the config file.
+    * Chris implemented the applies_to() mechanism, which allows each Transformer
       class to declare the types of PPI elements that it wants to examine.
-      When traversing the document, Perl::Mogrify invokes the Enforcer only
+      When traversing the document, Perl::Mogrify invokes the Transformer only
       for elements that are of the correct type.  This improves performance
       by about 33%.
     * Perl::Mogrify now uses a Plugin architecture to automatically
-      discover Enforcer modules.  So if you have custom Policies, all you
-      have to do is install them in the Perl::Mogrify::Enforcer namespace --
+      discover Transformer modules.  So if you have custom Policies, all you
+      have to do is install them in the Perl::Mogrify::Transformer namespace --
       no need to add anything to your .perlcriticrc file.  If you write
       policies in a different namespace, you can configure that too.  See
       the Perl::Mogrify::Config docs for details.
@@ -1946,20 +1946,20 @@ Revision history for Perl module Perl::Mogrify
 
 0.13 2005-10-31
 
-    * Renamed -Enforcer option to -include.  Added -exclude to give the
+    * Renamed -Transformer option to -include.  Added -exclude to give the
       opposite effect.
     * Refactored constructor of Perl::Mogrify.  Now, most of the work
       is delegated to Perl::Mogrify::Config.  I'm not sure I like how
       this turned out, but we'll see how it goes.
-    * Renamed some Enforcer modules to be a bit more comprehensible.  Note
+    * Renamed some Transformer modules to be a bit more comprehensible.  Note
       that you may need to change your .perlcriticrc file accordingly.
       I also suggest removing your current Perl::Mogrify installation
       before installing this one.
     * Improved error message when Perl::Mogrify dies because PPI can't
       parse the input code.
     * Changed output of -help to be more terse.
-    * Added -Enforcer option to perlcritic.  The idea is to provide a
-      compact interface for selecting Enforcer modules at the command-line.
+    * Added -Transformer option to perlcritic.  The idea is to provide a
+      compact interface for selecting Transformer modules at the command-line.
       This feature is experimental and subject to change.
     * Added a warning message if -verbose value looks strange.  In most
       applications, the -verbose option does not require a value, so people
@@ -1968,7 +1968,7 @@ Revision history for Perl module Perl::Mogrify
     * Command-line options to perlcritic are now case-sensitive.  This
       makes it easier to abbreviate options that start with the same letters
       (e.g. 'Version' and 'verbose')
-    * Fixed the new Enforcer modules that were misnamed and misplaced in the
+    * Fixed the new Transformer modules that were misnamed and misplaced in the
       previous distribution.
     * Rewrote some of the ControlStructures and BuiltinFunction
       policies to be simpler (and probably a little faster).
@@ -2017,7 +2017,7 @@ Revision history for Perl module Perl::Mogrify
 
     * The internal dynamics and API of Perl::Mogrify have changed
       considerably.  The result is a 300% increase in performance.
-      See the POD in Perl::Mogrify::Enforcer for details.
+      See the POD in Perl::Mogrify::Transformer for details.
     * Redesigned the 'verbose' feature.  Now the output format
       can be user-defined using a sprintf-like specification.
       perlciritc also has a predefined output format that is
@@ -2030,7 +2030,7 @@ Revision history for Perl module Perl::Mogrify
 
     [New Features]
     * Added -verbose option to put more stuff in the output.  In the
-      extreme, you can get the POD from Enforcer attached to each
+      extreme, you can get the POD from Transformer attached to each
       and every violation.
 
     [Additional Prerequisites]
@@ -2041,7 +2041,7 @@ Revision history for Perl module Perl::Mogrify
 
 0.10 2005-10-05
 
-    * Fixed stupid bug in newest Enforcer modules.  They were returning
+    * Fixed stupid bug in newest Transformer modules.  They were returning
       PPI objects instead of Perl::Mogrify::Violation objects.  Doh!
     * Fixed test scripts to prevent failures if the user already has a
       .perlcriticrc file.
@@ -2071,7 +2071,7 @@ Revision history for Perl module Perl::Mogrify
     [New features]
     * 14734: Limit for number separators is now configurable
 
-    [New Enforcer modules]
+    [New Transformer modules]
     * CodeLayout::ProhibitHardTabs
     * ControlStructures::ProhibitUnlessBlocks
     * ControlStructures::ProhibitUntilBlocks
@@ -2082,7 +2082,7 @@ Revision history for Perl module Perl::Mogrify
 
     * Fixed problems with Perl::Mogrify::Config that caused File::Spec
       to emit 'uninitialized value' warnings during the build.
-    * Added 1 Enforcer module contributed by Graham TerMarsch
+    * Added 1 Transformer module contributed by Graham TerMarsch
     * Switched from File::Spec::Functions to plain File::Spec because
       I think its usage is more common.
     * Removed 'FindBin' from the test files so I can be sure that the
@@ -2111,7 +2111,7 @@ Revision history for Perl module Perl::Mogrify
     * Renamed "ProhibitStringyGrep and "ProhibitStringyMap" because
       the so-called string form doesn't really exist.  Now called
       "RequireBlockGrep" and "RequireBlockMap"
-    * Corrected documentation on defining Enforcer names within the
+    * Corrected documentation on defining Transformer names within the
       configuration file.  This still isn't very clear and needs
       to be rewritten.
     * Perl::Mogrify now requires PPI version 1.003, which has a few bug
@@ -2154,9 +2154,9 @@ Revision history for Perl module Perl::Mogrify
       Policies).  The idea here is to allow other developers to easily
       contribute additional coding standards.
     * Reworked Perl::Review into a simple engine for loading and running
-      Enforcer modules.
+      Transformer modules.
     * Gave perlreview a command-line interface and configuration file
-      for selecting which Enforcer modules to use.
+      for selecting which Transformer modules to use.
 
 
 0.01 2005-08-16

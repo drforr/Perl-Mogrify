@@ -7,7 +7,7 @@ use warnings;
 use English qw<-no_match_vars>;
 
 use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify::ThemeListing;
 
 use Test::More tests => 1;
@@ -19,8 +19,8 @@ our $VERSION = '1.125';
 #-----------------------------------------------------------------------------
 
 my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-my @policy_names = Perl::Mogrify::EnforcerFactory::site_policy_names();
-my $factory = Perl::Mogrify::EnforcerFactory->new( -profile => $profile );
+my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
+my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
 my @policies = map { $factory->create_policy( -name => $_ ) } @policy_names;
 my $listing = Perl::Mogrify::ThemeListing->new( -policies => \@policies );
 

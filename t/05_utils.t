@@ -14,7 +14,7 @@ use File::Temp qw< >;
 use PPI::Document qw< >;
 use PPI::Document::File qw< >;
 
-use Perl::Mogrify::EnforcerFactory;
+use Perl::Mogrify::TransformerFactory;
 use Perl::Mogrify::TestUtils qw(bundled_policy_names);
 use Perl::Mogrify::Utils;
 
@@ -70,7 +70,7 @@ sub test_export {
 
     is($SPACE, q< >, 'character constants');
     is($SEVERITY_LOWEST, 1, 'severity constants');
-    is($POLICY_NAMESPACE, 'Perl::Mogrify::Enforcer', 'Enforcer namespace');
+    is($POLICY_NAMESPACE, 'Perl::Mogrify::Transformer', 'Transformer namespace');
 
     return;
 }
@@ -455,7 +455,7 @@ sub test_find_bundled_policies {
     Perl::Mogrify::TestUtils::block_perlcriticrc();
 
     my @native_policies = bundled_policy_names();
-    my $policy_dir = File::Spec->catfile( qw(lib Perl Mogrify Enforcer) );
+    my $policy_dir = File::Spec->catfile( qw(lib Perl Mogrify Transformer) );
     my @found_policies  = all_perl_files( $policy_dir );
     is( scalar @found_policies, scalar @native_policies, 'Find all perl code');
 

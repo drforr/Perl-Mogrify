@@ -7,7 +7,7 @@ use warnings;
 use Carp qw(confess);
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::EnforcerFactory;
+use Perl::Mogrify::TransformerFactory;
 use Perl::Mogrify::Utils qw(:characters hashify);
 use Readonly;
 
@@ -218,7 +218,7 @@ sub _parse_annotation {
     my ($annotation_element) = @_;
 
     #############################################################################
-    # This regex captures the list of Enforcer name patterns that are to be
+    # This regex captures the list of Transformer name patterns that are to be
     # disabled.  It is generally assumed that the element has already been
     # verified as a no-critic annotation.  So if this regex does not match,
     # then it implies that all Policies are to be disabled.
@@ -228,11 +228,11 @@ sub _parse_annotation {
     #                                 |              |      |        |
     #   "## no critic" with optional spaces          |      |        |
     #                                                |      |        |
-    #             Enforcer list may be prefixed with "qw"     |        |
+    #             Transformer list may be prefixed with "qw"     |        |
     #                                                       |        |
-    #         Optional Enforcer list must begin with one of these      |
+    #         Optional Transformer list must begin with one of these      |
     #                                                                |
-    #                 Capture entire Enforcer list (with delimiters) here
+    #                 Capture entire Transformer list (with delimiters) here
     #
     #############################################################################
 
@@ -245,15 +245,15 @@ sub _parse_annotation {
         my @policy_name_patterns = grep { $_ ne $EMPTY }
             split m{\s *[,\s] \s*}xms, $patterns_string;
         my $re = join $PIPE, map {"(?:$_)"} @policy_name_patterns;
-        my @site_policy_names = Perl::Mogrify::EnforcerFactory::site_policy_names();
+        my @site_policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
         @disabled_policy_names = grep {m/$re/ixms} @site_policy_names;
 
-        # It is possible that the Enforcer patterns listed in the annotation do not
+        # It is possible that the Transformer patterns listed in the annotation do not
         # match any of the site policy names.  This could happen when running
         # on a machine that does not have the same set of Policies as the author.
         # So we must return something here, otherwise all Policies will be
         # disabled.  We probably need to add a mechanism to (optionally) warn
-        # about this, just to help the author avoid writing invalid Enforcer names.
+        # about this, just to help the author avoid writing invalid Transformer names.
 
         if (not @disabled_policy_names) {
             @disabled_policy_names = @policy_name_patterns;
@@ -295,7 +295,7 @@ C<Perl::Mogrify::Annotation> represents a single C<"## no critic">
 annotation in a L<PPI:Document>.  The Annotation takes care of parsing
 the annotation and keeps track of which lines and Policies it affects.
 It is intended to encapsulate the details of the no-critic
-annotations, and to provide a way for Enforcer objects to interact with
+annotations, and to provide a way for Transformer objects to interact with
 the annotations (via a L<Perl::Mogrify::Document|Perl::Mogrify::Document>).
 
 

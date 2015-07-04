@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify::TestUtils qw(bundled_policy_names);
 
 use Test::More tests => 1;
@@ -21,7 +21,7 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
 #-----------------------------------------------------------------------------
 
 my $profile = Perl::Mogrify::UserProfile->new();
-my $factory = Perl::Mogrify::EnforcerFactory->new( -profile => $profile );
+my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
 my @found_policies = sort map { ref } $factory->create_all_policies();
 my $test_label = 'successfully loaded policies matches MANIFEST';
 is_deeply( \@found_policies, [bundled_policy_names()], $test_label );

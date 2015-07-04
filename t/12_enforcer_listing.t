@@ -7,8 +7,8 @@ use warnings;
 use English qw<-no_match_vars>;
 
 use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::EnforcerFactory (-test => 1);
-use Perl::Mogrify::EnforcerListing;
+use Perl::Mogrify::TransformerFactory (-test => 1);
+use Perl::Mogrify::TransformerListing;
 
 use Test::More;
 
@@ -19,10 +19,10 @@ our $VERSION = '1.125';
 #-----------------------------------------------------------------------------
 
 my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-my @policy_names = Perl::Mogrify::EnforcerFactory::site_policy_names();
-my $factory = Perl::Mogrify::EnforcerFactory->new( -profile => $profile );
+my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
+my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
 my @policies = map { $factory->create_policy( -name => $_ ) } @policy_names;
-my $listing = Perl::Mogrify::EnforcerListing->new( -policies => \@policies );
+my $listing = Perl::Mogrify::TransformerListing->new( -policies => \@policies );
 my $policy_count = scalar @policies;
 
 plan( tests => $policy_count + 1);

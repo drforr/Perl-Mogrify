@@ -175,7 +175,7 @@ Readonly::Hash our %EXPORT_TAGS => (
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar our $POLICY_NAMESPACE => 'Perl::Mogrify::Enforcer';
+Readonly::Scalar our $POLICY_NAMESPACE => 'Perl::Mogrify::Transformer';
 
 #-----------------------------------------------------------------------------
 
@@ -1402,8 +1402,8 @@ Perl::Mogrify::Utils - General utility subroutines and constants for Perl::Mogri
 =head1 DESCRIPTION
 
 This module provides several static subs and variables that are useful
-for developing L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
-subclasses.  Unless you are writing Enforcer modules, you probably don't
+for developing L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
+subclasses.  Unless you are writing Transformer modules, you probably don't
 care about this package.
 
 
@@ -1419,7 +1419,7 @@ interface will go through a deprecation cycle.
 
 =item C<find_keywords( $doc, $keyword )>
 
-B<DEPRECATED:> Since version 0.11, every Enforcer is evaluated at each
+B<DEPRECATED:> Since version 0.11, every Transformer is evaluated at each
 element of the document.  So you shouldn't need to go looking for a
 particular keyword.  If you I<do> want to use this, please import it
 via the C<:deprecated> tag, rather than directly, to mark the module
@@ -1554,7 +1554,7 @@ Given a L<PPI::Element|PPI::Element>, returns true if the element is a
 literal hash key.  PPI doesn't distinguish between regular barewords
 (like keywords or subroutine calls) and barewords in hash subscripts
 (which are considered literal).  So this subroutine is useful if your
-Enforcer is searching for L<PPI::Token::Word|PPI::Token::Word> elements
+Transformer is searching for L<PPI::Token::Word|PPI::Token::Word> elements
 and you want to filter out the hash subscript variety.  In both of the
 following examples, "foo" is considered a hash key:
 
@@ -1827,8 +1827,8 @@ punctuation.  Can be imported in one go via the C<:characters> tag.
 =item C<$SEVERITY_LOWEST>
 
 These numeric constants define the relative severity of violating each
-L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>.  The C<get_severity> and
-C<default_severity> methods of every Enforcer subclass must return one
+L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>.  The C<get_severity> and
+C<default_severity> methods of every Transformer subclass must return one
 of these values. Can be imported via the C<:severities> tag.
 
 =item C<$DEFAULT_VERBOSITY>

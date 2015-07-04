@@ -20,7 +20,7 @@ use Perl::Mogrify::Config;
 use Perl::Mogrify::Exception::Fatal::Generic qw{ &throw_generic };
 use Perl::Mogrify::Exception::Fatal::Internal qw{ &throw_internal };
 use Perl::Mogrify::Utils qw{ :severities :data_conversion policy_long_name };
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 
 our $VERSION = '1.125';
 
@@ -200,7 +200,7 @@ sub _globals_from_file {
 
     my %valid_keys = hashify qw< prerequisites >;
 
-    return if -z $test_file;  # Skip if the Enforcer has a regular .t file.
+    return if -z $test_file;  # Skip if the Transformer has a regular .t file.
 
     my %globals;
 
@@ -238,7 +238,7 @@ sub _subtests_from_file {
 
     my %valid_keys = hashify qw( name failures parms TODO error filename optional_modules );
 
-    return if -z $test_file;  # Skip if the Enforcer has a regular .t file.
+    return if -z $test_file;  # Skip if the Transformer has a regular .t file.
 
     open my $fh, '<', $test_file   ## no critic (RequireBriefOpen)
         or throw_internal "Couldn't open $test_file: $OS_ERROR";
@@ -347,7 +347,7 @@ sub _finalize_subtest {
 sub bundled_policy_names {
     require ExtUtils::Manifest;
     my $manifest = ExtUtils::Manifest::maniread();
-    my @policy_paths = map {m{\A lib/(Perl/Mogrify/Enforcer/.*).pm \z}xms} keys %{$manifest};
+    my @policy_paths = map {m{\A lib/(Perl/Mogrify/Transformer/.*).pm \z}xms} keys %{$manifest};
     my @policies = map { join q{::}, split m{/}xms } @policy_paths;
     my @sorted_policies = sort @policies;
     return @sorted_policies;
@@ -413,7 +413,7 @@ interface will go through a deprecation cycle.
 
 This module is used by L<Perl::Mogrify|Perl::Mogrify> only for
 self-testing. It provides a few handy subroutines for testing new
-Perl::Mogrify::Enforcer modules.  Look at the test programs that ship with
+Perl::Mogrify::Transformer modules.  Look at the test programs that ship with
 Perl::Mogrify for more examples of how to use these subroutines.
 
 
@@ -510,9 +510,9 @@ when it is desired that the examples be included.
 
 =item bundled_policy_names()
 
-Returns a list of Enforcer packages that come bundled with this package.
+Returns a list of Transformer packages that come bundled with this package.
 This functions by searching F<MANIFEST> for
-F<lib/Perl/Mogrify/Enforcer/*.pm> and converts the results to package
+F<lib/Perl/Mogrify/Transformer/*.pm> and converts the results to package
 names.
 
 
@@ -529,7 +529,7 @@ function on the current system using the specified configuration.
 
 Testing a policy follows a very simple pattern:
 
-    * Enforcer name
+    * Transformer name
         * Subtest name
         * Optional parameters
         * Number of failures expected

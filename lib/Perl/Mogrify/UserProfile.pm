@@ -14,7 +14,7 @@ use Perl::Mogrify::OptionsProcessor qw();
 use Perl::Mogrify::Utils qw{ :characters policy_long_name policy_short_name };
 use Perl::Mogrify::Exception::Fatal::Internal qw{ throw_internal };
 use Perl::Mogrify::Exception::Configuration::Generic qw{ throw_generic };
-use Perl::Mogrify::EnforcerConfig;
+use Perl::Mogrify::TransformerConfig;
 
 our $VERSION = '1.125';
 
@@ -56,7 +56,7 @@ sub policy_params {
 
     my $short_name = policy_short_name($policy);
 
-    return Perl::Mogrify::EnforcerConfig->new(
+    return Perl::Mogrify::TransformerConfig->new(
         $short_name,
         $self->raw_policy_params($policy),
     );
@@ -353,29 +353,29 @@ object for this UserProfile.
 
 =item C< policy_is_disabled( $policy ) >
 
-Given a reference to a L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
+Given a reference to a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
 object or the name of one, returns true if the user has disabled that
 policy in their profile.
 
 
 =item C< policy_is_enabled( $policy ) >
 
-Given a reference to a L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
+Given a reference to a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
 object or the name of one, returns true if the user has explicitly
 enabled that policy in their user profile.
 
 
 =item C< policy_params( $policy ) >
 
-Given a reference to a L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
+Given a reference to a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
 object or the name of one, returns a
-L<Perl::Mogrify::EnforcerConfig|Perl::Mogrify::EnforcerConfig> for the
+L<Perl::Mogrify::TransformerConfig|Perl::Mogrify::TransformerConfig> for the
 user's configuration parameters for that policy.
 
 
 =item C< raw_policy_params( $policy ) >
 
-Given a reference to a L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>
+Given a reference to a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
 object or the name of one, returns a reference to a hash of the user's
 configuration parameters for that policy.
 
@@ -383,7 +383,7 @@ configuration parameters for that policy.
 =item C< listed_policies() >
 
 Returns a list of the names of all the Policies that are mentioned in
-the profile.  The Enforcer names will be fully qualified (e.g.
+the profile.  The Transformer names will be fully qualified (e.g.
 Perl::Mogrify::Foo).
 
 

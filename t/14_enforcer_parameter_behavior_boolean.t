@@ -6,8 +6,8 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::Enforcer;
-use Perl::Mogrify::EnforcerParameter;
+use Perl::Mogrify::Transformer;
+use Perl::Mogrify::TransformerParameter;
 use Perl::Mogrify::Utils qw{ :booleans };
 
 use Test::More tests => 9;
@@ -31,22 +31,22 @@ $specification =
     };
 
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
 TODO: {
     local $TODO =
         'Need to restore tri-state functionality to Behavior::Boolean.';
 
-    $policy = Perl::Mogrify::Enforcer->new();
+    $policy = Perl::Mogrify::Transformer->new();
     $parameter->parse_and_validate_config_value($policy, \%config);
     is($policy->{_test}, undef, q{no value, no default});
 }
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '1';
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $TRUE, q{'1', no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $FALSE, q{'0', no default});
@@ -55,17 +55,17 @@ is($policy->{_test}, $FALSE, q{'0', no default});
 $specification->{default_string} = '1';
 delete $config{test};
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $TRUE, q{no value, default '1'});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '1';
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $TRUE, q{'1', default '1'});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $FALSE, q{'0', default '1'});
@@ -74,17 +74,17 @@ is($policy->{_test}, $FALSE, q{'0', default '1'});
 $specification->{default_string} = '0';
 delete $config{test};
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $FALSE, q{no value, default '0'});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '1';
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $TRUE, q{'1', default '0'});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, $FALSE, q{'0', default '0'});

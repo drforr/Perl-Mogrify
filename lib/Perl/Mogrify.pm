@@ -204,7 +204,7 @@ sub _futz_with_policy_order {
     # a way for Policies to express an ordering preference somehow.
 
     my @policy_objects = @_;
-    my $magical_policy_name = 'Perl::Mogrify::Enforcer::Miscellanea::ProhibitUselessNoCritic';
+    my $magical_policy_name = 'Perl::Mogrify::Transformer::Miscellanea::ProhibitUselessNoCritic';
     my $idx = firstidx {ref $_ eq $magical_policy_name} @policy_objects;
     push @policy_objects, splice @policy_objects, $idx, 1;
     return @policy_objects;
@@ -242,12 +242,12 @@ Perl::Mogrify - Critique Perl source code for best-practices.
 Perl::Mogrify is an extensible framework for creating and applying coding
 standards to Perl source code.  Essentially, it is a static source code
 analysis engine.  Perl::Mogrify is distributed with a number of
-L<Perl::Mogrify::Enforcer> modules that attempt to enforce various coding
-guidelines.  Most Enforcer modules are based on Damian Conway's book B<Perl Best
+L<Perl::Mogrify::Transformer> modules that attempt to enforce various coding
+guidelines.  Most Transformer modules are based on Damian Conway's book B<Perl Best
 Practices>.  However, Perl::Mogrify is B<not> limited to PBP and will even
 support Policies that contradict Conway.  You can enable, disable, and
 customize those Polices through the Perl::Mogrify interface.  You can also
-create new Enforcer modules that suit your own tastes.
+create new Transformer modules that suit your own tastes.
 
 For a command-line interface to Perl::Mogrify, see the documentation for
 L<perlcritic>.  If you want to integrate Perl::Mogrify with your build process,
@@ -295,13 +295,13 @@ location.  If a configuration file can't be found, or if C<$FILE> is an empty
 string, then all Policies will be loaded with their default configuration.
 See L<"CONFIGURATION"> for more information.
 
-B<-severity> is the minimum severity level.  Only Enforcer modules that have a
+B<-severity> is the minimum severity level.  Only Transformer modules that have a
 severity greater than C<$N> will be applied.  Severity values are integers
 ranging from 1 (least severe violations) to 5 (most severe violations).  The
 default is 5.  For a given C<-profile>, decreasing the C<-severity> will
-usually reveal more Enforcer violations. You can set the default value for this
+usually reveal more Transformer violations. You can set the default value for this
 option in your F<.perlcriticrc> file.  Users can redefine the severity level
-for any Enforcer in their F<.perlcriticrc> file.  See L<"CONFIGURATION"> for
+for any Transformer in their F<.perlcriticrc> file.  See L<"CONFIGURATION"> for
 more information.
 
 If it is difficult for you to remember whether severity "5" is the most or
@@ -331,30 +331,30 @@ this option in your F<.perlcriticrc> file.  See the L<"POLICY THEMES"> section
 for more information about themes.
 
 
-B<-include> is a reference to a list of string C<@PATTERNS>.  Enforcer modules
+B<-include> is a reference to a list of string C<@PATTERNS>.  Transformer modules
 that match at least one C<m/$PATTERN/ixms> will always be loaded, irrespective
 of all other settings.  For example:
 
     my $critic = Perl::Mogrify->new(-include => ['layout'] -severity => 4);
 
-This would cause Perl::Mogrify to apply all the C<CodeLayout::*> Enforcer modules
+This would cause Perl::Mogrify to apply all the C<CodeLayout::*> Transformer modules
 even though they have a severity level that is less than 4. You can set the
 default value for this option in your F<.perlcriticrc> file.  You can also use
 C<-include> in conjunction with the C<-exclude> option.  Note that C<-exclude>
-takes precedence over C<-include> when a Enforcer matches both patterns.
+takes precedence over C<-include> when a Transformer matches both patterns.
 
-B<-exclude> is a reference to a list of string C<@PATTERNS>.  Enforcer modules
+B<-exclude> is a reference to a list of string C<@PATTERNS>.  Transformer modules
 that match at least one C<m/$PATTERN/ixms> will not be loaded, irrespective of
 all other settings.  For example:
 
     my $critic = Perl::Mogrify->new(-exclude => ['strict'] -severity => 1);
 
 This would cause Perl::Mogrify to not apply the C<RequireUseStrict> and
-C<ProhibitNoStrict> Enforcer modules even though they have a severity level that
+C<ProhibitNoStrict> Transformer modules even though they have a severity level that
 is greater than 1.  You can set the default value for this option in your
 F<.perlcriticrc> file.  You can also use C<-exclude> in conjunction with the
 C<-include> option.  Note that C<-exclude> takes precedence over C<-include>
-when a Enforcer matches both patterns.
+when a Transformer matches both patterns.
 
 B<-single-policy> is a string C<PATTERN>.  Only one policy that matches
 C<m/$PATTERN/ixms> will be used.  Policies that do not match will be excluded.
@@ -440,22 +440,22 @@ there are no violations, this method returns an empty list.
 
 =item C<< add_policy( -policy => $policy_name, -params => \%param_hash ) >>
 
-Creates a Enforcer object and loads it into this Mogrify.  If the object cannot
+Creates a Transformer object and loads it into this Mogrify.  If the object cannot
 be instantiated, it will throw a fatal exception.  Otherwise, it returns a
 reference to this Mogrify.
 
-B<-policy> is the name of a L<Perl::Mogrify::Enforcer> subclass module.  The
-C<'Perl::Mogrify::Enforcer'> portion of the name can be omitted for brevity.
+B<-policy> is the name of a L<Perl::Mogrify::Transformer> subclass module.  The
+C<'Perl::Mogrify::Transformer'> portion of the name can be omitted for brevity.
 This argument is required.
 
-B<-params> is an optional reference to a hash of Enforcer parameters. The
+B<-params> is an optional reference to a hash of Transformer parameters. The
 contents of this hash reference will be passed into to the constructor of the
-Enforcer module.  See the documentation in the relevant Enforcer module for a
+Transformer module.  See the documentation in the relevant Transformer module for a
 description of the arguments it supports.
 
 =item C< policies() >
 
-Returns a list containing references to all the Enforcer objects that have been
+Returns a list containing references to all the Transformer objects that have been
 loaded into this engine.  Objects will be in the order that they were loaded.
 
 =item C< config() >
@@ -497,14 +497,14 @@ functions.  Sorry.
 
 =head1 CONFIGURATION
 
-Most of the settings for Perl::Mogrify and each of the Enforcer modules can be
+Most of the settings for Perl::Mogrify and each of the Transformer modules can be
 controlled by a configuration file.  The default configuration file is called
 F<.perlcriticrc>.  Perl::Mogrify will look for this file in the current
 directory first, and then in your home directory. Alternatively, you can set
 the C<PERLCRITIC> environment variable to explicitly point to a different file
 in another location.  If none of these files exist, and the C<-profile> option
 is not given to the constructor, then all the modules that are found in the
-Perl::Mogrify::Enforcer namespace will be loaded with their default
+Perl::Mogrify::Transformer namespace will be loaded with their default
 configuration.
 
 The format of the configuration file is a series of INI-style blocks that
@@ -531,7 +531,7 @@ constructor argument.
 
 The remainder of the configuration file is a series of blocks like this:
 
-    [Perl::Mogrify::Enforcer::Category::EnforcerName]
+    [Perl::Mogrify::Transformer::Category::TransformerName]
     severity = 1
     set_themes = foo bar
     add_themes = baz
@@ -539,14 +539,14 @@ The remainder of the configuration file is a series of blocks like this:
     arg1 = value1
     arg2 = value2
 
-C<Perl::Mogrify::Enforcer::Category::EnforcerName> is the full name of a module
-that implements the policy.  The Enforcer modules distributed with Perl::Mogrify
+C<Perl::Mogrify::Transformer::Category::TransformerName> is the full name of a module
+that implements the policy.  The Transformer modules distributed with Perl::Mogrify
 have been grouped into categories according to the table of contents in Damian
 Conway's book B<Perl Best Practices>. For brevity, you can omit the
-C<'Perl::Mogrify::Enforcer'> part of the module name.
+C<'Perl::Mogrify::Transformer'> part of the module name.
 
-C<severity> is the level of importance you wish to assign to the Enforcer.  All
-Enforcer modules are defined with a default severity value ranging from 1 (least
+C<severity> is the level of importance you wish to assign to the Transformer.  All
+Transformer modules are defined with a default severity value ranging from 1 (least
 severe) to 5 (most severe).  However, you may disagree with the default
 severity and choose to give it a higher or lower severity, based on your own
 coding philosophy.  You can set the C<severity> to an integer from 1 to 5, or
@@ -564,30 +564,30 @@ The names reflect how severely the code is criticized: a C<gentle> criticism
 reports only the most severe violations, and so on down to a C<brutal>
 criticism which reports even the most minor violations.
 
-C<set_themes> sets the theme for the Enforcer and overrides its default theme.
+C<set_themes> sets the theme for the Transformer and overrides its default theme.
 The argument is a string of one or more whitespace-delimited alphanumeric
 words.  Themes are case-insensitive.  See L<"POLICY THEMES"> for more
 information.
 
-C<add_themes> appends to the default themes for this Enforcer.  The argument is
+C<add_themes> appends to the default themes for this Transformer.  The argument is
 a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See L<"POLICY THEMES"> for more information.
 
-C<maximum_violations_per_document> limits the number of Violations the Enforcer
+C<maximum_violations_per_document> limits the number of Violations the Transformer
 will return for a given document.  Some Policies have a default limit; see the
 documentation for the individual Policies to see whether there is one.  To
-force a Enforcer to not have a limit, specify "no_limit" or the empty string for
+force a Transformer to not have a limit, specify "no_limit" or the empty string for
 the value of this parameter.
 
 The remaining key-value pairs are configuration parameters that will be passed
-into the constructor for that Enforcer.  The constructors for most Enforcer
+into the constructor for that Transformer.  The constructors for most Transformer
 objects do not support arguments, and those that do should have reasonable
-defaults.  See the documentation on the appropriate Enforcer module for more
+defaults.  See the documentation on the appropriate Transformer module for more
 details.
 
-Instead of redefining the severity for a given Enforcer, you can completely
-disable a Enforcer by prepending a '-' to the name of the module in your
-configuration file.  In this manner, the Enforcer will never be loaded,
+Instead of redefining the severity for a given Transformer, you can completely
+disable a Transformer by prepending a '-' to the name of the module in your
+configuration file.  In this manner, the Transformer will never be loaded,
 regardless of the C<-severity> given to the Perl::Mogrify constructor.
 
 A simple configuration might look like this:
@@ -640,10 +640,10 @@ distribution as F<examples/perlcriticrc-conway>.
 
 =head1 THE POLICIES
 
-A large number of Enforcer modules are distributed with Perl::Mogrify. They are
-described briefly in the companion document L<Perl::Mogrify::EnforcerSummary> and
+A large number of Transformer modules are distributed with Perl::Mogrify. They are
+described briefly in the companion document L<Perl::Mogrify::TransformerSummary> and
 in more detail in the individual modules themselves.  Say C<"perlcritic -doc
-PATTERN"> to see the perldoc for all Enforcer modules that match the regex
+PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
 There are a number of distributions of additional policies on CPAN. If
@@ -654,7 +654,7 @@ of these distributions.
 
 =head1 POLICY THEMES
 
-Each Enforcer is defined with one or more "themes".  Themes can be used to
+Each Transformer is defined with one or more "themes".  Themes can be used to
 create arbitrary groups of Policies.  They are intended to provide an
 alternative mechanism for selecting your preferred set of Policies. For
 example, you may wish disable a certain subset of Policies when analyzing test
@@ -679,9 +679,9 @@ You are free to invent new themes that suit your needs.
     tests             Policies that are specific to test programs
 
 
-Any Enforcer may fit into multiple themes.  Say C<"perlcritic -list"> to get a
+Any Transformer may fit into multiple themes.  Say C<"perlcritic -list"> to get a
 listing of all available Policies and the themes that are associated with each
-one.  You can also change the theme for any Enforcer in your F<.perlcriticrc>
+one.  You can also change the theme for any Transformer in your F<.perlcriticrc>
 file.  See the L<"CONFIGURATION"> section for more information about that.
 
 Using the C<-theme> option, you can create an arbitrarily complex rule that
@@ -734,7 +734,7 @@ line of code is overlooked.  To direct perlcritic to ignore the C<"## no
 critic"> annotations, use the C<--force> option.
 
 A bare C<"## no critic"> annotation disables all the active Policies.  If you
-wish to disable only specific Policies, add a list of Enforcer names as
+wish to disable only specific Policies, add a list of Transformer names as
 arguments, just as you would for the C<"no strict"> or C<"no warnings">
 pragmas.  For example, this would disable the C<ProhibitEmptyQuotes> and
 C<ProhibitPostfixControls> policies until the end of the block or until the
@@ -751,8 +751,8 @@ next C<"## use critic"> annotation (whichever comes first):
     # Still subjected to ValuesAndExpression::RequireNumberSeparators
     $long_int = 10000000000;
 
-Since the Enforcer names are matched against the C<"## no critic"> arguments as
-regular expressions, you can abbreviate the Enforcer names or disable an entire
+Since the Transformer names are matched against the C<"## no critic"> arguments as
+regular expressions, you can abbreviate the Transformer names or disable an entire
 family of Policies in one shot like this:
 
     ## no critic (NamingConventions)
@@ -802,12 +802,12 @@ private set of policies into Perl::Mogrify.
 
 The modular design of Perl::Mogrify is intended to facilitate the addition of
 new Policies.  You'll need to have some understanding of L<PPI>, but most
-Enforcer modules are pretty straightforward and only require about 20 lines of
+Transformer modules are pretty straightforward and only require about 20 lines of
 code.  Please see the L<Perl::Mogrify::DEVELOPER> file included in this
-distribution for a step-by-step demonstration of how to create new Enforcer
+distribution for a step-by-step demonstration of how to create new Transformer
 modules.
 
-If you develop any new Enforcer modules, feel free to send them to C<<
+If you develop any new Transformer modules, feel free to send them to C<<
 <team@perlcritic.com> >> and I'll be happy to consider adding them into the
 Perl::Mogrify distribution.  Or if you would like to work on the Perl::Mogrify
 project directly, you can fork our repository at L<http://github.com/Perl-
@@ -921,7 +921,7 @@ L<Task::Perl::Mogrify>
 
 Scrutinizing Perl code is hard for humans, let alone machines.  If you find
 any bugs, particularly false-positives or false-negatives from a
-Perl::Mogrify::Enforcer, please submit them at L<https://github.com/Perl-Mogrify
+Perl::Mogrify::Transformer, please submit them at L<https://github.com/Perl-Mogrify
 /Perl-Mogrify/issues>.  Thanks.
 
 =head1 CREDITS
@@ -930,7 +930,7 @@ Adam Kennedy - For creating L<PPI>, the heart and soul of L<Perl::Mogrify>.
 
 Damian Conway - For writing B<Perl Best Practices>, finally :)
 
-Chris Dolan - For contributing the best features and Enforcer modules.
+Chris Dolan - For contributing the best features and Transformer modules.
 
 Andy Lester - Wise sage and master of all-things-testing.
 

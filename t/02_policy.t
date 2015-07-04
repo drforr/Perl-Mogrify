@@ -15,15 +15,15 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-# Perl::Mogrify::Enforcer is an abstract class, so it can't be instantiated
+# Perl::Mogrify::Transformer is an abstract class, so it can't be instantiated
 # directly.  So we test it by declaring test classes that inherit from it.
 
 ## no critic (ProhibitMultiplePackages, RequireFilenameMatchesPackage)
-package EnforcerTest;
-use base 'Perl::Mogrify::Enforcer';
+package TransformerTest;
+use base 'Perl::Mogrify::Transformer';
 
-package EnforcerTestOverriddenDefaultMaximumViolations;
-use base 'Perl::Mogrify::Enforcer';
+package TransformerTestOverriddenDefaultMaximumViolations;
+use base 'Perl::Mogrify::Transformer';
 
 sub default_maximum_violations_per_document { return 31; }
 
@@ -32,8 +32,8 @@ sub default_maximum_violations_per_document { return 31; }
 package main;
 ## use critic
 
-my $p = EnforcerTest->new();
-isa_ok($p, 'EnforcerTest');
+my $p = TransformerTest->new();
+isa_ok($p, 'TransformerTest');
 
 
 local $EVAL_ERROR = undef;
@@ -83,8 +83,8 @@ is(
 );
 
 
-my $overridden_default = EnforcerTestOverriddenDefaultMaximumViolations->new();
-isa_ok($overridden_default, 'EnforcerTestOverriddenDefaultMaximumViolations');
+my $overridden_default = TransformerTestOverriddenDefaultMaximumViolations->new();
+isa_ok($overridden_default, 'TransformerTestOverriddenDefaultMaximumViolations');
 
 is(
     $overridden_default->is_enabled(),
@@ -160,13 +160,13 @@ is_deeply(
 
 
 # Test format getter/setters
-is( Perl::Mogrify::Enforcer::get_format, "%p\n", 'Default policy format');
+is( Perl::Mogrify::Transformer::get_format, "%p\n", 'Default policy format');
 
 my $new_format = '%p %s [%t]';
-Perl::Mogrify::Enforcer::set_format( $new_format ); # Set format
-is( Perl::Mogrify::Enforcer::get_format, $new_format, 'Changed policy format');
+Perl::Mogrify::Transformer::set_format( $new_format ); # Set format
+is( Perl::Mogrify::Transformer::get_format, $new_format, 'Changed policy format');
 
-my $expected_string = 'EnforcerTest 3 [a b c d e f]';
+my $expected_string = 'TransformerTest 3 [a b c d e f]';
 is( $p->to_string(), $expected_string, 'Stringification by to_string()');
 is( "$p", $expected_string, 'Stringification by overloading');
 

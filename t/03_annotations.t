@@ -92,7 +92,7 @@ SKIP: {
 SKIP: {
     foreach ( @bundled_policy_names ) {
         m/ FroBozzBazzle /smxi or next;
-        skip( 'Enforcer FroBozzBazzle actually implemented', 6 );
+        skip( 'Transformer FroBozzBazzle actually implemented', 6 );
         last;   # probably not necessary.
     }
 

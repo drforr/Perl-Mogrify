@@ -579,11 +579,11 @@ sub _render_all_policy_listing {
 sub _render_policy_listing {
     my %pc_params = @_;
 
-    require Perl::Mogrify::EnforcerListing;
+    require Perl::Mogrify::TransformerListing;
     require Perl::Mogrify;
 
     my @policies = Perl::Mogrify->new( %pc_params )->policies();
-    my $listing = Perl::Mogrify::EnforcerListing->new( -policies => \@policies );
+    my $listing = Perl::Mogrify::TransformerListing->new( -policies => \@policies );
     _out $listing;
 
     exit $EXIT_SUCCESS;
@@ -630,8 +630,8 @@ sub _render_policy_docs {
     $critic = Perl::Mogrify->new(%opts);
     _set_up_pager($critic->config()->pager());
 
-    require Perl::Mogrify::EnforcerFactory;
-    my @site_policies  = Perl::Mogrify::EnforcerFactory->site_policy_names();
+    require Perl::Mogrify::TransformerFactory;
+    my @site_policies  = Perl::Mogrify::TransformerFactory->site_policy_names();
     my @matching_policies  = grep { /$pattern/ixms } @site_policies;
 
     # "-T" means don't send to pager

@@ -25,14 +25,14 @@ my @bundled_policy_names = bundled_policy_names();
 my @concrete_exceptions = qw{
     AggregateConfiguration
     Configuration::Generic
-    Configuration::NonExistentEnforcer
+    Configuration::NonExistentTransformer
     Configuration::Option::Global::ExtraParameter
     Configuration::Option::Global::ParameterValue
-    Configuration::Option::Enforcer::ExtraParameter
-    Configuration::Option::Enforcer::ParameterValue
+    Configuration::Option::Transformer::ExtraParameter
+    Configuration::Option::Transformer::ParameterValue
     Fatal::Generic
     Fatal::Internal
-    Fatal::EnforcerDefinition
+    Fatal::TransformerDefinition
     IO
 };
 
@@ -123,44 +123,44 @@ isa_ok($processor, 'Perl::Mogrify::OptionsProcessor');
 is($processor->VERSION(), $version_string, 'Perl::Mogrify::OptionsProcessor version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Enforcer module interface
+# Test Perl::Mogrify::Transformer module interface
 
-use_ok('Perl::Mogrify::Enforcer') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Enforcer', 'add_themes');
-can_ok('Perl::Mogrify::Enforcer', 'applies_to');
-can_ok('Perl::Mogrify::Enforcer', 'default_maximum_violations_per_document');
-can_ok('Perl::Mogrify::Enforcer', 'default_severity');
-can_ok('Perl::Mogrify::Enforcer', 'default_themes');
-can_ok('Perl::Mogrify::Enforcer', 'get_abstract');
-can_ok('Perl::Mogrify::Enforcer', 'get_format');
-can_ok('Perl::Mogrify::Enforcer', 'get_long_name');
-can_ok('Perl::Mogrify::Enforcer', 'get_maximum_violations_per_document');
-can_ok('Perl::Mogrify::Enforcer', 'get_parameters');
-can_ok('Perl::Mogrify::Enforcer', 'get_raw_abstract');
-can_ok('Perl::Mogrify::Enforcer', 'get_severity');
-can_ok('Perl::Mogrify::Enforcer', 'get_short_name');
-can_ok('Perl::Mogrify::Enforcer', 'get_themes');
-can_ok('Perl::Mogrify::Enforcer', 'initialize_if_enabled');
-can_ok('Perl::Mogrify::Enforcer', 'is_enabled');
-can_ok('Perl::Mogrify::Enforcer', 'is_safe');
-can_ok('Perl::Mogrify::Enforcer', 'new');
-can_ok('Perl::Mogrify::Enforcer', 'new_parameter_value_exception');
-can_ok('Perl::Mogrify::Enforcer', 'parameter_metadata_available');
-can_ok('Perl::Mogrify::Enforcer', 'prepare_to_scan_document');
-can_ok('Perl::Mogrify::Enforcer', 'set_format');
-can_ok('Perl::Mogrify::Enforcer', 'set_maximum_violations_per_document');
-can_ok('Perl::Mogrify::Enforcer', 'set_severity');
-can_ok('Perl::Mogrify::Enforcer', 'set_themes');
-can_ok('Perl::Mogrify::Enforcer', 'throw_parameter_value_exception');
-can_ok('Perl::Mogrify::Enforcer', 'to_string');
-can_ok('Perl::Mogrify::Enforcer', 'violates');
-can_ok('Perl::Mogrify::Enforcer', 'violation');
-can_ok('Perl::Mogrify::Enforcer', 'is_safe');
+use_ok('Perl::Mogrify::Transformer') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::Mogrify::Transformer', 'add_themes');
+can_ok('Perl::Mogrify::Transformer', 'applies_to');
+can_ok('Perl::Mogrify::Transformer', 'default_maximum_violations_per_document');
+can_ok('Perl::Mogrify::Transformer', 'default_severity');
+can_ok('Perl::Mogrify::Transformer', 'default_themes');
+can_ok('Perl::Mogrify::Transformer', 'get_abstract');
+can_ok('Perl::Mogrify::Transformer', 'get_format');
+can_ok('Perl::Mogrify::Transformer', 'get_long_name');
+can_ok('Perl::Mogrify::Transformer', 'get_maximum_violations_per_document');
+can_ok('Perl::Mogrify::Transformer', 'get_parameters');
+can_ok('Perl::Mogrify::Transformer', 'get_raw_abstract');
+can_ok('Perl::Mogrify::Transformer', 'get_severity');
+can_ok('Perl::Mogrify::Transformer', 'get_short_name');
+can_ok('Perl::Mogrify::Transformer', 'get_themes');
+can_ok('Perl::Mogrify::Transformer', 'initialize_if_enabled');
+can_ok('Perl::Mogrify::Transformer', 'is_enabled');
+can_ok('Perl::Mogrify::Transformer', 'is_safe');
+can_ok('Perl::Mogrify::Transformer', 'new');
+can_ok('Perl::Mogrify::Transformer', 'new_parameter_value_exception');
+can_ok('Perl::Mogrify::Transformer', 'parameter_metadata_available');
+can_ok('Perl::Mogrify::Transformer', 'prepare_to_scan_document');
+can_ok('Perl::Mogrify::Transformer', 'set_format');
+can_ok('Perl::Mogrify::Transformer', 'set_maximum_violations_per_document');
+can_ok('Perl::Mogrify::Transformer', 'set_severity');
+can_ok('Perl::Mogrify::Transformer', 'set_themes');
+can_ok('Perl::Mogrify::Transformer', 'throw_parameter_value_exception');
+can_ok('Perl::Mogrify::Transformer', 'to_string');
+can_ok('Perl::Mogrify::Transformer', 'violates');
+can_ok('Perl::Mogrify::Transformer', 'violation');
+can_ok('Perl::Mogrify::Transformer', 'is_safe');
 
 {
-    my $policy = Perl::Mogrify::Enforcer->new();
-    isa_ok($policy, 'Perl::Mogrify::Enforcer');
-    is($policy->VERSION(), $version_string, 'Perl::Mogrify::Enforcer version');
+    my $policy = Perl::Mogrify::Transformer->new();
+    isa_ok($policy, 'Perl::Mogrify::Transformer');
+    is($policy->VERSION(), $version_string, 'Perl::Mogrify::Transformer version');
 }
 
 #-----------------------------------------------------------------------------
@@ -201,18 +201,18 @@ isa_ok($up, 'Perl::Mogrify::UserProfile');
 is($up->VERSION(), $version_string, 'Perl::Mogrify::UserProfile version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::EnforcerFactory module interface
+# Test Perl::Mogrify::TransformerFactory module interface
 
-use_ok('Perl::Mogrify::EnforcerFactory') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::EnforcerFactory', 'create_policy');
-can_ok('Perl::Mogrify::EnforcerFactory', 'new');
-can_ok('Perl::Mogrify::EnforcerFactory', 'site_policy_names');
+use_ok('Perl::Mogrify::TransformerFactory') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::Mogrify::TransformerFactory', 'create_policy');
+can_ok('Perl::Mogrify::TransformerFactory', 'new');
+can_ok('Perl::Mogrify::TransformerFactory', 'site_policy_names');
 
 
 my $profile = Perl::Mogrify::UserProfile->new();
-my $factory = Perl::Mogrify::EnforcerFactory->new( -profile => $profile );
-isa_ok($factory, 'Perl::Mogrify::EnforcerFactory');
-is($factory->VERSION(), $version_string, 'Perl::Mogrify::EnforcerFactory version');
+my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
+isa_ok($factory, 'Perl::Mogrify::TransformerFactory');
+is($factory->VERSION(), $version_string, 'Perl::Mogrify::TransformerFactory version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::Mogrify::Theme module interface
@@ -228,15 +228,15 @@ isa_ok($theme, 'Perl::Mogrify::Theme');
 is($theme->VERSION(), $version_string, 'Perl::Mogrify::Theme version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::EnforcerListing module interface
+# Test Perl::Mogrify::TransformerListing module interface
 
-use_ok('Perl::Mogrify::EnforcerListing') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::EnforcerListing', 'new');
-can_ok('Perl::Mogrify::EnforcerListing', 'to_string');
+use_ok('Perl::Mogrify::TransformerListing') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::Mogrify::TransformerListing', 'new');
+can_ok('Perl::Mogrify::TransformerListing', 'to_string');
 
-my $listing = Perl::Mogrify::EnforcerListing->new();
-isa_ok($listing, 'Perl::Mogrify::EnforcerListing');
-is($listing->VERSION(), $version_string, 'Perl::Mogrify::EnforcerListing version');
+my $listing = Perl::Mogrify::TransformerListing->new();
+isa_ok($listing, 'Perl::Mogrify::TransformerListing');
+is($listing->VERSION(), $version_string, 'Perl::Mogrify::TransformerListing version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::Mogrify::ProfilePrototype module interface
@@ -277,7 +277,7 @@ can_ok('Perl::Mogrify::Command', 'run');
 }
 
 #-----------------------------------------------------------------------------
-# Test module interface for each Enforcer subclass
+# Test module interface for each Transformer subclass
 
 {
     for my $mod ( @bundled_policy_names ) {
@@ -298,7 +298,7 @@ can_ok('Perl::Mogrify::Command', 'run');
         can_ok($mod, 'is_safe');
 
         my $policy = $mod->new();
-        isa_ok($policy, 'Perl::Mogrify::Enforcer');
+        isa_ok($policy, 'Perl::Mogrify::Transformer');
         is($policy->VERSION(), $version_string, "Version of $mod");
         ok($policy->is_safe(), "CORE policy $mod is marked safe");
     }

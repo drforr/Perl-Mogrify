@@ -6,7 +6,7 @@ use warnings;
 
 use Carp qw< confess >;
 
-use Perl::Mogrify::EnforcerConfig;
+use Perl::Mogrify::TransformerConfig;
 
 use Test::More tests => 28;
 
@@ -19,12 +19,12 @@ our $VERSION = '1.125';
 
 {
     my $config =
-        Perl::Mogrify::EnforcerConfig->new('Some::Enforcer');
+        Perl::Mogrify::TransformerConfig->new('Some::Transformer');
 
     is(
         $config->get_policy_short_name(),
-        'Some::Enforcer',
-        'Enforcer short name gets saved.',
+        'Some::Transformer',
+        'Transformer short name gets saved.',
     );
     is(
         $config->get_set_themes(),
@@ -63,8 +63,8 @@ our $VERSION = '1.125';
 
 {
     my $config =
-        Perl::Mogrify::EnforcerConfig->new(
-            'Some::Other::Enforcer',
+        Perl::Mogrify::TransformerConfig->new(
+            'Some::Other::Transformer',
             {
                 custom_parameter   => 'blargh',
 
@@ -78,8 +78,8 @@ our $VERSION = '1.125';
 
     is(
         $config->get_policy_short_name(),
-        'Some::Other::Enforcer',
-        'Enforcer short name gets saved.',
+        'Some::Other::Transformer',
+        'Transformer short name gets saved.',
     );
     is(
         $config->get_set_themes(),

@@ -11,7 +11,7 @@ use List::MoreUtils qw(all any);
 
 use Perl::Mogrify::Exception::AggregateConfiguration;
 use Perl::Mogrify::Config qw<>;
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify::TestUtils qw<
     bundled_policy_names
     names_of_policies_willing_to_work
@@ -158,7 +158,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 #-----------------------------------------------------------------------------
 # Test config w/ multiple severity levels.  In this profile, we
-# define an arbitrary severity for each Enforcer so that severity
+# define an arbitrary severity for each Transformer so that severity
 # levels 5 through 2 each have 10 Policies.  All remaining Policies
 # are in the 1st severity level.
 
@@ -481,7 +481,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     my $config = Perl::Mogrify::Config->new( -profile => 'NONE' );
 
     # Try adding a bogus policy
-    eval{ $config->add_policy( -policy => 'Bogus::Enforcer') };
+    eval{ $config->add_policy( -policy => 'Bogus::Transformer') };
     like(
         $EVAL_ERROR,
         qr/Unable [ ] to [ ] create [ ] policy/xms,
@@ -531,7 +531,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
     # Pretend that ProhibitQuotedWordLists is actually unsafe
     no warnings qw(redefine once);  ## no critic qw(ProhibitNoWarnings)
-    local *Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists::is_safe = sub {return 0};
+    local *Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);
     my @p = Perl::Mogrify::Config->new( %safe_pc_config )->policies();
@@ -543,7 +543,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
     my %singular_pc_config = ('-single-policy' => 'QuotedWordLists');
     @p = Perl::Mogrify::Config->new( %singular_pc_config )->policies();
-    is(scalar @p, 1, '-single-policy always loads Enforcer, even if unsafe');
+    is(scalar @p, 1, '-single-policy always loads Transformer, even if unsafe');
 }
 
 #-----------------------------------------------------------------------------

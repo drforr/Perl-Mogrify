@@ -6,8 +6,8 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::Enforcer;
-use Perl::Mogrify::EnforcerParameter;
+use Perl::Mogrify::Transformer;
+use Perl::Mogrify::TransformerParameter;
 use Perl::Mogrify::Utils qw{ :booleans };
 
 use Test::More tests => 22;
@@ -31,47 +31,47 @@ $specification =
     };
 
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 is($policy->{_test}, undef, q{no value, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '2943';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 2943, q{2943, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '+2943';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 2943, q{+2943, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '-2943';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, -2943, q{-2943, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '29_43';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 2943, q{29_43, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '+29_43';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 2943, q{+29_43, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '-29_43';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, -2943, q{-29_43, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 0, q{0, no default});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '1.5';
 eval { $parameter->parse_and_validate_config_value($policy, \%config); };
 ok($EVAL_ERROR, q{not an integer});
@@ -80,12 +80,12 @@ ok($EVAL_ERROR, q{not an integer});
 $specification->{default_string} = '0';
 delete $config{test};
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 0, q{no value, default 0});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '5';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 5, q{5, default 0});
@@ -93,18 +93,18 @@ cmp_ok($policy->{_test}, q<==>, 5, q{5, default 0});
 
 $specification->{integer_minimum} = 0;
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '5';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 5, q{5, minimum 0});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 0, q{0, minimum 0});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '-5';
 eval { $parameter->parse_and_validate_config_value($policy, \%config); };
 ok($EVAL_ERROR, q{below minimum});
@@ -113,18 +113,18 @@ ok($EVAL_ERROR, q{below minimum});
 delete $specification->{integer_minimum};
 $specification->{integer_maximum} = 0;
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '-5';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, -5, q{-5, maximum 0});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 0, q{0, maximum 0});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '5';
 eval { $parameter->parse_and_validate_config_value($policy, \%config); };
 ok($EVAL_ERROR, q{above maximum});
@@ -133,28 +133,28 @@ ok($EVAL_ERROR, q{above maximum});
 $specification->{integer_minimum} = 0;
 $specification->{integer_maximum} = 5;
 
-$parameter = Perl::Mogrify::EnforcerParameter->new($specification);
-$policy = Perl::Mogrify::Enforcer->new();
+$parameter = Perl::Mogrify::TransformerParameter->new($specification);
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '-5';
 eval { $parameter->parse_and_validate_config_value($policy, \%config); };
 ok($EVAL_ERROR, q{below minimum of range});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '0';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 0, q{0, minimum 0, maximum 5});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '3';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 3, q{3, minimum 0, maximum 5});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '5';
 $parameter->parse_and_validate_config_value($policy, \%config);
 cmp_ok($policy->{_test}, q<==>, 5, q{5, minimum 0, maximum 5});
 
-$policy = Perl::Mogrify::Enforcer->new();
+$policy = Perl::Mogrify::Transformer->new();
 $config{test} = '10';
 eval { $parameter->parse_and_validate_config_value($policy, \%config); };
 ok($EVAL_ERROR, q{above maximum of range});

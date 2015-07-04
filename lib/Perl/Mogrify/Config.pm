@@ -14,7 +14,7 @@ use Perl::Mogrify::Exception::AggregateConfiguration;
 use Perl::Mogrify::Exception::Configuration;
 use Perl::Mogrify::Exception::Configuration::Option::Global::ParameterValue;
 use Perl::Mogrify::Exception::Fatal::Internal qw{ throw_internal };
-use Perl::Mogrify::EnforcerFactory;
+use Perl::Mogrify::TransformerFactory;
 use Perl::Mogrify::Theme qw( $RULE_INVALID_CHARACTER_REGEX cook_rule );
 use Perl::Mogrify::UserProfile qw();
 use Perl::Mogrify::Utils qw{
@@ -128,7 +128,7 @@ sub _init {
 
     # Construct a Factory with the Profile
     my $factory =
-        Perl::Mogrify::EnforcerFactory->new(
+        Perl::Mogrify::TransformerFactory->new(
             -profile              => $profile,
             -errors               => $errors,
             '-profile-strictness' => $self->profile_strictness(),
@@ -188,7 +188,7 @@ sub _add_policy_if_enabled {
 
     my $config = $policy_object->__get_config()
         or throw_internal
-            q{Enforcer was not set up properly because it does not have }
+            q{Transformer was not set up properly because it does not have }
                 . q{a value for its config attribute.};
 
     push @{ $self->{_all_policies_enabled_or_not} }, $policy_object;
@@ -889,7 +889,7 @@ sub criticism_fatal {
 #-----------------------------------------------------------------------------
 
 sub site_policy_names {
-    return Perl::Mogrify::EnforcerFactory::site_policy_names();
+    return Perl::Mogrify::TransformerFactory::site_policy_names();
 }
 
 #-----------------------------------------------------------------------------
@@ -970,7 +970,7 @@ Perl::Mogrify::Config - The final derived Perl::Mogrify configuration, combined 
 
 Perl::Mogrify::Config takes care of finding and processing
 user-preferences for L<Perl::Mogrify|Perl::Mogrify>.  The Config object
-defines which Enforcer modules will be loaded into the Perl::Mogrify
+defines which Transformer modules will be loaded into the Perl::Mogrify
 engine and how they should be configured.  You should never really
 need to instantiate Perl::Mogrify::Config directly because the
 Perl::Mogrify constructor will do it for you.
@@ -999,24 +999,24 @@ Not properly documented because you shouldn't be using this.
 
 =item C<< add_policy( -policy => $policy_name, -params => \%param_hash ) >>
 
-Creates a Enforcer object and loads it into this Config.  If the object
+Creates a Transformer object and loads it into this Config.  If the object
 cannot be instantiated, it will throw a fatal exception.  Otherwise,
 it returns a reference to this Mogrify.
 
 B<-policy> is the name of a
-L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer> subclass module.  The
-C<'Perl::Mogrify::Enforcer'> portion of the name can be omitted for
+L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> subclass module.  The
+C<'Perl::Mogrify::Transformer'> portion of the name can be omitted for
 brevity.  This argument is required.
 
-B<-params> is an optional reference to a hash of Enforcer parameters.
+B<-params> is an optional reference to a hash of Transformer parameters.
 The contents of this hash reference will be passed into to the
-constructor of the Enforcer module.  See the documentation in the
-relevant Enforcer module for a description of the arguments it supports.
+constructor of the Transformer module.  See the documentation in the
+relevant Transformer module for a description of the arguments it supports.
 
 
 =item C< all_policies_enabled_or_not() >
 
-Returns a list containing references to all the Enforcer objects that
+Returns a list containing references to all the Transformer objects that
 have been seen.  Note that the state of these objects is not
 trustworthy.  In particular, it is likely that some of them are not
 prepared to examine any documents.
@@ -1024,7 +1024,7 @@ prepared to examine any documents.
 
 =item C< policies() >
 
-Returns a list containing references to all the Enforcer objects that
+Returns a list containing references to all the Transformer objects that
 have been enabled and loaded into this Config.
 
 
@@ -1153,8 +1153,8 @@ internally, but may be useful to you in some way.
 
 =item C<site_policy_names()>
 
-Returns a list of all the Enforcer modules that are currently installed
-in the Perl::Mogrify:Enforcer namespace.  These will include modules that
+Returns a list of all the Transformer modules that are currently installed
+in the Perl::Mogrify:Transformer namespace.  These will include modules that
 are distributed with Perl::Mogrify plus any third-party modules that
 have been installed.
 
@@ -1164,7 +1164,7 @@ have been installed.
 
 =head1 CONFIGURATION
 
-Most of the settings for Perl::Mogrify and each of the Enforcer modules
+Most of the settings for Perl::Mogrify and each of the Transformer modules
 can be controlled by a configuration file.  The default configuration
 file is called F<.perlcriticrc>.
 L<Perl::Mogrify::Config|Perl::Mogrify::Config> will look for this file
@@ -1205,35 +1205,35 @@ corresponding Perl::Mogrify constructor argument.
 The remainder of the configuration file is a series of blocks like
 this:
 
-    [Perl::Mogrify::Enforcer::Category::EnforcerName]
+    [Perl::Mogrify::Transformer::Category::TransformerName]
     severity = 1
     set_themes = foo bar
     add_themes = baz
     arg1 = value1
     arg2 = value2
 
-C<Perl::Mogrify::Enforcer::Category::EnforcerName> is the full name of a
-module that implements the policy.  The Enforcer modules distributed
+C<Perl::Mogrify::Transformer::Category::TransformerName> is the full name of a
+module that implements the policy.  The Transformer modules distributed
 with Perl::Mogrify have been grouped into categories according to the
 table of contents in Damian Conway's book B<Perl Best Practices>. For
-brevity, you can omit the C<'Perl::Mogrify::Enforcer'> part of the module
+brevity, you can omit the C<'Perl::Mogrify::Transformer'> part of the module
 name.
 
 C<severity> is the level of importance you wish to assign to the
-Enforcer.  All Enforcer modules are defined with a default severity value
+Transformer.  All Transformer modules are defined with a default severity value
 ranging from 1 (least severe) to 5 (most severe).  However, you may
 disagree with the default severity and choose to give it a higher or
 lower severity, based on your own coding philosophy.
 
 The remaining key-value pairs are configuration parameters that will
-be passed into the constructor of that Enforcer.  The constructors for
-most Enforcer modules do not support arguments, and those that do should
+be passed into the constructor of that Transformer.  The constructors for
+most Transformer modules do not support arguments, and those that do should
 have reasonable defaults.  See the documentation on the appropriate
-Enforcer module for more details.
+Transformer module for more details.
 
-Instead of redefining the severity for a given Enforcer, you can
-completely disable a Enforcer by prepending a '-' to the name of the
-module in your configuration file.  In this manner, the Enforcer will
+Instead of redefining the severity for a given Transformer, you can
+completely disable a Transformer by prepending a '-' to the name of the
+module in your configuration file.  In this manner, the Transformer will
 never be loaded, regardless of the C<-severity> given to the
 Perl::Mogrify::Config constructor.
 
@@ -1285,15 +1285,15 @@ that is included in this F<t/examples> directory of this distribution.
 
 =head1 THE POLICIES
 
-A large number of Enforcer modules are distributed with Perl::Mogrify.
+A large number of Transformer modules are distributed with Perl::Mogrify.
 They are described briefly in the companion document
-L<Perl::Mogrify::EnforcerSummary|Perl::Mogrify::EnforcerSummary> and in more
+L<Perl::Mogrify::TransformerSummary|Perl::Mogrify::TransformerSummary> and in more
 detail in the individual modules themselves.
 
 
 =head1 POLICY THEMES
 
-Each Enforcer is defined with one or more "themes".  Themes can be used
+Each Transformer is defined with one or more "themes".  Themes can be used
 to create arbitrary groups of Policies.  They are intended to provide
 an alternative mechanism for selecting your preferred set of Policies.
 For example, you may wish disable a certain subset of Policies when
@@ -1318,7 +1318,7 @@ needs.
 
 Say C<`perlcritic -list`> to get a listing of all available policies
 and the themes that are associated with each one.  You can also change
-the theme for any Enforcer in your F<.perlcriticrc> file.  See the
+the theme for any Transformer in your F<.perlcriticrc> file.  See the
 L<"CONFIGURATION"> section for more information about that.
 
 Using the C<-theme> option, you can combine theme names with

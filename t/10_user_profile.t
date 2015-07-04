@@ -44,36 +44,36 @@ our $VERSION = '1.125';
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         1,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Enforcer::NamingConventions::Capitalization is disabled.',
+        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         \%policy_params,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't enabled>,
+        q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't disabled>,
+        q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::Bogus'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
         {},
-        q<Bogus Enforcer doesn't have any configuration.>,
+        q<Bogus Transformer doesn't have any configuration.>,
     );
 }
 
@@ -109,36 +109,36 @@ our $VERSION = '1.125';
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         1,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Enforcer::NamingConventions::Capitalization is disabled.',
+        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         \%policy_params,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't enabled>,
+        q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't disabled>,
+        q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::Bogus'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
         {},
-        q<Bogus Enforcer doesn't have any configuration.>,
+        q<Bogus Transformer doesn't have any configuration.>,
     );
 }
 
@@ -174,36 +174,36 @@ END_PROFILE
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         1,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Enforcer::NamingConventions::Capitalization is disabled.',
+        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         \%policy_params,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't enabled>,
+        q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't disabled>,
+        q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::Bogus'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
         {},
-        q<Bogus Enforcer doesn't have any configuration.>,
+        q<Bogus Transformer doesn't have any configuration.>,
     );
 }
 
@@ -213,8 +213,8 @@ END_PROFILE
 {
     my %policy_params = (min_elements => 4);
     my $long_profile_string = <<'END_PROFILE';
-[-Perl::Mogrify::Enforcer::NamingConventions::Capitalization]
-[Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists]
+[-Perl::Mogrify::Transformer::NamingConventions::Capitalization]
+[Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists]
 min_elements = 4
 END_PROFILE
 
@@ -239,36 +239,36 @@ END_PROFILE
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         1,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Enforcer::NamingConventions::Capitalization is disabled.',
+        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
         \%policy_params,
-        'Perl::Mogrify::Enforcer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't enabled>,
+        q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Enforcer::Bogus'),
+        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
         q{},
-        q<Bogus Enforcer isn't disabled>,
+        q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Enforcer::Bogus'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
         {},
-        q<Bogus Enforcer doesn't have any configuration.>,
+        q<Bogus Transformer doesn't have any configuration.>,
     );
 }
 

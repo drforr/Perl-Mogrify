@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Test::More (tests => 32);
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 
 # common P::C testing tools
 use Perl::Mogrify::TestUtils qw(critique);
@@ -646,7 +646,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (Mogrify::Enforcer)
+## no critic (Mogrify::Transformer)
 my $noisy = '!';
 my $empty = '';
 eval $string;

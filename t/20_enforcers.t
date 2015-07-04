@@ -5,7 +5,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Enforcer qw< all_policies_ok >;
+use Test::Perl::Mogrify::Transformer qw< all_policies_ok >;
 
 #-----------------------------------------------------------------------------
 

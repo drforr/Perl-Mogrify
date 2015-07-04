@@ -17,8 +17,8 @@ use base 'Perl::Mogrify::Module::Build::Standard';
 sub ACTION_policysummary {
     my ($self) = @_;
 
-    require Perl::Mogrify::EnforcerSummaryGenerator;
-    Perl::Mogrify::EnforcerSummaryGenerator->import(
+    require Perl::Mogrify::TransformerSummaryGenerator;
+    Perl::Mogrify::TransformerSummaryGenerator->import(
         qw< generate_policy_summary >
     );
 
@@ -117,9 +117,9 @@ The following actions have been added or redefined:
 
 =item policysummary
 
-Generates the F<EnforcerSummary.pod> file.  This should only be used by
+Generates the F<TransformerSummary.pod> file.  This should only be used by
 C<Perl::Mogrify> developers.  This action is also invoked by the C<authortest>
-action, so the F<EnforcerSummary.pod> file will be generated whenever you create
+action, so the F<TransformerSummary.pod> file will be generated whenever you create
 a distribution with the C<dist> or C<distdir> targets.
 
 

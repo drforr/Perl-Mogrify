@@ -9,7 +9,7 @@ use English qw(-no_match_vars);
 use List::MoreUtils qw(any all none);
 
 use Perl::Mogrify::TestUtils;
-use Perl::Mogrify::EnforcerFactory;
+use Perl::Mogrify::TransformerFactory;
 use Perl::Mogrify::UserProfile;
 use Perl::Mogrify::Theme;
 
@@ -111,8 +111,8 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
 
 {
     my $profile = Perl::Mogrify::UserProfile->new( -profile => q{} );
-    my $factory = Perl::Mogrify::EnforcerFactory->new( -profile => $profile );
-    my @policy_names = Perl::Mogrify::EnforcerFactory::site_policy_names();
+    my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
+    my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
     my @pols = map { $factory->create_policy( -name => $_ ) } @policy_names;
 
     #--------------

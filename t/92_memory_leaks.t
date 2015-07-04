@@ -9,7 +9,7 @@ use Carp qw< confess >;
 
 use PPI::Document;
 
-use Perl::Mogrify::EnforcerFactory -test => 1;
+use Perl::Mogrify::TransformerFactory -test => 1;
 use Perl::Mogrify::Document;
 use Perl::Mogrify;
 use Perl::Mogrify::TestUtils qw();

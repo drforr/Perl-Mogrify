@@ -145,21 +145,21 @@ Lexical regular expression modifier defaults via (e.g.)
 C<use re '/smx'>). This also interacts with
 C<use feature 'unicode_strings'>. 5.13.7.
 
-=item * Support a means of failing if a Enforcer isn't installed.
+=item * Support a means of failing if a Transformer isn't installed.
 
-For example, the self compliance test now depends upon a Enforcer in the More
+For example, the self compliance test now depends upon a Transformer in the More
 distribution.
 
-Something like using a "+" sign in front of the Enforcer name in its
+Something like using a "+" sign in front of the Transformer name in its
 configuration block, analogous to the "-" sign used for disabling a policy,
-e.g. "C<[+Example::Enforcer]>".
+e.g. "C<[+Example::Transformer]>".
 
 
 =item * Threading
 
 Pretty obviously, Perl::Mogrify is readily parallelizable, just do a document per
 thread.  ("readily" being conceptual, not necessarily practical)  Although
-there's now C<Enforcer::prepare_to_scan_document()>, given perl's thread data
+there's now C<Transformer::prepare_to_scan_document()>, given perl's thread data
 sharing model, this shouldn't be an issue.
 
 
@@ -253,9 +253,9 @@ Look for the C<:lvalue> subroutine attribute.
 =item * Subroutines::RequireArgumentValidation
 
 Enforce the use of Params::Validate or Params::Util or some other
-argument validation mechanism.  This could be one Enforcer that
+argument validation mechanism.  This could be one Transformer that
 can be configured for different validation mechanisms, or we could
-have a separate Enforcer for each mechanism, and let the user choose
+have a separate Transformer for each mechanism, and let the user choose
 which one they want to use (I think I prefer the later).
 
 

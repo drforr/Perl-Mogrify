@@ -32,7 +32,7 @@ use Test::Perl::Mogrify;
 #-----------------------------------------------------------------------------
 
 # Fall over if P::C::More isn't installed.
-use Perl::Mogrify::Enforcer::ErrorHandling::RequireUseOfExceptions;
+use Perl::Mogrify::Transformer::ErrorHandling::RequireUseOfExceptions;
 
 #-----------------------------------------------------------------------------
 # Set up PPI caching for speed (used primarily during development)
@@ -54,7 +54,7 @@ if ( $ENV{PERL_CRITIC_CACHE} ) {
 # Strict object testing -- prevent direct hash key access
 
 use Devel::EnforceEncapsulation;
-foreach my $pkg ( $EMPTY, qw< ::Config ::Enforcer ::Violation> ) {
+foreach my $pkg ( $EMPTY, qw< ::Config ::Transformer ::Violation> ) {
     Devel::EnforceEncapsulation->apply_to('Perl::Mogrify'.$pkg);
 }
 

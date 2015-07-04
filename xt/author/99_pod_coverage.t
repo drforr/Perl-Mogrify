@@ -18,8 +18,8 @@ use Test::Pod::Coverage 1.04;
 
 {
     # HACK: Perl::Mogrify::Violation uses Pod::Parser to extract the
-    # DIAGNOSTIC section of the POD in each Enforcer module.  This
-    # happens when the Enforcer first C<uses> the Violation module.
+    # DIAGNOSTIC section of the POD in each Transformer module.  This
+    # happens when the Transformer first C<uses> the Violation module.
     # Meanwhile, Pod::Coverage also uses Pod::Parser to extract the
     # POD and compare it with the subroutines that are in the symbol
     # table for that module.  For reasons I cannot yet explain, using

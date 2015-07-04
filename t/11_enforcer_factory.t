@@ -7,7 +7,7 @@ use warnings;
 use English qw(-no_match_vars);
 
 use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::EnforcerFactory (-test => 1);
+use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify::TestUtils qw();
 
 use Test::More tests => 10;
@@ -23,11 +23,11 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
 #-----------------------------------------------------------------------------
 
 {
-    my $policy_name = 'Perl::Mogrify::Enforcer::Modules::ProhibitEvilModules';
+    my $policy_name = 'Perl::Mogrify::Transformer::Modules::ProhibitEvilModules';
     my $params = {severity => 2, set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $pf = Perl::Mogrify::EnforcerFactory->new( -profile  => $userprof );
+    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
 
 
     # Now test...
@@ -48,12 +48,12 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
     my $params = {set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $pf = Perl::Mogrify::EnforcerFactory->new( -profile  => $userprof );
+    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
 
 
     # Now test...
     my $policy = $pf->create_policy( -name => $policy_name, -params => $params );
-    my $policy_name_long = 'Perl::Mogrify::Enforcer::' . $policy_name;
+    my $policy_name_long = 'Perl::Mogrify::Transformer::' . $policy_name;
     is( ref $policy, $policy_name_long, 'Created correct type of policy');
 
     my @themes = $policy->get_themes();
@@ -65,7 +65,7 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
 
 {
     my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $pf = Perl::Mogrify::EnforcerFactory->new( -profile  => $userprof );
+    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
 
     # Try missing arguments
     eval{ $pf->create_policy() };
@@ -103,21 +103,21 @@ Perl::Mogrify::TestUtils::block_perlcriticrc();
 
     my $profile = { 'Perl::Mogrify::Bogus' => {} };
     my $userprof = Perl::Mogrify::UserProfile->new( -profile => $profile );
-    my $pf = Perl::Mogrify::EnforcerFactory->new( -profile  => $userprof );
+    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
     like(
         $last_warning,
-        qr/^Enforcer [ ] ".*Bogus" [ ] is [ ] not [ ] installed/xms,
-        'Got expected warning for positive configuration of Enforcer.',
+        qr/^Transformer [ ] ".*Bogus" [ ] is [ ] not [ ] installed/xms,
+        'Got expected warning for positive configuration of Transformer.',
     );
     $last_warning = q{};
 
     $profile = { '-Perl::Mogrify::Shizzle' => {} };
     $userprof = Perl::Mogrify::UserProfile->new( -profile => $profile );
-    $pf = Perl::Mogrify::EnforcerFactory->new( -profile  => $userprof );
+    $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
     like(
         $last_warning,
-        qr/^Enforcer [ ] ".*Shizzle" [ ] is [ ] not [ ] installed/xms,
-        'Got expected warning for negative configuration of Enforcer.',
+        qr/^Transformer [ ] ".*Shizzle" [ ] is [ ] not [ ] installed/xms,
+        'Got expected warning for negative configuration of Transformer.',
     );
     $last_warning = q{};
 }

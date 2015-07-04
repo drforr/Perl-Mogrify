@@ -95,7 +95,7 @@ L<"OVERLOADS"> for more information.
 When a L<Perl::Mogrify::ThemeListing|Perl::Mogrify::ThemeListing> is
 evaluated in string context, it produces a one-line summary of the
 default severity, policy name, and default themes for each
-L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer> object that was given to
+L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> object that was given to
 the constructor of this C<ThemeListing>.
 
 
