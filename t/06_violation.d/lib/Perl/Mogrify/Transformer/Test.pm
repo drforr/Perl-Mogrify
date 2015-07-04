@@ -10,7 +10,7 @@ use base 'Perl::Mogrify::Enforcer';
 sub default_severity { return $SEVERITY_LOWEST }
 sub applies_to { return 'PPI::Token::Word' }
 
-sub violates {
+sub transform {
     my ( $self, $elem, undef ) = @_;
     return $self->violation( 'desc', 'expl', $elem );
 }

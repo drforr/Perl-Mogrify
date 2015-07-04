@@ -153,7 +153,7 @@ can_ok('Perl::Mogrify::Transformer', 'set_severity');
 can_ok('Perl::Mogrify::Transformer', 'set_themes');
 can_ok('Perl::Mogrify::Transformer', 'throw_parameter_value_exception');
 can_ok('Perl::Mogrify::Transformer', 'to_string');
-can_ok('Perl::Mogrify::Transformer', 'violates');
+can_ok('Perl::Mogrify::Transformer', 'transform');
 can_ok('Perl::Mogrify::Transformer', 'violation');
 can_ok('Perl::Mogrify::Transformer', 'is_safe');
 
@@ -293,7 +293,7 @@ can_ok('Perl::Mogrify::Command', 'run');
         can_ok($mod, 'set_severity');
         can_ok($mod, 'set_themes');
         can_ok($mod, 'set_themes');
-        can_ok($mod, 'violates');
+        can_ok($mod, 'transform');
         can_ok($mod, 'violation');
         can_ok($mod, 'is_safe');
 

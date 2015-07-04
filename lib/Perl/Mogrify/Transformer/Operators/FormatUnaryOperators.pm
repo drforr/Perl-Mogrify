@@ -33,7 +33,17 @@ sub prepare_to_scan_document {
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+my %unary = (
+    # '++', '--' are unchanged.
+    # '!' is unchanged.
+    # 'not' is unchanged.
+
+    # '^', '!' are changed.
+    '^' => '+^',
+    '!' => '?^',
+);
+
+sub transform {
     my ($self, $elem, $doc) = @_;
 
     # nonassoc ++
@@ -53,28 +63,12 @@ sub violates {
     # nonassoc list operators (rightward)
     # right    not
 
-    my %map = (
-        # '++', '--' are unchanged.
-        # '!' is unchanged.
-        # 'not' is unchanged.
+    my $old_content = $elem->content;
+    return unless exists $unary{$old_content};
 
-        # '^', '!' are changed.
-        '^' => '+^',
-        '!' => '?^',
-    );
+    $elem->set_content( $unary{$old_content} );
 
-    my $operator = $doc->find('PPI::Token::Operator');
-    if ( $operator and ref $operator ) {
-        for my $token ( @{ $operator } ) {
-            my $old_content = $token->content;
- 
-            $token->set_content( $new_content );
-        }
-    }
-
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $operator and ref $operator;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

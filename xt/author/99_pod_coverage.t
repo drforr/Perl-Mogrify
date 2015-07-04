@@ -49,7 +49,7 @@ sub get_trusted_methods {
         new
         initialize_if_enabled
         prepare_to_scan_document
-        violates
+        transform
         applies_to
         is_safe
         default_themes

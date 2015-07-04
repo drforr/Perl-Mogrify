@@ -21,41 +21,32 @@ Readonly::Scalar my $EXPL => q{Perl6 octal integers look like :8<0011>};
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Number::Octal' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# 0o0123 --> :8<0123>
+# 0o0123_4567 --> :8<0123_4567>
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # 0o0123 --> :8<0123>
-    # 0o0123_4567 --> :8<0123_4567>
+    my $old_content = $elem->content;
 
-    my $octal_integers = $doc->find('PPI::Token::Number::Octal');
-    if ( $octal_integers and ref $octal_integers ) {
-        for my $token ( @{ $octal_integers } ) {
-            my $old_content = $token->content;
+    #
+    # Remove leading '0o' or '0'
+    #
+    $old_content =~ s{^0[o]?}{}i;
 
-            #
-            # Remove leading '0o' or '0'
-            #
-            $old_content =~ s{^0[o]?}{}i;
+    my $new_content = ':8<' . $old_content . '>';
+    $elem->set_content( $new_content );
 
-            my $new_content = ':8<' . $old_content . '>';
-            $token->set_content( $new_content );
-        }
-    }
-
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $octal_integers and ref $octal_integers;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

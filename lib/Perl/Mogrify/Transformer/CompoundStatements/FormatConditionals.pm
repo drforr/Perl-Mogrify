@@ -22,44 +22,35 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Statement::Compound' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+my %conditional = (
+    if => 1,
+    elsif => 1,
+    unless => 1,
+);
+
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my %conditional = (
-        if => 1,
-        elsif => 1,
-        unless => 1,
-    );
+    my $token = $elem->first_element;
 
-    my $conditional = $doc->find('PPI::Statement::Compound');
-    if ( $conditional and ref $conditional ) {
-        for my $token ( @{ $conditional } ) {
-            $token = $token->first_element;
-            my $old_content = $token->content;
-            next unless $conditional{$old_content};
-            next unless $token->next_sibling;
-            next if $token->next_sibling->isa('PPI::Token::WHitespace');
+    my $old_content = $token->content;
+    return unless $conditional{$old_content};
+    return unless $token->next_sibling;
+    return if $token->next_sibling->isa('PPI::Token::WHitespace');
 
-            my $space = PPI::Token::Whitespace->new();
-            $space->set_content(' ');
-            $token->insert_after( $space );
-        }
-    }
+    my $space = PPI::Token::Whitespace->new();
+    $space->set_content(' ');
+    $token->insert_after( $space );
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $conditional and ref $conditional;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

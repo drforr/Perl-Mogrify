@@ -189,7 +189,7 @@ END_PERL
     $document->index_locations();
     my $p = Perl::Mogrify::Transformer::Test->new();
     my @t = $document->tokens();
-    my $v = $p->violates($t[0]);
+    my $v = $p->transform($t[0]);
     ok($v, 'got a violation');
 
     is($v->to_string(), $expected, 'to_string()');

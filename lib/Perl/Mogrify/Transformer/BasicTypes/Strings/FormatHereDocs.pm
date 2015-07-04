@@ -21,51 +21,42 @@ Readonly::Scalar my $EXPL => q{Perl6 heredocs now have more flexibility};
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::HereDoc' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# <<EOF --> q:to/EOF/
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # <<EOF --> q:to/EOF/
+    my $content = $elem->content;
 
-    my $string = $doc->find('PPI::Token::HereDoc');
-    if ( $string and ref $string ) {
-        for my $token ( @{ $string } ) {
-            my $content = $token->content;
-
-            if ( $content =~ s{<<(\w+)}{q:to/$1/} ) {
-            }
-
-            #
-            # XXX This breaks PPI::Token::HereDoc encapsulation.
-            #
-            elsif ( $content =~ s{<<'(\s*(\w+))'}{q:to/$2/} ) {
-                my $heredoc = $1;
-                my $stripped = $2;
-                for my $line ( @{ $token->{_heredoc} } ) {
-                    next unless $line =~ /$heredoc/;
-                    $line = $stripped;
-                    last;
-                }
-                $token->{_terminator} = $1;
-            }
-
-            $token->set_content( $content );
-        }
+    if ( $content =~ s{<<(\w+)}{q:to/$1/} ) {
     }
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $string and ref $string;
-    return;
+    #
+    # XXX This breaks PPI::Token::HereDoc encapsulation.
+    #
+    elsif ( $content =~ s{<<'(\s*(\w+))'}{q:to/$2/} ) {
+        my $heredoc = $1;
+        my $stripped = $2;
+        for my $line ( @{ $elem->{_heredoc} } ) {
+            next unless $line =~ /$heredoc$/;
+            $line = $stripped;
+            last;
+        }
+        $elem->{_terminator} = $1;
+    }
+
+    $elem->set_content( $content );
+
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

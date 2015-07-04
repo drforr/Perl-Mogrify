@@ -58,7 +58,7 @@ sub all_policies_ok {
 
     for my $policy ( sort keys %{$subtests_with_extras} ) {
 
-        my ($full_policy_name, $method) = ("Perl::Mogrify::Transformer::$policy", 'violates');
+        my ($full_policy_name, $method) = ("Perl::Mogrify::Transformer::$policy", 'transform');
         my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
         $TEST->ok( $full_policy_name->can($method), $can_ok_label );
 

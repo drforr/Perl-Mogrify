@@ -13,8 +13,8 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{"${x}" is now "{$x}"};
-Readonly::Scalar my $EXPL => q{Braces in Perl6 now delimit code blocks, so {x} is interpreted as {x()}};
+Readonly::Scalar my $DESC => q{XXX SPLIT ME "${x}" is now "{$x}"};
+Readonly::Scalar my $EXPL => q{XXX SPLIT ME Braces in Perl6 now delimit code blocks, so {x} is interpreted as {x()}};
 
 #-----------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ sub prepare_to_scan_document {
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+sub transform {
     my ($self, $elem, $doc) = @_;
 
     # "$x" --> "$x"

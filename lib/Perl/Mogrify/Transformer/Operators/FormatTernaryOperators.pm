@@ -22,42 +22,34 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Operator' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+sub transform {
     my ($self, $elem, $doc) = @_;
+    return unless $elem->content eq '?';
 
     # right    ?:
 
-    my $operator = $doc->find('PPI::Token::Operator');
-    if ( $operator and ref $operator ) {
-        for my $token ( @{ $operator } ) {
-            my $old_content = $token->content;
-            if ( $old_content eq '?' ) { # XXX This is a special case.
-                $token->set_content( '??' );
-                while ( $token->next_sibling ) {
-                    if ( $token->content eq ':' ) {
-                        $token->set_content( '!!' );
-                        last;
-                    }
-                    $token = $token->next_sibling;
-                }
-            }
+    my $old_content = $elem->content;
+
+    $elem->set_content( '??' );
+
+    my $current = $elem;
+    while ( $current->next_sibling ) {
+        if ( $current->content eq ':' ) {
+            $current->set_content( '!!' );
+            last;
         }
+        $current = $current->next_sibling;
     }
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $operator and ref $operator;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

@@ -23,45 +23,37 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Statement::Include' }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+my %excluded_pragma = (
+    v6 => 1,
+    constant => 1, # 'use constant FOO => 1' --> 'constant FOO = 1' later
+    base => 1, # 'use base "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
+    parent => 1, # 'use parent "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
+);
+
+#
+# 'use strict;' --> ''
+# 'use warnings;' --> ''
+# 'no strict;' --> ''
+# 'no warnings;' --> ''
+# 'use 5.6;' --> ''
+# 'use v6;' --> 'use v6;'
+# 'use constant;' --> 'use constant;'
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
-    my $modified;
-    my %excluded_pragma = (
-        v6 => 1,
-        constant => 1, # 'use constant FOO => 1' --> 'constant FOO = 1' later
-        base => 1, # 'use base "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
-        parent => 1, # 'use parent "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
-    );
 
-    my $tokens = $doc->find('PPI::Statement::Include');
-    if ( $tokens ) {
-        #
-        # 'use strict;' --> ''
-        # 'use warnings;' --> ''
-        # 'no strict;' --> ''
-        # 'no warnings;' --> ''
-        # 'use 5.6;' --> ''
-        # 'use v6;' --> 'use v6;'
-        # 'use constant;' --> 'use constant;'
-        #
-        for my $pragma ( @{ $tokens } ) {
-            my $package_name = $pragma->child(2);
-            next unless is_version_number($package_name) or
-                        is_pragma($package_name);
-            next if exists $excluded_pragma{$package_name->content};
+    my $package_name = $elem->child(2);
+    return unless is_version_number($package_name) or
+                  is_pragma($package_name);
+    return if exists $excluded_pragma{$package_name->content};
 
-            $modified = 1;
-            $pragma->remove;
-        }
-    }
+    $elem->remove;
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $modified;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

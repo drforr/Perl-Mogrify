@@ -21,7 +21,7 @@ Readonly::Scalar my $EXPL => q{Perl6 binary integers look like :2<0011>};
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Number::Binary' }
 
 #-----------------------------------------------------------------------------
 
@@ -32,30 +32,24 @@ sub prepare_to_scan_document {
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# 0b0101       --> :2<0101>
+# 0b010_101_01 --> :2<010_101_01>
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # 0b0101       --> :2<0101>
-    # 0b010_101_01 --> :2<010_101_01>
+    my $old_content = $elem->content;
 
-    my $binary_integers = $doc->find('PPI::Token::Number::Binary');
-    if ( $binary_integers and ref $binary_integers ) {
-        for my $token ( @{ $binary_integers } ) {
-            my $old_content = $token->content;
+    #
+    # Remove leading '0b'
+    #
+    $old_content =~ s{^0b}{}i;
 
-            #
-            # Remove leading '0b'
-            #
-            $old_content =~ s{^0b}{}i;
+    my $new_content = ':2<' . $old_content . '>';
+    $elem->set_content( $new_content );
 
-            my $new_content = ':2<' . $old_content . '>';
-            $token->set_content( $new_content );
-        }
-    }
-
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $binary_integers and ref $binary_integers;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

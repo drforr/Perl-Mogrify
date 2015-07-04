@@ -22,18 +22,15 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Operator' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+sub transform {
     my ($self, $elem, $doc) = @_;
 
     # left     ->
@@ -112,34 +109,29 @@ sub violates {
         '.'  => '~',
     );
 
-    my $operator = $doc->find('PPI::Token::Operator');
-    if ( $operator and ref $operator ) {
-        for my $token ( @{ $operator } ) {
-            my $old_content = $token->content;
-            if ( $old_content eq '=>' ) { # XXX This is a special case.
-            }
-            elsif ( $old_content eq 'x' ) { # XXX This is a special case.
-            }
-            elsif ( $old_content eq '..' ) { # XXX This is a special case.
-                # List version is unchanged.
-                # Scalar version is now 'ff'
-$token->set_context('ff XXX');
-            }
-            elsif ( $old_content eq '...' ) { # XXX This is a special case.
-                # List version is unchanged.
-                # Scalar version is now 'fff'
-$token->set_context('fff XXX');
-            }
-            else {
-                $token->set_content( $map{$old_content} )
-                    if $map{$old_content};
-            }
-        }
+    my $old_content = $elem->content;
+    if ( $old_content eq '=>' ) { # XXX This is a special case.
+    }
+    elsif ( $old_content eq 'x' ) { # XXX This is a special case.
+    }
+    elsif ( $old_content eq '..' ) { # XXX This is a special case.
+        # List version is unchanged.
+        # Scalar version is now 'ff'
+$elem->set_content('ff XXX');
+    }
+    elsif ( $old_content eq '...' ) { # XXX This is a special case.
+        # List version is unchanged.
+        # Scalar version is now 'fff'
+$elem->set_content('fff XXX');
+    }
+    elsif ( exists $map{$old_content} ) {
+        $elem->set_content( $map{$old_content} );
+    }
+    else {
+        return;
     }
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $operator and ref $operator;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

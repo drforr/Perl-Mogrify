@@ -21,40 +21,31 @@ Readonly::Scalar my $EXPL => q{Perl6 hexadecimal integers look like :16<0123>};
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Number::Hex' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# 0x1_2eF -> :16<1_2ef>
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # 0x1_2eF -> :16<1_2ef>
+    my $old_content = $elem->content;
 
-    my $hex_integers = $doc->find('PPI::Token::Number::Hex');
-    if ( $hex_integers and ref $hex_integers ) {
-        for my $token ( @{ $hex_integers } ) {
-            my $old_content = $token->content;
+    #
+    # Remove leading '0x'
+    #
+    $old_content =~ s{^0x}{}i;
 
-            #
-            # Remove leading '0x'
-            #
-            $old_content =~ s{^0x}{}i;
+    my $new_content = ':16<' . $old_content . '>';
+    $elem->set_content( $new_content );
 
-            my $new_content = ':16<' . $old_content . '>';
-            $token->set_content( $new_content );
-        }
-    }
-
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $hex_integers and ref $hex_integers;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

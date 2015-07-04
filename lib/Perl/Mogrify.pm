@@ -178,7 +178,7 @@ sub _critique {
             # disabled.
 
           VIOLATION:
-            for my $violation ( $policy->violates( $element, $doc ) ) {
+            for my $violation ( $policy->transform( $element, $doc ) ) {
 
                 my $line = $violation->location()->[0];
                 if ( $doc->line_is_disabled_for_policy($line, $policy) ) {

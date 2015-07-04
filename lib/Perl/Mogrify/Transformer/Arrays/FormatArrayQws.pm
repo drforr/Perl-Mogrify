@@ -20,43 +20,28 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub supported_parameters { return ()                             }
+sub default_severity     { return $SEVERITY_HIGHEST              }
+sub default_themes       { return qw(core bugs)                  }
+sub applies_to           { return 'PPI::Token::QuoteLike::Words' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return ! $document->is_module();
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+sub transform {
     my ($self, $elem, $doc) = @_;
-    my $modified;
+    return unless $elem->content =~ /^qw\(/;
 
-    #
-    # Can't declare a variable $qw ... Teehee.
-    #
-    my $Qws = $doc->find('PPI::Token::QuoteLike::Words');
-    if ( $Qws ) {
-        for my $Qw ( @{ $Qws } ) {
-            next unless $Qw->content =~ /^qw\(/;
-            $modified = 1;
-            my $old_content = $Qw->content;
+    my $old_content = $elem->content;
 
-            $old_content =~ s{^qw\(}{^qw (};
+    $old_content =~ s{^qw\(}{qw (};
 
-            $Qw->set_content( $old_content );
-        }
-    }
+    $elem->set_content( $old_content );
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $modified;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

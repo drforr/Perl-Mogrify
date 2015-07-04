@@ -22,36 +22,27 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::QuoteLike::Command' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# qx{...} --> qqx{...}
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # qx{...} --> qqx{...}
+    my $content = $elem->content;
 
-    my $string = $doc->find('PPI::Token::QuoteLike::Command');
-    if ( $string and ref $string ) {
-        for my $token ( @{ $string } ) {
-            my $content = $token->content;
+    $content =~ s{^qx}{qqx};
 
-            $content =~ s{^qx}{qqx};
+    $elem->set_content( $content );
 
-            $token->set_content( $content );
-        }
-    }
-
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $string and ref $string;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

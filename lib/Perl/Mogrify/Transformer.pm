@@ -397,11 +397,11 @@ sub get_parameters {
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+sub transform {
     my ($self) = @_;
 
     return throw_policy_definition(
-        $self->get_short_name() . q/ does not implement violates()./ );
+        $self->get_short_name() . q/ does not implement transform()./ );
 }
 
 #-----------------------------------------------------------------------------
@@ -591,7 +591,7 @@ returns an empty list.  If the Transformer encounters an exception, then it
 should C<croak> with an error message and let the caller decide how to
 handle it.
 
-C<violates()> is an abstract method and it will abort if you attempt
+C<transform()> is an abstract method and it will abort if you attempt
 to invoke it directly.  It is the heart of all Transformer modules, and
 your subclass B<must> override this method.
 

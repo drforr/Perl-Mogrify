@@ -60,7 +60,7 @@ sub _use_Inline_Perl5_statement {
     return $statement;
 }
 
-sub violates {
+sub transform {
     my ($self, $elem, $doc) = @_;
     my $modified;
 

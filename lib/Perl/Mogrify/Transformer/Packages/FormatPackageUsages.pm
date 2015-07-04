@@ -23,37 +23,28 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Statement::Include' }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# 'use Foo;' --> 'use Foo:from<Perl5>;'
+# 'use Foo qw(a);' --> 'use Foo:from<Perl5> <a>;'
+#
+# Although this module only adjusts the 'Foo' bit.
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
-    my $modified;
 
-    my $tokens = $doc->find('PPI::Statement::Include');
-    if ( $tokens ) {
-        #
-        # 'use Foo;' --> 'use Foo:from<Perl5>;'
-        # 'use Foo qw(a);' --> 'use Foo:from<Perl5> <a>;'
-        #
-        # Although this module only adjusts the 'Foo' bit.
-        #
-        for my $package ( @{ $tokens } ) {
-            my $package_name = $package->child(2);
-            next if is_pragma($package_name);
-            next unless is_module_name($package_name);
+    my $package_name = $elem->child(2);
+    return if is_pragma($package_name);
+    return unless is_module_name($package_name);
 
-            $modified = 1;
-            my $old_content = $package_name;
-            $old_content .= ':from<Perl5>';
-            $package_name->set_content($old_content);
-        }
-    }
+    my $old_content = $package_name;
+    $old_content .= ':from<Perl5>';
+    $package_name->set_content($old_content);
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $modified;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

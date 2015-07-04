@@ -21,41 +21,32 @@ Readonly::Scalar my $EXPL => q{The Perl6 equivalent of packages are classes.};
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Statement::Package' }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# 'package Foo;' --> 'unit class Foo;'
+# 'package Foo { ... }' --> 'class Foo { ... }'
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
-    my $modified;
 
-    my $tokens = $doc->find('PPI::Statement::Package');
-    if ( $tokens ) {
-        #
-        # 'package Foo;' --> 'unit class Foo;'
-        # 'package Foo { ... }' --> 'class Foo { ... }'
-        #
-        for my $package ( @{ $tokens } ) {
-            $modified = 1;
-            if ( $package->child(3)->isa('PPI::Token::Structure') and
-                 $package->child(3)->content eq ';' ) {
-                $package->first_element->set_content('class');
-                $package->first_element->insert_before(
-                    PPI::Token::Whitespace->new(' ')
-                );
-                $package->first_element->insert_before(
-                    PPI::Token::Word->new('unit')
-                );
-            }
-            else {
-                $package->first_element->set_content('class');
-            }
-        }
+    if ( $elem->child(3)->isa('PPI::Token::Structure') and
+         $elem->child(3)->content eq ';' ) {
+        $elem->first_element->set_content('class');
+        $elem->first_element->insert_before(
+            PPI::Token::Whitespace->new(' ')
+        );
+        $elem->first_element->insert_before(
+            PPI::Token::Word->new('unit')
+        );
+    }
+    else {
+        $elem->first_element->set_content('class');
     }
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $modified;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

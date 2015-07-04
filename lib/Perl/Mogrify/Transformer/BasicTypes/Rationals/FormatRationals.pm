@@ -25,41 +25,29 @@ sub applies_to           { return 'PPI::Document'   }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
+sub prepare_to_scan_document { 1 }
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+#
+# 1.0 --> 1.0
+# .1 --> .1
+# 1. --> 1.0
+#
+sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # 1.0 --> 1.0
-    # .1 --> .1
-    # 1. --> 1.0
+    my $old_content = $elem->content;
+ 
+    my ( $lhs, $rhs ) = split( '\.', $old_content );
+    return unless $rhs eq '';
+ 
+    $rhs = '0' if $rhs eq '';
+    my $new_content = $lhs . '.' . $rhs;
+    
+    $elem->set_content( $new_content );
 
-    my $floating_point = $doc->find('PPI::Token::Number::Float');
-    my $modified;
-    if ( $floating_point and ref $floating_point ) {
-        for my $token ( @{ $floating_point } ) {
-            my $old_content = $token->content;
- 
-            my ( $lhs, $rhs ) = split( '\.', $old_content );
- 
-            if ( $rhs eq '' ) {
-                $modified = 1;
-                $rhs = '0' if $rhs eq '';
-            }
-            my $new_content = $lhs . '.' . $rhs;
- 
-            $token->set_content( $new_content );
-        }
-    }
-
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $modified;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

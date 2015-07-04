@@ -23,7 +23,7 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Operator' }
 
 #-----------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ sub prepare_to_scan_document {
 
 #-----------------------------------------------------------------------------
 
-sub violates {
+sub transform {
     my ($self, $elem, $doc) = @_;
 
     # left     ->
@@ -95,18 +95,11 @@ sub violates {
     # left     or
     # left     xor
 
-    my $operator = $doc->find('PPI::Token::Operator');
-    if ( $operator and ref $operator ) {
-        for my $token ( @{ $operator } ) {
 #            my $old_content = $token->content;
 # 
 #            $token->set_content( $new_content );
-        }
-    }
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $operator and ref $operator;
-    return;
+    return $self->violation( $DESC, $EXPL, $elem );
 }
 
 1;

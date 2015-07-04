@@ -37,8 +37,8 @@ isa_ok($p, 'TransformerTest');
 
 
 local $EVAL_ERROR = undef;
-eval { $p->violates(); 1 };
-ok($EVAL_ERROR, 'abstract violates() throws exception');
+eval { $p->transform(); 1 };
+ok($EVAL_ERROR, 'abstract transform() throws exception');
 
 
 is(
