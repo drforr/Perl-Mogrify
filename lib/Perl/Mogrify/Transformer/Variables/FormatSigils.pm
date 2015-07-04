@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::Operators::FormatUnaryOperators;
+package Perl::Mogrify::Transformer::Variables::FormatSigils;
 
 use 5.006001;
 use strict;
@@ -9,57 +9,47 @@ use Perl::Mogrify::Utils qw{ :characters :severities };
 
 use base 'Perl::Mogrify::Transformer';
 
-our $VERSION = '0.01';
+our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform unary operators to perl6 equivalents};
+Readonly::Scalar my $DESC => q{Transform $x[0] to @x[0]};
 Readonly::Scalar my $EXPL =>
-    q{Unary operators, notably '^' and '!', change names in Perl6};
+    q{Perl6 uses the data type as the sigil now, not the context desired};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to           { return 'PPI::Token::Symbol' }
 
 #-----------------------------------------------------------------------------
 
-my %unary = (
-    # '++', '--' are unchanged.
-    # '!' is unchanged.
-    # 'not' is unchanged.
-
-    # '^', '!' are changed.
-    '^' => '+^',
-    '!' => '?^',
-);
-
+#
+# %foo    --> %foo
+# $foo{a} --> %foo{a} # Note it does not pointify braces.
+# @foo    --> @foo
+# $foo[1] --> @foo[1]
+#
 sub transform {
     my ($self, $elem, $doc) = @_;
+    return if $elem->raw_type eq '@';
+    return if $elem->raw_type eq '%';
 
-    # nonassoc ++
-    # nonassoc --
-    # right    !
-    # right    ~
-    # right    \
-    # right    +
-    # right    -
-    # left     *
-    # left     %
+    if ( $elem->next_sibling ) {
+        my $subscript = $elem->next_sibling;
+        return unless $subscript->isa('PPI::Structure::Subscript');
+        my $new_content = $elem->content;
 
-    # nonassoc ~~
-    # left     &
-    # right    *= etc. goto last next redo dump
-
-    # nonassoc list operators (rightward)
-    # right    not
-
-    my $old_content = $elem->content;
-    return unless exists $unary{$old_content};
-
-    $elem->set_content( $unary{$old_content} );
+        if ( $subscript->start eq '[' ) {
+            substr($new_content, 0, 1) = '@';
+        }
+        elsif ( $subscript->start eq '{' ) {
+            substr($new_content, 0, 1) = '%';
+        }
+        $elem->set_content( $new_content );
+    }
 
     return $self->violation( $DESC, $EXPL, $elem );
 }
@@ -74,7 +64,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::Operators::FormatUnaryOperators - Transform '^', '!' &c to Perl6 equivalents
+Perl::Mogrify::Transformer::Variables::FormatSigils - Give variables their proper sigils.
 
 
 =head1 AFFILIATION
@@ -85,12 +75,14 @@ distribution.
 
 =head1 DESCRIPTION
 
-Some unary operators in Perl5 have been renamed in Perl6. For instance, the various negations such as '~', '^' and '!' have been unified under '^', and the previous numeric, logical and Boolean contexts are now represented in the first character, so '!' is now '?^' to repreent Boolean ('?') negation ('^'):
+Perl6 uses the sigil type as the data type now, and this is probably the most common operation people will want to do to their file. This transformer doesn't alter hash keys or array indices, those are left to transformers down the line:
 
-  ~32 --> +^32
-  !$x --> ?^$x
+  @foo = () --> @foo = ()
+  $foo[1] --> @foo[1]
+  %foo = () --> %foo = ()
+  $foo{a} --> %foo{a} # Not %foo<a> or %foo{'a'} yet.
 
-Transforms operators outside of comments, heredocs, strings and POD.
+Transforms variables outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

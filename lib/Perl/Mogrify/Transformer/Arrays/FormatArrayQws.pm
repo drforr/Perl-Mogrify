@@ -27,10 +27,6 @@ sub applies_to           { return 'PPI::Token::QuoteLike::Words' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document { 1 }
-
-#-----------------------------------------------------------------------------
-
 sub transform {
     my ($self, $elem, $doc) = @_;
     return unless $elem->content =~ /^qw\(/;

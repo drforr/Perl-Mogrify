@@ -27,13 +27,6 @@ sub applies_to           { return 'PPI::Token::Operator' }
 
 #-----------------------------------------------------------------------------
 
-sub prepare_to_scan_document {
-    my ( $self, $document ) = @_;
-    return 1; # Can be anything.
-}
-
-#-----------------------------------------------------------------------------
-
 sub transform {
     my ($self, $elem, $doc) = @_;
 
