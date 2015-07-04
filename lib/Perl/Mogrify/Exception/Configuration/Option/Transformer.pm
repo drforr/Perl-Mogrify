@@ -50,7 +50,7 @@ Perl::Mogrify::Exception::Configuration::Option::Enforcer - A problem with confi
 
 A representation of a problem found with the configuration of a
 L<Perl::Mogrify::Enforcer|Perl::Mogrify::Enforcer>, whether from a
-F<.perlcriticrc>, another profile file, or command line.
+F<.perlmogrifyrc>, another profile file, or command line.
 
 This is an abstract class.  It should never be instantiated.
 

@@ -18,7 +18,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
@@ -58,13 +58,13 @@ END_PERL
 
 # Just don't get involved with Perl::Tidy.
 my $profile = { '-CodeLayout::RequireTidyCode' => {} };
-my $critic =
+my $mogrify =
     Perl::Mogrify->new(
         -severity => 1,
         -profile => $profile,
         -theme => 'core',
     );
-my @violations = $critic->critique( \$code );
+my @violations = $mogrify->critique( \$code );
 
 #print @violations;
 #exit;
@@ -82,7 +82,7 @@ my %expected_stats = (
     violations_per_statement      => 1.4, # 7 violations / 5 lines
 );
 
-my $stats = $critic->statistics();
+my $stats = $mogrify->statistics();
 isa_ok($stats, $package);
 
 while ( my($method, $expected) = each %expected_stats) {

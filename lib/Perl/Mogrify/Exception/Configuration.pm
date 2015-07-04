@@ -35,7 +35,7 @@ Perl::Mogrify::Exception::Configuration - A problem with L<Perl::Mogrify|Perl::M
 =head1 DESCRIPTION
 
 A representation of a problem found with the configuration of
-L<Perl::Mogrify|Perl::Mogrify>, whether from a F<.perlcriticrc>, another profile
+L<Perl::Mogrify|Perl::Mogrify>, whether from a F<.perlmogrifyrc>, another profile
 file, or command line.
 
 This is an abstract class.  It should never be instantiated.

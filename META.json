@@ -874,14 +874,14 @@
       "bugtracker" : {
          "web" : "https://github.com/Perl-Mogrify/Perl-Mogrify/issues"
       },
-      "homepage" : "http://perlcritic.com",
+      "homepage" : "http://perlmogrify.com",
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
          "url" : "git://github.com/Perl-Mogrify/Perl-Mogrify.git"
       },
-      "x_MailingList" : "http://perlcritic.tigris.org/servlets/SummarizeList?listName=users"
+      "x_MailingList" : "http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users"
    },
    "version" : "1.125",
    "x_authority" : "cpan:CRITICRE"

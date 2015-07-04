@@ -69,7 +69,7 @@ Perl::Mogrify::Exception::Configuration::Option::Transformer::ParameterValue - A
 
 A representation of a problem found with the value of a parameter for
 a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>, whether from a
-F<.perlcriticrc>, another profile file, or command line.
+F<.perlmogrifyrc>, another profile file, or command line.
 
 
 =head1 INTERFACE SUPPORT

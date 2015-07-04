@@ -231,17 +231,17 @@ the sake of debugging.
 
 =item C< get_set_themes() >
 
-The value of C<set_themes> in the user's F<.perlcriticrc>.
+The value of C<set_themes> in the user's F<.perlmogrifyrc>.
 
 
 =item C< get_add_themes() >
 
-The value of C<add_themes> in the user's F<.perlcriticrc>.
+The value of C<add_themes> in the user's F<.perlmogrifyrc>.
 
 
 =item C< get_severity() >
 
-The value of C<severity> in the user's F<.perlcriticrc>.
+The value of C<severity> in the user's F<.perlmogrifyrc>.
 
 
 =item C< is_maximum_violations_per_document_unlimited() >
@@ -253,13 +253,13 @@ be considered to be unlimited.
 =item C< get_maximum_violations_per_document() >
 
 The value of C<maximum_violations_per_document> in the user's
-F<.perlcriticrc>.
+F<.perlmogrifyrc>.
 
 
 =item C< get($parameter) >
 
 Retrieve the value of the specified parameter in the user's
-F<.perlcriticrc>.
+F<.perlmogrifyrc>.
 
 
 =item C< remove($parameter) >

@@ -34,7 +34,7 @@ Perl::Mogrify::Exception::Configuration::Option::Global - A problem with L<Perl:
 =head1 DESCRIPTION
 
 A representation of a problem found with the global configuration of
-L<Perl::Mogrify|Perl::Mogrify>, whether from a F<.perlcriticrc>, another
+L<Perl::Mogrify|Perl::Mogrify>, whether from a F<.perlmogrifyrc>, another
 profile file, or command line.
 
 This is an abstract class.  It should never be instantiated.

@@ -36,13 +36,13 @@ sub error {
 
 #-----------------------------------------------------------------------------
 
-## no critic (Subroutines::RequireFinalReturn)
+## no mogrify (Subroutines::RequireFinalReturn)
 sub full_message {
     Perl::Mogrify::Exception::Fatal::Internal->throw(
         'Subclass failed to override abstract method.'
     );
 }
-## use critic
+## use mogrify
 
 
 1;
@@ -63,7 +63,7 @@ Perl::Mogrify::Exception::Configuration::Option - A problem with an option in th
 
 A representation of a problem found with an option in the
 configuration of L<Perl::Mogrify|Perl::Mogrify>, whether from a
-F<.perlcriticrc>, another profile file, or command line.
+F<.perlmogrifyrc>, another profile file, or command line.
 
 This is an abstract class.  It should never be instantiated.
 

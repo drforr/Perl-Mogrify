@@ -45,7 +45,7 @@ Readonly::Scalar my $EXIT_HAD_FILE_PROBLEMS => 3;
 #-----------------------------------------------------------------------------
 
 my @files = ();
-my $critic = undef;
+my $mogrify = undef;
 my $output = \*STDOUT;
 
 #-----------------------------------------------------------------------------
@@ -228,10 +228,10 @@ sub _critique {
     # why not save a few seconds if you can.
 
     require Perl::Mogrify;
-    $critic = Perl::Mogrify->new( %{$opts_ref} );
-    $critic->policies() || die "No policies selected.\n";
+    $mogrify = Perl::Mogrify->new( %{$opts_ref} );
+    $mogrify->policies() || die "No policies selected.\n";
 
-    _set_up_pager($critic->config()->pager());
+    _set_up_pager($mogrify->config()->pager());
 
     my $number_of_violations = undef;
     my $had_error_in_file = 0;
@@ -239,7 +239,7 @@ sub _critique {
     for my $file (@files_to_critique) {
 
         eval {
-            my @violations = $critic->critique($file);
+            my @violations = $mogrify->critique($file);
             $number_of_violations += scalar @violations;
 
             if (not $opts_ref->{'-statistics-only'}) {
@@ -259,14 +259,14 @@ sub _critique {
             }
             else {
                 die qq<Fatal error while critiquing "$file". Unfortunately, >,
-                    q<$@/$EVAL_ERROR >, ## no critic (RequireInterpolationOfMetachars)
+                    q<$@/$EVAL_ERROR >, ## no mogrify (RequireInterpolationOfMetachars)
                     qq<is empty, so the reason can't be shown.\n>;
             }
         }
     }
 
     if ( $opts_ref->{-statistics} or $opts_ref->{'-statistics-only'} ) {
-        my $stats = $critic->statistics();
+        my $stats = $mogrify->statistics();
         _report_statistics( $opts_ref, $stats );
     }
 
@@ -304,7 +304,7 @@ sub _render_report {
     }
 
     # Otherwise, format and print violations
-    my $verbosity = $critic->config->verbose();
+    my $verbosity = $mogrify->config->verbose();
     # $verbosity can be numeric or string, so use "eq" for comparison;
     $verbosity =
         ($verbosity eq $DEFAULT_VERBOSITY && @files > 1)
@@ -314,7 +314,7 @@ sub _render_report {
     if (not -f $file) { $fmt =~ s< \%[fF] ><STDIN>xms; } #HACK!
     Perl::Mogrify::Violation::set_format( $fmt );
 
-    my $color = $critic->config->color();
+    my $color = $mogrify->config->color();
     _out $color ? _colorize_by_severity(@violations) : @violations;
 
     return $number_of_violations;
@@ -327,7 +327,7 @@ sub _set_up_pager {
     return if not $pager_command;
     return if not _at_tty();
 
-    open my $pager, q<|->, $pager_command  ## no critic (InputOutput::RequireBriefOpen)
+    open my $pager, q<|->, $pager_command  ## no mogrify (InputOutput::RequireBriefOpen)
         or die qq<Unable to pipe to pager "$pager_command": $ERRNO\n>;
 
     $output = $pager;
@@ -525,7 +525,7 @@ sub _colorize_by_severity {
         1;
     };
 
-    my $config = $critic->config();
+    my $config = $mogrify->config();
     my %color_of = (
         $SEVERITY_HIGHEST   => $config->color_severity_highest(),
         $SEVERITY_HIGH      => $config->color_severity_high(),
@@ -563,7 +563,7 @@ sub _this_is_windows {
 #-----------------------------------------------------------------------------
 
 sub _at_tty {
-    return -t STDOUT; ## no critic (ProhibitInteractiveTest);
+    return -t STDOUT; ## no mogrify (ProhibitInteractiveTest);
 }
 
 #-----------------------------------------------------------------------------
@@ -627,15 +627,15 @@ sub _render_policy_docs {
     my $pattern = delete $opts{-doc};
 
     require Perl::Mogrify;
-    $critic = Perl::Mogrify->new(%opts);
-    _set_up_pager($critic->config()->pager());
+    $mogrify = Perl::Mogrify->new(%opts);
+    _set_up_pager($mogrify->config()->pager());
 
     require Perl::Mogrify::TransformerFactory;
     my @site_policies  = Perl::Mogrify::TransformerFactory->site_policy_names();
     my @matching_policies  = grep { /$pattern/ixms } @site_policies;
 
     # "-T" means don't send to pager
-    my @perldoc_output = map {`perldoc -T $_`} @matching_policies;  ## no critic (ProhibitBacktick)
+    my @perldoc_output = map {`perldoc -T $_`} @matching_policies;  ## no mogrify (ProhibitBacktick)
     _out @perldoc_output;
 
     exit $EXIT_SUCCESS;
@@ -662,7 +662,7 @@ Twitter
 
 =head1 NAME
 
-Perl::Mogrify::Command - Guts of L<perlcritic|perlcritic>.
+Perl::Mogrify::Command - Guts of L<perlmogrify|perlmogrify>.
 
 
 =head1 SYNOPSIS
@@ -675,7 +675,7 @@ Perl::Mogrify::Command - Guts of L<perlcritic|perlcritic>.
 
 =head1 DESCRIPTION
 
-This is the implementation of the L<perlcritic|perlcritic> command.  You can use
+This is the implementation of the L<perlmogrify|perlmogrify> command.  You can use
 this to run the command without going through a command interpreter.
 
 
@@ -691,7 +691,7 @@ experimental, and will likely change.
 
 =item C<run()>
 
-Does the equivalent of the L<perlcritic|perlcritic> command.  Unfortunately, at
+Does the equivalent of the L<perlmogrify|perlmogrify> command.  Unfortunately, at
 present, this doesn't take any parameters but uses C<@ARGV> to get its
 input instead.  Count on this changing; don't count on the current
 interface.

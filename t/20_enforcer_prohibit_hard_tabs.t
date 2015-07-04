@@ -15,7 +15,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 # This specific policy is being tested without run.t because the .run file
 # would have to contain invisible characters.

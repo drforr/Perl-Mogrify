@@ -59,8 +59,8 @@ optimizations
 PBP
 pbp
 perl
-perlcritic
-perlcriticrc
+perlmogrify
+perlmogrifyrc
 perldoc
 Perlish
 perlmonk

@@ -62,8 +62,8 @@ sub _run_nytprof {
         or croak 'Could not find nytprofhtml in your PATH';
 
     my $this_perl = $EXECUTABLE_NAME;
-    my @perl_args = qw(-Iblib/lib -d:NYTProf blib/script/perlcritic);
-    my @perlcritic_args =
+    my @perl_args = qw(-Iblib/lib -d:NYTProf blib/script/perlmogrify);
+    my @perlmogrify_args =
         qw<
             --noprofile
             --severity=1
@@ -73,11 +73,11 @@ sub _run_nytprof {
             --exclude=RcsKeywords
             blib
         >;
-    warn "Running: $this_perl @perl_args @perlcritic_args\n";
+    warn "Running: $this_perl @perl_args @perlmogrify_args\n";
 
-    my $status_perlcritic = system $this_perl, @perl_args, @perlcritic_args;
-    croak "perlcritic failed with status $status_perlcritic"
-        if $status_perlcritic == 1;
+    my $status_perlmogrify = system $this_perl, @perl_args, @perlmogrify_args;
+    croak "perlmogrify failed with status $status_perlmogrify"
+        if $status_perlmogrify == 1;
 
     my $status_nytprofhtml = system $nytprofhtml;
     croak "nytprofhtml failed with status $status_nytprofhtml"
@@ -125,7 +125,7 @@ a distribution with the C<dist> or C<distdir> targets.
 
 =item nytprof
 
-Runs perlcritic under the L<Devel::NYTProf> profiler and generates
+Runs perlmogrify under the L<Devel::NYTProf> profiler and generates
 an HTML report in F<nytprof/index.html>.
 
 

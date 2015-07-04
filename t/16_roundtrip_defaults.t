@@ -219,7 +219,7 @@ SKIP: {
             $policy_test_count
         if not $policy_counts_match;
 
-    for (my $x = 0; $x < @default_policies; $x++) { ## no critic (ProhibitCStyleForLoops)
+    for (my $x = 0; $x < @default_policies; $x++) { ## no mogrify (ProhibitCStyleForLoops)
         my $derived_policy = $derived_policies[$x];
         my $default_policy = $default_policies[$x];
 

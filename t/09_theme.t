@@ -24,7 +24,7 @@ our $VERSION = '1.125';
 ILLEGAL_RULES: {
 
     my @invalid_rules = (
-        '$cosmetic',    ## no critic (RequireInterpolationOfMetachars)
+        '$cosmetic',    ## no mogrify (RequireInterpolationOfMetachars)
         '"cosmetic"',
         '#cosmetic > bugs',
         'cosmetic / bugs',
@@ -107,7 +107,7 @@ TRANSLATIONS: {
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 {
     my $profile = Perl::Mogrify::UserProfile->new( -profile => q{} );

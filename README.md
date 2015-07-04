@@ -6,8 +6,8 @@ Perl::Mogrify - Critique Perl source code for best-practices.
 
     use Perl::Mogrify;
     my $file = shift;
-    my $critic = Perl::Mogrify->new();
-    my @violations = $critic->critique($file);
+    my $mogrify = Perl::Mogrify->new();
+    my @violations = $mogrify->critique($file);
     print @violations;
 
 # DESCRIPTION
@@ -23,19 +23,19 @@ customize those Polices through the Perl::Mogrify interface.  You can also
 create new Transformer modules that suit your own tastes.
 
 For a command-line interface to Perl::Mogrify, see the documentation for
-[perlcritic](https://metacpan.org/pod/perlcritic).  If you want to integrate Perl::Mogrify with your build process,
+[perlmogrify](https://metacpan.org/pod/perlmogrify).  If you want to integrate Perl::Mogrify with your build process,
 [Test::Perl::Mogrify](https://metacpan.org/pod/Test::Perl::Mogrify) provides an interface that is suitable for test
 programs.  Also, [Test::Perl::Mogrify::Progressive](https://metacpan.org/pod/Test::Perl::Mogrify::Progressive) is useful for gradually
 applying coding standards to legacy code.  For the ultimate convenience (at
-the expense of some flexibility) see the [criticism](https://metacpan.org/pod/criticism) pragma.
+the expense of some flexibility) see the [mogrification](https://metacpan.org/pod/mogrification) pragma.
 
 If you'd like to try [Perl::Mogrify](https://metacpan.org/pod/Perl::Mogrify) without installing anything, there is a
-web-service available at [http://perlcritic.com](http://perlcritic.com).  The web-service does not
+web-service available at [http://perlmogrify.com](http://perlmogrify.com).  The web-service does not
 yet support all the configuration features that are available in the native
 Perl::Mogrify API, but it should give you a good idea of what it does.
 
 Also, ActivePerl includes a very slick graphical interface to Perl-Mogrify
-called `perlcritic-gui`.  You can get a free community edition of ActivePerl
+called `perlmogrify-gui`.  You can get a free community edition of ActivePerl
 from [http://www.activestate.com](http://www.activestate.com).
 
 # INTERFACE SUPPORT
@@ -45,18 +45,18 @@ through a deprecation cycle.
 
 # CONSTRUCTOR
 
-- `new( [ -profile => $FILE, -severity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -criticism-fatal => $B)`
+- `new( [ -profile => $FILE, -severity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B)`
 - `new()`
 
     Returns a reference to a new Perl::Mogrify object.  Most arguments are just
     passed directly into [Perl::Mogrify::Config](https://metacpan.org/pod/Perl::Mogrify::Config), but I have described them here
     as well.  The default value for all arguments can be defined in your
-    `.perlcriticrc` file.  See the ["CONFIGURATION"](#configuration) section for more
+    `.perlmogrifyrc` file.  See the ["CONFIGURATION"](#configuration) section for more
     information about that.  All arguments are optional key-value pairs as
     follows:
 
     **-profile** is a path to a configuration file. If `$FILE` is not defined,
-    Perl::Mogrify::Config attempts to find a `.perlcriticrc` configuration file in
+    Perl::Mogrify::Config attempts to find a `.perlmogrifyrc` configuration file in
     the current directory, and then in your home directory.  Alternatively, you
     can set the `PERLCRITIC` environment variable to point to a file in another
     location.  If a configuration file can't be found, or if `$FILE` is an empty
@@ -68,8 +68,8 @@ through a deprecation cycle.
     ranging from 1 (least severe violations) to 5 (most severe violations).  The
     default is 5.  For a given `-profile`, decreasing the `-severity` will
     usually reveal more Transformer violations. You can set the default value for this
-    option in your `.perlcriticrc` file.  Users can redefine the severity level
-    for any Transformer in their `.perlcriticrc` file.  See ["CONFIGURATION"](#configuration) for
+    option in your `.perlmogrifyrc` file.  Users can redefine the severity level
+    for any Transformer in their `.perlmogrifyrc` file.  See ["CONFIGURATION"](#configuration) for
     more information.
 
     If it is difficult for you to remember whether severity "5" is the most or
@@ -83,30 +83,30 @@ through a deprecation cycle.
         -severity => 'cruel'                      -severity => 2
         -severity => 'brutal'                     -severity => 1
 
-    The names reflect how severely the code is criticized: a `gentle` criticism
-    reports only the most severe violations, and so on down to a `brutal`
-    criticism which reports even the most minor violations.
+    The names reflect how severely the code is mogrifyized: a `gentle`
+    mogrification reports only the most severe violations, and so on down to a
+    `brutal` mogrification which reports even the most minor violations.
 
     **-theme** is special expression that determines which Policies to apply based
     on their respective themes.  For example, the following would load only
     Policies that have a 'bugs' AND 'pbp' theme:
 
-        my $critic = Perl::Mogrify->new( -theme => 'bugs && pbp' );
+        my $mogrify = Perl::Mogrify->new( -theme => 'bugs && pbp' );
 
     Unless the `-severity` option is explicitly given, setting `-theme` silently
     causes the `-severity` to be set to 1.  You can set the default value for
-    this option in your `.perlcriticrc` file.  See the ["POLICY THEMES"](#policy-themes) section
+    this option in your `.perlmogrifyrc` file.  See the ["POLICY THEMES"](#policy-themes) section
     for more information about themes.
 
     **-include** is a reference to a list of string `@PATTERNS`.  Transformer modules
     that match at least one `m/$PATTERN/ixms` will always be loaded, irrespective
     of all other settings.  For example:
 
-        my $critic = Perl::Mogrify->new(-include => ['layout'] -severity => 4);
+        my $mogrify = Perl::Mogrify->new(-include => ['layout'] -severity => 4);
 
     This would cause Perl::Mogrify to apply all the `CodeLayout::*` Transformer modules
     even though they have a severity level that is less than 4. You can set the
-    default value for this option in your `.perlcriticrc` file.  You can also use
+    default value for this option in your `.perlmogrifyrc` file.  You can also use
     `-include` in conjunction with the `-exclude` option.  Note that `-exclude`
     takes precedence over `-include` when a Transformer matches both patterns.
 
@@ -114,12 +114,12 @@ through a deprecation cycle.
     that match at least one `m/$PATTERN/ixms` will not be loaded, irrespective of
     all other settings.  For example:
 
-        my $critic = Perl::Mogrify->new(-exclude => ['strict'] -severity => 1);
+        my $mogrify = Perl::Mogrify->new(-exclude => ['strict'] -severity => 1);
 
     This would cause Perl::Mogrify to not apply the `RequireUseStrict` and
     `ProhibitNoStrict` Transformer modules even though they have a severity level that
     is greater than 1.  You can set the default value for this option in your
-    `.perlcriticrc` file.  You can also use `-exclude` in conjunction with the
+    `.perlmogrifyrc` file.  You can also use `-exclude` in conjunction with the
     `-include` option.  Note that `-exclude` takes precedence over `-include`
     when a Transformer matches both patterns.
 
@@ -127,27 +127,27 @@ through a deprecation cycle.
     `m/$PATTERN/ixms` will be used.  Policies that do not match will be excluded.
     This option has precedence over the `-severity`, `-theme`, `-include`,
     `-exclude`, and `-only` options.  You can set the default value for this
-    option in your `.perlcriticrc` file.
+    option in your `.perlmogrifyrc` file.
 
     **-top** is the maximum number of Violations to return when ranked by their
     severity levels.  This must be a positive integer.  Violations are still
     returned in the order that they occur within the file. Unless the `-severity`
     option is explicitly given, setting `-top` silently causes the `-severity`
     to be set to 1.  You can set the default value for this option in your
-    `.perlcriticrc` file.
+    `.perlmogrifyrc` file.
 
     **-only** is a boolean value.  If set to a true value, Perl::Mogrify will only
     choose from Policies that are mentioned in the user's profile.  If set to a
     false value (which is the default), then Perl::Mogrify chooses from all the
     Policies that it finds at your site. You can set the default value for this
-    option in your `.perlcriticrc` file.
+    option in your `.perlmogrifyrc` file.
 
     **-profile-strictness** is an enumerated value, one of
     ["$PROFILE\_STRICTNESS\_WARN" in Perl::Mogrify::Utils::Constants](https://metacpan.org/pod/Perl::Mogrify::Utils::Constants#PROFILE_STRICTNESS_WARN) (the default),
     ["$PROFILE\_STRICTNESS\_FATAL" in Perl::Mogrify::Utils::Constants](https://metacpan.org/pod/Perl::Mogrify::Utils::Constants#PROFILE_STRICTNESS_FATAL), and
     ["$PROFILE\_STRICTNESS\_QUIET" in Perl::Mogrify::Utils::Constants](https://metacpan.org/pod/Perl::Mogrify::Utils::Constants#PROFILE_STRICTNESS_QUIET).  If set to
     ["$PROFILE\_STRICTNESS\_FATAL" in Perl::Mogrify::Utils::Constants](https://metacpan.org/pod/Perl::Mogrify::Utils::Constants#PROFILE_STRICTNESS_FATAL), Perl::Mogrify
-    will make certain warnings about problems found in a `.perlcriticrc` or file
+    will make certain warnings about problems found in a `.perlmogrifyrc` or file
     specified via the **-profile** option fatal. For example, Perl::Mogrify normally
     only `warn`s about profiles referring to non-existent Policies, but this
     value makes this situation fatal.  Correspondingly,
@@ -155,35 +155,35 @@ through a deprecation cycle.
     Perl::Mogrify shut up about these things.
 
     **-force** is a boolean value that controls whether Perl::Mogrify observes the
-    magical `"## no critic"` annotations in your code. If set to a true value,
+    magical `"## no mogrify"` annotations in your code. If set to a true value,
     Perl::Mogrify will analyze all code.  If set to a false value (which is the
     default) Perl::Mogrify will ignore code that is tagged with these annotations.
     See ["BENDING THE RULES"](#bending-the-rules) for more information.  You can set the default
-    value for this option in your `.perlcriticrc` file.
+    value for this option in your `.perlmogrifyrc` file.
 
     **-verbose** can be a positive integer (from 1 to 11), or a literal format
     specification.  See [Perl::Mogrify::Violation](https://metacpan.org/pod/Perl::Mogrify::Violation) for an
     explanation of format specifications.  You can set the default value for this
-    option in your `.perlcriticrc` file.
+    option in your `.perlmogrifyrc` file.
 
     **-unsafe** directs Perl::Mogrify to allow the use of Policies that are marked
     as "unsafe" by the author.  Such policies may compile untrusted code or do
     other nefarious things.
 
     **-color** and **-pager** are not used by Perl::Mogrify but is provided for the
-    benefit of [perlcritic](https://metacpan.org/pod/perlcritic).
+    benefit of [perlmogrify](https://metacpan.org/pod/perlmogrify).
 
-    **-criticism-fatal** is not used by Perl::Mogrify but is provided for the
-    benefit of [criticism](https://metacpan.org/pod/criticism).
+    **-mogrification-fatal** is not used by Perl::Mogrify but is provided for
+    the benefit of [mogrificatio](https://metacpan.org/pod/mogrificatio).
 
     **-color-severity-highest**, **-color-severity-high**, **-color-severity-
     medium**, **-color-severity-low**, and **-color-severity-lowest** are not used by
-    Perl::Mogrify, but are provided for the benefit of [perlcritic](https://metacpan.org/pod/perlcritic).
+    Perl::Mogrify, but are provided for the benefit of [perlmogrify](https://metacpan.org/pod/perlmogrify).
     Each is set to the Term::ANSIColor color specification to be used to display
     violations of the corresponding severity.
 
     **-files-with-violations** and **-files-without-violations** are not used by
-    Perl::Mogrify, but are provided for the benefit of [perlcritic](https://metacpan.org/pod/perlcritic), to
+    Perl::Mogrify, but are provided for the benefit of [perlmogrify](https://metacpan.org/pod/perlmogrify), to
     cause only the relevant filenames to be displayed.
 
 # METHODS
@@ -257,7 +257,7 @@ functions.  Sorry.
 
 Most of the settings for Perl::Mogrify and each of the Transformer modules can be
 controlled by a configuration file.  The default configuration file is called
-`.perlcriticrc`.  Perl::Mogrify will look for this file in the current
+`.perlmogrifyrc`.  Perl::Mogrify will look for this file in the current
 directory first, and then in your home directory. Alternatively, you can set
 the `PERLCRITIC` environment variable to explicitly point to a different file
 in another location.  If none of these files exist, and the `-profile` option
@@ -282,7 +282,7 @@ constructor argument.
     theme     = (pbp || security) && bugs             #A theme expression
     include   = NamingConventions ClassHierarchies    #Space-delimited list
     exclude   = Variables  Modules::RequirePackage    #Space-delimited list
-    criticism-fatal = 1                               #Zero or One
+    mogrificatio-fatal = 1                            #Zero or One
     color     = 1                                     #Zero or One
     allow-unsafe = 1                                  #Zero or One
     pager     = less                                  #pager to pipe output to
@@ -318,9 +318,9 @@ use one of the equivalent names:
     cruel                                              2
     brutal                                             1
 
-The names reflect how severely the code is criticized: a `gentle` criticism
+The names reflect how severely the code is mogrifyized: a `gentle` mogrification
 reports only the most severe violations, and so on down to a `brutal`
-criticism which reports even the most minor violations.
+mogrification which reports even the most minor violations.
 
 `set_themes` sets the theme for the Transformer and overrides its default theme.
 The argument is a string of one or more whitespace-delimited alphanumeric
@@ -371,7 +371,7 @@ A simple configuration might look like this:
 
     #--------------------------------------------------------------
     # Give these policies a custom theme.  I can activate just
-    # these policies by saying `perlcritic -theme larry`
+    # these policies by saying `perlmogrify -theme larry`
 
     [Modules::RequireFilenameMatchesPackage]
     add_themes = larry
@@ -389,17 +389,17 @@ A simple configuration might look like this:
     # For all other Policies, I accept the default severity,
     # so no additional configuration is required for them.
 
-For additional configuration examples, see the `perlcriticrc` file that is
+For additional configuration examples, see the `perlmogrifyrc` file that is
 included in this `examples` directory of this distribution.
 
 Damian Conway's own Perl::Mogrify configuration is also included in this
-distribution as `examples/perlcriticrc-conway`.
+distribution as `examples/perlmogrifyrc-conway`.
 
 # THE POLICIES
 
 A large number of Transformer modules are distributed with Perl::Mogrify. They are
 described briefly in the companion document [Perl::Mogrify::PolicySummary](https://metacpan.org/pod/Perl::Mogrify::PolicySummary) and
-in more detail in the individual modules themselves.  Say `"perlcritic -doc
+in more detail in the individual modules themselves.  Say `"perlmogrify -doc
 PATTERN"` to see the perldoc for all Transformer modules that match the regex
 `m/PATTERN/ixms`
 
@@ -434,9 +434,9 @@ You are free to invent new themes that suit your needs.
     security          Policies that relate to security issues
     tests             Policies that are specific to test programs
 
-Any Transformer may fit into multiple themes.  Say `"perlcritic -list"` to get a
+Any Transformer may fit into multiple themes.  Say `"perlmogrify -list"` to get a
 listing of all available Policies and the themes that are associated with each
-one.  You can also change the theme for any Transformer in your `.perlcriticrc`
+one.  You can also change the theme for any Transformer in your `.perlmogrifyrc`
 file.  See the ["CONFIGURATION"](#configuration) section for more information about that.
 
 Using the `-theme` option, you can create an arbitrarily complex rule that
@@ -464,37 +464,37 @@ you are knowingly violating the standards and that you have a Damn Good Reason
 To help with those situations, you can direct Perl::Mogrify to ignore certain
 lines or blocks of code by using annotations:
 
-    require 'LegacyLibaray1.pl';  ## no critic
-    require 'LegacyLibrary2.pl';  ## no critic
+    require 'LegacyLibaray1.pl';  ## no mogrify
+    require 'LegacyLibrary2.pl';  ## no mogrify
 
     for my $element (@list) {
 
-        ## no critic
+        ## no mogrify
 
         $foo = "";               #Violates 'ProhibitEmptyQuotes'
         $barf = bar() if $foo;   #Violates 'ProhibitPostfixControls'
         #Some more evil code...
 
-        ## use critic
+        ## use mogrify
 
         #Some good code...
         do_something($_);
     }
 
-The `"## no critic"` annotations direct Perl::Mogrify to ignore the remaining
-lines of code until a `"## use critic"` annotation is found. If the `"## no
-critic"` annotation is on the same line as a code statement, then only that
-line of code is overlooked.  To direct perlcritic to ignore the `"## no
-critic"` annotations, use the `--force` option.
+The `"## no mogrify"` annotations direct Perl::Mogrify to ignore the remaining
+lines of code until a `"## use mogrify"` annotation is found. If the `"## no
+mogrify"` annotation is on the same line as a code statement, then only that
+line of code is overlooked.  To direct perlmogrify to ignore the `"## no
+mogrify"` annotations, use the `--force` option.
 
-A bare `"## no critic"` annotation disables all the active Policies.  If you
+A bare `"## no mogrify"` annotation disables all the active Policies.  If you
 wish to disable only specific Policies, add a list of Transformer names as
 arguments, just as you would for the `"no strict"` or `"no warnings"`
 pragmas.  For example, this would disable the `ProhibitEmptyQuotes` and
 `ProhibitPostfixControls` policies until the end of the block or until the
-next `"## use critic"` annotation (whichever comes first):
+next `"## use mogrify"` annotation (whichever comes first):
 
-    ## no critic (EmptyQuotes, PostfixControls)
+    ## no mogrify (EmptyQuotes, PostfixControls)
 
     # Now exempt from ValuesAndExpressions::ProhibitEmptyQuotes
     $foo = "";
@@ -505,11 +505,11 @@ next `"## use critic"` annotation (whichever comes first):
     # Still subjected to ValuesAndExpression::RequireNumberSeparators
     $long_int = 10000000000;
 
-Since the Transformer names are matched against the `"## no critic"` arguments as
+Since the Transformer names are matched against the `"## no mogrify"` arguments as
 regular expressions, you can abbreviate the Transformer names or disable an entire
 family of Policies in one shot like this:
 
-    ## no critic (NamingConventions)
+    ## no mogrify (NamingConventions)
 
     # Now exempt from NamingConventions::Capitalization
     my $camelHumpVar = 'foo';
@@ -518,25 +518,25 @@ family of Policies in one shot like this:
     sub camelHumpSub {}
 
 The argument list must be enclosed in parentheses and must contain one or more
-comma-separated barewords (e.g. don't use quotes).  The `"## no critic"`
+comma-separated barewords (e.g. don't use quotes).  The `"## no mogrify"`
 annotations can be nested, and Policies named by an inner annotation will be
 disabled along with those already disabled an outer annotation.
 
 Some Policies like `Subroutines::ProhibitExcessComplexity` apply to an entire
-block of code.  In those cases, the `"## no critic"` annotation must appear
+block of code.  In those cases, the `"## no mogrify"` annotation must appear
 on the line where the violation is reported.  For example:
 
-    sub complicated_function {  ## no critic (ProhibitExcessComplexity)
+    sub complicated_function {  ## no mogrify (ProhibitExcessComplexity)
         # Your code here...
     }
 
 Policies such as `Documentation::RequirePodSections` apply to the entire
 document, in which case violations are reported at line 1.
 
-Use this feature wisely.  `"## no critic"` annotations should be used in the
+Use this feature wisely.  `"## no mogrify"` annotations should be used in the
 smallest possible scope, or only on individual lines of code. And you should
 always be as specific as possible about which Policies you want to disable
-(i.e. never use a bare `"## no critic"`).  If Perl::Mogrify complains about
+(i.e. never use a bare `"## no mogrify"`).  If Perl::Mogrify complains about
 your code, try and find a compliant solution before resorting to this feature.
 
 # THE [Perl::Mogrify](https://metacpan.org/pod/Perl::Mogrify) PHILOSOPHY
@@ -559,7 +559,7 @@ code.  Please see the [Perl::Mogrify::DEVELOPER](https://metacpan.org/pod/Perl::
 distribution for a step-by-step demonstration of how to create new Transformer
 modules.
 
-If you develop any new Transformer modules, feel free to send them to `<team@perlcritic.com>` and I'll be happy to consider puting them into the
+If you develop any new Transformer modules, feel free to send them to `<team@perlmogrify.com>` and I'll be happy to consider puting them into the
 Perl::Mogrify distribution.  Or if you would like to work on the Perl::Mogrify
 project directly, you can fork our repository at ["/github.com/Perl-
 Mogrify/Perl- Mogrify.git" in http:](https://metacpan.org/pod/http:#github.com-Perl--Mogrify-Perl--Mogrify.git).
@@ -569,7 +569,7 @@ its own coding standards, we can create custom Policies to enforce your local
 guidelines.  Or if your code base is prone to a particular defect pattern, we
 can design Policies that will help you catch those costly defects **before**
 they go into production. To discuss your needs with the Perl::Mogrify team,
-just contact `<team@perlcritic.com>`.
+just contact `<team@perlmogrify.com>`.
 
 # PREREQUISITES
 
@@ -628,13 +628,13 @@ Perl::Mogrify requires the following modules:
 # CONTACTING THE DEVELOPMENT TEAM
 
 You are encouraged to subscribe to the mailing list; send a message to
-[mailto:users-subscribe@perlcritic.tigris.org](mailto:users-subscribe@perlcritic.tigris.org).  To prevent spam, you may be
+[mailto:users-subscribe@perlmogrify.tigris.org](mailto:users-subscribe@perlmogrify.tigris.org).  To prevent spam, you may be
 required to regisgter for a user account with Tigris.org before being allowed
 to post messages to the mailing list. See also the mailing list archives at
-[http://perlcritic.tigris.org/servlets/SummarizeList?listName=users](http://perlcritic.tigris.org/servlets/SummarizeList?listName=users). At
+[http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users](http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users). At
 least one member of the development team is usually hanging around in
-[irc://irc.perl.org/#perlcritic](irc://irc.perl.org/#perlcritic) and you can follow Perl::Mogrify on Twitter,
-at [https://twitter.com/perlcritic](https://twitter.com/perlcritic).
+[irc://irc.perl.org/#perlmogrify](irc://irc.perl.org/#perlmogrify) and you can follow Perl::Mogrify on Twitter,
+at [https://twitter.com/perlmogrify](https://twitter.com/perlmogrify).
 
 # SEE ALSO
 

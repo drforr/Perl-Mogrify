@@ -53,7 +53,7 @@ sub _init {
     $self->{_theme}           = dor(delete $args{theme},              $EMPTY);
     $self->{_top}             = dor(delete $args{top},                $FALSE);
     $self->{_verbose}         = dor(delete $args{verbose},            $DEFAULT_VERBOSITY);
-    $self->{_criticism_fatal} = dor(delete $args{'criticism-fatal'},  $FALSE);
+    $self->{_mogrification_fatal} = dor(delete $args{'mogrification-fatal'},  $FALSE);
     $self->{_pager}           = dor(delete $args{pager},              $EMPTY);
     $self->{_allow_unsafe}    = dor(delete $args{'allow-unsafe'},     $FALSE);
 
@@ -95,7 +95,7 @@ sub _init {
 
     # If we're using a pager or not outputing to a tty don't use colors.
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
-    my $default_color = ($self->pager() or not -t *STDOUT) ? $FALSE : $TRUE; ## no critic (ProhibitInteractiveTest)
+    my $default_color = ($self->pager() or not -t *STDOUT) ? $FALSE : $TRUE; ## no mogrify (ProhibitInteractiveTest)
     $self->{_color} = dor(delete $args{color}, delete $args{colour}, $default_color);
 
     # If there's anything left, complain.
@@ -206,9 +206,9 @@ sub allow_unsafe {
 
 #-----------------------------------------------------------------------------
 
-sub criticism_fatal {
+sub mogrification_fatal {
     my ($self) = @_;
-    return $self->{_criticism_fatal};
+    return $self->{_mogrification_fatal};
 }
 
 #-----------------------------------------------------------------------------
@@ -307,7 +307,7 @@ that correspond to the methods listed below.
 
 This is usually only invoked by
 L<Perl::Mogrify::UserProfile|Perl::Mogrify::UserProfile>, which passes
-in the global values from a F<.perlcriticrc> file.  This object
+in the global values from a F<.perlmogrifyrc> file.  This object
 contains no information for individual Policies.
 
 =back
@@ -388,9 +388,9 @@ command string).
 Returns the default C<allow-unsafe> setting. (Either 1 or 0).
 
 
-=item C< criticism_fatal() >
+=item C< mogrification_fatal() >
 
-Returns the default C<criticism-fatal> setting (Either 1 or 0).
+Returns the default C<mogrification-fatal> setting (Either 1 or 0).
 
 =item C< color_severity_highest() >
 

@@ -67,7 +67,7 @@ Perl::Mogrify::Exception::Configuration::Option::Global::ParameterValue - A prob
 =head1 DESCRIPTION
 
 A representation of a problem found with the value of a global
-parameter, whether from a F<.perlcriticrc>, another profile file, or
+parameter, whether from a F<.perlmogrifyrc>, another profile file, or
 command line.
 
 

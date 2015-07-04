@@ -32,7 +32,7 @@ Readonly::Hash  our %EXPORT_TAGS    => (all => \@EXPORT_OK);
 #-----------------------------------------------------------------------------
 
 Perl::Mogrify::Violation::set_format( "%m at line %l, column %c.  (%r)\n" );
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
@@ -353,7 +353,7 @@ so like this:
     ## parms { allow_y => '0' }
 
 Note that all the values in this hash must be strings because that's
-what Perl::Mogrify will hand you from a F<.perlcriticrc>.
+what Perl::Mogrify will hand you from a F<.perlmogrifyrc>.
 
 If it's a TODO subtest (probably because of some weird corner of PPI
 that we exercised that Adam is getting around to fixing, right?), then

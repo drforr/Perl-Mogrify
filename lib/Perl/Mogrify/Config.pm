@@ -120,9 +120,9 @@ sub _init {
         boolean_to_number(
             dor( $args{'-allow-unsafe'}, $options_processor->allow_unsafe()
         ) );
-    $self->{_criticism_fatal} =
+    $self->{_mogrification_fatal} =
         boolean_to_number(
-            dor( $args{'-criticism-fatal'}, $options_processor->criticism_fatal() )
+            dor( $args{'-mogrification-fatal'}, $options_processor->mogrification_fatal() )
         );
 
 
@@ -229,7 +229,7 @@ sub _load_policies {
         # To load, or not to load -- that is the question.
         my $load_me = $self->only() ? $FALSE : $TRUE;
 
-        ## no critic (ProhibitPostfixControls)
+        ## no mogrify (ProhibitPostfixControls)
         $load_me = $FALSE if     $self->_policy_is_disabled( $policy );
         $load_me = $TRUE  if     $self->_policy_is_enabled( $policy );
         $load_me = $FALSE if     $self->_policy_is_unimportant( $policy );
@@ -635,7 +635,7 @@ sub _validate_and_save_theme {
 
         # eval of an empty string does not reset $@ in Perl 5.6.
         local $EVAL_ERROR = $EMPTY;
-        eval $rule_as_code; ## no critic (ProhibitStringyEval, RequireCheckingReturnValueOfEval)
+        eval $rule_as_code; ## no mogrify (ProhibitStringyEval, RequireCheckingReturnValueOfEval)
 
         if ($EVAL_ERROR) {
             $errors->add_exception(
@@ -678,7 +678,7 @@ sub _validate_and_save_pager {
         $pager = $profile->options_processor()->pager();
     }
 
-    if ($pager eq '$PAGER') {   ## no critic (RequireInterpolationOfMetachars)
+    if ($pager eq '$PAGER') {   ## no mogrify (RequireInterpolationOfMetachars)
         $pager = $ENV{PAGER};
     }
     $pager ||= $EMPTY;
@@ -881,9 +881,9 @@ sub unsafe_allowed {
 
 #-----------------------------------------------------------------------------
 
-sub criticism_fatal {
+sub mogrification_fatal {
     my ($self) = @_;
-    return $self->{_criticism_fatal};
+    return $self->{_mogrification_fatal};
 }
 
 #-----------------------------------------------------------------------------
@@ -1095,9 +1095,9 @@ Returns the value of the C<-pager> attribute for this Config.
 Returns the value of the C<-allow-unsafe> attribute for this Config.
 
 
-=item C< criticism_fatal() >
+=item C< mogrification_fatal() >
 
-Returns the value of the C<-criticsm-fatal> attribute for this Config.
+Returns the value of the C<-mogrifysm-fatal> attribute for this Config.
 
 
 =item C< color_severity_highest() >
@@ -1166,7 +1166,7 @@ have been installed.
 
 Most of the settings for Perl::Mogrify and each of the Transformer modules
 can be controlled by a configuration file.  The default configuration
-file is called F<.perlcriticrc>.
+file is called F<.perlmogrifyrc>.
 L<Perl::Mogrify::Config|Perl::Mogrify::Config> will look for this file
 in the current directory first, and then in your home directory.
 Alternatively, you can set the C<PERLCRITIC> environment variable to
@@ -1279,7 +1279,7 @@ A simple configuration might look like this:
     # and other parameters, so no additional configuration is
     # required for them.
 
-For additional configuration examples, see the F<perlcriticrc> file
+For additional configuration examples, see the F<perlmogrifyrc> file
 that is included in this F<t/examples> directory of this distribution.
 
 
@@ -1316,9 +1316,9 @@ needs.
     security          Policies that relate to security issues
     tests             Policies that are specific to test programs
 
-Say C<`perlcritic -list`> to get a listing of all available policies
+Say C<`perlmogrify -list`> to get a listing of all available policies
 and the themes that are associated with each one.  You can also change
-the theme for any Transformer in your F<.perlcriticrc> file.  See the
+the theme for any Transformer in your F<.perlmogrifyrc> file.  See the
 L<"CONFIGURATION"> section for more information about that.
 
 Using the C<-theme> option, you can combine theme names with

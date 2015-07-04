@@ -42,14 +42,14 @@ my $builder = Perl::Mogrify::Module::Build->new(
 
     PL_files            => get_PL_files(),
 
-    script_files        => ['bin/perlcritic'],
+    script_files        => ['bin/perlmogrify'],
 
     meta_merge          => {
         resources => {
             bugtracker  => 'https://github.com/Perl-Mogrify/Perl-Mogrify/issues',
-            homepage    => 'http://perlcritic.com',
+            homepage    => 'http://perlmogrify.com',
             license     => [ 'http://dev.perl.org/licenses' ],
-            MailingList => 'http://perlcritic.tigris.org/servlets/SummarizeList?listName=users',
+            MailingList => 'http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users',
             repository  => 'git://github.com/Perl-Mogrify/Perl-Mogrify.git',
         },
         no_index        => {

@@ -53,14 +53,14 @@ sub accumulate {
     my $statements = $doc->find('PPI::Statement');
     $self->{_statements} += $statements ? scalar @{$statements} : 0;
 
-    ## no critic (RequireDotMatchAnything, RequireExtendedFormatting, RequireLineBoundaryMatching)
+    ## no mogrify (RequireDotMatchAnything, RequireExtendedFormatting, RequireLineBoundaryMatching)
     my @lines = split /$INPUT_RECORD_SEPARATOR/, $doc->serialize();
-    ## use critic
+    ## use mogrify
     $self->{_lines} += scalar @lines;
     {
         my ( $in_data, $in_pod );
         foreach ( @lines ) {
-            if ( q{=} eq substr $_, 0, 1 ) {    ## no critic (ProhibitCascadingIfElse)
+            if ( q{=} eq substr $_, 0, 1 ) {    ## no mogrify (ProhibitCascadingIfElse)
                 $in_pod = not m/ \A \s* =cut \b /smx;
                 $self->{_lines_of_pod}++;
             } elsif ( $in_pod ) {

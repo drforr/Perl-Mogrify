@@ -27,7 +27,7 @@ our $VERSION = '1.125';
 #-----------------------------------------------------------------------------
 
 our $AUTOLOAD;
-sub AUTOLOAD {  ## no critic (ProhibitAutoloading,ArgUnpacking)
+sub AUTOLOAD {  ## no mogrify (ProhibitAutoloading,ArgUnpacking)
     my ( $function_name ) = $AUTOLOAD =~ m/ ([^:\']+) \z /xms;
     return if $function_name eq 'DESTROY';
     my $self = shift;
@@ -76,14 +76,14 @@ sub _init_common {
 
 #-----------------------------------------------------------------------------
 
-sub _init_from_external_source { ## no critic (Subroutines::RequireArgUnpacking)
+sub _init_from_external_source { ## no mogrify (Subroutines::RequireArgUnpacking)
     my $self = shift;
     my %args;
 
     if (@_ == 1) {
         warnings::warnif(
             'deprecated',
-            'Perl::Mogrify::Document->new($source) deprecated, use Perl::Mogrify::Document->new(-source => $source) instead.' ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
+            'Perl::Mogrify::Document->new($source) deprecated, use Perl::Mogrify::Document->new(-source => $source) instead.' ## no mogrify (ValuesAndExpressions::RequireInterpolationOfMetachars)
         );
         %args = ('-source' => shift);
     } else {
@@ -405,7 +405,7 @@ sub line_is_disabled_for_policy {
     my $policy_name = ref $policy || $policy;
 
     # HACK: This Transformer is special.  If it is active, it cannot be
-    # disabled by a "## no critic" annotation.  Rather than create a general
+    # disabled by a "## no mogrify" annotation.  Rather than create a general
     # hook in Transformer.pm for enabling this behavior, we chose to hack
     # it here, since this isn't the kind of thing that most policies do
 
@@ -508,8 +508,8 @@ sub _caching_finder {
         if ( !$classes ) {
             $classes = [ ref $element ];
             # Use a C-style loop because we append to the classes array inside
-            for ( my $i = 0; $i < @{$classes}; $i++ ) { ## no critic(ProhibitCStyleForLoops)
-                no strict 'refs';                       ## no critic(ProhibitNoStrict)
+            for ( my $i = 0; $i < @{$classes}; $i++ ) { ## no mogrify(ProhibitCStyleForLoops)
+                no strict 'refs';                       ## no mogrify(ProhibitNoStrict)
                 push @{$classes}, @{"$classes->[$i]::ISA"};
                 $cache_ref->{$classes->[$i]} ||= [];
             }
@@ -533,7 +533,7 @@ sub _disable_shebang_fix {
     # inserts some magical code into the top of the file (just after the
     # shebang).  This code allows people to call your program using a shell,
     # like `sh my_script`.  Unfortunately, this code causes several Transformer
-    # violations, so we disable them as if they had "## no critic" annotations.
+    # violations, so we disable them as if they had "## no mogrify" annotations.
 
     my $first_stmnt = $self->schild(0) || return;
 
@@ -541,7 +541,7 @@ sub _disable_shebang_fix {
     # fixing strings.  This matches most of the ones I've found in my own Perl
     # distribution, but it may not be bullet-proof.
 
-    my $fixin_rx = qr<^eval 'exec .* \$0 \$[{]1[+]"\$@"}'\s*[\r\n]\s*if.+;>ms; ## no critic (ExtendedFormatting)
+    my $fixin_rx = qr<^eval 'exec .* \$0 \$[{]1[+]"\$@"}'\s*[\r\n]\s*if.+;>ms; ## no mogrify (ExtendedFormatting)
     if ( $first_stmnt =~ $fixin_rx ) {
         my $line = $first_stmnt->location->[0];
         $self->{_disabled_line_map}->{$line}->{ALL} = 1;
@@ -811,7 +811,7 @@ here.
 =item C<< process_annotations() >>
 
 Causes this Document to scan itself and mark which lines &
-policies are disabled by the C<"## no critic"> annotations.
+policies are disabled by the C<"## no mogrify"> annotations.
 
 
 =item C<< line_is_disabled_for_policy($line, $policy_object) >>
@@ -835,7 +835,7 @@ were found in this Document.
 =item C<< add_suppressed_violation($violation) >>
 
 Informs this Document that a C<$violation> was found but not reported
-because it fell on a line that had been suppressed by a C<"## no critic">
+because it fell on a line that had been suppressed by a C<"## no mogrify">
 annotation. Returns C<$self>.
 
 

@@ -213,7 +213,7 @@ Readonly::Scalar our $FALSE        => 0;
 
 
 #-----------------------------------------------------------------------------
-## no critic (ProhibitNoisyQuotes);
+## no mogrify (ProhibitNoisyQuotes);
 
 Readonly::Hash my %PRECEDENCE_OF => (
     '->'   => 1,
@@ -311,14 +311,14 @@ Readonly::Hash my %PRECEDENCE_OF => (
     'xor'  => 24,
 );
 
-## use critic
+## use mogrify
 
 Readonly::Scalar my $MIN_PRECEDENCE_TO_TERMINATE_PARENLESS_ARG_LIST =>
     precedence_of( 'not' );
 
 #-----------------------------------------------------------------------------
 
-sub hashify {  ## no critic (ArgUnpacking)
+sub hashify {  ## no mogrify (ArgUnpacking)
     return map { $_ => 1 } @_;
 }
 
@@ -326,7 +326,7 @@ sub hashify {  ## no critic (ArgUnpacking)
 
 sub interpolate {
     my ( $literal ) = @_;
-    return eval "\"$literal\"" || confess $EVAL_ERROR;  ## no critic (StringyEval);
+    return eval "\"$literal\"" || confess $EVAL_ERROR;  ## no mogrify (StringyEval);
 }
 
 #-----------------------------------------------------------------------------
@@ -352,7 +352,7 @@ sub _name_for_sub_or_stringified_element {
 }
 
 #-----------------------------------------------------------------------------
-## no critic (ProhibitPackageVars)
+## no mogrify (ProhibitPackageVars)
 
 Readonly::Hash my %BUILTINS => hashify( @B::Keywords::Functions );
 
@@ -383,7 +383,7 @@ sub _build_globals_without_sigils {
             @B::Keywords::Arrays,
             @B::Keywords::Hashes,
             @B::Keywords::Scalars,
-            '$\\'; ## no critic (RequireInterpolationOfMetachars)
+            '$\\'; ## no mogrify (RequireInterpolationOfMetachars)
 
     # Not all of these have sigils
     foreach my $filehandle (@B::Keywords::Filehandles) {
@@ -417,7 +417,7 @@ sub is_perl_filehandle {
     return exists $FILEHANDLES{ _name_for_sub_or_stringified_element($elem) };
 }
 
-## use critic
+## use mogrify
 #-----------------------------------------------------------------------------
 
 # egrep '=item.*LIST' perlfunc.pod
@@ -642,7 +642,7 @@ sub is_perl_builtin_with_one_argument {
 
 #-----------------------------------------------------------------------------
 
-## no critic (ProhibitPackageVars)
+## no mogrify (ProhibitPackageVars)
 Readonly::Hash my %BUILTINS_WHICH_TAKE_OPTIONAL_ARGUMENT =>
     hashify(
         grep { not exists $BUILTINS_WHICH_TAKE_ONE_ARGUMENT{ $_ } }
@@ -650,7 +650,7 @@ Readonly::Hash my %BUILTINS_WHICH_TAKE_OPTIONAL_ARGUMENT =>
         grep { not exists $BUILTINS_WHICH_TAKE_MULTIPLE_ARGUMENTS{ $_ } }
         @B::Keywords::Functions
     );
-## use critic
+## use mogrify
 
 sub is_perl_builtin_with_optional_argument {
     my $elem = shift;
@@ -843,7 +843,7 @@ sub is_script {
 
     warnings::warnif(
         'deprecated',
-        'Perl::Mogrify::Utils::is_script($doc) deprecated, use $doc->is_program() instead.',  ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
+        'Perl::Mogrify::Utils::is_script($doc) deprecated, use $doc->is_program() instead.',  ## no mogrify (ValuesAndExpressions::RequireInterpolationOfMetachars)
     );
 
     return $doc->is_program()
@@ -856,7 +856,7 @@ sub is_script {
 
 #-----------------------------------------------------------------------------
 
-sub _is_PL_file {  ## no critic (NamingConventions::Capitalization)
+sub _is_PL_file {  ## no mogrify (NamingConventions::Capitalization)
     my ($doc) = @_;
     return if not $doc->can('filename');
     my $filename = $doc->filename() || return;
@@ -1006,7 +1006,7 @@ sub split_nodes_on_comma {
 
 #-----------------------------------------------------------------------------
 
-# XXX: You must keep the regular expressions in extras/perlcritic.el in sync
+# XXX: You must keep the regular expressions in extras/perlmogrify.el in sync
 # if you change these.
 Readonly::Hash my %FORMAT_OF => (
     1 => "%f:%l:%c:%m\n",
@@ -1198,7 +1198,7 @@ sub is_unchecked_call {
         # the elements to this statement to see if we find 'or' or '||'.
 
         my $or_operators = sub  {
-            my (undef, $elem) = @_;  ## no critic(Variables::ProhibitReusedNames)
+            my (undef, $elem) = @_;  ## no mogrify(Variables::ProhibitReusedNames)
             return if not $elem->isa('PPI::Token::Operator');
             return if $elem ne q{or} && $elem ne q{||};
             return 1;
@@ -1735,7 +1735,7 @@ Given a verbosity level between 1 and 10, returns the corresponding
 predefined format string.  These formats are suitable for passing to
 the C<set_format> method in
 L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>.  See the
-L<perlcritic|perlcritic> documentation for a listing of the predefined
+L<perlmogrify|perlmogrify> documentation for a listing of the predefined
 formats.
 
 

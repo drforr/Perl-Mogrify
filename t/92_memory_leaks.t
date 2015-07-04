@@ -22,7 +22,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 eval 'use Test::Memory::Cycle; 1'
     or plan skip_all => 'Test::Memory::Cycle requried to test memory leaks';
@@ -42,18 +42,18 @@ eval 'use Test::Memory::Cycle; 1'
     # about it.  The particular input we use here does not seem to create
     # circular references.
 
-    my $code    = q<print foo(); split /this/, $that;>; ## no critic (RequireInterpolationOfMetachars)
+    my $code    = q<print foo(); split /this/, $that;>; ## no mogrify (RequireInterpolationOfMetachars)
     my $ppi_doc = PPI::Document->new( \$code );
     my $pc_doc  = Perl::Mogrify::Document->new( '-source' => $ppi_doc );
-    my $critic  = Perl::Mogrify->new( -severity => 1 );
-    my @violations = $critic->critique( $pc_doc );
+    my $mogrify  = Perl::Mogrify->new( -severity => 1 );
+    my @violations = $mogrify->critique( $pc_doc );
     confess 'No violations were created' if not @violations;
 
     # One test for each violation, plus one each for Mogrify and Document.
     plan( tests => scalar @violations + 2 );
 
     memory_cycle_ok( $pc_doc );
-    memory_cycle_ok( $critic );
+    memory_cycle_ok( $mogrify );
     foreach my $violation (@violations) {
         memory_cycle_ok($_);
     }

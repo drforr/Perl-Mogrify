@@ -32,7 +32,7 @@ use Test::Pod::Coverage 1.04;
     # parsing.  I'll look for a better solution (or file a bug report)
     # when / if I have better understanding of the problem.
 
-    no warnings qw<redefine once>; ## no critic (ProhibitNoWarnings)
+    no warnings qw<redefine once>; ## no mogrify (ProhibitNoWarnings)
     require Perl::Mogrify::Violation;
     *Perl::Mogrify::Violation::import = sub { 1 };
 }

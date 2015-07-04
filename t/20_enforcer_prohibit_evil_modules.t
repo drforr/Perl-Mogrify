@@ -15,7 +15,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 # This is in addition to the regular .run file.
 

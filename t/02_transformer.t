@@ -18,7 +18,7 @@ our $VERSION = '1.125';
 # Perl::Mogrify::Transformer is an abstract class, so it can't be instantiated
 # directly.  So we test it by declaring test classes that inherit from it.
 
-## no critic (ProhibitMultiplePackages, RequireFilenameMatchesPackage)
+## no mogrify (ProhibitMultiplePackages, RequireFilenameMatchesPackage)
 package TransformerTest;
 use base 'Perl::Mogrify::Transformer';
 
@@ -30,7 +30,7 @@ sub default_maximum_violations_per_document { return 31; }
 #-----------------------------------------------------------------------------
 
 package main;
-## use critic
+## use mogrify
 
 my $p = TransformerTest->new();
 isa_ok($p, 'TransformerTest');

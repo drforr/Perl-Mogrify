@@ -97,7 +97,7 @@ for why we don't C<use constant>.)
 
 Most policies don't need to override the C<initialize_if_enabled()>
 method provided by L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>.
-However, if your Transformer is configurable via F<.perlcriticrc>, you
+However, if your Transformer is configurable via F<.perlmogrifyrc>, you
 should implement a C<supported_parameters()> method and need to
 implement C<initialize_if_enabled()> to examine the C<$config> values.
 Since this Transformer isn't configurable, we'll declare that by providing
@@ -272,7 +272,7 @@ bad code.  Here's an example:
     =cut
 
 When your policy has a section like this, users can invoke
-L<perlcritic|perlcritic> with a C<--verbose> parameter of C<10> or
+L<perlmogrify|perlmogrify> with a C<--verbose> parameter of C<10> or
 C<11> or with a "%d" escape to see it along with the rest of the
 output for violations of your policy.
 
@@ -289,7 +289,7 @@ conversion of that string to a useful form yourself.  However, if you
 provide some metadata about your parameters, the parameter handling
 will be taken care of for you.  (Additionally, tools that deal with
 Policies themselves can use this information to enhance their
-functionality.  See the L<perlcritic|perlcritic> C<--profile-proto>
+functionality.  See the L<perlmogrify|perlmogrify> C<--profile-proto>
 option for an example.)
 
 You can look at
@@ -326,7 +326,7 @@ be:
     }
 
 As stated above, what you get in C<$config> are trimmed strings.  For
-example, if the user's F<.perlcritic> contains
+example, if the user's F<.perlmogrify> contains
 
     [Your::Transformer]
     foo          = bar baz
@@ -429,7 +429,7 @@ above, this would be
 Given this information, C<Perl::Mogrify> can tell the user when they
 have specified a parameter for a Transformer which isn't valid, e.g. when
 they've misspelled the name of the parameter, and can emit the
-parameter as part of a F<.perlcriticrc> prototype.
+parameter as part of a F<.perlmogrifyrc> prototype.
 
 You can provide even more information about your Transformer's
 configuration by giving each parameter a description and a string
@@ -906,7 +906,7 @@ much help to the user to report every single violation.  If you've got
 such a policy, you should override
 L<default_maximum_violations_per_document()|Perl::Mogrify::Transformer/"default_maximum_violations_per_document()">
 method to provide a limit.  The user can override this value with a
-value for "maximum_violations_per_document" in their F<.perlcriticrc>.
+value for "maximum_violations_per_document" in their F<.perlmogrifyrc>.
 
 See the source code for
 L<Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMagicNumbers|Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMagicNumbers>
@@ -1011,7 +1011,7 @@ in the C<CONFIGURATION AND ENVIRONMENT> POD section as shown above.
     default_themes { return qw< example math > }
 
 If you're looking for ideas of what themes to use, have a look at the
-output of C<perlcritic --list-themes>.
+output of C<perlmogrify --list-themes>.
 
 
 =head2 Documentation
@@ -1075,7 +1075,7 @@ This is part of L<Perl::Mogrify|Perl::Mogrify> version 1.116.
 =head1 SEE ALSO
 
 Chas. Owens has a blog post about developing in-house policies at
-L<http://svok.blogspot.com/2009/09/adding-house-policies-to-perlcritic.html>.
+L<http://svok.blogspot.com/2009/09/adding-house-policies-to-perlmogrify.html>.
 
 
 =head1 AUTHOR

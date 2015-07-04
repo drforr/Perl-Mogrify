@@ -13,7 +13,7 @@ Conway's book B<Perl Best Practices>. Since most coding standards take the
 form "do this..." or "don't do that...", I have adopted the convention of
 naming each module C<RequireSomething> or C<ProhibitSomething>.  Each Transformer
 is listed here with its default severity.  If you don't agree with the default
-severity, you can change it in your F<.perlcriticrc> file (try C<perlcritic
+severity, you can change it in your F<.perlmogrifyrc> file (try C<perlmogrify
 --profile-proto> for a starting version).  See the documentation of each
 module for its specific details.
 
@@ -258,11 +258,11 @@ Do not use C<tie>. [Default severity 2]
 
 =head2 L<Miscellanea::ProhibitUnrestrictedNoCritic|Perl::Mogrify::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic>
 
-Forbid a bare C<## no critic> [Default severity 3]
+Forbid a bare C<## no mogrify> [Default severity 3]
 
 =head2 L<Miscellanea::ProhibitUselessNoCritic|Perl::Mogrify::Transformer::Miscellanea::ProhibitUselessNoCritic>
 
-Remove ineffective "## no critic" annotations. [Default severity 2]
+Remove ineffective "## no mogrify" annotations. [Default severity 2]
 
 =head2 L<Modules::ProhibitAutomaticExportation|Perl::Mogrify::Transformer::Modules::ProhibitAutomaticExportation>
 

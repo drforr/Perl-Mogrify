@@ -70,7 +70,7 @@ sub statistics {
 
 #-----------------------------------------------------------------------------
 
-sub critique {  ## no critic (ArgUnpacking)
+sub critique {  ## no mogrify (ArgUnpacking)
 
     #-------------------------------------------------------------------
     # This subroutine can be called as an object method or as a static
@@ -81,7 +81,7 @@ sub critique {  ## no critic (ArgUnpacking)
     # of the ways this subroutine might get called:
     #
     # #Object style...
-    # $critic->critique( $code );
+    # $mogrify->critique( $code );
     #
     # #Functional style...
     # critique( $code );
@@ -232,8 +232,8 @@ Perl::Mogrify - Critique Perl source code for best-practices.
 
     use Perl::Mogrify;
     my $file = shift;
-    my $critic = Perl::Mogrify->new();
-    my @violations = $critic->critique($file);
+    my $mogrify = Perl::Mogrify->new();
+    my @violations = $mogrify->critique($file);
     print @violations;
 
 
@@ -250,19 +250,19 @@ customize those Polices through the Perl::Mogrify interface.  You can also
 create new Transformer modules that suit your own tastes.
 
 For a command-line interface to Perl::Mogrify, see the documentation for
-L<perlcritic>.  If you want to integrate Perl::Mogrify with your build process,
+L<perlmogrify>.  If you want to integrate Perl::Mogrify with your build process,
 L<Test::Perl::Mogrify> provides an interface that is suitable for test
 programs.  Also, L<Test::Perl::Mogrify::Progressive> is useful for gradually
 applying coding standards to legacy code.  For the ultimate convenience (at
-the expense of some flexibility) see the L<criticism> pragma.
+the expense of some flexibility) see the L<mogrification> pragma.
 
 If you'd like to try L<Perl::Mogrify> without installing anything, there is a
-web-service available at L<http://perlcritic.com>.  The web-service does not
+web-service available at L<http://perlmogrify.com>.  The web-service does not
 yet support all the configuration features that are available in the native
 Perl::Mogrify API, but it should give you a good idea of what it does.
 
 Also, ActivePerl includes a very slick graphical interface to Perl-Mogrify
-called C<perlcritic-gui>.  You can get a free community edition of ActivePerl
+called C<perlmogrify-gui>.  You can get a free community edition of ActivePerl
 from L<http://www.activestate.com>.
 
 
@@ -276,19 +276,19 @@ through a deprecation cycle.
 
 =over
 
-=item C<< new( [ -profile => $FILE, -severity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -criticism-fatal => $B) >>
+=item C<< new( [ -profile => $FILE, -severity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B) >>
 
 =item C<< new() >>
 
 Returns a reference to a new Perl::Mogrify object.  Most arguments are just
 passed directly into L<Perl::Mogrify::Config>, but I have described them here
 as well.  The default value for all arguments can be defined in your
-F<.perlcriticrc> file.  See the L<"CONFIGURATION"> section for more
+F<.perlmogrifyrc> file.  See the L<"CONFIGURATION"> section for more
 information about that.  All arguments are optional key-value pairs as
 follows:
 
 B<-profile> is a path to a configuration file. If C<$FILE> is not defined,
-Perl::Mogrify::Config attempts to find a F<.perlcriticrc> configuration file in
+Perl::Mogrify::Config attempts to find a F<.perlmogrifyrc> configuration file in
 the current directory, and then in your home directory.  Alternatively, you
 can set the C<PERLCRITIC> environment variable to point to a file in another
 location.  If a configuration file can't be found, or if C<$FILE> is an empty
@@ -300,8 +300,8 @@ severity greater than C<$N> will be applied.  Severity values are integers
 ranging from 1 (least severe violations) to 5 (most severe violations).  The
 default is 5.  For a given C<-profile>, decreasing the C<-severity> will
 usually reveal more Transformer violations. You can set the default value for this
-option in your F<.perlcriticrc> file.  Users can redefine the severity level
-for any Transformer in their F<.perlcriticrc> file.  See L<"CONFIGURATION"> for
+option in your F<.perlmogrifyrc> file.  Users can redefine the severity level
+for any Transformer in their F<.perlmogrifyrc> file.  See L<"CONFIGURATION"> for
 more information.
 
 If it is difficult for you to remember whether severity "5" is the most or
@@ -315,19 +315,19 @@ least restrictive level, then you can use one of these named values:
     -severity => 'cruel'                      -severity => 2
     -severity => 'brutal'                     -severity => 1
 
-The names reflect how severely the code is criticized: a C<gentle> criticism
-reports only the most severe violations, and so on down to a C<brutal>
-criticism which reports even the most minor violations.
+The names reflect how severely the code is mogrifyized: a C<gentle>
+mogrification reports only the most severe violations, and so on down to a
+C<brutal> mogrification which reports even the most minor violations.
 
 B<-theme> is special expression that determines which Policies to apply based
 on their respective themes.  For example, the following would load only
 Policies that have a 'bugs' AND 'pbp' theme:
 
-  my $critic = Perl::Mogrify->new( -theme => 'bugs && pbp' );
+  my $mogrify = Perl::Mogrify->new( -theme => 'bugs && pbp' );
 
 Unless the C<-severity> option is explicitly given, setting C<-theme> silently
 causes the C<-severity> to be set to 1.  You can set the default value for
-this option in your F<.perlcriticrc> file.  See the L<"POLICY THEMES"> section
+this option in your F<.perlmogrifyrc> file.  See the L<"POLICY THEMES"> section
 for more information about themes.
 
 
@@ -335,11 +335,11 @@ B<-include> is a reference to a list of string C<@PATTERNS>.  Transformer module
 that match at least one C<m/$PATTERN/ixms> will always be loaded, irrespective
 of all other settings.  For example:
 
-    my $critic = Perl::Mogrify->new(-include => ['layout'] -severity => 4);
+    my $mogrify = Perl::Mogrify->new(-include => ['layout'] -severity => 4);
 
 This would cause Perl::Mogrify to apply all the C<CodeLayout::*> Transformer modules
 even though they have a severity level that is less than 4. You can set the
-default value for this option in your F<.perlcriticrc> file.  You can also use
+default value for this option in your F<.perlmogrifyrc> file.  You can also use
 C<-include> in conjunction with the C<-exclude> option.  Note that C<-exclude>
 takes precedence over C<-include> when a Transformer matches both patterns.
 
@@ -347,12 +347,12 @@ B<-exclude> is a reference to a list of string C<@PATTERNS>.  Transformer module
 that match at least one C<m/$PATTERN/ixms> will not be loaded, irrespective of
 all other settings.  For example:
 
-    my $critic = Perl::Mogrify->new(-exclude => ['strict'] -severity => 1);
+    my $mogrify = Perl::Mogrify->new(-exclude => ['strict'] -severity => 1);
 
 This would cause Perl::Mogrify to not apply the C<RequireUseStrict> and
 C<ProhibitNoStrict> Transformer modules even though they have a severity level that
 is greater than 1.  You can set the default value for this option in your
-F<.perlcriticrc> file.  You can also use C<-exclude> in conjunction with the
+F<.perlmogrifyrc> file.  You can also use C<-exclude> in conjunction with the
 C<-include> option.  Note that C<-exclude> takes precedence over C<-include>
 when a Transformer matches both patterns.
 
@@ -360,27 +360,27 @@ B<-single-policy> is a string C<PATTERN>.  Only one policy that matches
 C<m/$PATTERN/ixms> will be used.  Policies that do not match will be excluded.
 This option has precedence over the C<-severity>, C<-theme>, C<-include>,
 C<-exclude>, and C<-only> options.  You can set the default value for this
-option in your F<.perlcriticrc> file.
+option in your F<.perlmogrifyrc> file.
 
 B<-top> is the maximum number of Violations to return when ranked by their
 severity levels.  This must be a positive integer.  Violations are still
 returned in the order that they occur within the file. Unless the C<-severity>
 option is explicitly given, setting C<-top> silently causes the C<-severity>
 to be set to 1.  You can set the default value for this option in your
-F<.perlcriticrc> file.
+F<.perlmogrifyrc> file.
 
 B<-only> is a boolean value.  If set to a true value, Perl::Mogrify will only
 choose from Policies that are mentioned in the user's profile.  If set to a
 false value (which is the default), then Perl::Mogrify chooses from all the
 Policies that it finds at your site. You can set the default value for this
-option in your F<.perlcriticrc> file.
+option in your F<.perlmogrifyrc> file.
 
 B<-profile-strictness> is an enumerated value, one of
 L<Perl::Mogrify::Utils::Constants/"$PROFILE_STRICTNESS_WARN"> (the default),
 L<Perl::Mogrify::Utils::Constants/"$PROFILE_STRICTNESS_FATAL">, and
 L<Perl::Mogrify::Utils::Constants/"$PROFILE_STRICTNESS_QUIET">.  If set to
 L<Perl::Mogrify::Utils::Constants/"$PROFILE_STRICTNESS_FATAL">, Perl::Mogrify
-will make certain warnings about problems found in a F<.perlcriticrc> or file
+will make certain warnings about problems found in a F<.perlmogrifyrc> or file
 specified via the B<-profile> option fatal. For example, Perl::Mogrify normally
 only C<warn>s about profiles referring to non-existent Policies, but this
 value makes this situation fatal.  Correspondingly,
@@ -388,35 +388,35 @@ L<Perl::Mogrify::Utils::Constants/"$PROFILE_STRICTNESS_QUIET"> makes
 Perl::Mogrify shut up about these things.
 
 B<-force> is a boolean value that controls whether Perl::Mogrify observes the
-magical C<"## no critic"> annotations in your code. If set to a true value,
+magical C<"## no mogrify"> annotations in your code. If set to a true value,
 Perl::Mogrify will analyze all code.  If set to a false value (which is the
 default) Perl::Mogrify will ignore code that is tagged with these annotations.
 See L<"BENDING THE RULES"> for more information.  You can set the default
-value for this option in your F<.perlcriticrc> file.
+value for this option in your F<.perlmogrifyrc> file.
 
 B<-verbose> can be a positive integer (from 1 to 11), or a literal format
 specification.  See L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> for an
 explanation of format specifications.  You can set the default value for this
-option in your F<.perlcriticrc> file.
+option in your F<.perlmogrifyrc> file.
 
 B<-unsafe> directs Perl::Mogrify to allow the use of Policies that are marked
 as "unsafe" by the author.  Such policies may compile untrusted code or do
 other nefarious things.
 
 B<-color> and B<-pager> are not used by Perl::Mogrify but is provided for the
-benefit of L<perlcritic|perlcritic>.
+benefit of L<perlmogrify|perlmogrify>.
 
-B<-criticism-fatal> is not used by Perl::Mogrify but is provided for the
-benefit of L<criticism|criticism>.
+B<-mogrification-fatal> is not used by Perl::Mogrify but is provided for the
+benefit of L<mogrification|mogrification>.
 
 B<-color-severity-highest>, B<-color-severity-high>, B<-color-severity-
 medium>, B<-color-severity-low>, and B<-color-severity-lowest> are not used by
-Perl::Mogrify, but are provided for the benefit of L<perlcritic|perlcritic>.
+Perl::Mogrify, but are provided for the benefit of L<perlmogrify|perlmogrify>.
 Each is set to the Term::ANSIColor color specification to be used to display
 violations of the corresponding severity.
 
 B<-files-with-violations> and B<-files-without-violations> are not used by
-Perl::Mogrify, but are provided for the benefit of L<perlcritic|perlcritic>, to
+Perl::Mogrify, but are provided for the benefit of L<perlmogrify|perlmogrify>, to
 cause only the relevant filenames to be displayed.
 
 =back
@@ -499,7 +499,7 @@ functions.  Sorry.
 
 Most of the settings for Perl::Mogrify and each of the Transformer modules can be
 controlled by a configuration file.  The default configuration file is called
-F<.perlcriticrc>.  Perl::Mogrify will look for this file in the current
+F<.perlmogrifyrc>.  Perl::Mogrify will look for this file in the current
 directory first, and then in your home directory. Alternatively, you can set
 the C<PERLCRITIC> environment variable to explicitly point to a different file
 in another location.  If none of these files exist, and the C<-profile> option
@@ -524,7 +524,7 @@ constructor argument.
     theme     = (pbp || security) && bugs             #A theme expression
     include   = NamingConventions ClassHierarchies    #Space-delimited list
     exclude   = Variables  Modules::RequirePackage    #Space-delimited list
-    criticism-fatal = 1                               #Zero or One
+    mogrification-fatal = 1                           #Zero or One
     color     = 1                                     #Zero or One
     allow-unsafe = 1                                  #Zero or One
     pager     = less                                  #pager to pipe output to
@@ -560,9 +560,9 @@ use one of the equivalent names:
     cruel                                              2
     brutal                                             1
 
-The names reflect how severely the code is criticized: a C<gentle> criticism
-reports only the most severe violations, and so on down to a C<brutal>
-criticism which reports even the most minor violations.
+The names reflect how severely the code is mogrifyized: a C<gentle>
+mogrification reports only the most severe violations, and so on down to a
+C<brutal> mogrification which reports even the most minor violations.
 
 C<set_themes> sets the theme for the Transformer and overrides its default theme.
 The argument is a string of one or more whitespace-delimited alphanumeric
@@ -613,7 +613,7 @@ A simple configuration might look like this:
 
     #--------------------------------------------------------------
     # Give these policies a custom theme.  I can activate just
-    # these policies by saying `perlcritic -theme larry`
+    # these policies by saying `perlmogrify -theme larry`
 
     [Modules::RequireFilenameMatchesPackage]
     add_themes = larry
@@ -631,18 +631,18 @@ A simple configuration might look like this:
     # For all other Policies, I accept the default severity,
     # so no additional configuration is required for them.
 
-For additional configuration examples, see the F<perlcriticrc> file that is
+For additional configuration examples, see the F<perlmogrifyrc> file that is
 included in this F<examples> directory of this distribution.
 
 Damian Conway's own Perl::Mogrify configuration is also included in this
-distribution as F<examples/perlcriticrc-conway>.
+distribution as F<examples/perlmogrifyrc-conway>.
 
 
 =head1 THE POLICIES
 
 A large number of Transformer modules are distributed with Perl::Mogrify. They are
 described briefly in the companion document L<Perl::Mogrify::TransformerSummary> and
-in more detail in the individual modules themselves.  Say C<"perlcritic -doc
+in more detail in the individual modules themselves.  Say C<"perlmogrify -doc
 PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
@@ -679,9 +679,9 @@ You are free to invent new themes that suit your needs.
     tests             Policies that are specific to test programs
 
 
-Any Transformer may fit into multiple themes.  Say C<"perlcritic -list"> to get a
+Any Transformer may fit into multiple themes.  Say C<"perlmogrify -list"> to get a
 listing of all available Policies and the themes that are associated with each
-one.  You can also change the theme for any Transformer in your F<.perlcriticrc>
+one.  You can also change the theme for any Transformer in your F<.perlmogrifyrc>
 file.  See the L<"CONFIGURATION"> section for more information about that.
 
 Using the C<-theme> option, you can create an arbitrarily complex rule that
@@ -710,37 +710,37 @@ you are knowingly violating the standards and that you have a Damn Good Reason
 To help with those situations, you can direct Perl::Mogrify to ignore certain
 lines or blocks of code by using annotations:
 
-    require 'LegacyLibaray1.pl';  ## no critic
-    require 'LegacyLibrary2.pl';  ## no critic
+    require 'LegacyLibaray1.pl';  ## no mogrify
+    require 'LegacyLibrary2.pl';  ## no mogrify
 
     for my $element (@list) {
 
-        ## no critic
+        ## no mogrify
 
         $foo = "";               #Violates 'ProhibitEmptyQuotes'
         $barf = bar() if $foo;   #Violates 'ProhibitPostfixControls'
         #Some more evil code...
 
-        ## use critic
+        ## use mogrify
 
         #Some good code...
         do_something($_);
     }
 
-The C<"## no critic"> annotations direct Perl::Mogrify to ignore the remaining
-lines of code until a C<"## use critic"> annotation is found. If the C<"## no
-critic"> annotation is on the same line as a code statement, then only that
-line of code is overlooked.  To direct perlcritic to ignore the C<"## no
-critic"> annotations, use the C<--force> option.
+The C<"## no mogrify"> annotations direct Perl::Mogrify to ignore the remaining
+lines of code until a C<"## use mogrify"> annotation is found. If the C<"## no
+mogrify"> annotation is on the same line as a code statement, then only that
+line of code is overlooked.  To direct perlmogrify to ignore the C<"## no
+mogrify"> annotations, use the C<--force> option.
 
-A bare C<"## no critic"> annotation disables all the active Policies.  If you
+A bare C<"## no mogrify"> annotation disables all the active Policies.  If you
 wish to disable only specific Policies, add a list of Transformer names as
 arguments, just as you would for the C<"no strict"> or C<"no warnings">
 pragmas.  For example, this would disable the C<ProhibitEmptyQuotes> and
 C<ProhibitPostfixControls> policies until the end of the block or until the
-next C<"## use critic"> annotation (whichever comes first):
+next C<"## use mogrify"> annotation (whichever comes first):
 
-    ## no critic (EmptyQuotes, PostfixControls)
+    ## no mogrify (EmptyQuotes, PostfixControls)
 
     # Now exempt from ValuesAndExpressions::ProhibitEmptyQuotes
     $foo = "";
@@ -751,11 +751,11 @@ next C<"## use critic"> annotation (whichever comes first):
     # Still subjected to ValuesAndExpression::RequireNumberSeparators
     $long_int = 10000000000;
 
-Since the Transformer names are matched against the C<"## no critic"> arguments as
+Since the Transformer names are matched against the C<"## no mogrify"> arguments as
 regular expressions, you can abbreviate the Transformer names or disable an entire
 family of Policies in one shot like this:
 
-    ## no critic (NamingConventions)
+    ## no mogrify (NamingConventions)
 
     # Now exempt from NamingConventions::Capitalization
     my $camelHumpVar = 'foo';
@@ -764,25 +764,25 @@ family of Policies in one shot like this:
     sub camelHumpSub {}
 
 The argument list must be enclosed in parentheses and must contain one or more
-comma-separated barewords (e.g. don't use quotes).  The C<"## no critic">
+comma-separated barewords (e.g. don't use quotes).  The C<"## no mogrify">
 annotations can be nested, and Policies named by an inner annotation will be
 disabled along with those already disabled an outer annotation.
 
 Some Policies like C<Subroutines::ProhibitExcessComplexity> apply to an entire
-block of code.  In those cases, the C<"## no critic"> annotation must appear
+block of code.  In those cases, the C<"## no mogrify"> annotation must appear
 on the line where the violation is reported.  For example:
 
-    sub complicated_function {  ## no critic (ProhibitExcessComplexity)
+    sub complicated_function {  ## no mogrify (ProhibitExcessComplexity)
         # Your code here...
     }
 
 Policies such as C<Documentation::RequirePodSections> apply to the entire
 document, in which case violations are reported at line 1.
 
-Use this feature wisely.  C<"## no critic"> annotations should be used in the
+Use this feature wisely.  C<"## no mogrify"> annotations should be used in the
 smallest possible scope, or only on individual lines of code. And you should
 always be as specific as possible about which Policies you want to disable
-(i.e. never use a bare C<"## no critic">).  If Perl::Mogrify complains about
+(i.e. never use a bare C<"## no mogrify">).  If Perl::Mogrify complains about
 your code, try and find a compliant solution before resorting to this feature.
 
 
@@ -808,7 +808,7 @@ distribution for a step-by-step demonstration of how to create new Transformer
 modules.
 
 If you develop any new Transformer modules, feel free to send them to C<<
-<team@perlcritic.com> >> and I'll be happy to consider adding them into the
+<team@perlmogrify.com> >> and I'll be happy to consider adding them into the
 Perl::Mogrify distribution.  Or if you would like to work on the Perl::Mogrify
 project directly, you can fork our repository at L<http://github.com/Perl-
 Mogrify/Perl- Mogrify.git>.
@@ -818,7 +818,7 @@ its own coding standards, we can create custom Policies to enforce your local
 guidelines.  Or if your code base is prone to a particular defect pattern, we
 can design Policies that will help you catch those costly defects B<before>
 they go into production. To discuss your needs with the Perl::Mogrify team,
-just contact C<< <team@perlcritic.com> >>.
+just contact C<< <team@perlmogrify.com> >>.
 
 
 =head1 PREREQUISITES
@@ -879,13 +879,13 @@ L<version|version>
 =head1 CONTACTING THE DEVELOPMENT TEAM
 
 You are encouraged to subscribe to the mailing list; send a message to
-L<mailto:users-subscribe@perlcritic.tigris.org>.  To prevent spam, you may be
+L<mailto:users-subscribe@perlmogrify.tigris.org>.  To prevent spam, you may be
 required to register for a user account with Tigris.org before being allowed
 to post messages to the mailing list. See also the mailing list archives at
-L<http://perlcritic.tigris.org/servlets/SummarizeList?listName=users>. At
+L<http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users>. At
 least one member of the development team is usually hanging around in
-L<irc://irc.perl.org/#perlcritic> and you can follow Perl::Mogrify on Twitter,
-at L<https://twitter.com/perlcritic>.
+L<irc://irc.perl.org/#perlmogrify> and you can follow Perl::Mogrify on Twitter,
+at L<https://twitter.com/perlmogrify>.
 
 
 =head1 SEE ALSO

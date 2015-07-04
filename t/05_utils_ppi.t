@@ -292,7 +292,7 @@ can_ok('main', 'is_in_subroutine');
 
         my $name = defined $code ? $code : '<undef>';
 
-        local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic (Variables::ProhibitPackageVars)
+        local $Test::Builder::Level = $Test::Builder::Level + 1; ## no mogrify (Variables::ProhibitPackageVars)
         is(
             ! ! is_subroutine_declaration( $input ),
             ! ! $result,
@@ -329,7 +329,7 @@ can_ok('main', 'is_in_subroutine');
 
         my $name = defined $code ? $code : '<undef>';
 
-        local $Test::Builder::Level = $Test::Builder::Level + 1; ## no critic (Variables::ProhibitPackageVars)
+        local $Test::Builder::Level = $Test::Builder::Level + 1; ## no mogrify (Variables::ProhibitPackageVars)
         is(
             ! ! is_in_subroutine( $input ),
             ! ! $result,
@@ -341,7 +341,7 @@ can_ok('main', 'is_in_subroutine');
 
     $test->(undef, sub {}, 0);
 
-    ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
+    ## no mogrify (ValuesAndExpressions::RequireInterpolationOfMetachars)
     $test->('my $foo = 42', sub {}, 0);
 
     $test->(
@@ -370,7 +370,7 @@ can_ok('main', 'is_in_subroutine');
         },
         0,
     );
-    ## use critic
+    ## use mogrify
 }
 
 #-----------------------------------------------------------------------------

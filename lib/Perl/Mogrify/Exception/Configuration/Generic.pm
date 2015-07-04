@@ -42,7 +42,7 @@ Perl::Mogrify::Exception::Configuration::Generic - A problem with L<Perl::Mogrif
 =head1 DESCRIPTION
 
 A representation of a problem found with the configuration of
-L<Perl::Mogrify|Perl::Mogrify>, whether from a F<.perlcriticrc>, another
+L<Perl::Mogrify|Perl::Mogrify>, whether from a F<.perlmogrifyrc>, another
 profile file, or command line.
 
 This covers things like file reading and parsing errors.

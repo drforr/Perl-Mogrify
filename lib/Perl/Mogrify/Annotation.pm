@@ -25,7 +25,7 @@ sub create_annotations {
 
     my @annotations = ();
     my $comment_elements_ref  = $doc->find('PPI::Token::Comment') || return;
-    my $annotation_rx  = qr{\A (?: [#]! .*? )? \s* [#][#] \s* no  \s+ critic}xms;
+    my $annotation_rx  = qr{\A (?: [#]! .*? )? \s* [#][#] \s* no  \s+ mogrify}xms;
     for my $annotation_element ( grep { $_ =~ $annotation_rx } @{$comment_elements_ref} ) {
         push @annotations, Perl::Mogrify::Annotation->new( -element => $annotation_element);
     }
@@ -90,17 +90,17 @@ sub _init {
     }
 
 
-    # Handle multi-line usage.  This is either a "no critic" ..
-    # "use critic" region or a block where "no critic" is in effect
+    # Handle multi-line usage.  This is either a "no mogrify" ..
+    # "use mogrify" region or a block where "no mogrify" is in effect
     # until the end of the scope.  The start is the always the "no
-    # critic" which we already found.  So now we have to search for the end.
+    # mogrify" which we already found.  So now we have to search for the end.
     my $end = $annotation_element;
-    my $use_critic = qr{\A \s* [#][#] \s* use \s+ critic}xms;
+    my $use_mogrify = qr{\A \s* [#][#] \s* use \s+ mogrify}xms;
 
   SIB:
     while ( my $esib = $end->next_sibling() ) {
         $end = $esib; # keep track of last sibling encountered in this scope
-        last SIB if $esib->isa('PPI::Token::Comment') && $esib =~ $use_critic;
+        last SIB if $esib->isa('PPI::Token::Comment') && $esib =~ $use_mogrify;
     }
 
     # PPI parses __END__ as a PPI::Statement::End, and everything following is
@@ -112,7 +112,7 @@ sub _init {
         while ( my $esib = $end->next_sibling() ) {
             $end = $esib;
             last SIB if $esib->isa( 'PPI::Token::Comment' ) &&
-                $esib->content() =~ $use_critic;
+                $esib->content() =~ $use_mogrify;
         }
     }
 
@@ -220,13 +220,13 @@ sub _parse_annotation {
     #############################################################################
     # This regex captures the list of Transformer name patterns that are to be
     # disabled.  It is generally assumed that the element has already been
-    # verified as a no-critic annotation.  So if this regex does not match,
+    # verified as a no-mogrify annotation.  So if this regex does not match,
     # then it implies that all Policies are to be disabled.
     #
-    my $no_critic = qr{\#\# \s* no \s+ critic \s* (?:qw)? [("'] ([\s\w:,]+) }xms;
+    my $no_mogrify = qr{\#\# \s* no \s+ mogrify \s* (?:qw)? [("'] ([\s\w:,]+) }xms;
     #                  -------------------------- ------- ----- -----------
     #                                 |              |      |        |
-    #   "## no critic" with optional spaces          |      |        |
+    #   "## no mogrify" with optional spaces          |      |        |
     #                                                |      |        |
     #             Transformer list may be prefixed with "qw"     |        |
     #                                                       |        |
@@ -237,7 +237,7 @@ sub _parse_annotation {
     #############################################################################
 
     my @disabled_policy_names = ();
-    if ( my ($patterns_string) = $annotation_element =~ $no_critic ) {
+    if ( my ($patterns_string) = $annotation_element =~ $no_mogrify ) {
 
         # Compose the specified modules into a regex alternation.  Wrap each
         # in a no-capturing group to permit "|" in the modules specification.
@@ -273,13 +273,13 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Annotation - A "## no critic" annotation in a document.
+Perl::Mogrify::Annotation - A "## no mogrify" annotation in a document.
 
 
 =head1 SYNOPSIS
 
   use Perl::Mogrify::Annotation;
-  $annotation = Perl::Mogrify::Annotation->new( -element => $no_critic_ppi_element );
+  $annotation = Perl::Mogrify::Annotation->new( -element => $no_mogrify_ppi_element );
 
   $bool = $annotation->disables_line( $number );
   $bool = $annotation->disables_policy( $policy_object );
@@ -291,10 +291,10 @@ Perl::Mogrify::Annotation - A "## no critic" annotation in a document.
 
 =head1 DESCRIPTION
 
-C<Perl::Mogrify::Annotation> represents a single C<"## no critic">
+C<Perl::Mogrify::Annotation> represents a single C<"## no mogrify">
 annotation in a L<PPI:Document>.  The Annotation takes care of parsing
 the annotation and keeps track of which lines and Policies it affects.
-It is intended to encapsulate the details of the no-critic
+It is intended to encapsulate the details of the no-mogrify
 annotations, and to provide a way for Transformer objects to interact with
 the annotations (via a L<Perl::Mogrify::Document|Perl::Mogrify::Document>).
 
@@ -311,7 +311,7 @@ to change without notice.
 
 =item create_annotations( -doc => $doc )
 
-Given a L<Perl::Mogrify::Document|Perl::Mogrify::Document>, finds all the C<"## no critic">
+Given a L<Perl::Mogrify::Document|Perl::Mogrify::Document>, finds all the C<"## no mogrify">
 annotations and constructs a new C<Perl::Mogrify::Annotation> for each
 one and returns them.  The order of the returned objects is not
 defined.  It is generally expected that clients will use this
@@ -330,7 +330,7 @@ constructor directly.
 
 Returns a reference to a new Annotation object.  The B<-element>
 argument is required and should be a C<PPI::Token::Comment> that
-conforms to the C<"## no critic"> syntax.
+conforms to the C<"## no mogrify"> syntax.
 
 
 =back

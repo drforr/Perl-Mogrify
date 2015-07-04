@@ -61,7 +61,7 @@ Perl::Mogrify::Exception::Configuration::Option::Transformer::ExtraParameter - T
 
 A representation of the configuration attempting to specify a value
 for a parameter that a L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
-doesn't have, whether from a F<.perlcriticrc>, another profile file,
+doesn't have, whether from a F<.perlmogrifyrc>, another profile file,
 or command line.
 
 

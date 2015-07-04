@@ -20,7 +20,7 @@ our $VERSION = '1.125';
 
 use Test::More; #plan set below!
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 # This program proves that each policy that ships with Perl::Mogrify overrides

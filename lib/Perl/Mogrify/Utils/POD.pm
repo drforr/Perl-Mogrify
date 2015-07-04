@@ -367,7 +367,7 @@ sub _get_module_abstract_from_file {
 
 #-----------------------------------------------------------------------------
 
-sub _get_module_abstract_from_filehandle { ## no critic (RequireFinalReturn)
+sub _get_module_abstract_from_filehandle { ## no mogrify (RequireFinalReturn)
     my ($file_handle, $parser, $trimmer) = @_;
 
     my $name_section =

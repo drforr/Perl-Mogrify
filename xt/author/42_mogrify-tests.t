@@ -42,7 +42,7 @@ if ( $ENV{PERL_CRITIC_CACHE} ) {
     my $cache_path =
         File::Spec->catdir(
             File::Spec->tmpdir,
-            "test-perl-critic-cache-$ENV{USER}",
+            "test-perl-mogrify-cache-$ENV{USER}",
         );
     if ( ! -d $cache_path) {
         mkdir $cache_path, oct 700;
@@ -51,20 +51,16 @@ if ( $ENV{PERL_CRITIC_CACHE} ) {
 }
 
 #-----------------------------------------------------------------------------
-# Strict object testing -- prevent direct hash key access
+# Run mogrify against all of our own files
 
-use Devel::EnforceEncapsulation;
-foreach my $pkg ( $EMPTY, qw< ::Config ::Transformer ::Violation> ) {
-    Devel::EnforceEncapsulation->apply_to('Perl::Mogrify'.$pkg);
-}
-
-#-----------------------------------------------------------------------------
-# Run critic against all of our own files
-
-my $rcfile = File::Spec->catfile( 'xt', 'author', '40_perlcriticrc-code' );
+my $rcfile = File::Spec->catfile( 'xt', 'author', '42_perlmogrifyrc-tests' );
 Test::Perl::Mogrify->import( -profile => $rcfile );
 
-all_critic_ok( starting_points_including_examples() );
+all_mogrify_ok(
+    glob ('t/*.t'),
+    glob ('xt/author/*.t'),
+    'generate_without_optional_dependencies_wrappers.PL',
+);
 
 #-----------------------------------------------------------------------------
 

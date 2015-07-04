@@ -59,7 +59,7 @@ Perl::Mogrify::Exception::Configuration::Option::Global::ExtraParameter - The co
 
 A representation of the configuration attempting to specify a value
 for an option that L<Perl::Mogrify|Perl::Mogrify> doesn't have, whether
-from a F<.perlcriticrc>, another profile file, or command line.
+from a F<.perlmogrifyrc>, another profile file, or command line.
 
 
 =head1 INTERFACE SUPPORT

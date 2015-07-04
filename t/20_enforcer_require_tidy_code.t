@@ -14,7 +14,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 my $code;
 my $policy = 'CodeLayout::RequireTidyCode';

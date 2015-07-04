@@ -156,7 +156,7 @@ interface will go through a deprecation cycle.
 
 =item C<%PROFILE_STRICTNESSES>
 
-Valid values for the L<perlcritic/"-profile-strictness"> option.
+Valid values for the L<perlmogrify/"-profile-strictness"> option.
 Determines whether recoverable problems found in a profile file appear
 as warnings, are fatal, or are ignored.
 C<$PROFILE_STRICTNESS_DEFAULT> is set to C<$PROFILE_STRICTNESS_WARN>.

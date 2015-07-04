@@ -86,12 +86,12 @@ sub new {
 
 #-----------------------------------------------------------------------------
 
-sub set_format { return $format = verbosity_to_format( $_[0] ); }  ## no critic(ArgUnpacking)
+sub set_format { return $format = verbosity_to_format( $_[0] ); }  ## no mogrify(ArgUnpacking)
 sub get_format { return $format;         }
 
 #-----------------------------------------------------------------------------
 
-sub sort_by_location {  ## no critic(ArgUnpacking)
+sub sort_by_location {  ## no mogrify(ArgUnpacking)
 
     ref $_[0] || shift;              # Can call as object or class method
     return scalar @_ if ! wantarray; # In case we are called in scalar context
@@ -106,7 +106,7 @@ sub sort_by_location {  ## no critic(ArgUnpacking)
 
 #-----------------------------------------------------------------------------
 
-sub sort_by_severity {  ## no critic(ArgUnpacking)
+sub sort_by_severity {  ## no mogrify(ArgUnpacking)
 
     ref $_[0] || shift;              # Can call as object or class method
     return scalar @_ if ! wantarray; # In case we are called in scalar context
@@ -166,7 +166,7 @@ sub diagnostics {
     my $policy = $self->policy();
 
     if ( not $diagnostics{$policy} ) {
-        eval {              ## no critic (RequireCheckingReturnValueOfEval)
+        eval {              ## no mogrify (RequireCheckingReturnValueOfEval)
             my $module_name = ref $policy || $policy;
             $diagnostics{$policy} =
                 trim_pod_section(

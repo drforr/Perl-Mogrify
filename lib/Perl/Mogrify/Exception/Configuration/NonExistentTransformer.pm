@@ -51,7 +51,7 @@ Perl::Mogrify::Exception::Configuration::NonExistentTransformer - The configurat
 
 A representation of the configuration attempting to specify a
 L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> that is not known, whether from a
-F<.perlcriticrc>, another profile file, or command line.
+F<.perlmogrifyrc>, another profile file, or command line.
 
 
 =head1 INTERFACE SUPPORT

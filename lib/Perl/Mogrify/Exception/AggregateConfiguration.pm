@@ -77,7 +77,7 @@ sub add_exception_or_rethrow {
         $self->add_exceptions_from($eval_error);
     }
     else {
-        die $eval_error; ## no critic (RequireCarping)
+        die $eval_error; ## no mogrify (RequireCarping)
     }
 
     return;

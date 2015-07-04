@@ -215,7 +215,7 @@ Perl::Mogrify::ProfilePrototype - Generate an initial Perl::Mogrify profile.
 =head1 DESCRIPTION
 
 This is a helper class that generates a prototype of a
-L<Perl::Mogrify|Perl::Mogrify> profile (e.g. a F<.perlcriticrc> file.
+L<Perl::Mogrify|Perl::Mogrify> profile (e.g. a F<.perlmogrifyrc> file.
 There are no user-serviceable parts here.
 
 
@@ -259,7 +259,7 @@ policy name, default themes, and default severity for each
 L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> object that was given to
 the constructor of this C<ProfilePrototype>.  If the Transformer supports
 an additional parameters, they will also be listed (but
-commented-out).  The format is suitable for use as a F<.perlcriticrc>
+commented-out).  The format is suitable for use as a F<.perlmogrifyrc>
 file.
 
 

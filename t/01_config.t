@@ -27,7 +27,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
@@ -87,8 +87,8 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
             -severity   => $severity,
             -theme      => 'core',
         );
-        my $critic = Perl::Mogrify::Config->new( %pc_args );
-        my $policy_count = scalar $critic->policies();
+        my $mogrify = Perl::Mogrify::Config->new( %pc_args );
+        my $policy_count = scalar $mogrify->policies();
         my $test_name = "Count all policies, severity: $severity";
         cmp_ok($policy_count, '<', $last_policy_count, $test_name);
         $last_policy_count = $policy_count;
@@ -184,8 +184,8 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
             -severity   => $severity,
             -theme      => 'core',
         );
-        my $critic = Perl::Mogrify::Config->new( %pc_args );
-        my $policy_count = scalar $critic->policies();
+        my $mogrify = Perl::Mogrify::Config->new( %pc_args );
+        my $policy_count = scalar $mogrify->policies();
         my $expected_count = ($SEVERITY_HIGHEST - $severity + 1) * 10;
         my $test_name = "user-defined severity level: $severity";
         is( $policy_count, $expected_count, $test_name );
@@ -193,8 +193,8 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
     # All remaining policies should be at the lowest severity
     my %pc_args = (-profile => \%profile, -severity => $SEVERITY_LOWEST);
-    my $critic = Perl::Mogrify::Config->new( %pc_args );
-    my $policy_count = scalar $critic->policies();
+    my $mogrify = Perl::Mogrify::Config->new( %pc_args );
+    my $policy_count = scalar $mogrify->policies();
     my $expected_count = $SEVERITY_HIGHEST * 10;
     my $test_name = 'user-defined severity, all remaining policies';
     cmp_ok( $policy_count, '>=', $expected_count, $test_name);
@@ -205,7 +205,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 {
     my $examples_dir = 'examples';
-    my $profile = File::Spec->catfile( $examples_dir, 'perlcriticrc' );
+    my $profile = File::Spec->catfile( $examples_dir, 'perlmogrifyrc' );
     my $c = Perl::Mogrify::Config->new( -profile => $profile );
 
     is_deeply([$c->exclude()], [ qw(Documentation Naming) ],
@@ -324,7 +324,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
         -color
         -pager
         -allow-unsafe
-        -criticism-fatal
+        -mogrification-fatal
         -color-severity-highest
         -color-severity-high
         -color-severity-medium
@@ -333,7 +333,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     );
 
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
-    my $color = -t *STDOUT ? $TRUE : $FALSE; ## no critic (ProhibitInteractiveTest)
+    my $color = -t *STDOUT ? $TRUE : $FALSE; ## no mogrify (ProhibitInteractiveTest)
 
     my %undef_args = map { $_ => undef } @switches;
     my $c = Perl::Mogrify::Config->new( %undef_args );
@@ -347,7 +347,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     is( $c->pager(),            q{},    'Undefined -pager');
     is( $c->unsafe_allowed(),   0,      'Undefined -allow-unsafe');
     is( $c->verbose(),          4,      'Undefined -verbose');
-    is( $c->criticism_fatal(),  0,      'Undefined -criticism-fatal');
+    is( $c->mogrification_fatal(),  0,      'Undefined -mogrification-fatal');
     is( $c->color_severity_highest(),
         $PROFILE_COLOR_SEVERITY_HIGHEST_DEFAULT,
         'Undefined -color-severity-highest'
@@ -382,7 +382,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     is( $c->pager(),     $EMPTY,  'zero -pager');
     is( $c->unsafe_allowed(),    0,       'zero -allow-unsafe');
     is( $c->verbose(),   4,       'zero -verbose');
-    is( $c->criticism_fatal(), 0, 'zero -criticism-fatal');
+    is( $c->mogrification_fatal(), 0, 'zero -mogrification-fatal');
 
     my %empty_args = map { $_ => q{} } @switches;
     $c = Perl::Mogrify::Config->new( %empty_args );
@@ -395,7 +395,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     is( $c->pager(),     q{},     'empty -pager');
     is( $c->unsafe_allowed(),    0,       'empty -allow-unsafe');
     is( $c->verbose(),   4,       'empty -verbose');
-    is( $c->criticism_fatal(), 0, 'empty -criticism-fatal');
+    is( $c->mogrification_fatal(), 0, 'empty -mogrification-fatal');
     is( $c->color_severity_highest(), $EMPTY, 'empty -color-severity-highest');
     is( $c->color_severity_high(),   $EMPTY, 'empty -color-severity-high');
     is( $c->color_severity_medium(), $EMPTY, 'empty -color-severity-medium');
@@ -500,7 +500,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     eval{ Perl::Mogrify::Config->new( -severity => 'bogus' ) };
     like(
         $EVAL_ERROR,
-        qr/The value for the global "-severity" option [(]"bogus"[)] is not one of the valid severity names/ms, ## no critic (RequireExtendedFormatting)
+        qr/The value for the global "-severity" option [(]"bogus"[)] is not one of the valid severity names/ms, ## no mogrify (RequireExtendedFormatting)
         'invalid severity'
     );
 
@@ -530,7 +530,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     );
 
     # Pretend that ProhibitQuotedWordLists is actually unsafe
-    no warnings qw(redefine once);  ## no critic qw(ProhibitNoWarnings)
+    no warnings qw(redefine once);  ## no mogrify qw(ProhibitNoWarnings)
     local *Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);

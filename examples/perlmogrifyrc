@@ -1,13 +1,13 @@
 ##############################################################################
 # This file is an example of a Perl::Mogrify configuration file.  This
-# file is usually called ".perlcriticrc" and is usually located in
+# file is usually called ".perlmogrifyrc" and is usually located in
 # your home directory or the working directory of your project.
 # However, you can use the -profile option to tell Perl::Mogrify use a
 # different file in another location.
 #
 # The area before any of the [Perl::Mogrify::Transformer] sections is used
 # to set default values for the arguments to the Perl::Mogrify engine.
-# If you are using the "perlcritic" program, you can override these
+# If you are using the "perlmogrify" program, you can override these
 # settings at the command-line.  Or if you are using the Perl::Mogrify
 # library, your API arguments will override these settings as well.
 
@@ -27,7 +27,7 @@ exclude = Documentation Naming
 include   = CodeLayout Modules
 
 #-----------------------------------------------------------------------------
-# force: Directs Perl::Mogrify to ignore the special "##no critic"
+# force: Directs Perl::Mogrify to ignore the special "##no mogrify"
 # comments embedded in the source code.  The default is 0.  If
 # defined, this should be either 1 or 0.
 

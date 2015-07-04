@@ -1,7 +1,7 @@
 #!perl
 
 ## There's too much use of source code in strings.
-## no critic (RequireInterpolationOfMetachars)
+## no mogrify (RequireInterpolationOfMetachars)
 
 use 5.006001;
 use strict;
@@ -161,7 +161,7 @@ sub test_is_script {
         "\n#!perl\n",
     );
 
-    no warnings qw< deprecated >;   ## no critic (TestingAndDebugging::ProhibitNoWarnings)
+    no warnings qw< deprecated >;   ## no mogrify (TestingAndDebugging::ProhibitNoWarnings)
 
     for my $code (@good) {
         my $doc = PPI::Document->new(\$code) or confess;
@@ -180,7 +180,7 @@ sub test_is_script {
 
 #-----------------------------------------------------------------------------
 
-sub test_is_script_with_PL_files { ## no critic (NamingConventions::Capitalization)
+sub test_is_script_with_PL_files { ## no mogrify (NamingConventions::Capitalization)
 
     # Testing for .PL files (e.g. Makefile.PL, Build.PL)
     # See http://rt.cpan.org/Ticket/Display.html?id=20481
@@ -193,7 +193,7 @@ sub test_is_script_with_PL_files { ## no critic (NamingConventions::Capitalizati
 
     my $doc = PPI::Document::File->new($temp_file->filename());
 
-    no warnings qw< deprecated >;   ## no critic (TestingAndDebugging::ProhibitNoWarnings)
+    no warnings qw< deprecated >;   ## no mogrify (TestingAndDebugging::ProhibitNoWarnings)
     ok(is_script($doc), 'is_script, false for .PL files');
 
     return;
@@ -320,8 +320,8 @@ sub test_is_perl_and_shebang_line {
         '#!/usr/local/bin/perl',
         '#!/usr/local/bin/perl-5.8',
         '#!/bin/env perl',
-        '#!perl ## no critic',
-        '#!perl ## no critic (foo)',
+        '#!perl ## no mogrify',
+        '#!perl ## no mogrify (foo)',
     );
 
     for my $shebang (@perl_shebangs) {
@@ -392,7 +392,7 @@ sub test_first_arg {
         q{eval();}                 => undef,
     );
 
-    for (my $i = 0; $i < @tests; $i += 2) { ## no critic (ProhibitCStyleForLoops)
+    for (my $i = 0; $i < @tests; $i += 2) { ## no mogrify (ProhibitCStyleForLoops)
         my $code = $tests[$i];
         my $expect = $tests[$i+1];
         my $doc = PPI::Document->new(\$code);
@@ -452,7 +452,7 @@ sub test_is_function_call {
 #-----------------------------------------------------------------------------
 
 sub test_find_bundled_policies {
-    Perl::Mogrify::TestUtils::block_perlcriticrc();
+    Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
     my @native_policies = bundled_policy_names();
     my $policy_dir = File::Spec->catfile( qw(lib Perl Mogrify Transformer) );

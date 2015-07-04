@@ -112,11 +112,11 @@ can_ok('Perl::Mogrify::Document', 'is_module');
 
 {
     my $ppi_document = PPI::Document->new(\'foo(); package Foo; package Bar');
-    my $critic_document =
+    my $mogrify_document =
         Perl::Mogrify::Document->new(-source => $ppi_document);
 
     cmp_deeply(
-        [ $critic_document->namespaces() ],
+        [ $mogrify_document->namespaces() ],
         bag( qw< main Foo Bar > ),
         'Got expected namespaces',
     );
@@ -126,18 +126,18 @@ can_ok('Perl::Mogrify::Document', 'is_module');
 
 {
     my $ppi_document = PPI::Document->new(\'use Moose');
-    my $critic_document =
+    my $mogrify_document =
         Perl::Mogrify::Document->new(-source => $ppi_document);
 
-    ok(!! $critic_document->uses_module('Moose'),       'Moose is used.');
-    ok( ! $critic_document->uses_module('Moose::Role'), 'Moose::Role is not used.');
+    ok(!! $mogrify_document->uses_module('Moose'),       'Moose is used.');
+    ok( ! $mogrify_document->uses_module('Moose::Role'), 'Moose::Role is not used.');
 
     $ppi_document = PPI::Document->new( \q{ } );
-    $critic_document =
+    $mogrify_document =
         Perl::Mogrify::Document->new(-source => $ppi_document);
 
     ok(
-        ! $critic_document->uses_module('Blah'),
+        ! $mogrify_document->uses_module('Blah'),
         q<uses_module() doesn't barf when there are no include statements.>,
     );
 }

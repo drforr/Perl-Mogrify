@@ -18,7 +18,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 my @bundled_policy_names = bundled_policy_names();
 
@@ -54,10 +54,10 @@ can_ok('Perl::Mogrify', 'config');
 can_ok('Perl::Mogrify', 'critique');
 can_ok('Perl::Mogrify', 'policies');
 
-#Set -profile to avoid messing with .perlcriticrc
-my $critic = Perl::Mogrify->new( -profile => 'NONE' );
-isa_ok($critic, 'Perl::Mogrify');
-is($critic->VERSION(), $version_string, 'Perl::Mogrify version');
+#Set -profile to avoid messing with .perlmogrifyrc
+my $mogrify = Perl::Mogrify->new( -profile => 'NONE' );
+isa_ok($mogrify, 'Perl::Mogrify');
+is($mogrify->VERSION(), $version_string, 'Perl::Mogrify version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::Mogrify::Config module interface
@@ -78,7 +78,7 @@ can_ok('Perl::Mogrify::Config', 'top');
 can_ok('Perl::Mogrify::Config', 'verbose');
 can_ok('Perl::Mogrify::Config', 'color');
 can_ok('Perl::Mogrify::Config', 'unsafe_allowed');
-can_ok('Perl::Mogrify::Config', 'criticism_fatal');
+can_ok('Perl::Mogrify::Config', 'mogrification_fatal');
 can_ok('Perl::Mogrify::Config', 'site_policy_names');
 can_ok('Perl::Mogrify::Config', 'color_severity_highest');
 can_ok('Perl::Mogrify::Config', 'color_severity_high');
@@ -88,7 +88,7 @@ can_ok('Perl::Mogrify::Config', 'color_severity_lowest');
 can_ok('Perl::Mogrify::Config', 'program_extensions');
 can_ok('Perl::Mogrify::Config', 'program_extensions_as_regexes');
 
-#Set -profile to avoid messing with .perlcriticrc
+#Set -profile to avoid messing with .perlmogrifyrc
 my $config = Perl::Mogrify::Config->new( -profile => 'NONE');
 isa_ok($config, 'Perl::Mogrify::Config');
 is($config->VERSION(), $version_string, 'Perl::Mogrify::Config version');
@@ -110,7 +110,7 @@ can_ok('Perl::Mogrify::OptionsProcessor', 'top');
 can_ok('Perl::Mogrify::OptionsProcessor', 'verbose');
 can_ok('Perl::Mogrify::OptionsProcessor', 'color');
 can_ok('Perl::Mogrify::OptionsProcessor', 'allow_unsafe');
-can_ok('Perl::Mogrify::OptionsProcessor', 'criticism_fatal');
+can_ok('Perl::Mogrify::OptionsProcessor', 'mogrification_fatal');
 can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_highest');
 can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_high');
 can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_medium');

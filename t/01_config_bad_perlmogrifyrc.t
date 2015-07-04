@@ -46,7 +46,7 @@ $skip_color_severity
 
 plan tests => 13 + scalar @color_severity_params;
 
-Readonly::Scalar my $PROFILE => 't/01_bad_perlcriticrc';
+Readonly::Scalar my $PROFILE => 't/01_bad_perlmogrifyrc';
 Readonly::Scalar my $NO_ENABLED_POLICIES_MESSAGE =>
     q<There are no enabled policies.>;
 Readonly::Scalar my $INVALID_PARAMETER_MESSAGE =>
@@ -70,7 +70,7 @@ $test_passed =
     isa_ok(
         $eval_result,
         'Perl::Mogrify::Exception::AggregateConfiguration',
-        '$EVAL_ERROR',  ## no critic (RequireInterpolationOfMetachars)
+        '$EVAL_ERROR',  ## no mogrify (RequireInterpolationOfMetachars)
     );
 
 if ( not $test_passed ) {
@@ -161,7 +161,7 @@ sub is_require_pod_sections_source_exception {
 #-----------------------------------------------------------------------------
 
 # ensure we return true if this test is loaded by
-# t/01_config_bad_perlcriticrc.t_without_optional_dependencies.t
+# t/01_config_bad_perlmogrifyrc.t_without_optional_dependencies.t
 1;
 
 

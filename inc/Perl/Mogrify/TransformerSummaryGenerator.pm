@@ -39,7 +39,7 @@ sub generate_policy_summary {
     my @policies = $configuration->all_policies_enabled_or_not();
     my $policy_summary = 'lib/Perl/Mogrify/TransformerSummary.pod';
 
-    ## no critic (RequireBriefOpen)
+    ## no mogrify (RequireBriefOpen)
     open my $pod_file, '>', $policy_summary
       or confess "Could not open $policy_summary: $ERRNO";
 
@@ -59,7 +59,7 @@ Conway's book B<Perl Best Practices>. Since most coding standards take the
 form "do this..." or "don't do that...", I have adopted the convention of
 naming each module C<RequireSomething> or C<ProhibitSomething>.  Each Transformer
 is listed here with its default severity.  If you don't agree with the default
-severity, you can change it in your F<.perlcriticrc> file (try C<perlcritic
+severity, you can change it in your F<.perlmogrifyrc> file (try C<perlmogrify
 --profile-proto> for a starting version).  See the documentation of each
 module for its specific details.
 

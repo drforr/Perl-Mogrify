@@ -305,7 +305,7 @@ will go through a deprecation cycle.
 =item C<get_name()>
 
 Return the name of the parameter.  This is the key that will be looked
-for in the F<.perlcriticrc>.
+for in the F<.perlmogrifyrc>.
 
 
 =item C<get_description()>
@@ -317,7 +317,7 @@ provided by the developer of the policy.
 =item C<get_default_string()>
 
 Return a representation of the default value of this parameter as it
-would appear if it was specified in a F<.perlcriticrc> file.
+would appear if it was specified in a F<.perlmogrifyrc> file.
 
 
 =item C<parse_and_validate_config_value( $parser, $config )>

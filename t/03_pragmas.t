@@ -16,7 +16,7 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlcriticrc();
+Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 # Configure Mogrify not to load certain policies.  This
 # just makes it a little easier to create test cases
@@ -40,8 +40,8 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-require 'some_library.pl';  ## no critic
-print $crap if $condition;  ## no critic
+require 'some_library.pl';  ## no mogrify
+print $crap if $condition;  ## no mogrify
 
 1;
 END_PERL
@@ -52,7 +52,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'}
     ),
     0,
-    'inline no-critic disables violations'
+    'inline no-mogrify disables violations'
 );
 
 #-----------------------------------------------------------------------------
@@ -65,12 +65,12 @@ our $VERSION = 1.0;
 
 $foo = $bar;
 
-## no critic
+## no mogrify
 
 require 'some_library.pl';
 print $crap if $condition;
 
-## use critic
+## use mogrify
 
 $baz = $nuts;
 1;
@@ -82,7 +82,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     0,
-    'region no-critic',
+    'region no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ use warnings;
 our $VERSION = 1.0;
 
 for my $foo (@list) {
-  ## no critic
+  ## no mogrify
   $long_int = 12345678;
   $oct_num  = 033;
 }
@@ -110,7 +110,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     1,
-    'scoped no-critic',
+    'scoped no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ use warnings;
 our $VERSION = 1.0;
 
 {
-  ## no critic
+  ## no mogrify
   $long_int = 12345678;
   $oct_num  = 033;
 }
@@ -138,7 +138,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     1,
-    'scoped no-critic',
+    'scoped no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -149,13 +149,13 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic
+## no mogrify
 for my $foo (@list) {
   $long_int = 12345678;
   $oct_num  = 033;
 }
 
-## use critic
+## use mogrify
 my $noisy = '!';
 
 1;
@@ -167,7 +167,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     1,
-    'region no-critic across a scope',
+    'region no-mogrify across a scope',
 );
 
 #-----------------------------------------------------------------------------
@@ -179,10 +179,10 @@ use warnings;
 our $VERSION = 1.0;
 
 for my $foo (@list) {
-  ## no critic
+  ## no mogrify
   $long_int = 12345678;
   $oct_num  = 033;
-  ## use critic
+  ## use mogrify
 }
 
 my $noisy = '!';
@@ -197,7 +197,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     2,
-    'scoped region no-critic',
+    'scoped region no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -208,7 +208,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic
+## no mogrify
 for my $foo (@list) {
   $long_int = 12345678;
   $oct_num  = 033;
@@ -226,7 +226,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     0,
-    'unterminated no-critic across a scope',
+    'unterminated no-mogrify across a scope',
 );
 
 #-----------------------------------------------------------------------------
@@ -237,11 +237,11 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-$long_int = 12345678;  ## no critic
-$oct_num  = 033;       ## no critic
-my $noisy = '!';       ## no critic
-my $empty = '';        ## no critic
-my $empty = '';        ## use critic
+$long_int = 12345678;  ## no mogrify
+$oct_num  = 033;       ## no mogrify
+my $noisy = '!';       ## no mogrify
+my $empty = '';        ## no mogrify
+my $empty = '';        ## use mogrify
 
 1;
 END_PERL
@@ -252,7 +252,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     1,
-    'inline use-critic',
+    'inline use-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -263,10 +263,10 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-$long_int = 12345678;  ## no critic
-$oct_num  = 033;       ## no critic
-my $noisy = '!';       ## no critic
-my $empty = '';        ## no critic
+$long_int = 12345678;  ## no mogrify
+$oct_num  = 033;       ## no mogrify
+my $noisy = '!';       ## no mogrify
+my $empty = '';        ## no mogrify
 
 $long_int = 12345678;
 $oct_num  = 033;
@@ -282,7 +282,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     5,
-    q<inline no-critic doesn't block later violations>,
+    q<inline no-mogrify doesn't block later violations>,
 );
 
 #-----------------------------------------------------------------------------
@@ -293,12 +293,12 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-$long_int = 12345678;  ## no critic
-$oct_num  = 033;       ## no critic
-my $noisy = '!';       ## no critic
-my $empty = '';        ## no critic
+$long_int = 12345678;  ## no mogrify
+$oct_num  = 033;       ## no mogrify
+my $noisy = '!';       ## no mogrify
+my $empty = '';        ## no mogrify
 
-## no critic
+## no mogrify
 $long_int = 12345678;
 $oct_num  = 033;
 my $noisy = '!';
@@ -330,13 +330,13 @@ use warnings;
 our $VERSION = 1.0;
 
 for my $foo (@list) {
-  ## no critic
+  ## no mogrify
   $long_int = 12345678;
   $oct_num  = 033;
 }
 
-my $noisy = '!'; ## no critic
-my $empty = '';  ## no critic
+my $noisy = '!'; ## no mogrify
+my $empty = '';  ## no mogrify
 
 1;
 END_PERL
@@ -364,12 +364,12 @@ use warnings;
 our $VERSION = 1.0;
 
 for my $foo (@list) {
-  ## no critic
+  ## no mogrify
   $long_int = 12345678;
   $oct_num  = 033;
 }
 
-## no critic
+## no mogrify
 my $noisy = '!';
 my $empty = '';
 
@@ -391,7 +391,7 @@ is(
 );
 
 #-----------------------------------------------------------------------------
-# Check that '## no critic' on the top of a block doesn't extend
+# Check that '## no mogrify' on the top of a block doesn't extend
 # to all code within the block.  See RT bug #15295
 
 $code = <<'END_PERL';
@@ -400,13 +400,13 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-for ($i;$i++;$i<$j) { ## no critic
+for ($i;$i++;$i<$j) { ## no mogrify
     my $long_int = 12345678;
     my $oct_num  = 033;
 }
 
 unless ( $condition1
-         && $condition2 ) { ## no critic
+         && $condition2 ) { ## no mogrify
     my $noisy = '!';
     my $empty = '';
 }
@@ -424,7 +424,7 @@ is(
 );
 
 #-----------------------------------------------------------------------------
-# Check that '## no critic' on the top of a block doesn't extend
+# Check that '## no mogrify' on the top of a block doesn't extend
 # to all code within the block.  See RT bug #15295
 
 $code = <<'END_PERL';
@@ -433,7 +433,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-for ($i; $i++; $i<$j) { ## no critic
+for ($i; $i++; $i<$j) { ## no mogrify
     my $long_int = 12345678;
     my $oct_num  = 033;
 }
@@ -442,7 +442,7 @@ for ($i; $i++; $i<$j) { ## no critic
 $Global::Variable = "foo";  #Package var; double-quotes
 
 unless ( $condition1
-         && $condition2 ) { ## no critic
+         && $condition2 ) { ## no mogrify
     my $noisy = '!';
     my $empty = '';
 }
@@ -467,11 +467,11 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-sub grep {  ## no critic;
+sub grep {  ## no mogrify;
     return $foo;
 }
 
-sub grep { return $foo; } ## no critic
+sub grep { return $foo; } ## no mogrify
 1;
 END_PERL
 
@@ -481,7 +481,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
     0,
-    'no-critic on sub name',
+    'no-mogrify on sub name',
 );
 
 #-----------------------------------------------------------------------------
@@ -492,7 +492,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-sub grep {  ## no critic;
+sub grep {  ## no mogrify;
    return undef; #Should find this!
 }
 
@@ -505,7 +505,7 @@ is(
         {-profile  => $profile, -severity =>1, -theme => 'core'}
     ),
     1,
-    'no-critic on sub name',
+    'no-mogrify on sub name',
 );
 
 #-----------------------------------------------------------------------------
@@ -516,7 +516,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (NoisyQuotes)
+## no mogrify (NoisyQuotes)
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -530,7 +530,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     2,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -541,7 +541,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (ValuesAndExpressions)
+## no mogrify (ValuesAndExpressions)
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -555,7 +555,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     1,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -566,7 +566,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (Noisy, Empty)
+## no mogrify (Noisy, Empty)
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -580,7 +580,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     1,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -591,7 +591,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (NOISY, EMPTY, EVAL)
+## no mogrify (NOISY, EMPTY, EVAL)
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -605,7 +605,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     0,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -616,12 +616,12 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (Noisy, Empty, Eval)
+## no mogrify (Noisy, Empty, Eval)
 my $noisy = '!';
 my $empty = '';
 eval $string;
 
-## use critic
+## use mogrify
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -635,7 +635,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     3,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -646,7 +646,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (Mogrify::Transformer)
+## no mogrify (Mogrify::Transformer)
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -660,7 +660,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     0,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -671,7 +671,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (Foo::Bar, Baz, Boom)
+## no mogrify (Foo::Bar, Baz, Boom)
 my $noisy = '!';
 my $empty = '';
 eval $string;
@@ -685,7 +685,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     3,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -696,16 +696,16 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no critic (Noisy)
+## no mogrify (Noisy)
 my $noisy = '!';     #Should not find this
 my $empty = '';      #Should find this
 
 sub foo {
 
-   ## no critic (Empty)
+   ## no mogrify (Empty)
    my $nosiy = '!';  #Should not find this
    my $empty = '';   #Should not find this
-   ## use critic;
+   ## use mogrify;
 
    return 1;
 }
@@ -722,7 +722,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
     2,
-    'per-policy no-critic',
+    'per-policy no-mogrify',
 );
 
 #-----------------------------------------------------------------------------
@@ -734,34 +734,34 @@ use warnings;
 our $VERSION = 1.0;
 
 # with parentheses
-my $noisy = '!';           ##no critic (NoisyQuotes)
-barf() unless $$ eq '';    ##no critic (Postfix,Empty,Punctuation)
-barf() unless $$ eq '';    ##no critic (Postfix , Empty , Punctuation)
-barf() unless $$ eq '';    ##no critic (Postfix Empty Punctuation)
+my $noisy = '!';           ##no mogrify (NoisyQuotes)
+barf() unless $$ eq '';    ##no mogrify (Postfix,Empty,Punctuation)
+barf() unless $$ eq '';    ##no mogrify (Postfix , Empty , Punctuation)
+barf() unless $$ eq '';    ##no mogrify (Postfix Empty Punctuation)
 
 # qw() style
-my $noisy = '!';           ##no critic qw(NoisyQuotes);
-barf() unless $$ eq '';    ##no critic qw(Postfix,Empty,Punctuation)
-barf() unless $$ eq '';    ##no critic qw(Postfix , Empty , Punctuation)
-barf() unless $$ eq '';    ##no critic qw(Postfix Empty Punctuation)
+my $noisy = '!';           ##no mogrify qw(NoisyQuotes);
+barf() unless $$ eq '';    ##no mogrify qw(Postfix,Empty,Punctuation)
+barf() unless $$ eq '';    ##no mogrify qw(Postfix , Empty , Punctuation)
+barf() unless $$ eq '';    ##no mogrify qw(Postfix Empty Punctuation)
 
 # with quotes
-my $noisy = '!';           ##no critic 'NoisyQuotes';
-barf() unless $$ eq '';    ##no critic 'Postfix,Empty,Punctuation';
-barf() unless $$ eq '';    ##no critic 'Postfix , Empty , Punctuation';
-barf() unless $$ eq '';    ##no critic 'Postfix Empty Punctuation';
+my $noisy = '!';           ##no mogrify 'NoisyQuotes';
+barf() unless $$ eq '';    ##no mogrify 'Postfix,Empty,Punctuation';
+barf() unless $$ eq '';    ##no mogrify 'Postfix , Empty , Punctuation';
+barf() unless $$ eq '';    ##no mogrify 'Postfix Empty Punctuation';
 
 # with double quotes
-my $noisy = '!';           ##no critic "NoisyQuotes";
-barf() unless $$ eq '';    ##no critic "Postfix,Empty,Punctuation";
-barf() unless $$ eq '';    ##no critic "Postfix , Empty , Punctuation";
-barf() unless $$ eq '';    ##no critic "Postfix Empty Punctuation";
+my $noisy = '!';           ##no mogrify "NoisyQuotes";
+barf() unless $$ eq '';    ##no mogrify "Postfix,Empty,Punctuation";
+barf() unless $$ eq '';    ##no mogrify "Postfix , Empty , Punctuation";
+barf() unless $$ eq '';    ##no mogrify "Postfix Empty Punctuation";
 
 # with spacing variations
-my $noisy = '!';           ##no critic (NoisyQuotes)
-barf() unless $$ eq '';    ##  no   critic   (Postfix,Empty,Punctuation)
-barf() unless $$ eq '';    ##no critic(Postfix , Empty , Punctuation)
-barf() unless $$ eq '';    ##   no critic(Postfix Empty Punctuation)
+my $noisy = '!';           ##no mogrify (NoisyQuotes)
+barf() unless $$ eq '';    ##  no   mogrify   (Postfix,Empty,Punctuation)
+barf() unless $$ eq '';    ##no mogrify(Postfix , Empty , Punctuation)
+barf() unless $$ eq '';    ##   no mogrify(Postfix Empty Punctuation)
 
 1;
 
@@ -773,7 +773,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     0,
-    'no critic: syntaxes',
+    'no mogrify: syntaxes',
 );
 
 #-----------------------------------------------------------------------------
@@ -781,14 +781,14 @@ is(
 # only return one Violation at a time.  But the next three cases
 # involve policies that apply to the whole document and can return
 # multiple violations at a time.  These tests make sure that the 'no
-# critic' pragmas are effective with those Policies
+# mogrify' pragmas are effective with those Policies
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';
 package FOO;
 
 #Code before 'use strict'
-my $foo = 'baz';  ## no critic
+my $foo = 'baz';  ## no mogrify
 my $bar = 42;     # Should find this
 
 use strict;
@@ -804,7 +804,7 @@ is(
         {-profile  => $profile, -severity => 5, -theme => 'core'},
     ),
     1,
-    'no critic & RequireUseStrict',
+    'no mogrify & RequireUseStrict',
 );
 
 #-----------------------------------------------------------------------------
@@ -814,7 +814,7 @@ package FOO;
 use strict;
 
 #Code before 'use warnings'
-my $foo = 'baz';  ## no critic
+my $foo = 'baz';  ## no mogrify
 my $bar = 42;  # Should find this
 
 use warnings;
@@ -829,13 +829,13 @@ is(
         {-profile  => $profile, -severity => 4, -theme => 'core'},
     ),
     1,
-    'no critic & RequireUseWarnings',
+    'no mogrify & RequireUseWarnings',
 );
 
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';
-use strict;      ##no critic
+use strict;      ##no mogrify
 use warnings;    #should find this
 my $bar = 42;    #this one will be squelched
 
@@ -852,13 +852,13 @@ is(
         {-profile  => $profile, -severity => 4, -theme => 'core'},
     ),
     1,
-    'no critic & RequireExplicitPackage',
+    'no mogrify & RequireExplicitPackage',
 );
 
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';
-#!/usr/bin/perl -w ## no critic
+#!/usr/bin/perl -w ## no mogrify
 
 package Foo;
 use strict;
@@ -875,20 +875,20 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
     1,
-    'no-critic on shebang line'
+    'no-mogrify on shebang line'
 );
 
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';
 #line 1
-## no critic;
+## no mogrify;
 
 =pod
 
 =head1 SOME POD HERE
 
-This code has several POD-related violations at line 1.  The "## no critic"
+This code has several POD-related violations at line 1.  The "## no mogrify"
 marker is on the second physical line.  However, the "#line" directive should
 cause it to treat it as if it actually were on the first physical line.  Thus,
 the violations should be supressed.
@@ -903,20 +903,20 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
     0,
-    'no-critic where logical line == 1, but physical line != 1'
+    'no-mogrify where logical line == 1, but physical line != 1'
 );
 
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';
 #line 7
-## no critic;
+## no mogrify;
 
 =pod
 
 =head1 SOME POD HERE
 
-This code has several POD-related violations at line 1.  The "## no critic"
+This code has several POD-related violations at line 1.  The "## no mogrify"
 marker is on the second physical line, and the "#line" directive should cause
 it to treat it as if it actually were on the 7th physical line.  Thus, the
 violations should NOT be supressed.
@@ -931,21 +931,21 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
     2,
-    'no-critic at logical line != 1, and physical line != 1'
+    'no-mogrify at logical line != 1, and physical line != 1'
 );
 
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';
 #line 1
-#!perl ### no critic;
+#!perl ### no mogrify;
 
 package Foo;
 use strict;
 use warnings;
 our $VERSION = 1;
 
-# In this case, the "## no critic" marker is on the first logical line, which
+# In this case, the "## no mogrify" marker is on the first logical line, which
 # is also the shebang line.
 
 1;
@@ -958,7 +958,7 @@ is(
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
     0,
-    'no-critic on shebang line, where physical line != 1, but logical line == 1'
+    'no-mogrify on shebang line, where physical line != 1, but logical line == 1'
 );
 
 #-----------------------------------------------------------------------------

@@ -74,7 +74,7 @@ For the benefit of PodSpelling, etc.
 For things like RequirePodSections.
 
 
-=item * Add queries to --list option to F<perlcritic>.
+=item * Add queries to --list option to F<perlmogrify>.
 
 List Policies based upon severity, theme, and (what I want this second)
 applies_to.
@@ -165,29 +165,29 @@ sharing model, this shouldn't be an issue.
 
 =item * Add support in .run files for regexes for violation descriptions.
 
-=item * Add support for "## use critic (blah)".
+=item * Add support for "## use mogrify (blah)".
 
 If I've got:
 
-    ## no critic (SomePolicy)
+    ## no mogrify (SomePolicy)
 
     ...
 
-    ## no critic (ADifferentPolicy)
+    ## no mogrify (ADifferentPolicy)
 
     ...
 
-    ## no critic (YetAnotherPolicy)
+    ## no mogrify (YetAnotherPolicy)
 
 If I want to turn C<YetAnotherPolicy> back on but neither C<SomePolicy> nor
 C<ADifferentPolicy>, I've got to do this:
 
-    ## use critic
-    ## no critic (SomePolicy, ADifferentPolicy)
+    ## use mogrify
+    ## no mogrify (SomePolicy, ADifferentPolicy)
 
 Why can't I do this:
 
-    ## use critic (SomeOtherPolicy)
+    ## use mogrify (SomeOtherPolicy)
 
 
 =item * Make color work on Windows.
@@ -568,18 +568,18 @@ isn't necessary.
 
 =item * Give L<Perl::Mogrify::Command> a proper API.
 
-Now that we've got the guts of L<perlcritic> in there, we should make the
+Now that we've got the guts of L<perlmogrify> in there, we should make the
 it available to users.
 
 
 =item * Create constants for the PPI location array elements.
 
-=item * Some means of detecting "runaway" C<##no critic>
+=item * Some means of detecting "runaway" C<##no mogrify>
 
 Elliot was talking to a couple of users at ETech and one of their major
-concerns was that they were using C<##no critic> and forgetting to do a
-C<##use critic> after the problematic section.  Perhaps an option to
-F<perlcritic> to scan for such things is in order.
+concerns was that they were using C<##no mogrify> and forgetting to do a
+C<##use mogrify> after the problematic section.  Perhaps an option to
+F<perlmogrify> to scan for such things is in order.
 
 
 =item * Change API to use named parameters
@@ -591,22 +591,22 @@ Static methods can still use positional parameters.
 
 =item * Enhance P::C::critique() to accept files, directories, or code strings
 
-Just like F<bin/perlcritic> does now.
+Just like F<bin/perlmogrify> does now.
 
 
-=item * Add C<-cache> flag to F<bin/perlcritic>
+=item * Add C<-cache> flag to F<bin/perlmogrify>
 
 If enabled, this turns on L<PPI::Cache|PPI::Cache>:
 
     require PPI::Cache;
-    my $cache_path = "/tmp/test-perl-critic-cache-$ENV{USER}";
+    my $cache_path = "/tmp/test-perl-mogrify-cache-$ENV{USER}";
     mkdir $cache_path, oct 700 if (! -d $cache_path);
     PPI::Cache->import(path => $cache_path);
 
 This cache directory should perhaps include the PPI version number!  At least
 until PPI incorporates its own version number in the cache.
 
-(see F<t/40_criticize.t> for a more robust implementation)
+(see F<t/40_mogrifyize.t> for a more robust implementation)
 
 
 =item * Use hash-lookup instead of C<List::MoreUtils::any> function.

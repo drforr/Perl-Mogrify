@@ -32,7 +32,7 @@ in L<Perl::Mogrify/EXTENDING THE CRITIC>. The F<commits> mailing list
 is another good one.
 
 ** You will need to be registered as a developer before you can
-actually change code. L<http://perlcritic.tigris.org/> only lets you
+actually change code. L<http://perlmogrify.tigris.org/> only lets you
 register as an observer. I got promoted on registration, but if that
 doesn't happen, a note to the developers' mailing list might help.
 
@@ -81,11 +81,11 @@ This is not recommended.
     Issue the following commands (we assume '$ ' is your system prompt):
 
     $ svn copy
-        http://perlcritic.tigris.org/svn/perlcritic/trunk/distributions/Perl-Mogrify
-        http://perlcritic.tigris.org/svn/perlcritic/branches/rt25046
+        http://perlmogrify.tigris.org/svn/perlmogrify/trunk/distributions/Perl-Mogrify
+        http://perlmogrify.tigris.org/svn/perlmogrify/branches/rt25046
         -m "Put your comment here" --username your_username
 
-    $ svn checkout http://perlcritic.tigris.org/svn/perlcritic/branches/rt25046
+    $ svn checkout http://perlmogrify.tigris.org/svn/perlmogrify/branches/rt25046
         --username your_username
 
 The 'svn copy' command is the one that does the branch. Each 'svn'
@@ -146,7 +146,7 @@ details.
 
 =head1 ADDING A GLOBAL CONFIGURATION ITEM
 
-Perlcritic handles global configuration items and command line options
+Perlmogrify handles global configuration items and command line options
 in very similar ways. These notes will cover adding both a global
 configuration item and a corresponding, same-named command option.
 These notes can not, of course, cover implementing the functionality
@@ -227,7 +227,7 @@ In the case of multi-valued items, the accessor must return the array
 reference, so the above specimen code works in that case also.
 
 Note that no validation is done here -- this class is simply a bridge
-between the physical F<.perlcriticrc> file and
+between the physical F<.perlmogrifyrc> file and
 L<Perl::Mogrify::Config|Perl::Mogrify::Config>, which is where the
 action is.
 
@@ -282,13 +282,13 @@ If your new item has no corresponding global configuration item, you
 do not need to change this file.
 
 
-=head3 F<bin/perlcriticrc>
+=head3 F<bin/perlmogrifyrc>
 
 If your new item has a corresponding command option, you must document
 it here. If it does not, you do not need to change this file.
 
 
-=head3 F<examples/perlcriticrc>
+=head3 F<examples/perlmogrifyrc>
 
 If your new item has a corresponding global configuration item, you
 must add it here. If it does not, you do not need to change this file.
@@ -300,7 +300,7 @@ The following test files must be considered for modification:
 
     t/00_modules.t
     t/01_config.t
-    t/01_config_bad_perlcritic.t
+    t/01_config_bad_perlmogrify.t
     t/04_options_processor.t
     t/07_command.t
     t/10_user_profile.t

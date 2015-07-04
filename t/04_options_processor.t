@@ -20,7 +20,7 @@ our $VERSION = '1.125';
 
 {
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
-    my $color = -t *STDOUT ? $TRUE : $FALSE; ## no critic (ProhibitInteractiveTest)
+    my $color = -t *STDOUT ? $TRUE : $FALSE; ## no mogrify (ProhibitInteractiveTest)
 
     my $processor = Perl::Mogrify::OptionsProcessor->new();
     is($processor->force(),    0,           'native default force');
@@ -31,7 +31,7 @@ our $VERSION = '1.125';
     is($processor->color(),    $color,      'native default color');
     is($processor->pager(),    q{},         'native default pager');
     is($processor->verbose(),  4,           'native default verbose');
-    is($processor->criticism_fatal,   0,    'native default criticism-fatal');
+    is($processor->mogrification_fatal,   0,    'native default mogrification-fatal');
     is_deeply($processor->include(), [],    'native default include');
     is_deeply($processor->exclude(), [],    'native default exclude');
     is($processor->color_severity_highest(),
@@ -65,7 +65,7 @@ our $VERSION = '1.125';
          color     => $FALSE,
          pager     => 'less',
          verbose   => 7,
-         'criticism-fatal'   => 1,
+         'mogrification-fatal'   => 1,
          include   => 'foo bar',
          exclude   => 'baz nuts',
          'color-severity-highest'   => 'chartreuse',
@@ -85,7 +85,7 @@ our $VERSION = '1.125';
     is($processor->color(),    $FALSE,      'user default color');
     is($processor->pager(),    'less',      'user default pager');
     is($processor->verbose(),  7,           'user default verbose');
-    is($processor->criticism_fatal(),  1,   'user default criticism_fatal');
+    is($processor->mogrification_fatal(),  1,   'user default mogrification_fatal');
     is_deeply($processor->include(), [ qw(foo bar) ], 'user default include');
     is_deeply($processor->exclude(), [ qw(baz nuts)], 'user default exclude');
     is($processor->color_severity_highest(),

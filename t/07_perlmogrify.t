@@ -14,17 +14,17 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-my $perlcritic = File::Spec->catfile( qw(blib script perlcritic) );
-if (not -e $perlcritic) {
-    $perlcritic = File::Spec->catfile( qw(bin perlcritic) )
+my $perlmogrify = File::Spec->catfile( qw(blib script perlmogrify) );
+if (not -e $perlmogrify) {
+    $perlmogrify = File::Spec->catfile( qw(bin perlmogrify) )
 }
 
-require_ok($perlcritic);
+require_ok($perlmogrify);
 
 #-----------------------------------------------------------------------------
 
 # ensure we return true if this test is loaded by
-# t/07_perlcritic.t_without_optional_dependencies.t
+# t/07_perlmogrify.t_without_optional_dependencies.t
 1;
 
 # Local Variables:
