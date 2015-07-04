@@ -13,8 +13,8 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Octal literals must be of form :8<0123_4567>};
-Readonly::Scalar my $EXPL => q{Format octal literals};
+Readonly::Scalar my $DESC => q{Transforms 0o11 and 011 into :8<11>};
+Readonly::Scalar my $EXPL => q{Perl6 octal integers look like :8<0011>};
 
 #-----------------------------------------------------------------------------
 
@@ -44,9 +44,9 @@ sub violates {
             my $old_content = $token->content;
 
             #
-            # Remove leading '0o'
+            # Remove leading '0o' or '0'
             #
-            $old_content =~ s{^0o}{}i;
+            $old_content =~ s{^0[o]?}{}i;
 
             my $new_content = ':8<' . $old_content . '>';
             $token->set_content( $new_content );
@@ -79,14 +79,13 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 octal literals have the format ':8<0123_4567>'. This enforcer reformats Perl5 octal literals to the Perl6 specification:
+Perl6 octal literals have the format ':8<01_01_01_01>'. PPI treats leading-0 and 0o numbers the same. Existing separators are preserved:
 
-  0o12      -> :8<12>
-  0o1234    -> :8<1234>
-  0o123_45  -> :8<123_45>
+  001      -> :8<01>
+  0o0167   -> :8<0167>
+  0o010_10 -> :8<010_10>
 
-If an octal literal is used anywhere than as a standalone number, this enforcer does not apply.
-
+Transforms octal numbers outside of comments, heredocs, strings and POD.
 =head1 CONFIGURATION
 
 This Transformer is not configurable except for the standard options.

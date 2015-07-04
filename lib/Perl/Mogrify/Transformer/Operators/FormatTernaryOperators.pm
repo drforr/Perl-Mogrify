@@ -13,10 +13,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Binary operators should be formatted to their Perl6 equivalents};
+Readonly::Scalar my $DESC => q{The ternary operator is now $x ?? 1 !! 2};
 Readonly::Scalar my $EXPL =>
-    q{Format binary operators to their Perl6 equivalents};
+    q{The ternary operator has changed from ?: to ??!!};
 
 #-----------------------------------------------------------------------------
 
@@ -86,7 +85,9 @@ The Perl6 ternary operator is C<1 ?? 2 !! 3>:
 
   $x = $y > 1 ? 0 : 1 --> $x = $y > 1 ?? 0 !! 1;
 
-This enforcer only operates on standalone ternary operators.
+Transform
+
+Transforms ternary operators outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

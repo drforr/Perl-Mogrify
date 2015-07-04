@@ -13,8 +13,8 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Binary literals must be of form :2<0101_0101>};
-Readonly::Scalar my $EXPL => q{Format binary literals};
+Readonly::Scalar my $DESC => q{Transforms 0b0011 into :2<0011>};
+Readonly::Scalar my $EXPL => q{Perl6 binary integers look like :2<0011>};
 
 #-----------------------------------------------------------------------------
 
@@ -78,13 +78,13 @@ This Transformer is part of the core L<Perl::Mogrify|Perl::Mogrify> distribution
 
 =head1 DESCRIPTION
 
-Perl6 binary literals have the format ':2<01_01_01_01>'. This enforcer reformats Perl5 binary literals to the Perl6 specification.
+Perl6 binary literals have the format ':2<01_01_01_01>'. Existing separators are preserved:
 
-  0b01      -> :2<01>
-  0b0101    -> :2<0101>
-  0b010_10    -> :2<010_10>
+  0b01     -> :2<01>
+  0b0101   -> :2<0101>
+  0b010_10 -> :2<010_10>
 
-If a binary literal is used anywhere than as a standalone number, this enforcer does not apply.
+Transforms binary numbers outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

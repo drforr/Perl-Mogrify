@@ -13,9 +13,8 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{"${x}" in interpolated strings is now "{$x}"};
-Readonly::Scalar my $EXPL => q{Format "${x}" expressions correctly};
+Readonly::Scalar my $DESC => q{"${x}" is now "{$x}"};
+Readonly::Scalar my $EXPL => q{Braces in Perl6 now delimit code blocks, so {x} is interpreted as {x()}};
 
 #-----------------------------------------------------------------------------
 
@@ -85,13 +84,13 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 interpolation of variables lets you use C<{$x}> where the C<{}> can contain any expression. This enforcer reformats C<${x}> to C<{$x}> in your interpolated strings.
+In Perl6, contents inside {} are now executable code. That means that inside interpolated strings, C<"${x}"> will be parsed as C<"${x()}"> and throw an exception if C<x()> is not defined. As such, this transforms C<"${x}"> into C<"{$x}">:
 
   "The $x bit"      --> "The $x bit"
   "The ${x}rd bit"  --> "The {$x}rd bit"
   "The \${x}rd bit" --> "The \$\{x\}rd bit"
 
-This enforcer only operates in quoted strings, heredocs present another issue.
+Transforms only interpolated strings outside of comments, heredocs and POD.
 
 =head1 CONFIGURATION
 

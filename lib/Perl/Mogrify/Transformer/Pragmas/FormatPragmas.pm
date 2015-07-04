@@ -14,10 +14,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Remove unnecessary pragmas, such as strict, warnings and old versions};
+Readonly::Scalar my $DESC => q{Delete unnecessary pragmas};
 Readonly::Scalar my $EXPL =>
-    q{Remove unnecessary pragmas, such as strict, warnings and old versions};
+    q{Pragmas such as 'strict', 'warnings', 'utf8' and 'version' are unnecessary or redundant};
 
 #-----------------------------------------------------------------------------
 
@@ -86,13 +85,17 @@ distribution.
 
 =head1 DESCRIPTION
 
-Enforces the rule that Perl6 no longer needs certain pragmas. More specifically, it removes all core pragmas except C<v6>, C<constant>, C<base> and C<parent>. The C<v6> pragma remains untouched, C<constant> is transmogrified into <constant FOO = 1>, C<base> and C<parent> are added to the class declaration.
+Removes uneeded Perl5 pragmas. More specifically, it removes all core pragmas except C<v6>, C<constant>, C<base> and C<parent>. The C<v6> pragma remains untouched, C<constant> will be transformed later into <constant FOO = 1>, C<base> and C<parent> are added to the class declaration:
 
   use strict; --> ''
   no strict 'refs'; --> ''
   use warnings; --> ''
   use constant FOO => 1; --> use constant FOO => 1;
   use base qw(Foo); --> use base qw(Foo);
+
+Transforms pragmas outside of comments, heredocs, strings and POD.
+
+The 'constant', 'base' and 'parent' pragmas are left untouched for later transformers, so that they can do their Perl6 things.
 
 =head1 CONFIGURATION
 

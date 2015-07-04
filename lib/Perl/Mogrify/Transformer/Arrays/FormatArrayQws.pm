@@ -14,9 +14,9 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC =>
-    q{qw(a b) in perl5 is now qw (a b) due to whitespace rules};
+    q{Transform qw(...) to qw (...)};
 Readonly::Scalar my $EXPL =>
-    q{Format qw(...) to qw (...)};
+    q{qw<>, qw{} &c are fine, but qw() is now a function call. Add ' ' to avoid this};
 
 #-----------------------------------------------------------------------------
 
@@ -79,10 +79,11 @@ This Transformer is part of the core L<Perl::Mogrify|Perl::Mogrify> distribution
 
 =head1 DESCRIPTION
 
-Perl6 qw() operates almost exactly like Perl5 qw() but with one corner case - C<qw(a b c)> is treated as a function call. This Transformer places a whitespace between C<qw> and C<(...)> in order to disambiguate, like so:
+Perl6 qw() operates almost exactly like Perl5 qw() but with one corner case - C<qw(a b c)>, like any bareword followed by an open parenthesis, is treated as a function call. This Transformer places a whitespace between C<qw> and C<(...)> in order to disambiguate, like so:
 
   qw(a b c) --> qw (a b c)
   qw{a b c} --> qw{a b c}
+  qw<a b c> --> qw{a b c}
 
 =head1 CONFIGURATION
 

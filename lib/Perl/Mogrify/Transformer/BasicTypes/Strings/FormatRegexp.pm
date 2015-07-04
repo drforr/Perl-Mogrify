@@ -13,10 +13,9 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{qr{...} is now rx{...} - This does NOT convert contents to the new grammar.};
+Readonly::Scalar my $DESC => q{qr{...} is now rx{...} - Does not alter the contents of qr{...}};
 Readonly::Scalar my $EXPL =>
-    q{Format qr{...} as rx{...}. Does not alter the contents to perl6};
+    q{qr{...} is now written as rx{...} - The contents are not rewritten};
 
 #-----------------------------------------------------------------------------
 
@@ -93,13 +92,13 @@ distribution.
 
 Perl6 heredocs no longer need to be quoted
 
-Perl6 interpolation of variables lets you use C<{$x}> where the C<{}> can contain any expression. This enforcer reformats C<${x}> to C<{$x}> in your interpolated strings.
+Perl6 interpolation of variables lets you use C<{$x}> where the C<{}> can contain any expression. Transforms C<${x}> to C<{$x}> in your interpolated strings:
 
   "The $x bit"      --> "The $x bit"
   "The ${x}rd bit"  --> "The {$x}rd bit"
   "The \${x}rd bit" --> "The \$\{x\}rd bit"
 
-This enforcer only operates in quoted strings, heredocs present another issue.
+Transforms qr{} outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

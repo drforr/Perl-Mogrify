@@ -13,10 +13,8 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Heredoc <<EOF; now is q:to/EOF/;};
-Readonly::Scalar my $EXPL =>
-    q{Format heredoc <<EOF as q:to/EOF/};
+Readonly::Scalar my $DESC => q{Transform <<EOF to q:to/EOF/};
+Readonly::Scalar my $EXPL => q{Perl6 heredocs now have more flexibility};
 
 #-----------------------------------------------------------------------------
 
@@ -91,15 +89,15 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 heredocs no longer need to be quoted
+Perl6 heredocs now no longer need to be quoted, and the indentation rules differ from perl5. Specifically the old workaround of C<< <<'  EOF' >> will have surprising results, because your entire heredoc will be indented by the whitespace amount:
 
-Perl6 interpolation of variables lets you use C<{$x}> where the C<{}> can contain any expression. This enforcer reformats C<${x}> to C<{$x}> in your interpolated strings.
+  <<EOF; --> q:to/EOF/;
+  EOF    --> EOF
 
-  "The $x bit"      --> "The $x bit"
-  "The ${x}rd bit"  --> "The {$x}rd bit"
-  "The \${x}rd bit" --> "The \$\{x\}rd bit"
+  <<'  EOF'; --> q:to/EOF/;
+    EOF      --> EOF
 
-This enforcer only operates in quoted strings, heredocs present another issue.
+Transforms only heredocs, not POD or comments.
 
 =head1 CONFIGURATION
 

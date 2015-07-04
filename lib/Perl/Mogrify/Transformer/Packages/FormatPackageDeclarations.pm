@@ -13,10 +13,8 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{'package' is now 'class'};
-Readonly::Scalar my $EXPL =>
-    q{Replace 'package Foo;' with 'unit class Foo;'};
+Readonly::Scalar my $DESC => q{Transform 'package' declaration into 'class'};
+Readonly::Scalar my $EXPL => q{The Perl6 equivalent of packages are classes.};
 
 #-----------------------------------------------------------------------------
 
@@ -81,10 +79,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-The Perl6 equivalent of a Perl5 package is 'class'. Older Perl5 source uses C<package Foo;> while some more modern source uses C<package Foo { .. }> to delineate package boundaries. This enforcer formats both case correctly:
+The Perl6 equivalent of a Perl5 package is 'class'. Older Perl5 source uses C<package Foo;> while some more modern source uses C<package Foo { .. }> to delineate package boundaries:
 
   package Foo; --> unit class Foo;
   package Foo { ... } --> class Foo { ... }
+
+Other transformers will be responsible for ensuring that perl5 classes inherit correctly.
 
 =head1 CONFIGURATION
 

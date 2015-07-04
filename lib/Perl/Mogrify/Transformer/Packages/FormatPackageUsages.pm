@@ -14,10 +14,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{'use Foo;' from perl5 code uses 'use Foo:from<Perl5>;'};
+Readonly::Scalar my $DESC => q{Transform 'use Foo;' to 'use Foo:from<Perl5>;'};
 Readonly::Scalar my $EXPL =>
-    q{'use Foo;' from perl5 code uses 'use Foo:from<Perl5>;'};
+    q{Legacy Perl5 classes can be supported using Inline::Perl5 and the :from<Perl5> adverb};
 
 #-----------------------------------------------------------------------------
 
@@ -78,13 +77,16 @@ distribution.
 
 =head1 DESCRIPTION
 
-This Transformer assumes that you have installed L<Inline::Perl5> in your Perl6 environment, as it uses the C<< :from<Perl5> >> adverb.
+Since this tool's main purpose is helping to migrate legacy code, it assumes that you've installed L<Inline::Perl5> in order to be able to load Perl5 classes.
 
-This Transformer assumes that you are porting existing Perl5 code to work on Perl6, and therefore have not altered it to use Perl6 modules. To that end this Transformer modifies C<use Foo;> declarations to use the Perl5 equivalent module, which is C<< use Foo:from<Perl5>;>>:
+Perl6 can use Perl5 classes through the use of the C<< :from<Perl5> >> adverb. Since this tool is meant to port existing Perl5 code, the transformer assumes that all C<use> statements it sees are for legacy code. Future transformers may migrate L<Test::More> code to Perl6 L<Test> modules:
 
   use Foo; --> use Foo:from<Perl5>;
+  use Foo qw(a b); --> use Foo:from<Perl5> qw(a b);
 
-The C<use> declaration commonly imports functions or variables from external modules, such as C<use Carp qw(croak);>. This enforcer does not alter C<qw(croak)> to the Perl6 style of C<< <croak> >>, that is left to other enforcers.
+Transforms 'use' statements outside of comments, heredocs, strings and POD.
+
+Does B<not> transform C<qw()> statements into their more modern Perl5 C<< <> >> equivalent, that is left to later transformers.
 
 =head1 CONFIGURATION
 

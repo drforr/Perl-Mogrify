@@ -13,10 +13,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Binary operators should be formatted to their Perl6 equivalents};
+Readonly::Scalar my $DESC => q{Transform binary operators to perl6 equivalents};
 Readonly::Scalar my $EXPL =>
-    q{Format binary operators to their Perl6 equivalents};
+    q{Binary operators, notably '->' and '.', change names in Perl6};
 
 #-----------------------------------------------------------------------------
 
@@ -153,7 +152,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Rationals::FormatRationals - Format 1.0, .1, 1. correctly
+Perl::Mogrify::Transformer::Operators::FormatBinaryOperators - Transform binary operators to Perl6 equivalents
 
 
 =head1 AFFILIATION
@@ -164,20 +163,20 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 floating-point values have the format '1.0' where a trailing digit is required. It also optionally adds separators every N digits before the decimal point.
+Several Perl5 operators such as '->' and '.' have changed names, hopefully without changing precedence. Most binary operators transform in straightforward fashion, '->' changes to '.' and '.' changes to '~', but some, like 'x' are more complex and depend upon their context:
 
-  1.0 --> 1.0
-  1.  --> 1.0 # Modified to perl6 standards
-  .1  --> .1
+  1 + 1     --> 1 + 1
+  1 % 7     --> 1 % 7
+  Foo->[0]  --> Foo.[0]
+  Foo->new  --> Foo.new
+  'a' x 7   --> 'a' x 7
+  ('a') x 7 --> 'a' xx 7
 
-This enforcer only operates on stand-alone floating point numbers.
+Transforms operators outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 
-By default this Transformer does not alter '_' separators. Specify 0 for no separators, or a non-negative value if you want separators inserted every N digits:
-
-    [BasicTypes::Rationals::FormatRationals]
-    separators = 3
+This Transformer is not configurable except for the standard options.
 
 =head1 AUTHOR
 

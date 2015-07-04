@@ -13,10 +13,9 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{qx{...} now has a perl5 equivalent qqx{...}};
-Readonly::Scalar my $EXPL =>
-    q{Format qx{...} expression with the perl5 equivalent};
+Readonly::Scalar my $DESC => q{Transform qx{...} to qqx{...}};
+Readonly::Scalar my $EXPL => 
+    q{Perl6 supports qx{}, but the perl5ish version is qqx{}};
 
 #-----------------------------------------------------------------------------
 

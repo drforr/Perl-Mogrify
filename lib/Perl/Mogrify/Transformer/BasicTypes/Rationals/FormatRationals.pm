@@ -13,9 +13,8 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Rationals nust not have a trailing decimal point};
-Readonly::Scalar my $EXPL => q{Format floating-point numbers};
+Readonly::Scalar my $DESC => q{Add trailing 0 after decimal point};
+Readonly::Scalar my $EXPL => q{'1.' is no longer a valid floating-point number fomat};
 
 #-----------------------------------------------------------------------------
 
@@ -84,13 +83,13 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 floating-point values have the format '1.0' where a trailing digit is required.
+Perl6 floating-point values have the format '1.0' where a trailing digit is required:
 
   1.0 --> 1.0
-  1.  --> 1.0 # Modified to perl6 standards
+  1.  --> 1.0
   .1  --> .1
 
-This enforcer only operates on stand-alone floating point numbers.
+Transforms floating-point numbers outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

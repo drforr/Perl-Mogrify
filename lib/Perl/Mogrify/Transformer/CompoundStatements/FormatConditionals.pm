@@ -13,10 +13,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Conditionals such as if(), elsif() and unless() need whitespace};
+Readonly::Scalar my $DESC => q{Transform 'if()' to 'if ()'};
 Readonly::Scalar my $EXPL =>
-    q{Format if(), elsif() and unless() to have a single whitespace};
+    q{if(), elsif() and unless() need whitespace in order to not be interpreted as function calls};
 
 #-----------------------------------------------------------------------------
 
@@ -37,21 +36,24 @@ sub prepare_to_scan_document {
 sub violates {
     my ($self, $elem, $doc) = @_;
 
+    my %conditional = (
+        if => 1,
+        elsif => 1,
+        unless => 1,
+    );
+
     my $conditional = $doc->find('PPI::Statement::Compound');
     if ( $conditional and ref $conditional ) {
         for my $token ( @{ $conditional } ) {
             $token = $token->first_element;
             my $old_content = $token->content;
-            if ( $old_content eq 'if' or
-                 $old_content eq 'elsif' or
-                 $old_content eq 'unless' ) {
-                if ( $token->next_sibling and
-                     !$token->next_sibling->isa('PPI::Token::Whitespace') ) {
-                    my $space = PPI::Token::Whitespace->new();
-                    $space->set_content( ' ' );
-                    $token->insert_after( $space );
-                }
-            }
+            next unless $conditional{$old_content};
+            next unless $token->next_sibling;
+            next if $token->next_sibling->isa('PPI::Token::WHitespace');
+
+            my $space = PPI::Token::Whitespace->new();
+            $space->set_content(' ');
+            $token->insert_after( $space );
         }
     }
 
@@ -81,7 +83,7 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 conditionals still allow parentheses, but must have whitespace between C<if> and C<()>:
+While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<if> and the opening parenthesis to avoid being interpreted as a function call:
 
   if(1) { } --> if (1) { }
   if (1) { } --> if (1) { }

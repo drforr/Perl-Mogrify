@@ -13,8 +13,8 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Hex literals must be of form :16<DEAD_BEEF>};
-Readonly::Scalar my $EXPL => q{Format hexadecimal literals};
+Readonly::Scalar my $DESC => q{Transforms 0x0123 into :16<0123>};
+Readonly::Scalar my $EXPL => q{Perl6 hexadecimal integers look like :16<0123>};
 
 #-----------------------------------------------------------------------------
 
@@ -78,14 +78,13 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 hexadecimal literals have the format ':16<DEAD_BEEF>'. This enforcer reformats Perl5 hexadecimal literals to the Perl6 specification:
+Perl6 binary literals have the format ':2<01_01_01_01>'. Existig separators are preserved:
 
-  0x12      -> :16<12>
-  0xEf      -> :16<Ef>
-  0x12ef    -> :16<12ef>
-  0xEFa_abc -> :16<EFa_abc>
+  0x01     -> :2<01>
+  0x01ef   -> :2<01ef>
+  0x010_ab -> :2<010_ab>
 
-If a hexadecimal literal is used anywhere than as a standalone number, this enforcer does not apply.
+Transforms hexadecimal numbers outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

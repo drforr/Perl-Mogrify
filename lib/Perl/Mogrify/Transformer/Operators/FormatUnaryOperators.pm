@@ -13,10 +13,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Binary operators should be formatted to their Perl6 equivalents};
+Readonly::Scalar my $DESC => q{Transform unary operators to perl6 equivalents};
 Readonly::Scalar my $EXPL =>
-    q{Format binary operators to their Perl6 equivalents};
+    q{Unary operators, notably '^' and '!', change names in Perl6};
 
 #-----------------------------------------------------------------------------
 
@@ -67,9 +66,9 @@ sub violates {
     my $operator = $doc->find('PPI::Token::Operator');
     if ( $operator and ref $operator ) {
         for my $token ( @{ $operator } ) {
-#            my $old_content = $token->content;
-# 
-#            $token->set_content( $new_content );
+            my $old_content = $token->content;
+ 
+            $token->set_content( $new_content );
         }
     }
 
@@ -88,7 +87,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Rationals::FormatRationals - Format 1.0, .1, 1. correctly
+Perl::Mogrify::Transformer::Operators::FormatUnaryOperators - Transform '^', '!' &c to Perl6 equivalents
 
 
 =head1 AFFILIATION
@@ -99,20 +98,16 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 floating-point values have the format '1.0' where a trailing digit is required. It also optionally adds separators every N digits before the decimal point.
+Some unary operators in Perl5 have been renamed in Perl6. For instance, the various negations such as '~', '^' and '!' have been unified under '^', and the previous numeric, logical and Boolean contexts are now represented in the first character, so '!' is now '?^' to repreent Boolean ('?') negation ('^'):
 
-  1.0 --> 1.0
-  1.  --> 1.0 # Modified to perl6 standards
-  .1  --> .1
+  ~32 --> +^32
+  !$x --> ?^$x
 
-This enforcer only operates on stand-alone floating point numbers.
+Transforms operators outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 
-By default this Transformer does not alter '_' separators. Specify 0 for no separators, or a non-negative value if you want separators inserted every N digits:
-
-    [BasicTypes::Rationals::FormatRationals]
-    separators = 3
+This Transformer is not configurable except for the standard options.
 
 =head1 AUTHOR
 
