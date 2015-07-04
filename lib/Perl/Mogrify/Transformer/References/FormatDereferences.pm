@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::BasicTypes::Integers::FormatHexLiterals;
+package Perl::Mogrify::Transformer::References::FormatDereferences;
 
 use 5.006001;
 use strict;
@@ -13,33 +13,42 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transforms 0x0123 into :16<0123>};
-Readonly::Scalar my $EXPL => q{Perl6 hexadecimal integers look like :16<0123>};
+Readonly::Scalar my $DESC => q{Transform %x{a} to %x{'a'}};
+Readonly::Scalar my $EXPL =>
+    q{Perl6 assumes that braces are code blocks, so any content must be compilable};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Number::Hex' }
+sub applies_to           { return 'PPI::Token::Cast' }
 
 #-----------------------------------------------------------------------------
 
 #
-# 0x1_2eF -> :16<1_2ef>
+# %foo{'a'} --> %foo{'a'}
+# %foo{a}   --> %foo{'a'}
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
+    my $next = $elem->next_sibling;
 
-    my $old_content = $elem->content;
+    return if $next->isa('PPI::Token::Symbol');
+    # Two casts in a row, like \% in \%{"$pack\:\:SUBS"} .
+    return if $next->isa('PPI::Token::Cast') and
+              $elem->content eq '\\';
+    # \( $x, $y ) is not the construct we are looking for.
+    return if $next->isa('PPI::Structure::List') and
+              $elem->content eq '\\';
 
-    #
-    # Remove leading '0x' and optional leading underscore
-    #
-    $old_content =~ s{^0x[_]?}{}i;
+    return unless $next->isa('PPI::Structure::Block');
+    return unless $next->start->content eq '{' and
+                  $next->finish->content eq '}';
 
-    my $new_content = ':16<' . $old_content . '>';
-    $elem->set_content( $new_content );
+    # %{...} becomes %(...). Same with @{...} and ${...}.
+    $next->start->set_content('(');
+    $next->finish->set_content(')');
 
     return $self->violation( $DESC, $EXPL, $elem );
 }
@@ -54,7 +63,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Integers::FormatHexLiterals - Format 0x1234 properly
+Perl::Mogrify::Transformer::References::FormatDereferences - Transform %{$foo} to %($foo)
 
 
 =head1 AFFILIATION
@@ -65,14 +74,14 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 binary literals have the format ':2<01_01_01_01>'. Existig separators are preserved:
+Perl6 dereferencing uses C<%()> and C<@()> because C<()> would be a code block otherwise:
 
-  0x01     -> :16<01>
-  0x01ef   -> :16<01ef>
-  0x010_ab -> :16<010_ab>
-  0x_010_ab -> :16<010_ab>
+  %{$foo} --> %($foo)
+  %$foo   --> %$foo
+  @{$foo} --> @($foo)
+  @$foo   --> @$foo
 
-Transforms hexadecimal numbers outside of comments, heredocs, strings and POD.
+Transforms dereferences outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

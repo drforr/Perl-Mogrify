@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::BasicTypes::Integers::FormatHexLiterals;
+package Perl::Mogrify::Transformer::Variables::FormatHashKeys;
 
 use 5.006001;
 use strict;
@@ -13,33 +13,38 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transforms 0x0123 into :16<0123>};
-Readonly::Scalar my $EXPL => q{Perl6 hexadecimal integers look like :16<0123>};
+Readonly::Scalar my $DESC => q{Transform %x{a} to %x{'a'}};
+Readonly::Scalar my $EXPL =>
+    q{Perl6 assumes that braces are code blocks, so any content must be compilable};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Number::Hex' }
+sub applies_to           { return 'PPI::Structure::Subscript' }
 
 #-----------------------------------------------------------------------------
 
 #
-# 0x1_2eF -> :16<1_2ef>
+# %foo{'a'} --> %foo{'a'}
+# %foo{a}   --> %foo{'a'}
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
+    return unless $elem->start eq '{' and $elem->finish eq '}';
+    return unless $elem->sprevious_sibling->isa('PPI::Token::Symbol');
 
-    my $old_content = $elem->content;
+    my $bareword = $elem->child(0)->child(0);
 
-    #
-    # Remove leading '0x' and optional leading underscore
-    #
-    $old_content =~ s{^0x[_]?}{}i;
+    my $old_content = $bareword->content;
 
-    my $new_content = ':16<' . $old_content . '>';
-    $elem->set_content( $new_content );
+    my $new_content = "'" . $old_content . "'";
+
+    my $word = PPI::Token::Quote::Single->new($new_content);
+
+    $bareword->insert_after($word);
+    $bareword->delete;
 
     return $self->violation( $DESC, $EXPL, $elem );
 }
@@ -54,7 +59,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Integers::FormatHexLiterals - Format 0x1234 properly
+Perl::Mogrify::Transformer::Variables::FormatHashKeys - Transform bareword hash keys into quoted hash keys
 
 
 =head1 AFFILIATION
@@ -65,14 +70,14 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 binary literals have the format ':2<01_01_01_01>'. Existig separators are preserved:
+Anything enclosed in braces should be compilable code in Perl6, and unfortunately bareword hash keys such as C<%foo{a}> are interpreted as C<%foo{a()}>, so when the function a() can't be found, the block fails to compile:
 
-  0x01     -> :16<01>
-  0x01ef   -> :16<01ef>
-  0x010_ab -> :16<010_ab>
-  0x_010_ab -> :16<010_ab>
+  %foo{a} --> %foo{'a'}
+  %foo{'a'} --> %foo{'a'}
 
-Transforms hexadecimal numbers outside of comments, heredocs, strings and POD.
+Using angle brackets as in C<< %foo<a> >> would be more Perl6 style, but this is a change that most people will immediately understand.
+
+Transforms variables outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

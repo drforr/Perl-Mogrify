@@ -35,9 +35,9 @@ sub transform {
     my $old_content = $elem->content;
 
     #
-    # Remove leading '0b'
+    # Remove leading '0b' and optional leading underscore
     #
-    $old_content =~ s{^0b}{}i;
+    $old_content =~ s{^0b[_]?}{}i;
 
     my $new_content = ':2<' . $old_content . '>';
     $elem->set_content( $new_content );
@@ -70,6 +70,7 @@ Perl6 binary literals have the format ':2<01_01_01_01>'. Existing separators are
   0b01     -> :2<01>
   0b0101   -> :2<0101>
   0b010_10 -> :2<010_10>
+  0b_010_10 -> :2<010_10>
 
 Transforms binary numbers outside of comments, heredocs, strings and POD.
 

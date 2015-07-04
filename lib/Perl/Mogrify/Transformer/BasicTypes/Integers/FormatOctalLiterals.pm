@@ -35,9 +35,9 @@ sub transform {
     my $old_content = $elem->content;
 
     #
-    # Remove leading '0o' or '0'
+    # Remove leading '0o' or '0' and optional leading underscore
     #
-    $old_content =~ s{^0[o]?}{}i;
+    $old_content =~ s{^0[o]?[_]?}{}i;
 
     my $new_content = ':8<' . $old_content . '>';
     $elem->set_content( $new_content );
@@ -71,6 +71,7 @@ Perl6 octal literals have the format ':8<01_01_01_01>'. PPI treats leading-0 and
   001      -> :8<01>
   0o0167   -> :8<0167>
   0o010_10 -> :8<010_10>
+  0o_010_10 -> :8<010_10>
 
 Transforms octal numbers outside of comments, heredocs, strings and POD.
 =head1 CONFIGURATION
