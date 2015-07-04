@@ -31,6 +31,12 @@ sub applies_to           { return 'PPI::Document'   }
 sub violates {
     my ($self, $elem, $doc) = @_;
     my $modified;
+    my %excluded_pragma = (
+        v6 => 1,
+        constant => 1, # 'use constant FOO => 1' --> 'constant FOO = 1' later
+        base => 1, # 'use base "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
+        parent => 1, # 'use parent "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
+    );
 
     my $tokens = $doc->find('PPI::Statement::Include');
     if ( $tokens ) {
@@ -47,8 +53,7 @@ sub violates {
             my $package_name = $pragma->child(2);
             next unless is_version_number($package_name) or
                         is_pragma($package_name);
-            next if $package_name->content eq 'v6';
-            next if $package_name->content eq 'constant';
+            next if exists $excluded_pragma{$package_name->content};
 
             $modified = 1;
             $pragma->remove;
@@ -81,13 +86,13 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 no longer needs or uses 'strict' or 'warnings' pragmas. This enforcer removes all references to the 'strict' and 'warnings' pragmas, whether they be C<use strict;>, C<no strict 'refs';> or just C<use warnings;>:
+Enforces the rule that Perl6 no longer needs certain pragmas. More specifically, it removes all core pragmas except C<v6>, C<constant>, C<base> and C<parent>. The C<v6> pragma remains untouched, C<constant> is transmogrified into <constant FOO = 1>, C<base> and C<parent> are added to the class declaration.
 
-  use strict; -->
-  no strict 'refs'; -->
-  use warnings; --
-
-Note that 'use constant' is not a pragma for the purposes of this Enforcer. This is because later on C<<use constant FOO => 1>> declarations will be replaced wit C<constant FOO = 1> declarations.
+  use strict; --> ''
+  no strict 'refs'; --> ''
+  use warnings; --> ''
+  use constant FOO => 1; --> use constant FOO => 1;
+  use base qw(Foo); --> use base qw(Foo);
 
 =head1 CONFIGURATION
 

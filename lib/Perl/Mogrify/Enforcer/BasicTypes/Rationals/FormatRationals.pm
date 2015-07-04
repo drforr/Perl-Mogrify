@@ -41,13 +41,17 @@ sub violates {
     # 1. --> 1.0
 
     my $floating_point = $doc->find('PPI::Token::Number::Float');
+    my $modified;
     if ( $floating_point and ref $floating_point ) {
         for my $token ( @{ $floating_point } ) {
             my $old_content = $token->content;
  
             my ( $lhs, $rhs ) = split( '\.', $old_content );
  
-            $rhs = '0' if $rhs eq '';
+            if ( $rhs eq '' ) {
+                $modified = 1;
+                $rhs = '0' if $rhs eq '';
+            }
             my $new_content = $lhs . '.' . $rhs;
  
             $token->set_content( $new_content );
@@ -55,7 +59,7 @@ sub violates {
     }
 
     return $self->violation( $DESC, $EXPL, $elem )
-        if $floating_point and ref $floating_point;
+        if $modified;
     return;
 }
 

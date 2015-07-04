@@ -74,13 +74,12 @@ Perl::Mogrify::Enforcer::Array::FormatArrayQws - Format qw() to qw ()
 
 =head1 AFFILIATION
 
-This Enforcer is part of the core L<Perl::Mogrify|Perl::Mogrify>
-distribution.
+This Enforcer is part of the core L<Perl::Mogrify|Perl::Mogrify> distribution.
 
 
 =head1 DESCRIPTION
 
-Perl6 qw() operates almost exactly like Perl5 qw() but with one corner case - C<qw(a b c)> is treated as a function all. This Enforcer adds a single space in order to clear this problem up:
+Perl6 qw() operates almost exactly like Perl5 qw() but with one corner case - C<qw(a b c)> is treated as a function call. This Enforcer places a whitespace between C<qw> and C<(...)> in order to disambiguate, like so:
 
   qw(a b c) --> qw (a b c)
   qw{a b c} --> qw{a b c}

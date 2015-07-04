@@ -162,11 +162,26 @@ sub is_pragma {
     return unless $element->isa('PPI::Token::Word');
     my $content = $element->content;
 
-    return 1 if $content eq 'strict';
-    return 1 if $content eq 'warnings';
-    return 1 if $content eq 'overload';
-    return 1 if $content eq 'constant';
-    return 1 if $content eq 'utf8';
+    my %pragma = (
+        strict => 1,
+        warnings => 1,
+        autodie => 1,
+        base => 1,
+        parent => 1,
+        bigint => 1,
+        bignum => 1,
+	bigrat => 1,
+	constant => 1,
+	mro => 1,
+	encoding => 1,
+	integer => 1,
+	lib => 1,
+	mro => 1,
+	utf8 => 1,
+	vars => 1,
+    );
+
+    return 1 if exists $pragma{$content};
 
     return;
 }
