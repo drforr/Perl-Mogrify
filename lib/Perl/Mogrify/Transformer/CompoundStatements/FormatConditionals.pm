@@ -27,9 +27,11 @@ sub applies_to           { return 'PPI::Statement::Compound' }
 #-----------------------------------------------------------------------------
 
 my %conditional = (
-    if => 1,
-    elsif => 1,
+    if     => 1,
+    elsif  => 1,
     unless => 1,
+    while  => 1,
+    until  => 1,
 );
 
 sub transform {
