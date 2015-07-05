@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals;
+package Perl::Mogrify::Transformer::CompoundStatements::FormatGivens;
 
 use 5.006001;
 use strict;
@@ -13,36 +13,25 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform 'if()' to 'if ()'};
+Readonly::Scalar my $DESC => q{Transform 'given()' to 'given ()'};
 Readonly::Scalar my $EXPL =>
-    q{if(), elsif() and unless() need whitespace in order to not be interpreted as function calls};
+    q{unless() needs whitespace in order to not be interpreted as a function call};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::Compound' }
+sub applies_to           { return 'PPI::Statement::Given' }
 
 #-----------------------------------------------------------------------------
-
-my %conditional = (
-    if      => 1,
-    elsif   => 1,
-    unless  => 1,
-    while   => 1,
-    until   => 1,
-    for     => 1,
-    foreach => 1,
-);
 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $token = $elem->first_element;
+    return unless $token->content eq 'given';
 
-    my $old_content = $token->content;
-    return unless $conditional{$old_content};
     return unless $token->next_sibling;
     return if $token->next_sibling->isa('PPI::Token::Whitespace');
 
@@ -63,7 +52,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals - Format if(), elsif(), unless()
+Perl::Mogrify::Transformer::CompoundStatements::FormatGivens - Format given()
 
 
 =head1 AFFILIATION
@@ -74,10 +63,10 @@ distribution.
 
 =head1 DESCRIPTION
 
-While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<if> and the opening parenthesis to avoid being interpreted as a function call:
+While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<given> and the opening parenthesis to avoid being interpreted as a function call:
 
-  if(1) { } --> if (1) { }
-  if (1) { } --> if (1) { }
+  given(1) { } --> given (1) { }
+  given (1) { } --> given (1) { }
 
 =head1 CONFIGURATION
 
