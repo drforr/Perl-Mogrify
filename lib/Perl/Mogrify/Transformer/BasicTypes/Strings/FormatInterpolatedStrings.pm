@@ -13,43 +13,40 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{XXX SPLIT ME "${x}" is now "{$x}"};
-Readonly::Scalar my $EXPL => q{XXX SPLIT ME Braces in Perl6 now delimit code blocks, so {x} is interpreted as {x()}};
+Readonly::Scalar my $DESC => q{"${x}" is now "{$x}"};
+Readonly::Scalar my $EXPL => q{Braces in Perl6 now delimit code blocks, so {x} is interpreted as {x()}};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
+sub applies_to {
+    return 'PPI::Token::Quote::Interpolate',
+           'PPI::Token::Quote::Double';
+}
 
 #-----------------------------------------------------------------------------
 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # "$x" --> "$x"
-    # "${x}" --> "{$x}"
+    # "\v"    --> ""
+    # "$x"    --> "$x"
+    # "$x-30" --> "$x\-30"
+    # "${x}"  --> "{$x}"
     # "\${x}" --> "\$\{x\}"
 
-    my $interpolated = $doc->find('PPI::Token::Quote::Interpolate');
-    my $double = $doc->find('PPI::Token::Quote::Double');
+    my $old_content = $elem->content;
 
-    my $string = [ ];
-    push @{ $string }, @{ $interpolated }
-        if $interpolated and ref $interpolated;
-    push @{ $string }, @{ $double }
-        if $double and ref $double;
+    $old_content =~ s{\\v}{}g;
+    $old_content =~ s{\\l\$x}{{lc \$x}}g;
+    $old_content =~ s{\\u\$x}{{uc \$x}}g;
+    $old_content =~ s{(\$\w+)-}{$1\-}g;
+    $old_content =~ s{\\N\{(\w+)\}}{\\c[$1]};
+    $old_content =~ s{ (?: ^ | [^\\] ) \$\{(\w+)\} }{ '{$'.$1.'}' }gex;
 
-    if ( $string and ref $string ) {
-        for my $token ( @{ $string } ) {
-            my $old_content = $token->content;
- 
-            $old_content =~ s{ (?: ^ | [^\\] ) \$\{(\w+)\} }{ '{$'.$1.'}' }gex;
- 
-            $token->set_content( $old_content );
-        }
-    }
+    $elem->set_content( $old_content );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -78,6 +75,9 @@ distribution.
 In Perl6, contents inside {} are now executable code. That means that inside interpolated strings, C<"${x}"> will be parsed as C<"${x()}"> and throw an exception if C<x()> is not defined. As such, this transforms C<"${x}"> into C<"{$x}">:
 
   "The $x bit"      --> "The $x bit"
+  "The $x-30 bit"   --> "The $x\-30 bit"
+  "The \l$x bit"    --> "The {lc $x} bit"
+  "The \v bit"      --> "The  bit"
   "The ${x}rd bit"  --> "The {$x}rd bit"
   "The \${x}rd bit" --> "The \$\{x\}rd bit"
 
