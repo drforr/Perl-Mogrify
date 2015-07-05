@@ -52,7 +52,7 @@ sub transform {
 
     $elem->set_content( $content );
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

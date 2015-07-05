@@ -46,7 +46,7 @@ sub transform {
     $bareword->insert_after($word);
     $bareword->delete;
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

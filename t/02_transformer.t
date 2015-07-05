@@ -25,7 +25,7 @@ use base 'Perl::Mogrify::Transformer';
 package TransformerTestOverriddenDefaultMaximumViolations;
 use base 'Perl::Mogrify::Transformer';
 
-sub default_maximum_violations_per_document { return 31; }
+sub default_maximum_transformations_per_document { return 31; }
 
 #-----------------------------------------------------------------------------
 
@@ -55,31 +55,31 @@ ok( !! $p->is_safe(), 'is_safe() returns a true value by default.' );
 is($p->applies_to(), 'PPI::Element', 'applies_to()');
 
 
-# Test default maximum violations per document...
+# Test default maximum transformations per document...
 is(
-    $p->default_maximum_violations_per_document(),
+    $p->default_maximum_transformations_per_document(),
     undef,
-    'default_maximum_violations_per_document()',
+    'default_maximum_transformations_per_document()',
 );
 is(
-    $p->get_maximum_violations_per_document(),
+    $p->get_maximum_transformations_per_document(),
     undef,
-    'get_maximum_violations_per_document()',
+    'get_maximum_transformations_per_document()',
 );
 
-# Change maximum violations level...
-$p->set_maximum_violations_per_document(3);
+# Change maximum transformations level...
+$p->set_maximum_transformations_per_document(3);
 
-# Test maximum violations again...
+# Test maximum transformations again...
 is(
-    $p->default_maximum_violations_per_document(),
+    $p->default_maximum_transformations_per_document(),
     undef,
-    q<default_maximum_violations_per_document() hasn't changed>,
+    q<default_maximum_transformations_per_document() hasn't changed>,
 );
 is(
-    $p->get_maximum_violations_per_document(),
+    $p->get_maximum_transformations_per_document(),
     3,
-    q<get_maximum_violations_per_document() returns new value>,
+    q<get_maximum_transformations_per_document() returns new value>,
 );
 
 
@@ -92,31 +92,31 @@ is(
     'is_enabled() initially returns undef',
 );
 
-# Test default maximum violations per document...
+# Test default maximum transformations per document...
 is(
-    $overridden_default->default_maximum_violations_per_document(),
+    $overridden_default->default_maximum_transformations_per_document(),
     31,
-    'default_maximum_violations_per_document() overridden',
+    'default_maximum_transformations_per_document() overridden',
 );
 is(
-    $overridden_default->get_maximum_violations_per_document(),
+    $overridden_default->get_maximum_transformations_per_document(),
     31,
-    'get_maximum_violations_per_document() overridden',
+    'get_maximum_transformations_per_document() overridden',
 );
 
-# Change maximum violations level...
-$overridden_default->set_maximum_violations_per_document(undef);
+# Change maximum transformations level...
+$overridden_default->set_maximum_transformations_per_document(undef);
 
-# Test maximum violations again...
+# Test maximum transformations again...
 is(
-    $overridden_default->default_maximum_violations_per_document(),
+    $overridden_default->default_maximum_transformations_per_document(),
     31,
-    q<default_maximum_violations_per_document() overridden hasn't changed>,
+    q<default_maximum_transformations_per_document() overridden hasn't changed>,
 );
 is(
-    $overridden_default->get_maximum_violations_per_document(),
+    $overridden_default->get_maximum_transformations_per_document(),
     undef,
-    q<get_maximum_violations_per_document() overridden returns new undefined value>,
+    q<get_maximum_transformations_per_document() overridden returns new undefined value>,
 );
 
 

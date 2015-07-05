@@ -42,7 +42,7 @@ sub transform {
     my $new_content = ':2<' . $old_content . '>';
     $elem->set_content( $new_content );
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

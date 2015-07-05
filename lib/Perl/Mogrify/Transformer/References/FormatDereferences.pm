@@ -50,7 +50,7 @@ sub transform {
     $next->start->set_content('(');
     $next->finish->set_content(')');
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

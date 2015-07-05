@@ -394,23 +394,23 @@ Returns the default C<mogrification-fatal> setting (Either 1 or 0).
 
 =item C< color_severity_highest() >
 
-Returns the color to be used for coloring highest severity violations.
+Returns the color to be used for coloring highest severity transformations.
 
 =item C< color_severity_high() >
 
-Returns the color to be used for coloring high severity violations.
+Returns the color to be used for coloring high severity transformations.
 
 =item C< color_severity_medium() >
 
-Returns the color to be used for coloring medium severity violations.
+Returns the color to be used for coloring medium severity transformations.
 
 =item C< color_severity_low() >
 
-Returns the color to be used for coloring low severity violations.
+Returns the color to be used for coloring low severity transformations.
 
 =item C< color_severity_lowest() >
 
-Returns the color to be used for coloring lowest severity violations.
+Returns the color to be used for coloring lowest severity transformations.
 
 =item C< program_extensions() >
 

@@ -103,6 +103,8 @@ sub transform {
         '>>' => '+>',
 
         '.'  => '~',
+
+        '->' => '.',
     );
 
     my $old_content = $elem->content;
@@ -127,7 +129,7 @@ $elem->set_content('fff XXX');
         return;
     }
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

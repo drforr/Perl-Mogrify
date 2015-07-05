@@ -108,18 +108,18 @@ sub critique {  ## no mogrify (ArgUnpacking)
         )
     }
 
-    my @violations = $self->_gather_violations($doc);
+    my @transformations = $self->_gather_transformations($doc);
     open my $fh, '>', $source_code . '.pl6'
         or die "Could not write to '$source_code.pl6': $!";
         print $fh $doc->serialize;
     close $fh;
-    return @violations;
+    return @transformations;
 }
 
 #=============================================================================
 # PRIVATE methods
 
-sub _gather_violations {
+sub _gather_transformations {
     my ($self, $doc) = @_;
 
     # Disable exempt code lines, if desired
@@ -130,20 +130,20 @@ sub _gather_violations {
     # Evaluate each policy
     my @policies = $self->config->policies();
     my @ordered_policies = _futz_with_policy_order(@policies);
-    my @violations = map { _critique($_, $doc) } @ordered_policies;
+    my @transformations = map { _critique($_, $doc) } @ordered_policies;
 
     # Accumulate statistics
-    $self->statistics->accumulate( $doc, \@violations );
+    $self->statistics->accumulate( $doc, \@transformations );
 
-    # If requested, rank violations by their severity and return the top N.
-    if ( @violations && (my $top = $self->config->top()) ) {
-        my $limit = @violations < $top ? $#violations : $top-1;
-        @violations = Perl::Mogrify::Violation::sort_by_severity(@violations);
-        @violations = ( reverse @violations )[ 0 .. $limit ];  #Slicing...
+    # If requested, rank transformations by their severity and return the top N.
+    if ( @transformations && (my $top = $self->config->top()) ) {
+        my $limit = @transformations < $top ? $#transformations : $top-1;
+        @transformations = Perl::Mogrify::Violation::sort_by_severity(@transformations);
+        @transformations = ( reverse @transformations )[ 0 .. $limit ];  #Slicing...
     }
 
-    # Always return violations sorted by location
-    return Perl::Mogrify::Violation->sort_by_location(@violations);
+    # Always return transformations sorted by location
+    return Perl::Mogrify::Violation->sort_by_location(@transformations);
 }
 
 #=============================================================================
@@ -154,10 +154,10 @@ sub _critique {
 
     return if not $policy->prepare_to_scan_document($doc);
 
-    my $maximum_violations = $policy->get_maximum_violations_per_document();
-    return if defined $maximum_violations && $maximum_violations == 0;
+    my $maximum_transformations = $policy->get_maximum_transformations_per_document();
+    return if defined $maximum_transformations && $maximum_transformations == 0;
 
-    my @violations = ();
+    my @transformations = ();
 
   TYPE:
     for my $type ( $policy->applies_to() ) {
@@ -173,33 +173,33 @@ sub _critique {
         for my $element (@elements) {
 
             # Evaluate the policy on this $element.  A policy may
-            # return zero or more violations.  We only want the
-            # violations that occur on lines that have not been
+            # return zero or more transformations.  We only want the
+            # transformations that occur on lines that have not been
             # disabled.
 
           VIOLATION:
-            for my $violation ( $policy->transform( $element, $doc ) ) {
+            for my $transformation ( $policy->transform( $element, $doc ) ) {
 
-                my $line = $violation->location()->[0];
+                my $line = $transformation->location()->[0];
                 if ( $doc->line_is_disabled_for_policy($line, $policy) ) {
-                    $doc->add_suppressed_violation($violation);
+                    $doc->add_suppressed_transformation($transformation);
                     next VIOLATION;
                 }
 
-                push @violations, $violation;
-                last TYPE if defined $maximum_violations and @violations >= $maximum_violations;
+                push @transformations, $transformation;
+                last TYPE if defined $maximum_transformations and @transformations >= $maximum_transformations;
             }
         }
     }
 
-    return @violations;
+    return @transformations;
 }
 
 #-----------------------------------------------------------------------------
 
 sub _futz_with_policy_order {
     # The ProhibitUselessNoCritic policy is another special policy.  It
-    # deals with the violations that *other* Policies produce.  Therefore
+    # deals with the transformations that *other* Policies produce.  Therefore
     # it needs to be run *after* all the other Policies.  TODO: find
     # a way for Policies to express an ordering preference somehow.
 
@@ -233,8 +233,8 @@ Perl::Mogrify - Critique Perl source code for best-practices.
     use Perl::Mogrify;
     my $file = shift;
     my $mogrify = Perl::Mogrify->new();
-    my @violations = $mogrify->critique($file);
-    print @violations;
+    my @transformations = $mogrify->critique($file);
+    print @transformations;
 
 
 =head1 DESCRIPTION
@@ -297,9 +297,9 @@ See L<"CONFIGURATION"> for more information.
 
 B<-severity> is the minimum severity level.  Only Transformer modules that have a
 severity greater than C<$N> will be applied.  Severity values are integers
-ranging from 1 (least severe violations) to 5 (most severe violations).  The
+ranging from 1 (least severe transformations) to 5 (most severe transformations).  The
 default is 5.  For a given C<-profile>, decreasing the C<-severity> will
-usually reveal more Transformer violations. You can set the default value for this
+usually reveal more Transformer transformations. You can set the default value for this
 option in your F<.perlmogrifyrc> file.  Users can redefine the severity level
 for any Transformer in their F<.perlmogrifyrc> file.  See L<"CONFIGURATION"> for
 more information.
@@ -316,8 +316,8 @@ least restrictive level, then you can use one of these named values:
     -severity => 'brutal'                     -severity => 1
 
 The names reflect how severely the code is mogrifyized: a C<gentle>
-mogrification reports only the most severe violations, and so on down to a
-C<brutal> mogrification which reports even the most minor violations.
+mogrification reports only the most severe transformations, and so on down to a
+C<brutal> mogrification which reports even the most minor transformations.
 
 B<-theme> is special expression that determines which Policies to apply based
 on their respective themes.  For example, the following would load only
@@ -413,9 +413,9 @@ B<-color-severity-highest>, B<-color-severity-high>, B<-color-severity-
 medium>, B<-color-severity-low>, and B<-color-severity-lowest> are not used by
 Perl::Mogrify, but are provided for the benefit of L<perlmogrify|perlmogrify>.
 Each is set to the Term::ANSIColor color specification to be used to display
-violations of the corresponding severity.
+transformations of the corresponding severity.
 
-B<-files-with-violations> and B<-files-without-violations> are not used by
+B<-files-with-transformations> and B<-files-without-transformations> are not used by
 Perl::Mogrify, but are provided for the benefit of L<perlmogrify|perlmogrify>, to
 cause only the relevant filenames to be displayed.
 
@@ -434,9 +434,9 @@ scalar reference, then it is treated as a string of actual Perl code.  If
 C<$source_code> is a reference to an instance of L<PPI::Document>, then that
 instance is used directly. Otherwise, it is treated as a path to a local file
 containing Perl code.  This method returns a list of
-L<Perl::Mogrify::Violation> objects for each violation of the loaded Policies.
+L<Perl::Mogrify::Violation> objects for each transformation of the loaded Policies.
 The list is sorted in the order that the Violations appear in the code.  If
-there are no violations, this method returns an empty list.
+there are no transformations, this method returns an empty list.
 
 =item C<< add_policy( -policy => $policy_name, -params => \%param_hash ) >>
 
@@ -483,10 +483,10 @@ those supported by the C<Perl::Mogrify::new()> method.  Here are some examples:
     use Perl::Mogrify qw(critique);
 
     # Use default parameters...
-    @violations = critique( $some_file );
+    @transformations = critique( $some_file );
 
     # Use custom parameters...
-    @violations = critique( {-severity => 2}, $some_file );
+    @transformations = critique( {-severity => 2}, $some_file );
 
     # As a one-liner
     %> perl -MPerl::Mogrify=critique -e 'print critique(shift)' some_file.pm
@@ -535,7 +535,7 @@ The remainder of the configuration file is a series of blocks like this:
     severity = 1
     set_themes = foo bar
     add_themes = baz
-    maximum_violations_per_document = 57
+    maximum_transformations_per_document = 57
     arg1 = value1
     arg2 = value2
 
@@ -561,8 +561,8 @@ use one of the equivalent names:
     brutal                                             1
 
 The names reflect how severely the code is mogrifyized: a C<gentle>
-mogrification reports only the most severe violations, and so on down to a
-C<brutal> mogrification which reports even the most minor violations.
+mogrification reports only the most severe transformations, and so on down to a
+C<brutal> mogrification which reports even the most minor transformations.
 
 C<set_themes> sets the theme for the Transformer and overrides its default theme.
 The argument is a string of one or more whitespace-delimited alphanumeric
@@ -573,7 +573,7 @@ C<add_themes> appends to the default themes for this Transformer.  The argument 
 a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See L<"POLICY THEMES"> for more information.
 
-C<maximum_violations_per_document> limits the number of Violations the Transformer
+C<maximum_transformations_per_document> limits the number of Violations the Transformer
 will return for a given document.  Some Policies have a default limit; see the
 documentation for the individual Policies to see whether there is one.  To
 force a Transformer to not have a limit, specify "no_limit" or the empty string for
@@ -770,14 +770,14 @@ disabled along with those already disabled an outer annotation.
 
 Some Policies like C<Subroutines::ProhibitExcessComplexity> apply to an entire
 block of code.  In those cases, the C<"## no mogrify"> annotation must appear
-on the line where the violation is reported.  For example:
+on the line where the transformation is reported.  For example:
 
     sub complicated_function {  ## no mogrify (ProhibitExcessComplexity)
         # Your code here...
     }
 
 Policies such as C<Documentation::RequirePodSections> apply to the entire
-document, in which case violations are reported at line 1.
+document, in which case transformations are reported at line 1.
 
 Use this feature wisely.  C<"## no mogrify"> annotations should be used in the
 smallest possible scope, or only on individual lines of code. And you should

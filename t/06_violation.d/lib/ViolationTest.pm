@@ -16,7 +16,7 @@ This is a test diagnostic.
 
 =cut
 
-sub get_violation {
+sub get_transformation {
 
     my $code = 'Hello World;';
     my $doc = PPI::Document->new(\$code);

@@ -22,11 +22,11 @@ our $VERSION = '1.125';
 
 #-----------------------------------------------------------------------------
 
-use lib catdir( qw< t 06_violation.d lib > );
+use lib catdir( qw< t 06_transformation.d lib > );
 
 use ViolationTest;   # this is solely to test the import() method; has diagnostics
 use ViolationTest2;  # this is solely to test the import() method; no diagnostics
-use Perl::Mogrify::Transformer::Test;    # this is to test violation formatting
+use Perl::Mogrify::Transformer::Test;    # this is to test transformation formatting
 
 #-----------------------------------------------------------------------------
 #  method tests
@@ -137,7 +137,7 @@ use Perl::Mogrify::Transformer::Test;    # this is to test violation formatting
 # Import tests
 {
     like(
-        ViolationTest->get_violation()->diagnostics(),
+        ViolationTest->get_transformation()->diagnostics(),
         qr/ \A \s* This [ ] is [ ] a [ ] test [ ] diagnostic [.] \s*\z /xms,
         'import diagnostics',
     );
@@ -154,17 +154,17 @@ END_PERL
 
     my $document = PPI::Document->new(\$code);
     my @children   = $document->schildren();
-    my @violations =
+    my @transformations =
         map { Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $_, 0) }
             $document, @children;
-    my @sorted = Perl::Mogrify::Violation->sort_by_location( reverse @violations);
-    is_deeply(\@sorted, \@violations, 'sort_by_location');
+    my @sorted = Perl::Mogrify::Violation->sort_by_location( reverse @transformations);
+    is_deeply(\@sorted, \@transformations, 'sort_by_location');
 
     my @severities = (5, 3, 4, 0, 2, 1);
-    @violations =
+    @transformations =
         map { Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $document, $_) }
         @severities;
-    @sorted = Perl::Mogrify::Violation->sort_by_severity( @violations );
+    @sorted = Perl::Mogrify::Violation->sort_by_severity( @transformations );
     is_deeply( [map {$_->severity()} @sorted], [sort @severities], 'sort_by_severity');
 }
 
@@ -190,7 +190,7 @@ END_PERL
     my $p = Perl::Mogrify::Transformer::Test->new();
     my @t = $document->tokens();
     my $v = $p->transform($t[0]);
-    ok($v, 'got a violation');
+    ok($v, 'got a transformation');
 
     is($v->to_string(), $expected, 'to_string()');
 }
@@ -233,7 +233,7 @@ END_PERL
 #-----------------------------------------------------------------------------
 
 {
-    my $filename = catfile( qw< t 06_violation.d source Line.pm > );
+    my $filename = catfile( qw< t 06_transformation.d source Line.pm > );
     my $document = PPI::Document::File->new($filename);
 
     my @words = @{ $document->find('PPI::Token::Word') };
@@ -267,12 +267,12 @@ END_PERL
 sub _test_file_and_line_formats {
     my ($word, $expected) = @_;
 
-    my $violation = Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $word, 0);
+    my $transformation = Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $word, 0);
 
     foreach my $format ( sort keys %{$expected} ) {
         Perl::Mogrify::Violation::set_format($format);
         is(
-            $violation->to_string(),
+            $transformation->to_string(),
             $expected->{$format},
             "Got expected value for $format for " . $word->content(),
         );
@@ -283,7 +283,7 @@ sub _test_file_and_line_formats {
 
 #-----------------------------------------------------------------------------
 # ensure we return true if this test is loaded by
-# t/06_violation.t_without_optional_dependencies.t
+# t/06_transformation.t_without_optional_dependencies.t
 
 1;
 

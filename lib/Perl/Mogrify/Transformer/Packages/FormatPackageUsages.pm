@@ -44,7 +44,7 @@ sub transform {
     $old_content .= ':from<Perl5>';
     $package_name->set_content($old_content);
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

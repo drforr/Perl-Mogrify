@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::BasicTypes::Rationals::FormatRationals;
+package Perl::Mogrify::Transformer::FormatSpecialLiterals;
 
 use 5.006001;
 use strict;
@@ -9,39 +9,38 @@ use Perl::Mogrify::Utils qw{ :characters :severities };
 
 use base 'Perl::Mogrify::Transformer';
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Add trailing 0 after decimal point};
-Readonly::Scalar my $EXPL => q{'1.' is no longer a valid floating-point number fomat};
+Readonly::Scalar my $DESC => q{Transform '__END__' etc.};
+Readonly::Scalar my $EXPL => q{__END__ and __DATA__ are now POD markers};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Number::Float'   }
+sub applies_to           {
+    return 'PPI::Token::Separator',
+           'PPI::Token::End'
+}
 
 #-----------------------------------------------------------------------------
 
-#
-# 1.0 --> 1.0
-# .1 --> .1
-# 1. --> 1.0
-#
 sub transform {
     my ($self, $elem, $doc) = @_;
-
-    my $old_content = $elem->content;
- 
-    my ( $lhs, $rhs ) = split( '\.', $old_content );
-    return unless $rhs eq '';
- 
-    $rhs = '0' if $rhs eq '';
-    my $new_content = $lhs . '.' . $rhs;
-    
-    $elem->set_content( $new_content );
+    if ( $elem->isa('PPI::Token::Separator') ) {
+        my $pod = PPI::Token::Word->new('=finish');
+        $elem->insert_before($pod);
+        $elem->remove;
+    }
+#    elsif ( $elem->isa('PPI::Token::Data') ) {
+#    }
+#
+#        my $comma = PPI::Token::Operator->new(',');
+#        $elem->child(2)->insert_after( $comma );
+#    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -56,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Rationals::FormatRationals - Format 1.0, .1, 1. correctly
+Perl::Mogrify::Transformer::FormatSpecialLiterals - Format __END__, __DATA__
 
 
 =head1 AFFILIATION
@@ -67,13 +66,9 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 floating-point values have the format '1.0' where a trailing digit is required:
+__END__ is replaced with the POD marker '=finish', and you can read beyond this boundary with the filehandle C<$*FINISH>:
 
-  1.0 --> 1.0
-  1.  --> 1.0
-  .1  --> .1
-
-Transforms floating-point numbers outside of comments, heredocs, strings and POD.
+  __END__ --> =finish
 
 =head1 CONFIGURATION
 

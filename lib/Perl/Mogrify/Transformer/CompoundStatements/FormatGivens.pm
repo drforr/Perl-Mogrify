@@ -39,7 +39,7 @@ sub transform {
     $space->set_content(' ');
     $token->insert_after( $space );
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

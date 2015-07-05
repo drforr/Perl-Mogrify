@@ -28,9 +28,9 @@ sub new {
     $self->{_lines_of_data} = 0;
     $self->{_lines_of_perl} = 0;
     $self->{_lines_of_pod} = 0;
-    $self->{_violations_by_policy} = {};
-    $self->{_violations_by_severity} = {};
-    $self->{_total_violations} = 0;
+    $self->{_transformations_by_policy} = {};
+    $self->{_transformations_by_severity} = {};
+    $self->{_total_transformations} = 0;
 
     return $self;
 }
@@ -38,7 +38,7 @@ sub new {
 #-----------------------------------------------------------------------------
 
 sub accumulate {
-    my ($self, $doc, $violations) = @_;
+    my ($self, $doc, $transformations) = @_;
 
     $self->{_modules}++;
 
@@ -80,10 +80,10 @@ sub accumulate {
         }
     }
 
-    foreach my $violation ( @{ $violations } ) {
-        $self->{_violations_by_severity}->{ $violation->severity() }++;
-        $self->{_violations_by_policy}->{ $violation->policy() }++;
-        $self->{_total_violations}++;
+    foreach my $transformation ( @{ $transformations } ) {
+        $self->{_transformations_by_severity}->{ $transformation->severity() }++;
+        $self->{_transformations_by_policy}->{ $transformation->policy() }++;
+        $self->{_total_transformations}++;
     }
 
     return;
@@ -171,26 +171,26 @@ sub _subs_total_mccabe {
 
 #-----------------------------------------------------------------------------
 
-sub violations_by_severity {
+sub transformations_by_severity {
     my ( $self ) = @_;
 
-    return $self->{_violations_by_severity};
+    return $self->{_transformations_by_severity};
 }
 
 #-----------------------------------------------------------------------------
 
-sub violations_by_policy {
+sub transformations_by_policy {
     my ( $self ) = @_;
 
-    return $self->{_violations_by_policy};
+    return $self->{_transformations_by_policy};
 }
 
 #-----------------------------------------------------------------------------
 
-sub total_violations {
+sub total_transformations {
     my ( $self ) = @_;
 
-    return $self->{_total_violations};
+    return $self->{_total_transformations};
 }
 
 #-----------------------------------------------------------------------------
@@ -213,34 +213,34 @@ sub average_sub_mccabe {
 
 #-----------------------------------------------------------------------------
 
-sub violations_per_file {
+sub transformations_per_file {
     my ( $self ) = @_;
 
     return if $self->modules() == 0;
 
-    return $self->total_violations() / $self->modules();
+    return $self->total_transformations() / $self->modules();
 }
 
 #-----------------------------------------------------------------------------
 
-sub violations_per_statement {
+sub transformations_per_statement {
     my ( $self ) = @_;
 
     my $statements = $self->statements_other_than_subs();
 
     return if $statements == 0;
 
-    return $self->total_violations() / $statements;
+    return $self->total_transformations() / $statements;
 }
 
 #-----------------------------------------------------------------------------
 
-sub violations_per_line_of_code {
+sub transformations_per_line_of_code {
     my ( $self ) = @_;
 
     return if $self->lines() == 0;
 
-    return $self->total_violations() / $self->lines();
+    return $self->total_transformations() / $self->lines();
 }
 
 #-----------------------------------------------------------------------------
@@ -257,12 +257,12 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Statistics - Compile stats on Perl::Mogrify violations.
+Perl::Mogrify::Statistics - Compile stats on Perl::Mogrify transformations.
 
 
 =head1 DESCRIPTION
 
-This class accumulates statistics on Perl::Mogrify violations across one or
+This class accumulates statistics on Perl::Mogrify transformations across one or
 more files.  NOTE: This class is experimental and subject to change.
 
 
@@ -282,9 +282,9 @@ Create a new instance of Perl::Mogrify::Statistics.  No arguments are supported
 at this time.
 
 
-=item C< accumulate( $doc, \@violations ) >
+=item C< accumulate( $doc, \@transformations ) >
 
-Accumulates statistics about the C<$doc> and the C<@violations> that were
+Accumulates statistics about the C<$doc> and the C<@transformations> that were
 found.
 
 
@@ -339,21 +339,21 @@ The total number of lines of POD analyzed by this Mogrify. Pod occurring in a
 data section is counted as POD, not as data.
 
 
-=item C<violations_by_severity()>
+=item C<transformations_by_severity()>
 
-The number of violations of each severity found by this Mogrify as a
+The number of transformations of each severity found by this Mogrify as a
 reference to a hash keyed by severity.
 
 
-=item C<violations_by_policy()>
+=item C<transformations_by_policy()>
 
-The number of violations of each policy found by this Mogrify as a
+The number of transformations of each policy found by this Mogrify as a
 reference to a hash keyed by full policy name.
 
 
-=item C<total_violations()>
+=item C<total_transformations()>
 
-The total number of violations found by this Mogrify.
+The total number of transformations found by this Mogrify.
 
 
 =item C<statements_other_than_subs()>
@@ -367,20 +367,20 @@ Useful because a subroutine is considered a statement by PPI.
 The average McCabe score of all scanned subroutines.
 
 
-=item C<violations_per_file()>
+=item C<transformations_per_file()>
 
-The total violations divided by the number of modules.
+The total transformations divided by the number of modules.
 
 
-=item C<violations_per_statement()>
+=item C<transformations_per_statement()>
 
-The total violations divided by the number statements minus
+The total transformations divided by the number statements minus
 subroutines.
 
 
-=item C<violations_per_line_of_code()>
+=item C<transformations_per_line_of_code()>
 
-The total violations divided by the lines of code.
+The total transformations divided by the lines of code.
 
 
 =back

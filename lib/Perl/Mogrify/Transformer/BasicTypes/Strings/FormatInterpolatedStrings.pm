@@ -51,9 +51,7 @@ sub transform {
         }
     }
 
-    return $self->violation( $DESC, $EXPL, $elem )
-        if $string and ref $string;
-    return;
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

@@ -25,9 +25,9 @@ use Perl::Mogrify::TransformerFactory (-test => 1);
 our $VERSION = '1.125';
 
 Readonly::Array our @EXPORT_OK => qw(
-    pcritique pcritique_with_violations
-    critique  critique_with_violations
-    fcritique fcritique_with_violations
+    pcritique pcritique_with_transformations
+    critique  critique_with_transformations
+    fcritique fcritique_with_transformations
     subtests_in_tree
     should_skip_author_tests
     get_author_test_skip_message
@@ -48,9 +48,9 @@ sub block_perlmogrifyrc {
 }
 
 #-----------------------------------------------------------------------------
-# Criticize a code snippet using only one policy.  Returns the violations.
+# Criticize a code snippet using only one policy.  Returns the transformations.
 
-sub pcritique_with_violations {
+sub pcritique_with_transformations {
     my($policy, $code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->add_policy(-policy => $policy, -config => $config_ref);
@@ -59,16 +59,16 @@ sub pcritique_with_violations {
 
 #-----------------------------------------------------------------------------
 # Criticize a code snippet using only one policy.  Returns the number
-# of violations
+# of transformations
 
 sub pcritique {  ##no mogrify(ArgUnpacking)
-    return scalar pcritique_with_violations(@_);
+    return scalar pcritique_with_transformations(@_);
 }
 
 #-----------------------------------------------------------------------------
-# Criticize a code snippet using a specified config.  Returns the violations.
+# Criticize a code snippet using a specified config.  Returns the transformations.
 
-sub critique_with_violations {
+sub critique_with_transformations {
     my ($code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( %{$config_ref} );
     return $c->critique($code_ref);
@@ -76,19 +76,19 @@ sub critique_with_violations {
 
 #-----------------------------------------------------------------------------
 # Criticize a code snippet using a specified config.  Returns the
-# number of violations
+# number of transformations
 
 sub critique {  ##no mogrify(ArgUnpacking)
-    return scalar critique_with_violations(@_);
+    return scalar critique_with_transformations(@_);
 }
 
 #-----------------------------------------------------------------------------
-# Like pcritique_with_violations, but forces a PPI::Document::File context.
+# Like pcritique_with_transformations, but forces a PPI::Document::File context.
 # The $filename arg is a Unix-style relative path, like 'Foo/Bar.pm'
 
 Readonly::Scalar my $TEMP_FILE_PERMISSIONS => oct 700;
 
-sub fcritique_with_violations {
+sub fcritique_with_transformations {
     my($policy, $code_ref, $filename, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->add_policy(-policy => $policy, -config => $config_ref);
@@ -122,7 +122,7 @@ sub fcritique_with_violations {
 # $filename arg is a Unix-style relative path, like 'Foo/Bar.pm'
 
 sub fcritique {  ##no mogrify(ArgUnpacking)
-    return scalar fcritique_with_violations(@_);
+    return scalar fcritique_with_transformations(@_);
 }
 
 # Note: $include_extras is not documented in the POD because I'm not
@@ -398,15 +398,15 @@ interface will go through a deprecation cycle.
 
     # Critique code against all loaded policies...
     my $perl_mogrify_config = { -severity => 2 };
-    my $violation_count = critique( \$code, $perl_mogrify_config);
+    my $transformation_count = critique( \$code, $perl_mogrify_config);
 
     # Critique code against one policy...
     my $custom_policy = 'Miscellanea::ProhibitFrobulation'
-    my $violation_count = pcritique( $custom_policy, \$code );
+    my $transformation_count = pcritique( $custom_policy, \$code );
 
     # Critique code against one filename-related policy...
     my $custom_policy = 'Modules::RequireFilenameMatchesPackage'
-    my $violation_count = fcritique( $custom_policy, \$code, 'Foo/Bar.pm' );
+    my $transformation_count = fcritique( $custom_policy, \$code, 'Foo/Bar.pm' );
 
 
 =head1 DESCRIPTION
@@ -429,10 +429,10 @@ simply call it at the top of your F<.t> program.  Note that this is
 not easily reversible, but that should not matter.
 
 
-=item critique_with_violations( $code_string_ref, $config_ref )
+=item critique_with_transformations( $code_string_ref, $config_ref )
 
 Test a block of code against the specified Perl::Mogrify::Config
-instance (or C<undef> for the default).  Returns the violations that
+instance (or C<undef> for the default).  Returns the transformations that
 occurred.
 
 
@@ -440,12 +440,12 @@ occurred.
 
 Test a block of code against the specified Perl::Mogrify::Config
 instance (or C<undef> for the default).  Returns the number of
-violations that occurred.
+transformations that occurred.
 
 
-=item pcritique_with_violations( $policy_name, $code_string_ref, $config_ref )
+=item pcritique_with_transformations( $policy_name, $code_string_ref, $config_ref )
 
-Like C<critique_with_violations()>, but tests only a single policy
+Like C<critique_with_transformations()>, but tests only a single policy
 instead of the whole bunch.
 
 
@@ -455,9 +455,9 @@ Like C<critique()>, but tests only a single policy instead of the
 whole bunch.
 
 
-=item fcritique_with_violations( $policy_name, $code_string_ref, $filename, $config_ref )
+=item fcritique_with_transformations( $policy_name, $code_string_ref, $filename, $config_ref )
 
-Like C<pcritique_with_violations()>, but pretends that the code was
+Like C<pcritique_with_transformations()>, but pretends that the code was
 loaded from the specified filename.  This is handy for testing
 policies like C<Modules::RequireFilenameMatchesPackage> which care
 about the filename that the source derived from.

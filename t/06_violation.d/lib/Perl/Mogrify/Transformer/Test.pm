@@ -12,7 +12,7 @@ sub applies_to { return 'PPI::Token::Word' }
 
 sub transform {
     my ( $self, $elem, undef ) = @_;
-    return $self->violation( 'desc', 'expl', $elem );
+    return $self->transformation( 'desc', 'expl', $elem );
 }
 
 1;

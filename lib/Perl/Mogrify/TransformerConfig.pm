@@ -32,7 +32,7 @@ sub new {
         $self{$NON_PUBLIC_DATA}{_profile_strictness};
 
     foreach my $standard_parameter (
-        qw< maximum_violations_per_document severity set_themes add_themes >
+        qw< maximum_transformations_per_document severity set_themes add_themes >
     ) {
         if ( exists $self{$standard_parameter} ) {
             $non_public_data{"_$standard_parameter"} =
@@ -88,14 +88,14 @@ sub get_severity {
 
 #-----------------------------------------------------------------------------
 
-sub is_maximum_violations_per_document_unlimited {
+sub is_maximum_transformations_per_document_unlimited {
     my ($self) = @_;
 
-    my $maximum_violations = $self->get_maximum_violations_per_document();
+    my $maximum_transformations = $self->get_maximum_transformations_per_document();
     if (
-            not defined $maximum_violations
-        or  $maximum_violations eq $EMPTY
-        or  $maximum_violations =~ m<\A $NO_LIMIT \z>xmsio
+            not defined $maximum_transformations
+        or  $maximum_transformations eq $EMPTY
+        or  $maximum_transformations =~ m<\A $NO_LIMIT \z>xmsio
     ) {
         return $TRUE;
     }
@@ -105,10 +105,10 @@ sub is_maximum_violations_per_document_unlimited {
 
 #-----------------------------------------------------------------------------
 
-sub get_maximum_violations_per_document {
+sub get_maximum_transformations_per_document {
     my ($self) = @_;
 
-    return $self->_get_non_public_data()->{_maximum_violations_per_document};
+    return $self->_get_non_public_data()->{_maximum_transformations_per_document};
 }
 
 #-----------------------------------------------------------------------------
@@ -244,15 +244,15 @@ The value of C<add_themes> in the user's F<.perlmogrifyrc>.
 The value of C<severity> in the user's F<.perlmogrifyrc>.
 
 
-=item C< is_maximum_violations_per_document_unlimited() >
+=item C< is_maximum_transformations_per_document_unlimited() >
 
-Answer whether the value of C<maximum_violations_per_document> should
+Answer whether the value of C<maximum_transformations_per_document> should
 be considered to be unlimited.
 
 
-=item C< get_maximum_violations_per_document() >
+=item C< get_maximum_transformations_per_document() >
 
-The value of C<maximum_violations_per_document> in the user's
+The value of C<maximum_transformations_per_document> in the user's
 F<.perlmogrifyrc>.
 
 

@@ -53,7 +53,7 @@ sub transform {
 
     $elem->remove;
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

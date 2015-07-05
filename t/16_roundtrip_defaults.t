@@ -229,9 +229,9 @@ SKIP: {
             'policy names match',
         );
         is(
-            $derived_policy->get_maximum_violations_per_document(),
-            $default_policy->get_maximum_violations_per_document(),
-            $default_policy->get_short_name() . ' maximum violations per document match',
+            $derived_policy->get_maximum_transformations_per_document(),
+            $default_policy->get_maximum_transformations_per_document(),
+            $default_policy->get_short_name() . ' maximum transformations per document match',
         );
         is(
             $derived_policy->get_severity(),
@@ -248,7 +248,7 @@ SKIP: {
                 $default_policy->parameter_metadata_available()
             and not $default_policy->isa('Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode')
         ) {
-            # Encapsulation violation alert!
+            # Encapsulation transformation alert!
             foreach my $parameter ( @{$default_policy->get_parameters()} ) {
                 my $parameter_name =
                     $default_policy->__get_parameter_name( $parameter );

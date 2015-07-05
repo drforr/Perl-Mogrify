@@ -77,7 +77,7 @@ sub new {
 
     my $top = $elem->top();
     $self->{_filename} = $top->can('filename') ? $top->filename() : undef;
-    $self->{_source}   = _line_containing_violation( $elem );
+    $self->{_source}   = _line_containing_transformation( $elem );
     $self->{_location} =
         $elem->location() || [ 0, 0, 0, 0, $self->filename() ];
 
@@ -290,7 +290,7 @@ sub _compare { return "$_[0]" cmp "$_[1]" }
 
 #-----------------------------------------------------------------------------
 
-sub _line_containing_violation {
+sub _line_containing_transformation {
     my ( $elem ) = @_;
 
     my $stmnt = $elem->statement() || $elem;
@@ -299,7 +299,7 @@ sub _line_containing_violation {
     # Split into individual lines
     my @lines = split qr{ \n\s* }xms, $code_string;
 
-    # Take the line containing the element that is in violation
+    # Take the line containing the element that is in transformation
     my $inx = ( $elem->line_number() || 0 ) -
         ( $stmnt->line_number() || 0 );
     $inx > @lines and return $EMPTY;
@@ -329,7 +329,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Violation - A violation of a Transformer found in some source code.
+Perl::Mogrify::Violation - A transformation of a Transformer found in some source code.
 
 
 =head1 SYNOPSIS
@@ -338,9 +338,9 @@ Perl::Mogrify::Violation - A violation of a Transformer found in some source cod
   use Perl::Mogrify::Violation;
 
   my $elem = $doc->child(0);      # $doc is a PPI::Document object
-  my $desc = 'Offending code';    # Describe the violation
+  my $desc = 'Offending code';    # Describe the transformation
   my $expl = [1,45,67];           # Page numbers from PBP
-  my $sev  = 5;                   # Severity level of this violation
+  my $sev  = 5;                   # Severity level of this transformation
 
   my $vio  = Perl::Mogrify::Violation->new($desc, $expl, $node, $sev);
 
@@ -348,9 +348,9 @@ Perl::Mogrify::Violation - A violation of a Transformer found in some source cod
 =head1 DESCRIPTION
 
 Perl::Mogrify::Violation is the generic representation of an individual
-Transformer violation.  Its primary purpose is to provide an abstraction
+Transformer transformation.  Its primary purpose is to provide an abstraction
 layer so that clients of L<Perl::Mogrify|Perl::Mogrify> don't have to
-know anything about L<PPI|PPI>.  The C<violations> method of all
+know anything about L<PPI|PPI>.  The C<transformations> method of all
 L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> subclasses must return a
 list of these Perl::Mogrify::Violation objects.
 
@@ -368,10 +368,10 @@ will go through a deprecation cycle.
 =item C<new( $description, $explanation, $element, $severity )>
 
 Returns a reference to a new C<Perl::Mogrify::Violation> object. The
-arguments are a description of the violation (as string), an
+arguments are a description of the transformation (as string), an
 explanation for the policy (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
-caused the violation, and the severity of the violation (as an
+caused the transformation, and the severity of the transformation (as an
 integer).
 
 
@@ -384,8 +384,8 @@ integer).
 
 =item C<description()>
 
-Returns a brief description of the specific violation.  In other
-words, this value may change on a per violation basis.
+Returns a brief description of the specific transformation.  In other
+words, this value may change on a per transformation basis.
 
 
 =item C<explanation()>
@@ -408,25 +408,25 @@ Violation occurred, as in L<PPI::Element|PPI::Element>.
 
 =item C<line_number()>
 
-Returns the physical line number that the violation was found on.
+Returns the physical line number that the transformation was found on.
 
 
 =item C<logical_line_number()>
 
-Returns the logical line number that the violation was found on.  This
+Returns the logical line number that the transformation was found on.  This
 can differ from the physical line number when there were C<#line>
 directives in the code.
 
 
 =item C<column_number()>
 
-Returns the physical column that the violation was found at.  This
+Returns the physical column that the transformation was found at.  This
 means that hard tab characters count as a single character.
 
 
 =item C<visual_column_number()>
 
-Returns the column that the violation was found at, as it would appear
+Returns the column that the transformation was found at, as it would appear
 if hard tab characters were expanded, based upon the value of
 L<PPI::Document/"tab_width [ $width ]">.
 
@@ -451,18 +451,18 @@ Returns the severity of this Violation as an integer ranging from 1 to
 5, where 5 is the "most" severe.
 
 
-=item C<sort_by_severity( @violation_objects )>
+=item C<sort_by_severity( @transformation_objects )>
 
 If you need to sort Violations by severity, use this handy routine:
 
-    @sorted = Perl::Mogrify::Violation::sort_by_severity(@violations);
+    @sorted = Perl::Mogrify::Violation::sort_by_severity(@transformations);
 
 
-=item C<sort_by_location( @violation_objects )>
+=item C<sort_by_location( @transformation_objects )>
 
 If you need to sort Violations by location, use this handy routine:
 
-    @sorted = Perl::Mogrify::Violation::sort_by_location(@violations);
+    @sorted = Perl::Mogrify::Violation::sort_by_location(@transformations);
 
 
 =item C<diagnostics()>
@@ -483,7 +483,7 @@ that created this Violation.
 
 Returns the string of source code that caused this exception.  If the
 code spans multiple lines (e.g. multi-line statements, subroutines or
-other blocks), then only the line containing the violation will be
+other blocks), then only the line containing the transformation will be
 returned.
 
 
@@ -508,7 +508,7 @@ when they are evaluated in string context.
 
 =item C<to_string()>
 
-Returns a string representation of this violation.  The content of the
+Returns a string representation of this transformation.  The content of the
 string depends on the current value of the C<$format> package
 variable.  See L<"OVERLOADS"> for the details.
 
@@ -528,21 +528,21 @@ characters are:
 
     Escape    Meaning
     -------   ----------------------------------------------------------------
-    %c        Column number where the violation occurred
-    %d        Full diagnostic discussion of the violation (DESCRIPTION in POD)
-    %e        Explanation of violation or page numbers in PBP
-    %F        Just the name of the logical file where the violation occurred.
-    %f        Path to the logical file where the violation occurred.
-    %G        Just the name of the physical file where the violation occurred.
-    %g        Path to the physical file where the violation occurred.
-    %l        Logical line number where the violation occurred
-    %L        Physical line number where the violation occurred
-    %m        Brief description of the violation
-    %P        Full name of the Transformer module that created the violation
+    %c        Column number where the transformation occurred
+    %d        Full diagnostic discussion of the transformation (DESCRIPTION in POD)
+    %e        Explanation of transformation or page numbers in PBP
+    %F        Just the name of the logical file where the transformation occurred.
+    %f        Path to the logical file where the transformation occurred.
+    %G        Just the name of the physical file where the transformation occurred.
+    %g        Path to the physical file where the transformation occurred.
+    %l        Logical line number where the transformation occurred
+    %L        Physical line number where the transformation occurred
+    %m        Brief description of the transformation
+    %P        Full name of the Transformer module that created the transformation
     %p        Name of the Transformer without the Perl::Mogrify::Transformer:: prefix
-    %r        The string of source code that caused the violation
-    %C        The class of the PPI::Element that caused the violation
-    %s        The severity level of the violation
+    %r        The string of source code that caused the transformation
+    %C        The class of the PPI::Element that caused the transformation
+    %s        The severity level of the transformation
 
 Explanation of the C<%F>, C<%f>, C<%G>, C<%G>, C<%l>, and C<%L> formats:
 Using C<#line> directives, you can affect what perl thinks the current line

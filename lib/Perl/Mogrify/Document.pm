@@ -68,7 +68,7 @@ sub _init_common {
     my ($self) = @_;
 
     $self->{_annotations} = [];
-    $self->{_suppressed_violations} = [];
+    $self->{_suppressed_transformations} = [];
     $self->{_disabled_line_map} = {};
 
     return;
@@ -450,17 +450,17 @@ sub annotations {
 
 #-----------------------------------------------------------------------------
 
-sub add_suppressed_violation {
-    my ($self, $violation) = @_;
-    push @{$self->{_suppressed_violations}}, $violation;
+sub add_suppressed_transformation {
+    my ($self, $transformation) = @_;
+    push @{$self->{_suppressed_transformations}}, $transformation;
     return $self;
 }
 
 #-----------------------------------------------------------------------------
 
-sub suppressed_violations {
+sub suppressed_transformations {
     my ($self) = @_;
-    return @{ $self->{_suppressed_violations} };
+    return @{ $self->{_suppressed_transformations} };
 }
 
 #-----------------------------------------------------------------------------
@@ -533,7 +533,7 @@ sub _disable_shebang_fix {
     # inserts some magical code into the top of the file (just after the
     # shebang).  This code allows people to call your program using a shell,
     # like `sh my_script`.  Unfortunately, this code causes several Transformer
-    # violations, so we disable them as if they had "## no mogrify" annotations.
+    # transformations, so we disable them as if they had "## no mogrify" annotations.
 
     my $first_stmnt = $self->schild(0) || return;
 
@@ -832,14 +832,14 @@ L<Perl::Mogrify::Annotation|Perl::Mogrify::Annotation>s that
 were found in this Document.
 
 
-=item C<< add_suppressed_violation($violation) >>
+=item C<< add_suppressed_transformation($transformation) >>
 
-Informs this Document that a C<$violation> was found but not reported
+Informs this Document that a C<$transformation> was found but not reported
 because it fell on a line that had been suppressed by a C<"## no mogrify">
 annotation. Returns C<$self>.
 
 
-=item C<< suppressed_violations() >>
+=item C<< suppressed_transformations() >>
 
 Returns a list of references to all the
 L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>s

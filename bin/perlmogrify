@@ -53,8 +53,8 @@ C<perlmogrify> - Command-line interface to critique Perl source.
               [--color-severity-medium color_specification]
               [--color-severity-low color_specification]
               [--color-severity-lowest color_specification]
-              [--files-with-violations | -l]
-              [--files-without-violations | -L]
+              [--files-with-transformations | -l]
+              [--files-without-transformations | -L]
               [--program-extensions file_name_extension]
               {FILE | DIRECTORY | STDIN}
 
@@ -85,7 +85,7 @@ documentation for L<Perl::Mogrify> itself.
 Before getting into all the gory details, here are some basic usage
 examples to help get you started.
 
-    # Report only most severe violations (severity = 5)
+    # Report only most severe transformations (severity = 5)
     perlmogrify YourModule.pm
 
     # Same as above, but read input from STDIN
@@ -94,25 +94,25 @@ examples to help get you started.
     # Recursively process all Perl files beneath directory
     perlmogrify /some/directory
 
-    # Report slightly less severe violations too (severity >= 4)
+    # Report slightly less severe transformations too (severity >= 4)
     perlmogrify -4 YourModule.pm
 
     # Same as above, but using named severity level
     perlmogrify --stern YourModule.pm
 
-    # Report all violations, regardless of severity (severity >= 1)
+    # Report all transformations, regardless of severity (severity >= 1)
     perlmogrify -1 YourModule.pm
 
     # Same as above, but using named severity level
     perlmogrify --brutal YourModule.pm
 
-    # Report only violations of things from "Perl Best Practices"
+    # Report only transformations of things from "Perl Best Practices"
     perlmogrify --theme pbp YourModule.pm
 
-    # Report top 20 most severe violations (severity >= 1)
+    # Report top 20 most severe transformations (severity >= 1)
     perlmogrify --top YourModule.pm
 
-    # Report additional violations of Policies that match m/variables/xms
+    # Report additional transformations of Policies that match m/variables/xms
     perlmogrify --include variables YourModule.pm
 
     # Use defaults from somewhere other than ~/.perlmogrifyrc
@@ -151,7 +151,7 @@ the default configuration for all Policies.
 Directs C<perlmogrify> to only apply Policies with a severity greater than
 C<N>.  Severity values are integers ranging from 1 (least severe) to 5 (most
 severe).  The default is 5.  For a given C<--profile>, decreasing the
-C<--severity> will usually produce more violations. You can set the default
+C<--severity> will usually produce more transformations. You can set the default
 value for this option in your F<.perlmogrifyrc> file.  You can also redefine
 the C<severity> for any Transformer in your F<.perlmogrifyrc> file.  See
 L<"CONFIGURATION"> for more information.
@@ -164,7 +164,7 @@ are specified, then the most restrictive one wins.  If an explicit
 C<--severity> option is also given, then all shortcut options are silently
 ignored.  NOTE: Be careful not to put one of the number severity shortcut
 options immediately after the C<--top> flag or C<perlmogrify> will interpret it
-as the number of violations to report.
+as the number of transformations to report.
 
 =item C<--severity NAME>
 
@@ -258,7 +258,7 @@ containing only the desired policy and then running...
 
 =item C<--top [ N ]>
 
-Directs C<perlmogrify> to report only the top C<N> Transformer violations in each
+Directs C<perlmogrify> to report only the top C<N> Transformer transformations in each
 file, ranked by their severity.  If C<N> is not specified, it defaults to 20.
 If the C<--severity> option (or one of the shortcuts) is not explicitly given,
 the C<--top> option implies that the minimum severity level is "1" (i.e.
@@ -266,7 +266,7 @@ the C<--top> option implies that the minimum severity level is "1" (i.e.
 F<.perlmogrifyrc> file.  See L<"CONFIGURATION"> for more information.  You can
 set the default value for this option in your F<.perlmogrifyrc> file.  NOTE: Be
 careful not to put one of the severity shortcut options immediately after the
-C<--top> flag or C<perlmogrify> will interpret it as the number of violations
+C<--top> flag or C<perlmogrify> will interpret it as the number of transformations
 to report.
 
 =item C<--force>
@@ -277,7 +277,7 @@ the default value for this option in your F<.perlmogrifyrc> file.
 
 =item C<--statistics>
 
-Causes several statistics about the code being scanned and the violations
+Causes several statistics about the code being scanned and the transformations
 found to be reported after any other output.
 
 =item C<--statistics-only>
@@ -287,8 +287,8 @@ the statistics.
 
 =item C<--verbose N | FORMAT>
 
-Sets the verbosity level or format for reporting violations.  If given a
-number (C<N>), C<perlmogrify> reports violations using one of the predefined
+Sets the verbosity level or format for reporting transformations.  If given a
+number (C<N>), C<perlmogrify> reports transformations using one of the predefined
 formats described below.  If given a string (C<FORMAT>), it is interpreted to
 be an actual format specification.  If the C<--verbose> option is not
 specified, it defaults to either 4 or 5, depending on whether multiple files
@@ -315,18 +315,18 @@ of the formatting capabilities.  Valid escape characters are:
 
     Escape    Meaning
     -------   ------------------------------------------------------------
-    %c        Column number where the violation occurred
-    %d        Full diagnostic discussion of the violation
-    %e        Explanation of violation or page numbers in PBP
-    %F        Just the name of the file where the violation occurred.
-    %f        Path to the file where the violation occurred.
-    %l        Line number where the violation occurred
-    %m        Brief description of the violation
-    %P        Full name of the Transformer module that created the violation
+    %c        Column number where the transformation occurred
+    %d        Full diagnostic discussion of the transformation
+    %e        Explanation of transformation
+    %F        Just the name of the file where the transformation occurred.
+    %f        Path to the file where the transformation occurred.
+    %l        Line number where the transformation occurred
+    %m        Brief description of the transformation
+    %P        Full name of the Transformer module that created the transformation
     %p        Name of the Transformer without the Perl::Mogrify::Transformer:: prefix
-    %r        The string of source code that caused the violation
-    %C        The class of the PPI::Element that caused the violation
-    %s        The severity level of the violation
+    %r        The string of source code that caused the transformation
+    %C        The class of the PPI::Element that caused the transformation
+    %s        The severity level of the transformation
 
 The purpose of these formats is to provide some compatibility with text
 editors that have an interface for parsing certain kinds of input. See
@@ -381,7 +381,7 @@ this option in your F<.perlmogrifyrc> file.
 
 =item C<-C>
 
-Display only the number of violations for each file.  Use this feature to get
+Display only the number of transformations for each file.  Use this feature to get
 a quick handle on where a large pile of code might need the most attention.
 
 =item C<--Safari>
@@ -410,44 +410,44 @@ to display raw characters.  For C<less> and C<more>, use the -R switch.
 
 =item C<--color-severity-highest COLOR_SPECIFICATION>
 
-Specifies the color to be used for highest severity violations, as a
+Specifies the color to be used for highest severity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
 severity-highest>, C<--color-severity-5>, or C<--colour-severity-5>.
 
 =item C<--color-severity-high COLOR_SPECIFICATION>
 
-Specifies the color to be used for high severity violations, as a
+Specifies the color to be used for high severity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
 severity-high>, C<--color-severity-4>, or C<--colour-severity-4>.
 
 =item C<--color-severity-medium COLOR_SPECIFICATION>
 
-Specifies the color to be used for medium severity violations, as a
+Specifies the color to be used for medium severity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
 severity-medium>, C<--color-severity-3>, or C<--colour-severity-3>.
 
 =item C<--color-severity-low COLOR_SPECIFICATION>
 
-Specifies the color to be used for low severity violations, as a
+Specifies the color to be used for low severity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
 severity-low>, C<--color-severity-2>, or C<--colour-severity-2>.
 
 =item C<--color-severity-lowest COLOR_SPECIFICATION>
 
-Specifies the color to be used for lowest severity violations, as a
+Specifies the color to be used for lowest severity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
 severity-lowest>, C<--color-severity-1>, or C<--colour-severity-1>.
 
-=item C<--files-with-violations>
+=item C<--files-with-transformations>
 
-Display only the names of files with violations.  Use this feature with
---single-policy to find files that contain violations of a given policy. Can
+Display only the names of files with transformations.  Use this feature with
+--single-policy to find files that contain transformations of a given policy. Can
 also be specified as C<--l>.
 
-=item C<--files-without-violations>
+=item C<--files-without-transformations>
 
-Display only the names of files without violations.  Use this feature with
---single-policy to find files that do not contain violations of a given
+Display only the names of files without transformations.  Use this feature with
+--single-policy to find files that do not contain transformations of a given
 policy. Can also be specified as C<--L>.
 
 =item C<--program-extensions file_name_extension>
@@ -491,7 +491,7 @@ switch>.
 
 =item C<--quiet>
 
-Suppress the "source OK" message when no violations are found.
+Suppress the "source OK" message when no transformations are found.
 
 =item C<--help>
 
@@ -782,14 +782,14 @@ disabled along with those already disabled an outer annotation.
 
 Some Policies like C<Subroutines::ProhibitExcessComplexity> apply to an entire
 block of code.  In those cases, C<"## no mogrify"> must appear on the line
-where the violation is reported.  For example:
+where the transformations is reported.  For example:
 
     sub complicated_function {  ## no mogrify (ProhibitExcessComplexity)
         # Your code here...
     }
 
 Some Policies like C<Documentation::RequirePodSections> apply to the entire
-document, in which case violations are reported at line 1.  But if the file
+document, in which case transformations are reported at line 1.  But if the file
 requires a shebang line, it is impossible to put C<"## no mogrify"> on the
 first line of the file.  This is a known limitation and it will be addressed
 in a future release.  As a workaround, you can disable the affected policies
@@ -862,8 +862,8 @@ download, installation, and usage instructions.  Apple users rejoice!
 =head1 EXIT STATUS
 
 If C<perlmogrify> has any errors itself, exits with status == 1.  If there are
-no errors, but C<perlmogrify> finds Transformer violations in your source code,
-exits with status == 2.  If there were no errors and no violations were found,
+no errors, but C<perlmogrify> finds Transformer transformations in your source code,
+exits with status == 2.  If there were no errors and no transformations were found,
 exits with status == 0.
 
 

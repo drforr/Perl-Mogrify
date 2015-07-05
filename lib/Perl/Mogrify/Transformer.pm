@@ -151,7 +151,7 @@ sub __set_base_parameters {
     my $config = $self->__get_config();
     my $errors = Perl::Mogrify::Exception::AggregateConfiguration->new();
 
-    $self->_set_maximum_violations_per_document($errors);
+    $self->_set_maximum_transformations_per_document($errors);
 
     my $user_severity = $config->get_severity();
     if ( defined $user_severity ) {
@@ -180,23 +180,23 @@ sub __set_base_parameters {
 
 #-----------------------------------------------------------------------------
 
-sub _set_maximum_violations_per_document {
+sub _set_maximum_transformations_per_document {
     my ($self, $errors) = @_;
 
     my $config = $self->__get_config();
 
-    if ( $config->is_maximum_violations_per_document_unlimited() ) {
+    if ( $config->is_maximum_transformations_per_document_unlimited() ) {
         return;
     }
 
-    my $user_maximum_violations =
-        $config->get_maximum_violations_per_document();
+    my $user_maximum_transformations =
+        $config->get_maximum_transformations_per_document();
 
-    if ( not is_integer($user_maximum_violations) ) {
+    if ( not is_integer($user_maximum_transformations) ) {
         $errors->add_exception(
             new_parameter_value_exception(
-                'maximum_violations_per_document',
-                $user_maximum_violations,
+                'maximum_transformations_per_document',
+                $user_maximum_transformations,
                 undef,
                 "does not look like an integer.\n"
             )
@@ -204,11 +204,11 @@ sub _set_maximum_violations_per_document {
 
         return;
     }
-    elsif ( $user_maximum_violations < 0 ) {
+    elsif ( $user_maximum_transformations < 0 ) {
         $errors->add_exception(
             new_parameter_value_exception(
-                'maximum_violations_per_document',
-                $user_maximum_violations,
+                'maximum_transformations_per_document',
+                $user_maximum_transformations,
                 undef,
                 "is not greater than or equal to zero.\n"
             )
@@ -217,8 +217,8 @@ sub _set_maximum_violations_per_document {
         return;
     }
 
-    $self->set_maximum_violations_per_document(
-        $user_maximum_violations
+    $self->set_maximum_transformations_per_document(
+        $user_maximum_transformations
     );
 
     return;
@@ -283,29 +283,29 @@ sub applies_to {
 
 #-----------------------------------------------------------------------------
 
-sub set_maximum_violations_per_document {
-    my ($self, $maximum_violations_per_document) = @_;
+sub set_maximum_transformations_per_document {
+    my ($self, $maximum_transformations_per_document) = @_;
 
-    $self->{_maximum_violations_per_document} =
-        $maximum_violations_per_document;
+    $self->{_maximum_transformations_per_document} =
+        $maximum_transformations_per_document;
 
     return $self;
 }
 
 #-----------------------------------------------------------------------------
 
-sub get_maximum_violations_per_document {
+sub get_maximum_transformations_per_document {
     my ($self) = @_;
 
     return
-        exists $self->{_maximum_violations_per_document}
-            ? $self->{_maximum_violations_per_document}
-            : $self->default_maximum_violations_per_document();
+        exists $self->{_maximum_transformations_per_document}
+            ? $self->{_maximum_transformations_per_document}
+            : $self->default_maximum_transformations_per_document();
 }
 
 #-----------------------------------------------------------------------------
 
-sub default_maximum_violations_per_document {
+sub default_maximum_transformations_per_document {
     return;
 }
 
@@ -406,7 +406,7 @@ sub transform {
 
 #-----------------------------------------------------------------------------
 
-sub violation {  ## no mogrify (ArgUnpacking)
+sub transformation {  ## no mogrify (ArgUnpacking)
     my ( $self, $desc, $expl, $elem ) = @_;
     # HACK!! Use goto instead of an explicit call because P::C::V::new() uses caller()
     my $sev = $self->get_severity();
@@ -465,8 +465,8 @@ sub to_string {
          's' => sub { $self->get_severity() },
          'T' => sub { join $SPACE, $self->default_themes() },
          't' => sub { join $SPACE, $self->get_themes() },
-         'V' => sub { dor( $self->default_maximum_violations_per_document(), $NO_LIMIT ) },
-         'v' => sub { dor( $self->get_maximum_violations_per_document(), $NO_LIMIT ) },
+         'V' => sub { dor( $self->default_maximum_transformations_per_document(), $NO_LIMIT ) },
+         'v' => sub { dor( $self->get_maximum_transformations_per_document(), $NO_LIMIT ) },
     );
     return stringf(get_format(), %fspec);
 }
@@ -586,7 +586,7 @@ to the document.  By default, does nothing but return C<$TRUE>.
 Given a L<PPI::Element|PPI::Element> and a
 L<PPI::Document|PPI::Document>, returns one or more
 L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> objects if the
-C<$element> violates this Transformer.  If there are no violations, then it
+C<$element> violates this Transformer.  If there are no transformations, then it
 returns an empty list.  If the Transformer encounters an exception, then it
 should C<croak> with an error message and let the caller decide how to
 handle it.
@@ -596,13 +596,13 @@ to invoke it directly.  It is the heart of all Transformer modules, and
 your subclass B<must> override this method.
 
 
-=item C< violation( $description, $explanation, $element ) >
+=item C< transformation( $description, $explanation, $element ) >
 
 Returns a reference to a new C<Perl::Mogrify::Violation> object. The
-arguments are a description of the violation (as string), an
+arguments are a description of the transformation (as string), an
 explanation for the policy (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
-caused the violation.
+caused the transformation.
 
 These are the same as the constructor to
 L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>, but without the
@@ -649,24 +649,24 @@ method in Transformer subclasses should lead to significant performance
 increases.
 
 
-=item C< default_maximum_violations_per_document() >
+=item C< default_maximum_transformations_per_document() >
 
-Returns the default maximum number of violations for this policy to
+Returns the default maximum number of transformations for this policy to
 report per document.  By default, this not defined, but subclasses may
 override this.
 
 
-=item C< get_maximum_violations_per_document() >
+=item C< get_maximum_transformations_per_document() >
 
-Returns the maximum number of violations this policy will report for a
+Returns the maximum number of transformations this policy will report for a
 single document.  If this is not defined, then there is no limit.  If
-L</set_maximum_violations_per_document()> has not been invoked, then
-L</default_maximum_violations_per_document()> is returned.
+L</set_maximum_transformations_per_document()> has not been invoked, then
+L</default_maximum_transformations_per_document()> is returned.
 
 
-=item C< set_maximum_violations_per_document() >
+=item C< set_maximum_transformations_per_document() >
 
-Specify the maximum violations that this policy should report for a
+Specify the maximum transformations that this policy should report for a
 document.
 
 
@@ -874,12 +874,12 @@ The current themes for the policy.
 
 =item C<%V>
 
-The default maximum number of violations per document of the policy.
+The default maximum number of transformations per document of the policy.
 
 
 =item C<%v>
 
-The current maximum number of violations per document of the policy.
+The current maximum number of transformations per document of the policy.
 
 
 =back

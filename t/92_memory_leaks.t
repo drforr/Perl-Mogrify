@@ -46,15 +46,15 @@ eval 'use Test::Memory::Cycle; 1'
     my $ppi_doc = PPI::Document->new( \$code );
     my $pc_doc  = Perl::Mogrify::Document->new( '-source' => $ppi_doc );
     my $mogrify  = Perl::Mogrify->new( -severity => 1 );
-    my @violations = $mogrify->critique( $pc_doc );
-    confess 'No violations were created' if not @violations;
+    my @transformations = $mogrify->critique( $pc_doc );
+    confess 'No transformations were created' if not @transformations;
 
-    # One test for each violation, plus one each for Mogrify and Document.
-    plan( tests => scalar @violations + 2 );
+    # One test for each transformation, plus one each for Mogrify and Document.
+    plan( tests => scalar @transformations + 2 );
 
     memory_cycle_ok( $pc_doc );
     memory_cycle_ok( $mogrify );
-    foreach my $violation (@violations) {
+    foreach my $transformation (@transformations) {
         memory_cycle_ok($_);
     }
 }

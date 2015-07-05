@@ -15,7 +15,7 @@ use Test::More;
 
 use Perl::Mogrify::Violation;
 use Perl::Mogrify::TestUtils qw<
-    pcritique_with_violations fcritique_with_violations subtests_in_tree
+    pcritique_with_transformations fcritique_with_transformations subtests_in_tree
 >;
 
 #-----------------------------------------------------------------------------
@@ -66,8 +66,8 @@ sub all_policies_ok {
             my $todo = $subtest->{TODO};
             if ($todo) { $TEST->todo_start( $todo ); }
 
-            my ($error, @violations) = _run_subtest($policy, $subtest);
-            my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@violations);
+            my ($error, @transformations) = _run_subtest($policy, $subtest);
+            my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@transformations);
             $TEST->ok( $ok, _create_test_name($policy, $subtest) );
 
             if (@diag) { $TEST->diag(@diag); }
@@ -113,12 +113,12 @@ sub _filter_unwanted_subtests {
 sub _run_subtest {
     my ($policy, $subtest) = @_;
 
-    my @violations;
+    my @transformations;
     my $error;
     if ( $subtest->{filename} ) {
         eval {
-            @violations =
-                fcritique_with_violations(
+            @transformations =
+                fcritique_with_transformations(
                     $policy,
                     \$subtest->{code},
                     $subtest->{filename},
@@ -131,8 +131,8 @@ sub _run_subtest {
     }
     else {
         eval {
-            @violations =
-                pcritique_with_violations(
+            @transformations =
+                pcritique_with_transformations(
                     $policy,
                     \$subtest->{code},
                     $subtest->{parms},
@@ -143,13 +143,13 @@ sub _run_subtest {
         };
     }
 
-    return ($error, @violations);
+    return ($error, @transformations);
 }
 
 #-----------------------------------------------------------------------------
 
 sub _evaluate_test_results {
-    my ($subtest, $error, $violations) = @_;
+    my ($subtest, $error, $transformations) = @_;
 
     if ($subtest->{error}) {
         return _evaluate_error_case($subtest, $error);
@@ -158,24 +158,24 @@ sub _evaluate_test_results {
         confess $error;
     }
     else {
-        return _evaluate_violation_case($subtest, $violations);
+        return _evaluate_transformation_case($subtest, $transformations);
     }
 }
 
 #-----------------------------------------------------------------------------
 
-sub _evaluate_violation_case {
-    my ($subtest, $violations) = @_;
+sub _evaluate_transformation_case {
+    my ($subtest, $transformations) = @_;
     my ($ok, @diagnostics);
 
-    my @violations = @{$violations};
-    my $have = scalar @violations;
-    my $want = _compute_wanted_violation_count($subtest);
+    my @transformations = @{$transformations};
+    my $have = scalar @transformations;
+    my $want = _compute_wanted_transformation_count($subtest);
     if ( not $ok = $have == $want ) {
-        my $msg = qq(Expected $want violations, got $have. );
-        if (@violations) { $msg .= q(Found violations follow...); }
+        my $msg = qq(Expected $want transformations, got $have. );
+        if (@transformations) { $msg .= q(Found transformations follow...); }
         push @diagnostics, $msg . "\n";
-        push @diagnostics, map { qq(Found violation: $_) } @violations;
+        push @diagnostics, map { qq(Found transformation: $_) } @transformations;
     }
 
     return ($ok, @diagnostics)
@@ -218,10 +218,10 @@ sub _compute_test_count {
 
 #-----------------------------------------------------------------------------
 
-sub _compute_wanted_violation_count {
+sub _compute_wanted_transformation_count {
     my ($subtest) = @_;
 
-    # If any optional modules are NOT available, then there should be no violations.
+    # If any optional modules are NOT available, then there should be no transformations.
     return 0 if not _all_optional_modules_are_available($subtest);
     return $subtest->{failures};
 }

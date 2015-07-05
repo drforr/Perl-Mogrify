@@ -52,7 +52,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'}
     ),
     0,
-    'inline no-mogrify disables violations'
+    'inline no-mogrify disables transformations'
 );
 
 #-----------------------------------------------------------------------------
@@ -282,7 +282,7 @@ is(
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
     5,
-    q<inline no-mogrify doesn't block later violations>,
+    q<inline no-mogrify doesn't block later transformations>,
 );
 
 #-----------------------------------------------------------------------------
@@ -780,7 +780,7 @@ is(
 # Most policies apply to a particular type of PPI::Element and usually
 # only return one Violation at a time.  But the next three cases
 # involve policies that apply to the whole document and can return
-# multiple violations at a time.  These tests make sure that the 'no
+# multiple transformations at a time.  These tests make sure that the 'no
 # mogrify' pragmas are effective with those Policies
 #-----------------------------------------------------------------------------
 
@@ -888,10 +888,10 @@ $code = <<'END_PERL';
 
 =head1 SOME POD HERE
 
-This code has several POD-related violations at line 1.  The "## no mogrify"
+This code has several POD-related transformations at line 1.  The "## no mogrify"
 marker is on the second physical line.  However, the "#line" directive should
 cause it to treat it as if it actually were on the first physical line.  Thus,
-the violations should be supressed.
+the transformations should be supressed.
 
 =cut
 
@@ -916,10 +916,10 @@ $code = <<'END_PERL';
 
 =head1 SOME POD HERE
 
-This code has several POD-related violations at line 1.  The "## no mogrify"
+This code has several POD-related transformations at line 1.  The "## no mogrify"
 marker is on the second physical line, and the "#line" directive should cause
 it to treat it as if it actually were on the 7th physical line.  Thus, the
-violations should NOT be supressed.
+transformations should NOT be supressed.
 
 =cut
 

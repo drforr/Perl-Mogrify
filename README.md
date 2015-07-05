@@ -7,8 +7,8 @@ Perl::Mogrify - Critique Perl source code for best-practices.
     use Perl::Mogrify;
     my $file = shift;
     my $mogrify = Perl::Mogrify->new();
-    my @violations = $mogrify->critique($file);
-    print @violations;
+    my @transformations = $mogrify->critique($file);
+    print @transformations;
 
 # DESCRIPTION
 
@@ -65,9 +65,9 @@ through a deprecation cycle.
 
     **-severity** is the minimum severity level.  Only Transformer modules that have a
     severity greater than `$N` will be applied.  Severity values are integers
-    ranging from 1 (least severe violations) to 5 (most severe violations).  The
+    ranging from 1 (least severe transformations) to 5 (most severe transformations).  The
     default is 5.  For a given `-profile`, decreasing the `-severity` will
-    usually reveal more Transformer violations. You can set the default value for this
+    usually reveal more Transformer transformations. You can set the default value for this
     option in your `.perlmogrifyrc` file.  Users can redefine the severity level
     for any Transformer in their `.perlmogrifyrc` file.  See ["CONFIGURATION"](#configuration) for
     more information.
@@ -84,8 +84,8 @@ through a deprecation cycle.
         -severity => 'brutal'                     -severity => 1
 
     The names reflect how severely the code is mogrifyized: a `gentle`
-    mogrification reports only the most severe violations, and so on down to a
-    `brutal` mogrification which reports even the most minor violations.
+    mogrification reports only the most severe transformations, and so on down to a
+    `brutal` mogrification which reports even the most minor transformations.
 
     **-theme** is special expression that determines which Policies to apply based
     on their respective themes.  For example, the following would load only
@@ -180,9 +180,9 @@ through a deprecation cycle.
     medium**, **-color-severity-low**, and **-color-severity-lowest** are not used by
     Perl::Mogrify, but are provided for the benefit of [perlmogrify](https://metacpan.org/pod/perlmogrify).
     Each is set to the Term::ANSIColor color specification to be used to display
-    violations of the corresponding severity.
+    transformations of the corresponding severity.
 
-    **-files-with-violations** and **-files-without-violations** are not used by
+    **-files-with-transformations** and **-files-without-transformations** are not used by
     Perl::Mogrify, but are provided for the benefit of [perlmogrify](https://metacpan.org/pod/perlmogrify), to
     cause only the relevant filenames to be displayed.
 
@@ -196,9 +196,9 @@ through a deprecation cycle.
     `$source_code` is a reference to an instance of [PPI::Document](https://metacpan.org/pod/PPI::Document), then that
     instance is used directly. Otherwise, it is treated as a path to a local file
     containing Perl code.  This method returns a list of
-    [Perl::Mogrify::Violation](https://metacpan.org/pod/Perl::Mogrify::Violation) objects for each violation of the loaded Policies.
+    [Perl::Mogrify::Violation](https://metacpan.org/pod/Perl::Mogrify::Violation) objects for each transformation of the loaded Policies.
     The list is sorted in the order that the Violations appear in the code.  If
-    there are no violations, this method returns an empty list.
+    there are no transformations, this method returns an empty list.
 
 - `add_policy( -policy => $policy_name, -params => \%param_hash )`
 
@@ -242,10 +242,10 @@ those supported by the `Perl::Mogrify::new()` method.  Here are some examples:
     use Perl::Mogrify qw(critique);
 
     # Use default parameters...
-    @violations = critique( $some_file );
+    @transformations = critique( $some_file );
 
     # Use custom parameters...
-    @violations = critique( {-severity => 2}, $some_file );
+    @transformations = critique( {-severity => 2}, $some_file );
 
     # As a one-liner
     %> perl -MPerl::Mogrify=critique -e 'print critique(shift)' some_file.pm
@@ -293,7 +293,7 @@ The remainder of the configuration file is a series of blocks like this:
     severity = 1
     set_themes = foo bar
     add_themes = baz
-    maximum_violations_per_document = 57
+    maximum_transformations_per_document = 57
     arg1 = value1
     arg2 = value2
 
@@ -319,8 +319,8 @@ use one of the equivalent names:
     brutal                                             1
 
 The names reflect how severely the code is mogrifyized: a `gentle` mogrification
-reports only the most severe violations, and so on down to a `brutal`
-mogrification which reports even the most minor violations.
+reports only the most severe transformations, and so on down to a `brutal`
+mogrification which reports even the most minor transformations.
 
 `set_themes` sets the theme for the Transformer and overrides its default theme.
 The argument is a string of one or more whitespace-delimited alphanumeric
@@ -331,7 +331,7 @@ information.
 a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See ["POLICY THEMES"](#policy-themes) for more information.
 
-`maximum_violations_per_document` limits the number of Violations the Transformer
+`maximum_transformations_per_document` limits the number of Violations the Transformer
 will return for a given document.  Some Policies have a default limit; see the
 documentation for the individual Policies to see whether there is one.  To
 force a Transformer to not have a limit, specify "no\_limit" or the empty string for
@@ -524,14 +524,14 @@ disabled along with those already disabled an outer annotation.
 
 Some Policies like `Subroutines::ProhibitExcessComplexity` apply to an entire
 block of code.  In those cases, the `"## no mogrify"` annotation must appear
-on the line where the violation is reported.  For example:
+on the line where the transformation is reported.  For example:
 
     sub complicated_function {  ## no mogrify (ProhibitExcessComplexity)
         # Your code here...
     }
 
 Policies such as `Documentation::RequirePodSections` apply to the entire
-document, in which case violations are reported at line 1.
+document, in which case transformations are reported at line 1.
 
 Use this feature wisely.  `"## no mogrify"` annotations should be used in the
 smallest possible scope, or only on individual lines of code. And you should

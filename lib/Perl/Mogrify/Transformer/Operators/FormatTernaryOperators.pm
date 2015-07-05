@@ -45,7 +45,7 @@ sub transform {
         $current = $current->next_sibling;
     }
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

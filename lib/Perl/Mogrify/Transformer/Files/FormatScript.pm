@@ -76,7 +76,7 @@ sub transform {
 #    }
 $modified = 1;
 
-    return $self->violation( $DESC, $EXPL, $elem )
+    return $self->transformation( $DESC, $EXPL, $elem )
         if $modified;
     return;
 }

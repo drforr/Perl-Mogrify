@@ -79,7 +79,7 @@ sub transform {
             or die;
     }
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

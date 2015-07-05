@@ -53,7 +53,7 @@ sub get_trusted_methods {
         applies_to
         is_safe
         default_themes
-        default_maximum_violations_per_document
+        default_maximum_transformations_per_document
         default_severity
         supported_parameters
         description

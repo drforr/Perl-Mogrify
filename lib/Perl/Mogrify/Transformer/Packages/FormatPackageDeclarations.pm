@@ -46,7 +46,7 @@ sub transform {
         $elem->first_element->set_content('class');
     }
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

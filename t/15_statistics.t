@@ -31,13 +31,13 @@ my @methods = qw(
     new
     statements
     subs
-    total_violations
-    violations_by_policy
-    violations_by_severity
+    total_transformations
+    transformations_by_policy
+    transformations_by_severity
     statements_other_than_subs
-    violations_per_file
-    violations_per_statement
-    violations_per_line_of_code
+    transformations_per_file
+    transformations_per_statement
+    transformations_per_line_of_code
 );
 
 for my $method ( @methods ) {
@@ -64,9 +64,9 @@ my $mogrify =
         -profile => $profile,
         -theme => 'core',
     );
-my @violations = $mogrify->critique( \$code );
+my @transformations = $mogrify->critique( \$code );
 
-#print @violations;
+#print @transformations;
 #exit;
 
 my %expected_stats = (
@@ -76,10 +76,10 @@ my %expected_stats = (
     statements                    => 6,
     statements_other_than_subs    => 5,
     subs                          => 1,
-    total_violations              => 7,
-    violations_per_file           => 7,
-    violations_per_line_of_code   => 1.4, # 7 violations / 5 lines
-    violations_per_statement      => 1.4, # 7 violations / 5 lines
+    total_transformations              => 7,
+    transformations_per_file           => 7,
+    transformations_per_line_of_code   => 1.4, # 7 transformations / 5 lines
+    transformations_per_statement      => 1.4, # 7 transformations / 5 lines
 );
 
 my $stats = $mogrify->statistics();

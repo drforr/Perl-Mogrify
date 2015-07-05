@@ -128,13 +128,13 @@ is($processor->VERSION(), $version_string, 'Perl::Mogrify::OptionsProcessor vers
 use_ok('Perl::Mogrify::Transformer') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::Mogrify::Transformer', 'add_themes');
 can_ok('Perl::Mogrify::Transformer', 'applies_to');
-can_ok('Perl::Mogrify::Transformer', 'default_maximum_violations_per_document');
+can_ok('Perl::Mogrify::Transformer', 'default_maximum_transformations_per_document');
 can_ok('Perl::Mogrify::Transformer', 'default_severity');
 can_ok('Perl::Mogrify::Transformer', 'default_themes');
 can_ok('Perl::Mogrify::Transformer', 'get_abstract');
 can_ok('Perl::Mogrify::Transformer', 'get_format');
 can_ok('Perl::Mogrify::Transformer', 'get_long_name');
-can_ok('Perl::Mogrify::Transformer', 'get_maximum_violations_per_document');
+can_ok('Perl::Mogrify::Transformer', 'get_maximum_transformations_per_document');
 can_ok('Perl::Mogrify::Transformer', 'get_parameters');
 can_ok('Perl::Mogrify::Transformer', 'get_raw_abstract');
 can_ok('Perl::Mogrify::Transformer', 'get_severity');
@@ -148,13 +148,13 @@ can_ok('Perl::Mogrify::Transformer', 'new_parameter_value_exception');
 can_ok('Perl::Mogrify::Transformer', 'parameter_metadata_available');
 can_ok('Perl::Mogrify::Transformer', 'prepare_to_scan_document');
 can_ok('Perl::Mogrify::Transformer', 'set_format');
-can_ok('Perl::Mogrify::Transformer', 'set_maximum_violations_per_document');
+can_ok('Perl::Mogrify::Transformer', 'set_maximum_transformations_per_document');
 can_ok('Perl::Mogrify::Transformer', 'set_severity');
 can_ok('Perl::Mogrify::Transformer', 'set_themes');
 can_ok('Perl::Mogrify::Transformer', 'throw_parameter_value_exception');
 can_ok('Perl::Mogrify::Transformer', 'to_string');
 can_ok('Perl::Mogrify::Transformer', 'transform');
-can_ok('Perl::Mogrify::Transformer', 'violation');
+can_ok('Perl::Mogrify::Transformer', 'transformation');
 can_ok('Perl::Mogrify::Transformer', 'is_safe');
 
 {
@@ -294,7 +294,7 @@ can_ok('Perl::Mogrify::Command', 'run');
         can_ok($mod, 'set_themes');
         can_ok($mod, 'set_themes');
         can_ok($mod, 'transform');
-        can_ok($mod, 'violation');
+        can_ok($mod, 'transformation');
         can_ok($mod, 'is_safe');
 
         my $policy = $mod->new();
@@ -311,7 +311,7 @@ Perl::Mogrify->import( qw(critique) );
 can_ok('main', 'critique');  #Export test
 
 # TODO: These tests are weak. They just verify that it doesn't
-# blow up, and that at least one violation is returned.
+# blow up, and that at least one transformation is returned.
 ok( critique( \$code ), 'Functional style, no config' );
 ok( critique( {}, \$code ), 'Functional style, empty config' );
 ok( critique( {severity => 1}, \$code ), 'Functional style, with config');

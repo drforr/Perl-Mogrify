@@ -61,11 +61,11 @@ sub run {
     my %options    = _get_options();
     @files         = _get_input(@ARGV);
 
-    my ($violations, $had_error_in_file) = _critique(\%options, @files);
+    my ($transformations, $had_error_in_file) = _critique(\%options, @files);
 
     return $EXIT_HAD_FILE_PROBLEMS  if $had_error_in_file;
-    return $EXIT_NO_FILES           if not defined $violations;
-    return $EXIT_HAD_VIOLATIONS     if $violations;
+    return $EXIT_NO_FILES           if not defined $transformations;
+    return $EXIT_HAD_VIOLATIONS     if $transformations;
 
     return $EXIT_SUCCESS;
 }
@@ -233,17 +233,17 @@ sub _critique {
 
     _set_up_pager($mogrify->config()->pager());
 
-    my $number_of_violations = undef;
+    my $number_of_transformations = undef;
     my $had_error_in_file = 0;
 
     for my $file (@files_to_critique) {
 
         eval {
-            my @violations = $mogrify->critique($file);
-            $number_of_violations += scalar @violations;
+            my @transformations = $mogrify->critique($file);
+            $number_of_transformations += scalar @transformations;
 
             if (not $opts_ref->{'-statistics-only'}) {
-                _render_report( $file, $opts_ref, @violations )
+                _render_report( $file, $opts_ref, @transformations )
             }
             1;
         }
@@ -270,40 +270,40 @@ sub _critique {
         _report_statistics( $opts_ref, $stats );
     }
 
-    return $number_of_violations, $had_error_in_file;
+    return $number_of_transformations, $had_error_in_file;
 }
 
 #------------------------------------------------------------------------------
 
 sub _render_report {
-    my ( $file, $opts_ref, @violations ) = @_;
+    my ( $file, $opts_ref, @transformations ) = @_;
 
     # Only report the files, if asked.
-    my $number_of_violations = scalar @violations;
-    if ( $opts_ref->{'-files-with-violations'} ||
-        $opts_ref->{'-files-without-violations'} ) {
+    my $number_of_transformations = scalar @transformations;
+    if ( $opts_ref->{'-files-with-transformations'} ||
+        $opts_ref->{'-files-without-transformations'} ) {
         not ref $file
-            and $opts_ref->{$number_of_violations ? '-files-with-violations' :
-            '-files-without-violations'}
+            and $opts_ref->{$number_of_transformations ? '-files-with-transformations' :
+            '-files-without-transformations'}
             and _out "$file\n";
-        return $number_of_violations;
+        return $number_of_transformations;
     }
 
-    # Only report the number of violations, if asked.
+    # Only report the number of transformations, if asked.
     if( $opts_ref->{-count} ){
         ref $file || _out "$file: ";
-        _out "$number_of_violations\n";
-        return $number_of_violations;
+        _out "$number_of_transformations\n";
+        return $number_of_transformations;
     }
 
     # Hail all-clear unless we should shut up.
-    if( !@violations && !$opts_ref->{-quiet} ) {
+    if( !@transformations && !$opts_ref->{-quiet} ) {
         ref $file || _out "$file ";
         _out "source OK\n";
         return 0;
     }
 
-    # Otherwise, format and print violations
+    # Otherwise, format and print transformations
     my $verbosity = $mogrify->config->verbose();
     # $verbosity can be numeric or string, so use "eq" for comparison;
     $verbosity =
@@ -315,9 +315,9 @@ sub _render_report {
     Perl::Mogrify::Violation::set_format( $fmt );
 
     my $color = $mogrify->config->color();
-    _out $color ? _colorize_by_severity(@violations) : @violations;
+    _out $color ? _colorize_by_severity(@transformations) : @transformations;
 
-    return $number_of_violations;
+    return $number_of_transformations;
 }
 
 #-----------------------------------------------------------------------------
@@ -343,7 +343,7 @@ sub _report_statistics {
     if (
             not $opts_ref->{'-statistics-only'}
         and (
-                $statistics->total_violations()
+                $statistics->total_transformations()
             or  not $opts_ref->{-quiet} and $statistics->modules()
         )
     ) {
@@ -387,62 +387,62 @@ sub _report_statistics {
 
     _out "\n";
 
-    _out _commaify($statistics->total_violations()), " violations.\n";
+    _out _commaify($statistics->total_transformations()), " transformations.\n";
 
-    my $violations_per_file = $statistics->violations_per_file();
-    if (defined $violations_per_file) {
+    my $transformations_per_file = $statistics->transformations_per_file();
+    if (defined $transformations_per_file) {
         _out
             sprintf
                 "Violations per file was %.3f.\n",
-                $violations_per_file;
+                $transformations_per_file;
     }
-    my $violations_per_statement = $statistics->violations_per_statement();
-    if (defined $violations_per_statement) {
+    my $transformations_per_statement = $statistics->transformations_per_statement();
+    if (defined $transformations_per_statement) {
         _out
             sprintf
                 "Violations per statement was %.3f.\n",
-                $violations_per_statement;
+                $transformations_per_statement;
     }
-    my $violations_per_line = $statistics->violations_per_line_of_code();
-    if (defined $violations_per_line) {
+    my $transformations_per_line = $statistics->transformations_per_line_of_code();
+    if (defined $transformations_per_line) {
         _out
             sprintf
                 "Violations per line of code was %.3f.\n",
-                $violations_per_line;
+                $transformations_per_line;
     }
 
-    if ( $statistics->total_violations() ) {
+    if ( $statistics->total_transformations() ) {
         _out "\n";
 
-        my %severity_violations = %{ $statistics->violations_by_severity() };
-        my @severities = reverse sort keys %severity_violations;
+        my %severity_transformations = %{ $statistics->transformations_by_severity() };
+        my @severities = reverse sort keys %severity_transformations;
         $width =
             max
-                map { length _commaify( $severity_violations{$_} ) }
+                map { length _commaify( $severity_transformations{$_} ) }
                     @severities;
         foreach my $severity (@severities) {
             _out
                 sprintf
-                    "%*s severity %d violations.\n",
+                    "%*s severity %d transformations.\n",
                     $width,
-                    _commaify( $severity_violations{$severity} ),
+                    _commaify( $severity_transformations{$severity} ),
                     $severity;
         }
 
         _out "\n";
 
-        my %policy_violations = %{ $statistics->violations_by_policy() };
-        my @policies = sort keys %policy_violations;
+        my %policy_transformations = %{ $statistics->transformations_by_policy() };
+        my @policies = sort keys %policy_transformations;
         $width =
             max
-                map { length _commaify( $policy_violations{$_} ) }
+                map { length _commaify( $policy_transformations{$_} ) }
                     @policies;
         foreach my $policy (@policies) {
             _out
                 sprintf
-                    "%*s violations of %s.\n",
+                    "%*s transformations of %s.\n",
                     $width,
-                    _commaify($policy_violations{$policy}),
+                    _commaify($policy_transformations{$policy}),
                     policy_short_name($policy);
         }
     }
@@ -508,8 +508,8 @@ sub _get_option_specification {
         color-severity-medium|colour-severity-medium|color-severity-3|colour-severity-3=s
         color-severity-low|colour-severity-low|color-severity-2|colour-severity-2=s
         color-severity-lowest|colour-severity-lowest|color-severity-1|colour-severity-1=s
-        files-with-violations|l
-        files-without-violations|L
+        files-with-transformations|l
+        files-without-transformations|L
         program-extensions=s@
     >;
 }
@@ -517,9 +517,9 @@ sub _get_option_specification {
 #-----------------------------------------------------------------------------
 
 sub _colorize_by_severity {
-    my @violations = @_;
-    return @violations if _this_is_windows();
-    return @violations if not eval {
+    my @transformations = @_;
+    return @transformations if _this_is_windows();
+    return @transformations if not eval {
         require Term::ANSIColor;
         Term::ANSIColor->VERSION( $_MODULE_VERSION_TERM_ANSICOLOR );
         1;
@@ -534,7 +534,7 @@ sub _colorize_by_severity {
         $SEVERITY_LOWEST    => $config->color_severity_lowest(),
     );
 
-    return map { _colorize( "$_", $color_of{$_->severity()} ) } @violations;
+    return map { _colorize( "$_", $color_of{$_->severity()} ) } @transformations;
 
 }
 

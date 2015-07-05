@@ -42,9 +42,9 @@ our $VERSION = '1.125';
         'severity is undef when not specified.',
     );
     is(
-        $config->get_maximum_violations_per_document(),
+        $config->get_maximum_transformations_per_document(),
         undef,
-        'maximum_violations_per_document is undef when not specified.',
+        'maximum_transformations_per_document is undef when not specified.',
     );
     ok(
         $config->is_empty(),
@@ -72,7 +72,7 @@ our $VERSION = '1.125';
                 set_themes                      => 'thingy',
                 add_themes                      => 'another thingy',
                 severity                        => 'harsh',
-                maximum_violations_per_document => '2',
+                maximum_transformations_per_document => '2',
             }
         );
 
@@ -97,9 +97,9 @@ our $VERSION = '1.125';
         'severity gets saved.',
     );
     is(
-        $config->get_maximum_violations_per_document(),
+        $config->get_maximum_transformations_per_document(),
         '2',
-        'maximum_violations_per_document gets saved.',
+        'maximum_transformations_per_document gets saved.',
     );
     is(
         $config->get('custom_parameter'),
@@ -149,7 +149,7 @@ sub test_standard_parameters_undef_via_get {
             set_themes
             add_themes
             severity
-            maximum_violations_per_document
+            maximum_transformations_per_document
             _non_public_data
         >
     ) {

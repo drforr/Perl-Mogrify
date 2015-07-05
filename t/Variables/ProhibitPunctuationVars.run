@@ -53,7 +53,7 @@ print $!;
 
 #-----------------------------------------------------------------------------
 
-## name PPI::Token::Quote::Double Interpolation: violations
+## name PPI::Token::Quote::Double Interpolation: transformations
 ## parms { allow => '$@ $!' }
 ## failures 7
 ## cut
@@ -66,7 +66,7 @@ print "as \n$+ should this";
 print "${\($$)}";
 print "${[$$]}";
 
-## name PPI::Token::Quote::Double Interpolation: non-violations
+## name PPI::Token::Quote::Double Interpolation: non-transformations
 ## parms { allow => '$@ $!' }
 ## failures 0
 ## cut
@@ -78,7 +78,7 @@ print "no magic here";
 print "This is my $@; is it not nifty?";
 print "but not \n\$+ this";
 
-## name PPI::Token::Quote::Interpolate Interpolation: violations
+## name PPI::Token::Quote::Interpolate Interpolation: transformations
 ## failures 3
 ## cut
 
@@ -86,56 +86,56 @@ print qq<$+>;
 print qq<\\$+>;
 print qq<\\\\$+>;
 
-## name PPI::Token::Quote::Interpolate Interpolation: non-violations
+## name PPI::Token::Quote::Interpolate Interpolation: non-transformations
 ## failures 0
 ## cut
 
 print qq<\$+>;
 print qq<\\\$+>;
 
-## name PPI::Token::QuoteLike::Command: violations
+## name PPI::Token::QuoteLike::Command: transformations
 ## failures 1
 ## cut
 
 print qx<$+>;
 
-## name PPI::Token::QuoteLike::Command: non-violations
+## name PPI::Token::QuoteLike::Command: non-transformations
 ## failures 0
 ## cut
 
 print qx<\$+>;
 
-## name PPI::Token::QuoteLike::Backtick: violations
+## name PPI::Token::QuoteLike::Backtick: transformations
 ## failures 1
 ## cut
 
 print `$+`;
 
-## name PPI::Token::QuoteLike::Backtick: non-violations
+## name PPI::Token::QuoteLike::Backtick: non-transformations
 ## failures 0
 ## cut
 
 print `\$+`;
 
-## name PPI::Token::QuoteLike::Regexp: violations
+## name PPI::Token::QuoteLike::Regexp: transformations
 ## failures 1
 ## cut
 
 print qr<$+>;
 
-## name PPI::Token::QuoteLike::Regexp: non-violations
+## name PPI::Token::QuoteLike::Regexp: non-transformations
 ## failures 0
 ## cut
 
 print qr<\$+>;
 
-## name PPI::Token::QuoteLike::Readline: violations
+## name PPI::Token::QuoteLike::Readline: transformations
 ## failures 1
 ## cut
 
 while (<$+>) { 1; }
 
-## name PPI::Token::QuoteLike::Readline: non-violations
+## name PPI::Token::QuoteLike::Readline: non-transformations
 ## failures 0
 ## cut
 
@@ -143,7 +143,7 @@ while (<\$+>) { 1; }
 
 #-----------------------------------------------------------------------------
 
-## name Heredoc Interpolation: violations
+## name Heredoc Interpolation: transformations
 ## parms { allow => '$@ $!' }
 ## failures 8
 ## cut
@@ -189,7 +189,7 @@ print <<`BACKTICK`;                                      # backtick context
 $+
 BACKTICK
 
-## name Heredoc Interpolation: non-violations
+## name Heredoc Interpolation: non-transformations
 ## parms { allow => '$@ $!' }
 ## failures 0
 ## cut
@@ -308,7 +308,7 @@ print "as \n$+ should this";
 
 #-----------------------------------------------------------------------------
 
-## name String Interpolation - thorough-mode violations
+## name String Interpolation - thorough-mode transformations
 ## failures 4
 ## parms { string_mode => 'thorough' }
 ## cut
@@ -326,7 +326,7 @@ print "blahblah ${\($$))}" # sneaky scalar dereference syntax
 #-----------------------------------------------------------------------------
 
 
-## name String Interpolation - thorough-mode special case violations
+## name String Interpolation - thorough-mode special case transformations
 ## failures 16
 ## parms { string_mode => 'thorough' }
 ## cut
@@ -360,7 +360,7 @@ print "$::foo then $' followed by $'3"; # violates for $'
 
 #-----------------------------------------------------------------------------
 
-## name String Interpolation - thorough-mode mixed multiple violations
+## name String Interpolation - thorough-mode mixed multiple transformations
 ## failures 1
 ## parms { string_mode => 'thorough' }
 ## cut
@@ -369,7 +369,7 @@ print "$::foo then $' followed by $'3 and $+ and $]";
 
 #-----------------------------------------------------------------------------
 
-## name String Interpolation - thorough-mode special case non-violations
+## name String Interpolation - thorough-mode special case non-transformations
 ## failures 0
 ## parms { string_mode => 'thorough' }
 ## cut

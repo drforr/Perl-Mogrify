@@ -41,7 +41,7 @@ appropriate node.  The Transformer can inspect the node, look at the
 surrounding nodes, and do whatever else it wants.  If the Transformer
 decides that a coding standard has been violated, it returns one
 or more L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> objects.
-If there are no violations, then the Transformer returns nothing.
+If there are no transformations, then the Transformer returns nothing.
 
 Policies are usually written based on existing policies, so let's look
 at one to see how it works.  The F<RequireBlockGrep.pm> Transformer is
@@ -234,18 +234,18 @@ But if it is not a L<PPI::Structure::Block|PPI::Structure::Block>,
 then we know that this call to C<grep> must be using the expression
 form, and that violates our Transformer.  So we create and return a new
 L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> object via the
-L<Perl::Mogrify::Transformer/"violation"> method, passing in the
+L<Perl::Mogrify::Transformer/"transformation"> method, passing in the
 description, explanation, and a reference to the PPI element that
-caused the violation.  And that's all there is to it!
+caused the transformation.  And that's all there is to it!
 
-        return $self->violation( $DESC, $EXPL, $elem );
+        return $self->transformation( $DESC, $EXPL, $elem );
     }
 
     1;
 
 One last thing -- people are going to need to understand what is wrong
 with the code when your Transformer finds a problem.  It isn't reasonable
-to include all the details in your violation description or
+to include all the details in your transformation description or
 explanation.  So please include a DESCRIPTION section in the POD for
 your Transformer.  It should succinctly describe the behavior and
 motivation for your Transformer and include a few examples of both good and
@@ -274,7 +274,7 @@ bad code.  Here's an example:
 When your policy has a section like this, users can invoke
 L<perlmogrify|perlmogrify> with a C<--verbose> parameter of C<10> or
 C<11> or with a "%d" escape to see it along with the rest of the
-output for violations of your policy.
+output for transformations of your policy.
 
 
 =head1 MAKING YOUR POLICY CONFIGURABLE
@@ -894,19 +894,19 @@ the value of the parameter.
 
 =head1 ADDITIONAL FEATURES
 
-=head2 C<default_maximum_violations_per_document()>
+=head2 C<default_maximum_transformations_per_document()>
 
 Certain problems that a Transformer detects can be endemic to a particular
-file; if there's one violation, there's likely to be many.  A good
+file; if there's one transformation, there's likely to be many.  A good
 example of this is
 L<Perl::Mogrify::Transformer::TestingAndDebugging::RequireUseStrict|Perl::Mogrify::Transformer::TestingAndDebugging::RequireUseStrict>;
 if there's one line before L<use strict>, there's a good chance that
 the entire file is missing L<use strict>.  In such cases, it's not
-much help to the user to report every single violation.  If you've got
+much help to the user to report every single transformation.  If you've got
 such a policy, you should override
-L<default_maximum_violations_per_document()|Perl::Mogrify::Transformer/"default_maximum_violations_per_document()">
+L<default_maximum_transformations_per_document()|Perl::Mogrify::Transformer/"default_maximum_transformations_per_document()">
 method to provide a limit.  The user can override this value with a
-value for "maximum_violations_per_document" in their F<.perlmogrifyrc>.
+value for "maximum_transformations_per_document" in their F<.perlmogrifyrc>.
 
 See the source code for
 L<Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMagicNumbers|Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMagicNumbers>

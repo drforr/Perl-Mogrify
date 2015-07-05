@@ -27,13 +27,13 @@ sub applies_to           { return 'PPI::Statement::Compound' }
 #-----------------------------------------------------------------------------
 
 my %conditional = (
-    if      => 1,
-    elsif   => 1,
-    unless  => 1,
-    while   => 1,
-    until   => 1,
-    for     => 1,
-    foreach => 1,
+    if      => 'if',
+    elsif   => 'elsif',
+    unless  => 'unless',
+    while   => 'while',
+    until   => 'until',
+    for     => 'for',
+    foreach => 'for',
 );
 
 sub transform {
@@ -44,13 +44,16 @@ sub transform {
     my $old_content = $token->content;
     return unless $conditional{$old_content};
     return unless $token->next_sibling;
+
+    $token->set_content($conditional{$old_content});
+
     return if $token->next_sibling->isa('PPI::Token::Whitespace');
 
     my $space = PPI::Token::Whitespace->new();
     $space->set_content(' ');
     $token->insert_after( $space );
 
-    return $self->violation( $DESC, $EXPL, $elem );
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;
