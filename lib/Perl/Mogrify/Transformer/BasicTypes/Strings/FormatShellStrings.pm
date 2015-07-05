@@ -63,13 +63,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 interpolation of variables lets you use C<{$x}> where the C<{}> can contain any expression. This enforcer reformats C<${x}> to C<{$x}> in your interpolated strings.
+Perl6 has a C<qx()> operator, but the C<qqx()> operator is more akin to Perl5:
 
-  "The $x bit"      --> "The $x bit"
-  "The ${x}rd bit"  --> "The {$x}rd bit"
-  "The \${x}rd bit" --> "The \$\{x\}rd bit"
+  qx{..} --> qx{..}
+  qx(..) --> qx (..)
 
-This enforcer only operates in quoted strings, heredocs present another issue.
+This enforcer only operates on qx() constructs.
 
 =head1 CONFIGURATION
 

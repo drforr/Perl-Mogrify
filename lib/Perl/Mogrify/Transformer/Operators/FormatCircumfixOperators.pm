@@ -105,7 +105,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Rationals::FormatRationals - Format 1.0, .1, 1. correctly
+Perl::Mogrify::Transformer::Operators::FormatCircumfixOperators - Format the {}, [], () operators
 
 
 =head1 AFFILIATION
@@ -116,13 +116,7 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 floating-point values have the format '1.0' where a trailing digit is required. It also optionally adds separators every N digits before the decimal point.
-
-  1.0 --> 1.0
-  1.  --> 1.0 # Modified to perl6 standards
-  .1  --> .1
-
-This enforcer only operates on stand-alone floating point numbers.
+This module is unused, but may be used in the future.
 
 =head1 CONFIGURATION
 

@@ -91,7 +91,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals - Format if(), elsif(), unless()
+Perl::Mogrify::Transformer::Files::FormatScript - Format the script to include 'use v6'
 
 
 =head1 AFFILIATION
@@ -102,10 +102,10 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 conditionals still allow parentheses, but must have whitespace between C<if> and C<()>:
+Perl6 is a new version, so to prevent Perl5 from running the newer version, place 'use v6;' at the top of the script.
 
-  if(1) { } --> if (1) { }
-  if (1) { } --> if (1) { }
+  #!perl --> #!perl
+             use v6;
 
 =head1 CONFIGURATION
 
