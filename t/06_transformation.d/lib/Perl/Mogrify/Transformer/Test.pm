@@ -1,11 +1,11 @@
-package Perl::Mogrify::Enforcer::Test;
+package Perl::Mogrify::Transformer::Test;
 
 use 5.006001;
 use strict;
 use warnings;
 
 use Perl::Mogrify::Utils qw{ :severities };
-use base 'Perl::Mogrify::Enforcer';
+use base 'Perl::Mogrify::Transformer';
 
 sub default_severity { return $SEVERITY_LOWEST }
 sub applies_to { return 'PPI::Token::Word' }

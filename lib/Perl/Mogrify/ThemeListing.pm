@@ -10,7 +10,7 @@ use Perl::Mogrify::Utils qw< hashify >;
 
 use overload ( q<""> => 'to_string' );
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

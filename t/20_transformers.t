@@ -9,7 +9,7 @@ use Test::Perl::Mogrify::Transformer qw< all_policies_ok >;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 # Notice that you can pass arguments to this test, which limit the testing to

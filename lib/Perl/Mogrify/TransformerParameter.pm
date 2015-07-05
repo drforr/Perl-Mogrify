@@ -23,7 +23,7 @@ use Perl::Mogrify::TransformerParameter::Behavior::StringList;
 use Perl::Mogrify::Utils qw{ :characters &interpolate };
 use Perl::Mogrify::Utils::DataConversion qw{ &defined_or_empty };
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 Readonly::Scalar our $NO_DESCRIPTION_AVAILABLE => 'No description available.';
 

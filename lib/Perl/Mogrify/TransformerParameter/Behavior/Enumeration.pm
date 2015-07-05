@@ -10,7 +10,7 @@ use Perl::Mogrify::Utils qw{ :characters &words_from_string &hashify };
 
 use base qw{ Perl::Mogrify::TransformerParameter::Behavior };
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

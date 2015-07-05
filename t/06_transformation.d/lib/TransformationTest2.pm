@@ -9,7 +9,7 @@ use Perl::Mogrify::Transformation;
 
 # This file exists solely to test Perl::Mogrify::Transformation::import()
 
-sub get_transformation {
+sub get_violation {
 
     my $code = 'Hello World;';
     my $doc = PPI::Document->new(\$code);

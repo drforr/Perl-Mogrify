@@ -23,7 +23,7 @@ use Test::More;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
@@ -244,14 +244,14 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 
 {
-    # In this test, we'll use a cusotm profile to deactivate some
+    # In this test, we'll use a custom profile to deactivate some
     # policies, and then use the -include option to re-activate them.  So
     # the net result is that we should still end up with the all the
     # policies.
 
     my %profile = (
-        '-NamingConventions::Capitalization' => {},
-        '-CodeLayout::ProhibitQuotedWordLists' => {},
+        '-BasicTypes::Strings::FormatShellStrings' => {},
+        '-Variables::FormatHashKeys' => {},
     );
 
     my @include = qw(capital quoted);
@@ -408,33 +408,20 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 {
     my %profile = (
-        'NamingConventions::Capitalization' => {},
-        'CodeLayout::ProhibitQuotedWordLists' => {},
+        'BasicTypes::Strings::FormatShellStrings' => {},
+        'Variables::FormatHashKeys' => {},
     );
 
     my %pc_config = (-severity => 1, -only => 1, -profile => \%profile);
     my @policies = Perl::Mogrify::Config->new( %pc_config )->policies();
     is(scalar @policies, 2, '-only switch');
-
-#    %pc_config = ( -severity => 1, -only => 1, -profile => {} );
-#    eval { Perl::Mogrify::Config->new( %pc_config )->policies() };
-#    my $exception = Perl::Mogrify::Exception::AggregateConfiguration->caught();
-#    ok(
-#        defined $exception,
-#        "got exception with -only switch, empty profile.",
-#    );
-#    like(
-#        $exception,
-#        qr<There are no enabled policies>,
-#        "got correct exception message with -only switch, empty profile.",
-#    );
 }
 
 #-----------------------------------------------------------------------------
 # Test the -single-policy switch
 
 {
-    my %pc_config = ('-single-policy' => 'ProhibitMagicNumbers');
+    my %pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
     my @policies = Perl::Mogrify::Config->new( %pc_config )->policies();
     is(scalar @policies, 1, '-single-policy switch');
 }
@@ -525,13 +512,13 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 # Test the -allow-unsafe switch
 {
     my %profile = (
-        'NamingConventions::Capitalization' => {},
-        'CodeLayout::ProhibitQuotedWordLists' => {},
+        'BasicTypes::Strings::FormatShellStrings' => {},
+        'Variables::FormatHashKeys' => {},
     );
 
     # Pretend that ProhibitQuotedWordLists is actually unsafe
     no warnings qw(redefine once);  ## no mogrify qw(ProhibitNoWarnings)
-    local *Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists::is_safe = sub {return 0};
+    local *Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);
     my @p = Perl::Mogrify::Config->new( %safe_pc_config )->policies();
@@ -541,7 +528,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     @p = Perl::Mogrify::Config->new( %unsafe_pc_config )->policies();
     is(scalar @p, 2, 'Also loaded unsafe policies with -allow-unsafe switch');
 
-    my %singular_pc_config = ('-single-policy' => 'QuotedWordLists');
+    my %singular_pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
     @p = Perl::Mogrify::Config->new( %singular_pc_config )->policies();
     is(scalar @p, 1, '-single-policy always loads Transformer, even if unsafe');
 }

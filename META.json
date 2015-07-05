@@ -94,779 +94,779 @@
    "provides" : {
       "Perl::Mogrify" : {
          "file" : "lib/Perl/Mogrify.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Annotation" : {
          "file" : "lib/Perl/Mogrify/Annotation.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Command" : {
          "file" : "lib/Perl/Mogrify/Command.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Config" : {
          "file" : "lib/Perl/Mogrify/Config.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Document" : {
          "file" : "lib/Perl/Mogrify/Document.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception" : {
          "file" : "lib/Perl/Mogrify/Exception.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::AggregateConfiguration" : {
          "file" : "lib/Perl/Mogrify/Exception/AggregateConfiguration.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Generic" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Generic.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::NonExistentTransformer" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/NonExistentTransformer.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option::Global" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Global.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option::Global::ExtraParameter" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Global/ExtraParameter.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option::Global::ParameterValue" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Global/ParameterValue.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option::Transformer" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Transformer.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option::Transformer::ExtraParameter" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Transformer/ExtraParameter.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Configuration::Option::Transformer::ParameterValue" : {
          "file" : "lib/Perl/Mogrify/Exception/Configuration/Option/Transformer/ParameterValue.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Fatal" : {
          "file" : "lib/Perl/Mogrify/Exception/Fatal.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Fatal::Generic" : {
          "file" : "lib/Perl/Mogrify/Exception/Fatal/Generic.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Fatal::Internal" : {
          "file" : "lib/Perl/Mogrify/Exception/Fatal/Internal.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Fatal::TransformerDefinition" : {
          "file" : "lib/Perl/Mogrify/Exception/Fatal/TransformerDefinition.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::IO" : {
          "file" : "lib/Perl/Mogrify/Exception/IO.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Exception::Parse" : {
          "file" : "lib/Perl/Mogrify/Exception/Parse.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::OptionsProcessor" : {
          "file" : "lib/Perl/Mogrify/OptionsProcessor.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer" : {
          "file" : "lib/Perl/Mogrify/Transformer.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitBooleanGrep" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitBooleanGrep.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitComplexMappings" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitComplexMappings.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitLvalueSubstr" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitLvalueSubstr.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitReverseSortBlock" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitReverseSortBlock.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitSleepViaSelect" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitSleepViaSelect.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitStringyEval" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitStringyEval.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitStringySplit" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitStringySplit.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitUniversalCan" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitUniversalCan.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitUniversalIsa" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitUniversalIsa.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitUselessTopic" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitUselessTopic.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitVoidGrep" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitVoidGrep.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::ProhibitVoidMap" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/ProhibitVoidMap.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::RequireBlockGrep" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireBlockGrep.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::RequireBlockMap" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireBlockMap.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::RequireGlobFunction" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireGlobFunction.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::BuiltinFunctions::RequireSimpleSortBlock" : {
          "file" : "lib/Perl/Mogrify/Transformer/BuiltinFunctions/RequireSimpleSortBlock.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ClassHierarchies::ProhibitAutoloading" : {
          "file" : "lib/Perl/Mogrify/Transformer/ClassHierarchies/ProhibitAutoloading.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ClassHierarchies::ProhibitExplicitISA" : {
          "file" : "lib/Perl/Mogrify/Transformer/ClassHierarchies/ProhibitExplicitISA.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ClassHierarchies::ProhibitOneArgBless" : {
          "file" : "lib/Perl/Mogrify/Transformer/ClassHierarchies/ProhibitOneArgBless.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::ProhibitHardTabs" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitHardTabs.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::ProhibitParensWithBuiltins" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitParensWithBuiltins.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitQuotedWordLists.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::ProhibitTrailingWhitespace" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/ProhibitTrailingWhitespace.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::RequireConsistentNewlines" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/RequireConsistentNewlines.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/RequireTidyCode.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CodeLayout::RequireTrailingCommas" : {
          "file" : "lib/Perl/Mogrify/Transformer/CodeLayout/RequireTrailingCommas.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitCStyleForLoops" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitCStyleForLoops.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitCascadingIfElse" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitCascadingIfElse.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitDeepNests" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitDeepNests.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitLabelsWithSpecialBlockNames" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitLabelsWithSpecialBlockNames.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitMutatingListFunctions" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitMutatingListFunctions.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitNegativeExpressionsInUnlessAndUntilConditions.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitPostfixControls" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitPostfixControls.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitUnlessBlocks" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitUnlessBlocks.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitUnreachableCode" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitUnreachableCode.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ControlStructures::ProhibitUntilBlocks" : {
          "file" : "lib/Perl/Mogrify/Transformer/ControlStructures/ProhibitUntilBlocks.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Documentation::PodSpelling" : {
          "file" : "lib/Perl/Mogrify/Transformer/Documentation/PodSpelling.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Documentation::RequirePackageMatchesPodName" : {
          "file" : "lib/Perl/Mogrify/Transformer/Documentation/RequirePackageMatchesPodName.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Documentation::RequirePodAtEnd" : {
          "file" : "lib/Perl/Mogrify/Transformer/Documentation/RequirePodAtEnd.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Documentation::RequirePodLinksIncludeText" : {
          "file" : "lib/Perl/Mogrify/Transformer/Documentation/RequirePodLinksIncludeText.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Documentation::RequirePodSections" : {
          "file" : "lib/Perl/Mogrify/Transformer/Documentation/RequirePodSections.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ErrorHandling::RequireCarping" : {
          "file" : "lib/Perl/Mogrify/Transformer/ErrorHandling/RequireCarping.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ErrorHandling::RequireCheckingReturnValueOfEval" : {
          "file" : "lib/Perl/Mogrify/Transformer/ErrorHandling/RequireCheckingReturnValueOfEval.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitBacktickOperators" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitBacktickOperators.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitBarewordFileHandles" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitBarewordFileHandles.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitExplicitStdin" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitExplicitStdin.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitInteractiveTest" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitInteractiveTest.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitJoinedReadline" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitJoinedReadline.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitOneArgSelect" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitOneArgSelect.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitReadlineInForLoop" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitReadlineInForLoop.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::ProhibitTwoArgOpen" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/ProhibitTwoArgOpen.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::RequireBracedFileHandleWithPrint" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/RequireBracedFileHandleWithPrint.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::RequireBriefOpen" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/RequireBriefOpen.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::RequireCheckedClose" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/RequireCheckedClose.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::RequireCheckedOpen" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/RequireCheckedOpen.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::RequireCheckedSyscalls" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/RequireCheckedSyscalls.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::InputOutput::RequireEncodingWithUTF8Layer" : {
          "file" : "lib/Perl/Mogrify/Transformer/InputOutput/RequireEncodingWithUTF8Layer.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Miscellanea::ProhibitFormats" : {
          "file" : "lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitFormats.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Miscellanea::ProhibitTies" : {
          "file" : "lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitTies.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic" : {
          "file" : "lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitUnrestrictedNoCritic.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Miscellanea::ProhibitUselessNoCritic" : {
          "file" : "lib/Perl/Mogrify/Transformer/Miscellanea/ProhibitUselessNoCritic.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::ProhibitAutomaticExportation" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/ProhibitAutomaticExportation.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::ProhibitConditionalUseStatements" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/ProhibitConditionalUseStatements.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::ProhibitEvilModules" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/ProhibitEvilModules.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::ProhibitExcessMainComplexity" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/ProhibitExcessMainComplexity.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::ProhibitMultiplePackages" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/ProhibitMultiplePackages.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::RequireBarewordIncludes" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/RequireBarewordIncludes.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::RequireEndWithOne" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/RequireEndWithOne.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::RequireExplicitPackage" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/RequireExplicitPackage.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::RequireFilenameMatchesPackage" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/RequireFilenameMatchesPackage.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::RequireNoMatchVarsWithUseEnglish" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/RequireNoMatchVarsWithUseEnglish.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Modules::RequireVersionVar" : {
          "file" : "lib/Perl/Mogrify/Transformer/Modules/RequireVersionVar.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::NamingConventions::Capitalization" : {
          "file" : "lib/Perl/Mogrify/Transformer/NamingConventions/Capitalization.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::NamingConventions::ProhibitAmbiguousNames" : {
          "file" : "lib/Perl/Mogrify/Transformer/NamingConventions/ProhibitAmbiguousNames.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Objects::ProhibitIndirectSyntax" : {
          "file" : "lib/Perl/Mogrify/Transformer/Objects/ProhibitIndirectSyntax.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::References::ProhibitDoubleSigils" : {
          "file" : "lib/Perl/Mogrify/Transformer/References/ProhibitDoubleSigils.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitCaptureWithoutTest" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitCaptureWithoutTest.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitComplexRegexes" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitComplexRegexes.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitEnumeratedClasses" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitEnumeratedClasses.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitEscapedMetacharacters" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitEscapedMetacharacters.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitFixedStringMatches" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitFixedStringMatches.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitSingleCharAlternation" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitSingleCharAlternation.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitUnusedCapture" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitUnusedCapture.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitUnusualDelimiters" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitUnusualDelimiters.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::ProhibitUselessTopic" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/ProhibitUselessTopic.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::RequireBracesForMultiline" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/RequireBracesForMultiline.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::RequireDotMatchAnything" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/RequireDotMatchAnything.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::RequireExtendedFormatting" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/RequireExtendedFormatting.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::RegularExpressions::RequireLineBoundaryMatching" : {
          "file" : "lib/Perl/Mogrify/Transformer/RegularExpressions/RequireLineBoundaryMatching.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitAmpersandSigils" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitAmpersandSigils.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitBuiltinHomonyms" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitBuiltinHomonyms.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitExcessComplexity" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitExcessComplexity.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitExplicitReturnUndef" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitExplicitReturnUndef.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitManyArgs" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitManyArgs.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitNestedSubs" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitNestedSubs.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitReturnSort" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitReturnSort.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitSubroutinePrototypes" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitSubroutinePrototypes.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProhibitUnusedPrivateSubroutines" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProhibitUnusedPrivateSubroutines.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::ProtectPrivateSubs" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/ProtectPrivateSubs.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::RequireArgUnpacking" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/RequireArgUnpacking.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Subroutines::RequireFinalReturn" : {
          "file" : "lib/Perl/Mogrify/Transformer/Subroutines/RequireFinalReturn.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::TestingAndDebugging::ProhibitNoStrict" : {
          "file" : "lib/Perl/Mogrify/Transformer/TestingAndDebugging/ProhibitNoStrict.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::TestingAndDebugging::ProhibitNoWarnings" : {
          "file" : "lib/Perl/Mogrify/Transformer/TestingAndDebugging/ProhibitNoWarnings.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::TestingAndDebugging::ProhibitProlongedStrictureOverride" : {
          "file" : "lib/Perl/Mogrify/Transformer/TestingAndDebugging/ProhibitProlongedStrictureOverride.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::TestingAndDebugging::RequireTestLabels" : {
          "file" : "lib/Perl/Mogrify/Transformer/TestingAndDebugging/RequireTestLabels.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::TestingAndDebugging::RequireUseStrict" : {
          "file" : "lib/Perl/Mogrify/Transformer/TestingAndDebugging/RequireUseStrict.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::TestingAndDebugging::RequireUseWarnings" : {
          "file" : "lib/Perl/Mogrify/Transformer/TestingAndDebugging/RequireUseWarnings.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitCommaSeparatedStatements" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitCommaSeparatedStatements.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitComplexVersion" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitComplexVersion.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitConstantPragma" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitConstantPragma.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitEmptyQuotes" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitEmptyQuotes.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitEscapedCharacters" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitEscapedCharacters.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitImplicitNewlines" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitImplicitNewlines.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitInterpolationOfLiterals" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitInterpolationOfLiterals.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitLeadingZeros" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitLeadingZeros.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitLongChainsOfMethodCalls" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitLongChainsOfMethodCalls.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMagicNumbers" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitMagicNumbers.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMismatchedOperators" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitMismatchedOperators.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitMixedBooleanOperators" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitMixedBooleanOperators.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitNoisyQuotes" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitNoisyQuotes.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitQuotesAsQuotelikeOperatorDelimiters.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitSpecialLiteralHeredocTerminator.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::ProhibitVersionStrings" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/ProhibitVersionStrings.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::RequireConstantVersion" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireConstantVersion.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::RequireInterpolationOfMetachars" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireInterpolationOfMetachars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::RequireNumberSeparators" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireNumberSeparators.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::RequireQuotedHeredocTerminator" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireQuotedHeredocTerminator.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::ValuesAndExpressions::RequireUpperCaseHeredocTerminator" : {
          "file" : "lib/Perl/Mogrify/Transformer/ValuesAndExpressions/RequireUpperCaseHeredocTerminator.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitAugmentedAssignmentInDeclaration" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitAugmentedAssignmentInDeclaration.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitConditionalDeclarations" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitConditionalDeclarations.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitEvilVariables" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitEvilVariables.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitLocalVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitLocalVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitMatchVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitMatchVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitPackageVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitPackageVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitPerl4PackageNames" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitPerl4PackageNames.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitPunctuationVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitPunctuationVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitReusedNames" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitReusedNames.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProhibitUnusedVariables" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProhibitUnusedVariables.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::ProtectPrivateVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/ProtectPrivateVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::RequireInitializationForLocalVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/RequireInitializationForLocalVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::RequireLexicalLoopIterators" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/RequireLexicalLoopIterators.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::RequireLocalizedPunctuationVars" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/RequireLocalizedPunctuationVars.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Variables::RequireNegativeIndices" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/RequireNegativeIndices.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerConfig" : {
          "file" : "lib/Perl/Mogrify/TransformerConfig.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerFactory" : {
          "file" : "lib/Perl/Mogrify/TransformerFactory.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerListing" : {
          "file" : "lib/Perl/Mogrify/TransformerListing.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter::Behavior" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter::Behavior::Boolean" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/Boolean.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter::Behavior::Enumeration" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/Enumeration.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter::Behavior::Integer" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/Integer.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter::Behavior::String" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/String.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TransformerParameter::Behavior::StringList" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/StringList.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::ProfilePrototype" : {
          "file" : "lib/Perl/Mogrify/ProfilePrototype.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Statistics" : {
          "file" : "lib/Perl/Mogrify/Statistics.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::TestUtils" : {
          "file" : "lib/Perl/Mogrify/TestUtils.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Theme" : {
          "file" : "lib/Perl/Mogrify/Theme.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::ThemeListing" : {
          "file" : "lib/Perl/Mogrify/ThemeListing.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::UserProfile" : {
          "file" : "lib/Perl/Mogrify/UserProfile.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils" : {
          "file" : "lib/Perl/Mogrify/Utils.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::Constants" : {
          "file" : "lib/Perl/Mogrify/Utils/Constants.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::DataConversion" : {
          "file" : "lib/Perl/Mogrify/Utils/DataConversion.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::McCabe" : {
          "file" : "lib/Perl/Mogrify/Utils/McCabe.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::POD" : {
          "file" : "lib/Perl/Mogrify/Utils/POD.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::POD::ParseInteriorSequence" : {
          "file" : "lib/Perl/Mogrify/Utils/POD/ParseInteriorSequence.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::PPI" : {
          "file" : "lib/Perl/Mogrify/Utils/PPI.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Utils::Perl" : {
          "file" : "lib/Perl/Mogrify/Utils/Perl.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Perl::Mogrify::Transformation" : {
          "file" : "lib/Perl/Mogrify/Transformation.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       },
       "Test::Perl::Mogrify::Transformer" : {
          "file" : "lib/Test/Perl/Mogrify/Transformer.pm",
-         "version" : "1.125"
+         "version" : "0.01"
       }
    },
    "release_status" : "stable",
@@ -883,6 +883,6 @@
       },
       "x_MailingList" : "http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users"
    },
-   "version" : "1.125",
+   "version" : "0.01",
    "x_authority" : "cpan:CRITICRE"
 }

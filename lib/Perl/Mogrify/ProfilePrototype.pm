@@ -11,7 +11,7 @@ use Perl::Mogrify::Transformer qw{};
 use Perl::Mogrify::Utils qw{ :characters };
 use overload ( q{""} => 'to_string' );
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ sub _proto_format {
 ${prefix}set_themes                         = %t
 ${prefix}add_themes                         =
 ${prefix}severity                           = %s
-${prefix}maximum_violations_per_document    = %v
+${prefix}maximum_transformations_per_document    = %v
 %{\\n%\\x7b# \\x7df\\n${prefix}%n = %D\\n}O%{${prefix}Cannot programmatically discover what parameters this policy takes.\\n}U
 END_OF_FORMAT
 

@@ -16,7 +16,7 @@ use Perl::Mogrify::Exception::Fatal::Internal qw{ throw_internal };
 use Perl::Mogrify::Exception::Configuration::Generic qw{ throw_generic };
 use Perl::Mogrify::TransformerConfig;
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

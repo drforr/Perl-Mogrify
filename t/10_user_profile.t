@@ -12,7 +12,7 @@ use Test::More tests => 41;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
@@ -20,33 +20,33 @@ our $VERSION = '1.125';
 
 {
     my %policy_params = (min_elements => 4);
-    my %profile_hash = ( '-NamingConventions::Capitalization' => {},
-                         'CodeLayout::ProhibitQuotedWordLists' => \%policy_params );
+    my %profile_hash = ( '-BasicTypes::Strings::FormatShellStrings' => {},
+        '-Variables::FormatHashKeys' => \%policy_params );
 
     my $up = Perl::Mogrify::UserProfile->new( -profile => \%profile_hash );
 
     # Using short policy names
     is(
-        $up->policy_is_enabled('CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Variables::FormatHashKeys'),
         1,
-        'CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Variables::FormatHashKeys'),
         1,
-        'NamingConventions::Capitalization is disabled.',
+        'Variables::FormatHashKeys is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Variables::FormatHashKeys'),
         \%policy_params,
-        'CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
@@ -54,9 +54,9 @@ our $VERSION = '1.125';
         'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
@@ -83,7 +83,7 @@ our $VERSION = '1.125';
 {
     my %policy_params = (min_elements => 4);
     my @profile_array = ( q{ [-NamingConventions::Capitalization] },
-                          q{ [CodeLayout::ProhibitQuotedWordLists]           },
+                          q{ [Variables::FormatHashKeys]           },
                           q{ min_elements = 4                         },
     );
 
@@ -92,9 +92,9 @@ our $VERSION = '1.125';
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Variables::FormatHashKeys'),
         1,
-        'CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('NamingConventions::Capitalization'),
@@ -102,16 +102,16 @@ our $VERSION = '1.125';
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Variables::FormatHashKeys'),
         \%policy_params,
-        'CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
@@ -119,9 +119,9 @@ our $VERSION = '1.125';
         'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
@@ -149,7 +149,7 @@ our $VERSION = '1.125';
     my %policy_params = (min_elements => 4);
     my $profile_string = <<'END_PROFILE';
 [-NamingConventions::Capitalization]
-[CodeLayout::ProhibitQuotedWordLists]
+[Variables::FormatHashKeys]
 min_elements = 4
 END_PROFILE
 
@@ -157,9 +157,9 @@ END_PROFILE
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Variables::FormatHashKeys'),
         1,
-        'CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('NamingConventions::Capitalization'),
@@ -167,16 +167,16 @@ END_PROFILE
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Variables::FormatHashKeys'),
         \%policy_params,
-        'CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
@@ -184,9 +184,9 @@ END_PROFILE
         'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
@@ -214,7 +214,7 @@ END_PROFILE
     my %policy_params = (min_elements => 4);
     my $long_profile_string = <<'END_PROFILE';
 [-Perl::Mogrify::Transformer::NamingConventions::Capitalization]
-[Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists]
+[Perl::Mogrify::Transformer::Variables::FormatHashKeys]
 min_elements = 4
 END_PROFILE
 
@@ -222,9 +222,9 @@ END_PROFILE
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Variables::FormatHashKeys'),
         1,
-        'CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('NamingConventions::Capitalization'),
@@ -232,16 +232,16 @@ END_PROFILE
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Variables::FormatHashKeys'),
         \%policy_params,
-        'CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists is enabled.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
         $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
@@ -249,9 +249,9 @@ END_PROFILE
         'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists'),
+        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::CodeLayout::ProhibitQuotedWordLists got the correct configuration.',
+        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names

@@ -1,4 +1,4 @@
-package Perl::Mogrify::Exception::Configuration::Option::Enforcer;
+package Perl::Mogrify::Exception::Configuration::Option::Transformer;
 
 use 5.006001;
 use strict;
@@ -6,12 +6,12 @@ use warnings;
 
 use Perl::Mogrify::Utils qw{ &policy_short_name };
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
 use Exception::Class (
-    'Perl::Mogrify::Exception::Configuration::Option::Enforcer' => {
+    'Perl::Mogrify::Exception::Configuration::Option::Transformer' => {
         isa         => 'Perl::Mogrify::Exception::Configuration::Option',
         description => 'A problem with the configuration of a policy.',
         fields      => [ qw{ policy } ],

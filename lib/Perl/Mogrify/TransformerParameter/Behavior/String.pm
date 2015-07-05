@@ -8,7 +8,7 @@ use Perl::Mogrify::Utils;
 
 use base qw{ Perl::Mogrify::TransformerParameter::Behavior };
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

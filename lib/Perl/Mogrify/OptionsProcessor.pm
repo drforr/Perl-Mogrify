@@ -17,7 +17,7 @@ use Perl::Mogrify::Utils::Constants qw<
     >;
 use Perl::Mogrify::Utils::DataConversion qw< dor >;
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

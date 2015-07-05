@@ -1,6 +1,6 @@
 Revision history for Perl module Perl::Mogrify
 
-1.125 2015-03-02
+0.01 2015-03-02
 
     [Bug Fixes]
     * Corrected dependency on List::Util::any() to List::MoreUtils::any()

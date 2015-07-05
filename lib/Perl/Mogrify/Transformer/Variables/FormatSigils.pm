@@ -9,7 +9,7 @@ use Perl::Mogrify::Utils qw{ :characters :severities };
 
 use base 'Perl::Mogrify::Transformer';
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

@@ -9,7 +9,7 @@ use Perl::Mogrify::Utils qw{ $EMPTY hashify };
 
 use Exporter 'import';
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 

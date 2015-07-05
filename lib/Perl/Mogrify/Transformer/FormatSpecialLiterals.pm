@@ -23,24 +23,30 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return 'PPI::Token::Separator',
-           'PPI::Token::End'
+           'PPI::Token::End',
+           'PPI::Token::Word'
 }
 
 #-----------------------------------------------------------------------------
 
+my %map = (
+    '__END__'     => '=finish',
+    '__FILE__'    => '$?FILE',
+    '__LINE__'    => '$?LINE',
+    '__PACKAGE__' => '$?PACKAGE',
+);
+
 sub transform {
     my ($self, $elem, $doc) = @_;
-    if ( $elem->isa('PPI::Token::Separator') ) {
-        my $pod = PPI::Token::Word->new('=finish');
-        $elem->insert_before($pod);
-        $elem->remove;
+    return unless exists $map{$elem->content};
+    if ( $elem->isa('PPI::Token::Word') ) {
+        my $new_content = $elem->content;
+        $elem->set_content($map{$new_content});
     }
-#    elsif ( $elem->isa('PPI::Token::Data') ) {
-#    }
-#
-#        my $comma = PPI::Token::Operator->new(',');
-#        $elem->child(2)->insert_after( $comma );
-#    }
+    elsif ( $elem->isa('PPI::Token::Separator') ) {
+        my $new_content = $elem->content;
+        $elem->set_content($map{$new_content});
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -55,8 +61,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::FormatSpecialLiterals - Format __END__, __DATA__
-
+Perl::Mogrify::Transformer::FormatSpecialLiterals - Format __END__, __LINE__ &c
 
 =head1 AFFILIATION
 
@@ -69,6 +74,9 @@ distribution.
 __END__ is replaced with the POD marker '=finish', and you can read beyond this boundary with the filehandle C<$*FINISH>:
 
   __END__ --> =finish
+  __LINE__ --> $?LINE
+  __FILE__ --> $?FILE
+  __PACKAGE__ --> $?PACKAGE
 
 =head1 CONFIGURATION
 

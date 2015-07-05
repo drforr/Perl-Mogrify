@@ -22,7 +22,7 @@ use Perl::Mogrify::Exception::Fatal::Internal qw{ &throw_internal };
 use Perl::Mogrify::Utils qw{ :severities :data_conversion policy_long_name };
 use Perl::Mogrify::TransformerFactory (-test => 1);
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 Readonly::Array our @EXPORT_OK => qw(
     pcritique pcritique_with_transformations
@@ -48,7 +48,7 @@ sub block_perlmogrifyrc {
 }
 
 #-----------------------------------------------------------------------------
-# Criticize a code snippet using only one policy.  Returns the transformations.
+# Mogrifyize a code snippet using only one policy.  Returns the transformations.
 
 sub pcritique_with_transformations {
     my($policy, $code_ref, $config_ref) = @_;
@@ -58,7 +58,7 @@ sub pcritique_with_transformations {
 }
 
 #-----------------------------------------------------------------------------
-# Criticize a code snippet using only one policy.  Returns the number
+# Mogrifyize a code snippet using only one policy.  Returns the number
 # of transformations
 
 sub pcritique {  ##no mogrify(ArgUnpacking)
@@ -66,7 +66,7 @@ sub pcritique {  ##no mogrify(ArgUnpacking)
 }
 
 #-----------------------------------------------------------------------------
-# Criticize a code snippet using a specified config.  Returns the transformations.
+# Mogrifyize a code snippet using a specified config.  Returns the transformations.
 
 sub critique_with_transformations {
     my ($code_ref, $config_ref) = @_;
@@ -75,7 +75,7 @@ sub critique_with_transformations {
 }
 
 #-----------------------------------------------------------------------------
-# Criticize a code snippet using a specified config.  Returns the
+# Mogrifyize a code snippet using a specified config.  Returns the
 # number of transformations
 
 sub critique {  ##no mogrify(ArgUnpacking)
@@ -93,7 +93,7 @@ sub fcritique_with_transformations {
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->add_policy(-policy => $policy, -config => $config_ref);
 
-    my $dir = File::Temp::tempdir( 'PerlCritic-tmpXXXXXX', TMPDIR => 1 );
+    my $dir = File::Temp::tempdir( 'PerlMogrify-tmpXXXXXX', TMPDIR => 1 );
     $filename ||= 'Temp.pm';
     my @fileparts = File::Spec::Unix->splitdir($filename);
     if (@fileparts > 1) {
@@ -411,7 +411,7 @@ interface will go through a deprecation cycle.
 
 =head1 DESCRIPTION
 
-This module is used by L<Perl::Mogrify|Perl::Mogrify> only for
+This module is used by L<Perl::Mogrify|Perl::Critic> only for
 self-testing. It provides a few handy subroutines for testing new
 Perl::Mogrify::Transformer modules.  Look at the test programs that ship with
 Perl::Mogrify for more examples of how to use these subroutines.
@@ -621,7 +621,7 @@ they're the right six?
 =head1 AUTHOR
 
 Chris Dolan <cdolan@cpan.org>
-and the rest of the L<Perl::Mogrify|Perl::Mogrify> team.
+and the rest of the L<Perl::Mogrify|Perl::Critic> team.
 
 
 =head1 COPYRIGHT

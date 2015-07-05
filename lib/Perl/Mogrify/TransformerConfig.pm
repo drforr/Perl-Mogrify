@@ -6,7 +6,7 @@ use warnings;
 
 use Readonly;
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 use Perl::Mogrify::Exception::AggregateConfiguration;
 use Perl::Mogrify::Exception::Configuration::Option::Transformer::ParameterValue;

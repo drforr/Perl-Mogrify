@@ -22,7 +22,7 @@ use Perl::Mogrify::Utils::POD qw<
 >;
 use Perl::Mogrify::Exception::Fatal::Internal qw< throw_internal >;
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 
 Readonly::Scalar my $LOCATION_LINE_NUMBER               => 0;

@@ -6,7 +6,7 @@ use warnings;
 
 use Perl::Mogrify::Utils qw{ :characters };
 
-our $VERSION = '1.125';
+our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
