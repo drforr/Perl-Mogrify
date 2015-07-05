@@ -54,7 +54,7 @@ if ( $ENV{PERL_CRITIC_CACHE} ) {
 # Strict object testing -- prevent direct hash key access
 
 use Devel::EnforceEncapsulation;
-foreach my $pkg ( $EMPTY, qw< ::Config ::Transformer ::Violation> ) {
+foreach my $pkg ( $EMPTY, qw< ::Config ::Transformer ::Transformation> ) {
     Devel::EnforceEncapsulation->apply_to('Perl::Mogrify'.$pkg);
 }
 

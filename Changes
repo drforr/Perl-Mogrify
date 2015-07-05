@@ -168,7 +168,7 @@ Revision history for Perl module Perl::Mogrify
 
     [Other Changes]
     * Corrected POD in Perl::Mogrify::PPI::Utils. RT #68898.
-    * Perl::Mogrify::Violation source() method now returns the line
+    * Perl::Mogrify::Transformation source() method now returns the line
       containing the violation (not the first line) when the statement
       containing the violation spans multiple lines.
 
@@ -517,7 +517,7 @@ Revision history for Perl module Perl::Mogrify
       .perlcriticrc file and you want to see which Policies *would*
       be used with the current configuration, if you were actually going
       to critique a file with it.
-    * Perl::Mogrify::Violation now takes #line directives into account in the
+    * Perl::Mogrify::Transformation now takes #line directives into account in the
       %F, %f, and %l formats.  You can get the old values via the new %G, %g,
       and %L formats.
 
@@ -633,7 +633,7 @@ Revision history for Perl module Perl::Mogrify
       http://docs.activestate.com/pdk/8.0/PerlCritic_gui.html
 
     [New Features]
-    * Violation coloring is now configurable via command line or profile. The
+    * Transformation coloring is now configurable via command line or profile. The
       profile entries are color-severity-highest, -high, -medium, -low, or
       -lowest. Numbers are accepted in lieu of named severities (e.g.
       'color-severity-5' for 'color-severity-highest'), and 'colour' is
@@ -690,7 +690,7 @@ Revision history for Perl module Perl::Mogrify
       go through a deprecation cycle.  Non-public modules may have their
       interfaces changed without notice.
     * P::C::Transformer now has an is_enabled() method.
-    * P::C::Violation now has an element_class() method.
+    * P::C::Transformation now has an element_class() method.
 
     [Bug Fixes]
     * CodeLayout::ProhibitTrailingWhitespace didn't notice cases where PPI
@@ -786,7 +786,7 @@ Revision history for Perl module Perl::Mogrify
         ## no critic qw(Foo Bar Baz)   # also ok!
 
     * The deprecated $FORMAT variables for Perl::Mogrify::Transformer and
-      Perl::Mogrify::Violation no longer exist.  Use the corresponding
+      Perl::Mogrify::Transformation no longer exist.  Use the corresponding
       get_format() and set_format() functions instead.
 
     [New Policies]
@@ -839,7 +839,7 @@ Revision history for Perl module Perl::Mogrify
       problematic policy name.
 
     [Miscellanea]
-    * Perl::Mogrify::Violation will automatically strip trailing periods
+    * Perl::Mogrify::Transformation will automatically strip trailing periods
       from your Transformer description and explanation strings.  This ensures that
       the punctuation is consistent with the format specified by the user via
       the -verbose formatting options.
@@ -1516,7 +1516,7 @@ Revision history for Perl module Perl::Mogrify
     * 24005: test 95 in t/13_bundled_policies fails in 0.22
 
     [Groovy New Features]
-    * Added '%F' to the Violation format specifications.  This will
+    * Added '%F' to the Transformation format specifications.  This will
       give you just the name of file where the violation occurred
       (i.e. without the path).
     * Improved validation of .perlcriticrc file.  An invalid
@@ -2008,7 +2008,7 @@ Revision history for Perl module Perl::Mogrify
     [Bug Fixes]
     14923: 'require' is now permitted. See RequireBarewordIncludes.
     15022: Fixed false-positives when keywords are used as hash keys.
-    15023: Fixed spurious Violations by removing magic shebang.
+    15023: Fixed spurious Transformations by removing magic shebang.
     15031: Fixed spelling mistakes (and probably added some new ones).
     15233: Postfix 'if' is now allowed with 'die', 'croak', etc.
 
@@ -2042,7 +2042,7 @@ Revision history for Perl module Perl::Mogrify
 0.10 2005-10-05
 
     * Fixed stupid bug in newest Transformer modules.  They were returning
-      PPI objects instead of Perl::Mogrify::Violation objects.  Doh!
+      PPI objects instead of Perl::Mogrify::Transformation objects.  Doh!
     * Fixed test scripts to prevent failures if the user already has a
       .perlcriticrc file.
     * 'ProhibitHardTabs' now allows leading tabs by default.

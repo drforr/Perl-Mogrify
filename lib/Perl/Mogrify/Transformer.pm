@@ -36,7 +36,7 @@ use Perl::Mogrify::Exception::Fatal::TransformerDefinition
     qw< throw_policy_definition >;
 use Perl::Mogrify::TransformerConfig qw<>;
 use Perl::Mogrify::TransformerParameter qw<>;
-use Perl::Mogrify::Violation qw<>;
+use Perl::Mogrify::Transformation qw<>;
 
 use Exception::Class;   # this must come after "use P::C::Exception::*"
 
@@ -410,8 +410,8 @@ sub transformation {  ## no mogrify (ArgUnpacking)
     my ( $self, $desc, $expl, $elem ) = @_;
     # HACK!! Use goto instead of an explicit call because P::C::V::new() uses caller()
     my $sev = $self->get_severity();
-    @_ = ('Perl::Mogrify::Violation', $desc, $expl, $elem, $sev );
-    goto &Perl::Mogrify::Violation::new;
+    @_ = ('Perl::Mogrify::Transformation', $desc, $expl, $elem, $sev );
+    goto &Perl::Mogrify::Transformation::new;
 }
 
 #-----------------------------------------------------------------------------
@@ -585,7 +585,7 @@ to the document.  By default, does nothing but return C<$TRUE>.
 
 Given a L<PPI::Element|PPI::Element> and a
 L<PPI::Document|PPI::Document>, returns one or more
-L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> objects if the
+L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation> objects if the
 C<$element> violates this Transformer.  If there are no transformations, then it
 returns an empty list.  If the Transformer encounters an exception, then it
 should C<croak> with an error message and let the caller decide how to
@@ -598,14 +598,14 @@ your subclass B<must> override this method.
 
 =item C< transformation( $description, $explanation, $element ) >
 
-Returns a reference to a new C<Perl::Mogrify::Violation> object. The
+Returns a reference to a new C<Perl::Mogrify::Transformation> object. The
 arguments are a description of the transformation (as string), an
 explanation for the policy (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
 caused the transformation.
 
 These are the same as the constructor to
-L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>, but without the
+L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation>, but without the
 severity.  The Transformer itself knows the severity.
 
 
@@ -799,7 +799,7 @@ By default L<Perl::Mogrify|Perl::Mogrify> will not run unsafe policies.
 =head1 DOCUMENTATION
 
 When your Transformer module first C<use>s
-L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>, it will try and
+L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation>, it will try and
 extract the DESCRIPTION section of your Transformer module's POD.  This
 information is displayed by Perl::Mogrify if the verbosity level is set
 accordingly.  Therefore, please include a DESCRIPTION section in the
@@ -808,7 +808,7 @@ POD for any Transformer modules that you author.  Thanks.
 
 =head1 OVERLOADS
 
-Perl::Mogrify::Violation overloads the C<""> operator to produce neat
+Perl::Mogrify::Transformation overloads the C<""> operator to produce neat
 little messages when evaluated in string context.
 
 Formats are a combination of literal and escape characters similar to

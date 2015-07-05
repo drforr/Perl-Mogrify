@@ -12,7 +12,7 @@ use PPI::Document q< >;
 use PPI::Document::File q< >;
 
 use Perl::Mogrify::Utils qw< :characters >;
-use Perl::Mogrify::Violation q< >;
+use Perl::Mogrify::Transformation q< >;
 
 use Test::More tests => 69;
 
@@ -24,35 +24,35 @@ our $VERSION = '1.125';
 
 use lib catdir( qw< t 06_transformation.d lib > );
 
-use ViolationTest;   # this is solely to test the import() method; has diagnostics
-use ViolationTest2;  # this is solely to test the import() method; no diagnostics
+use TransformationTest;   # this is solely to test the import() method; has diagnostics
+use TransformationTest2;  # this is solely to test the import() method; no diagnostics
 use Perl::Mogrify::Transformer::Test;    # this is to test transformation formatting
 
 #-----------------------------------------------------------------------------
 #  method tests
 
 {
-    can_ok('Perl::Mogrify::Violation', 'sort_by_location');
-    can_ok('Perl::Mogrify::Violation', 'sort_by_severity');
-    can_ok('Perl::Mogrify::Violation', 'new');
-    can_ok('Perl::Mogrify::Violation', 'location');
-    can_ok('Perl::Mogrify::Violation', 'diagnostics');
-    can_ok('Perl::Mogrify::Violation', 'description');
-    can_ok('Perl::Mogrify::Violation', 'explanation');
-    can_ok('Perl::Mogrify::Violation', 'filename');
-    can_ok('Perl::Mogrify::Violation', 'source');
-    can_ok('Perl::Mogrify::Violation', 'policy');
-    can_ok('Perl::Mogrify::Violation', 'get_format');
-    can_ok('Perl::Mogrify::Violation', 'set_format');
-    can_ok('Perl::Mogrify::Violation', 'to_string');
+    can_ok('Perl::Mogrify::Transformation', 'sort_by_location');
+    can_ok('Perl::Mogrify::Transformation', 'sort_by_severity');
+    can_ok('Perl::Mogrify::Transformation', 'new');
+    can_ok('Perl::Mogrify::Transformation', 'location');
+    can_ok('Perl::Mogrify::Transformation', 'diagnostics');
+    can_ok('Perl::Mogrify::Transformation', 'description');
+    can_ok('Perl::Mogrify::Transformation', 'explanation');
+    can_ok('Perl::Mogrify::Transformation', 'filename');
+    can_ok('Perl::Mogrify::Transformation', 'source');
+    can_ok('Perl::Mogrify::Transformation', 'policy');
+    can_ok('Perl::Mogrify::Transformation', 'get_format');
+    can_ok('Perl::Mogrify::Transformation', 'set_format');
+    can_ok('Perl::Mogrify::Transformation', 'to_string');
 } # end scope block
 
 #-----------------------------------------------------------------------------
 # Constructor Failures:
 {
-    eval { Perl::Mogrify::Violation->new('desc', 'expl'); };
+    eval { Perl::Mogrify::Transformation->new('desc', 'expl'); };
     ok($EVAL_ERROR, 'new, wrong number of args');
-    eval { Perl::Mogrify::Violation->new('desc', 'expl', {}, 'severity'); };
+    eval { Perl::Mogrify::Transformation->new('desc', 'expl', {}, 'severity'); };
     ok($EVAL_ERROR, 'new, bad arg');
 } # end scope block
 
@@ -64,7 +64,7 @@ use Perl::Mogrify::Transformer::Test;    # this is to test transformation format
     my $code = 'Hello World;';
     my $document = PPI::Document->new(\$code);
     my $no_diagnostics_msg = qr/ \s* No [ ] diagnostics [ ] available \s* /xms;
-    my $viol = Perl::Mogrify::Violation->new( 'Foo', 'Bar', $document, 99, );
+    my $viol = Perl::Mogrify::Transformation->new( 'Foo', 'Bar', $document, 99, );
 
     is(   $viol->description(),          'Foo',           'description');
     is(   $viol->explanation(),          'Bar',           'explanation');
@@ -79,20 +79,20 @@ use Perl::Mogrify::Transformer::Test;    # this is to test transformation format
     like( $viol->diagnostics(), qr/ \A $no_diagnostics_msg \z /xms, 'diagnostics');
 
     {
-        my $old_format = Perl::Mogrify::Violation::get_format();
-        Perl::Mogrify::Violation::set_format('%l,%c,%m,%e,%p,%d,%r');
+        my $old_format = Perl::Mogrify::Transformation::get_format();
+        Perl::Mogrify::Transformation::set_format('%l,%c,%m,%e,%p,%d,%r');
         my $expect = qr/\A 1,1,Foo,Bar,$pkg,$no_diagnostics_msg,\Q$code\E \z/xms;
 
         like($viol->to_string(), $expect, 'to_string');
         like("$viol",            $expect, 'stringify');
 
-        Perl::Mogrify::Violation::set_format($old_format);
+        Perl::Mogrify::Transformation::set_format($old_format);
     }
 
-    $viol = Perl::Mogrify::Violation->new('Foo', [28], $document, 99);
+    $viol = Perl::Mogrify::Transformation->new('Foo', [28], $document, 99);
     is($viol->explanation(), 'See page 28 of PBP', 'explanation');
 
-    $viol = Perl::Mogrify::Violation->new('Foo', [28,30], $document, 99);
+    $viol = Perl::Mogrify::Transformation->new('Foo', [28,30], $document, 99);
     is($viol->explanation(), 'See pages 28,30 of PBP', 'explanation');
 } # end scope block
 
@@ -105,7 +105,7 @@ use Perl::Mogrify::Transformer::Test;    # this is to test transformation format
     my $word = $words->[0];
 
     my $no_diagnostics_msg = qr/ \s* No [ ] diagnostics [ ] available \s* /xms;
-    my $viol = Perl::Mogrify::Violation->new( 'Foo', 'Bar', $word, 99, );
+    my $viol = Perl::Mogrify::Transformation->new( 'Foo', 'Bar', $word, 99, );
 
     # Make bye-bye with the document.  This will end up stripping the guts out
     # of the PPI::Token::Word instance, so it is useless to us after the
@@ -137,14 +137,14 @@ use Perl::Mogrify::Transformer::Test;    # this is to test transformation format
 # Import tests
 {
     like(
-        ViolationTest->get_transformation()->diagnostics(),
+        TransformationTest->get_transformation()->diagnostics(),
         qr/ \A \s* This [ ] is [ ] a [ ] test [ ] diagnostic [.] \s*\z /xms,
         'import diagnostics',
     );
 } # end scope block
 
 #-----------------------------------------------------------------------------
-# Violation sorting
+# Transformation sorting
 
 SKIP: {
     my $code = <<'END_PERL';
@@ -155,21 +155,21 @@ END_PERL
     my $document = PPI::Document->new(\$code);
     my @children   = $document->schildren();
     my @transformations =
-        map { Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $_, 0) }
+        map { Perl::Mogrify::Transformation->new($EMPTY, $EMPTY, $_, 0) }
             $document, @children;
-    my @sorted = Perl::Mogrify::Violation->sort_by_location( reverse @transformations);
+    my @sorted = Perl::Mogrify::Transformation->sort_by_location( reverse @transformations);
     is_deeply(\@sorted, \@transformations, 'sort_by_location');
 
     my @severities = (5, 3, 4, 0, 2, 1);
     @transformations =
-        map { Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $document, $_) }
+        map { Perl::Mogrify::Transformation->new($EMPTY, $EMPTY, $document, $_) }
         @severities;
-    @sorted = Perl::Mogrify::Violation->sort_by_severity( @transformations );
+    @sorted = Perl::Mogrify::Transformation->sort_by_severity( @transformations );
     is_deeply( [map {$_->severity()} @sorted], [sort @severities], 'sort_by_severity');
 }
 
 #-----------------------------------------------------------------------------
-# Violation formatting
+# Transformation formatting
 
 {
     my $format = '%l; %c; %m; %e; %s; %r; %P; %p; %d';
@@ -182,8 +182,8 @@ END_PERL
        '    diagnostic',
     );
 
-    Perl::Mogrify::Violation::set_format($format);
-    is(Perl::Mogrify::Violation::get_format(), $format, 'set/get_format');
+    Perl::Mogrify::Transformation::set_format($format);
+    is(Perl::Mogrify::Transformation::get_format(), $format, 'set/get_format');
     my $code = "print;\n";
     my $document = PPI::Document->new(\$code);
     $document->index_locations();
@@ -200,8 +200,8 @@ END_PERL
 
 {
     # Alias subroutines, because I'm lazy
-    my $get_format = *Perl::Mogrify::Violation::get_format;
-    my $set_format = *Perl::Mogrify::Violation::set_format;
+    my $get_format = *Perl::Mogrify::Transformation::get_format;
+    my $set_format = *Perl::Mogrify::Transformation::set_format;
 
     my $fmt_literal = 'Found %m in file %f on line %l\n';  ## no mogrify (RequireInterpolationOfMetachars)
     my $fmt_interp  = "Found %m in file %f on line %l\n"; #Same, but double-quotes
@@ -225,7 +225,7 @@ END_PERL
 {
     my @given = ( qw(foo bar. .baz.. nuts!), [], {} );
     my @want  = ( qw(foo bar  .baz   nuts!), [], {} );
-    my @have  = Perl::Mogrify::Violation::_chomp_periods(@given);
+    my @have  = Perl::Mogrify::Transformation::_chomp_periods(@given);
 
     is_deeply(\@have, \@want, 'Chomping periods');
 } # end scope block
@@ -267,10 +267,10 @@ END_PERL
 sub _test_file_and_line_formats {
     my ($word, $expected) = @_;
 
-    my $transformation = Perl::Mogrify::Violation->new($EMPTY, $EMPTY, $word, 0);
+    my $transformation = Perl::Mogrify::Transformation->new($EMPTY, $EMPTY, $word, 0);
 
     foreach my $format ( sort keys %{$expected} ) {
-        Perl::Mogrify::Violation::set_format($format);
+        Perl::Mogrify::Transformation::set_format($format);
         is(
             $transformation->to_string(),
             $expected->{$format},

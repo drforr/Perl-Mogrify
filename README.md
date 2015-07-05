@@ -129,8 +129,8 @@ through a deprecation cycle.
     `-exclude`, and `-only` options.  You can set the default value for this
     option in your `.perlmogrifyrc` file.
 
-    **-top** is the maximum number of Violations to return when ranked by their
-    severity levels.  This must be a positive integer.  Violations are still
+    **-top** is the maximum number of Transformations to return when ranked by their
+    severity levels.  This must be a positive integer.  Transformations are still
     returned in the order that they occur within the file. Unless the `-severity`
     option is explicitly given, setting `-top` silently causes the `-severity`
     to be set to 1.  You can set the default value for this option in your
@@ -162,7 +162,7 @@ through a deprecation cycle.
     value for this option in your `.perlmogrifyrc` file.
 
     **-verbose** can be a positive integer (from 1 to 11), or a literal format
-    specification.  See [Perl::Mogrify::Violation](https://metacpan.org/pod/Perl::Mogrify::Violation) for an
+    specification.  See [Perl::Mogrify::Transformation](https://metacpan.org/pod/Perl::Mogrify::Transformation) for an
     explanation of format specifications.  You can set the default value for this
     option in your `.perlmogrifyrc` file.
 
@@ -196,8 +196,8 @@ through a deprecation cycle.
     `$source_code` is a reference to an instance of [PPI::Document](https://metacpan.org/pod/PPI::Document), then that
     instance is used directly. Otherwise, it is treated as a path to a local file
     containing Perl code.  This method returns a list of
-    [Perl::Mogrify::Violation](https://metacpan.org/pod/Perl::Mogrify::Violation) objects for each transformation of the loaded Policies.
-    The list is sorted in the order that the Violations appear in the code.  If
+    [Perl::Mogrify::Transformation](https://metacpan.org/pod/Perl::Mogrify::Transformation) objects for each transformation of the loaded Policies.
+    The list is sorted in the order that the Transformations appear in the code.  If
     there are no transformations, this method returns an empty list.
 
 - `add_policy( -policy => $policy_name, -params => \%param_hash )`
@@ -331,7 +331,7 @@ information.
 a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See ["POLICY THEMES"](#policy-themes) for more information.
 
-`maximum_transformations_per_document` limits the number of Violations the Transformer
+`maximum_transformations_per_document` limits the number of Transformations the Transformer
 will return for a given document.  Some Policies have a default limit; see the
 documentation for the individual Policies to see whether there is one.  To
 force a Transformer to not have a limit, specify "no\_limit" or the empty string for

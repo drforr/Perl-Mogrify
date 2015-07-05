@@ -842,7 +842,7 @@ annotation. Returns C<$self>.
 =item C<< suppressed_transformations() >>
 
 Returns a list of references to all the
-L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>s
+L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation>s
 that were found in this Document but were suppressed.
 
 

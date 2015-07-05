@@ -1726,7 +1726,7 @@ exception.
 
 =item C<is_valid_numeric_verbosity( $severity )>
 
-Answers whether the argument has a translation to a Violation format.
+Answers whether the argument has a translation to a Transformation format.
 
 
 =item C<verbosity_to_format( $verbosity_level )>
@@ -1734,7 +1734,7 @@ Answers whether the argument has a translation to a Violation format.
 Given a verbosity level between 1 and 10, returns the corresponding
 predefined format string.  These formats are suitable for passing to
 the C<set_format> method in
-L<Perl::Mogrify::Violation|Perl::Mogrify::Violation>.  See the
+L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation>.  See the
 L<perlmogrify|perlmogrify> documentation for a listing of the predefined
 formats.
 

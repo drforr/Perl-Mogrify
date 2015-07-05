@@ -17,9 +17,9 @@ our $VERSION = '1.125';
 use Test::Pod::Coverage 1.04;
 
 {
-    # HACK: Perl::Mogrify::Violation uses Pod::Parser to extract the
+    # HACK: Perl::Mogrify::Transformation uses Pod::Parser to extract the
     # DIAGNOSTIC section of the POD in each Transformer module.  This
-    # happens when the Transformer first C<uses> the Violation module.
+    # happens when the Transformer first C<uses> the Transformation module.
     # Meanwhile, Pod::Coverage also uses Pod::Parser to extract the
     # POD and compare it with the subroutines that are in the symbol
     # table for that module.  For reasons I cannot yet explain, using
@@ -28,13 +28,13 @@ use Test::Pod::Coverage 1.04;
     # on IO::String at line 1239 of Pod/Parser.pm".
 
     # For now, my workaround is to temporarily redefine the import()
-    # method in the Violation module so that it doesn't do any Pod
+    # method in the Transformation module so that it doesn't do any Pod
     # parsing.  I'll look for a better solution (or file a bug report)
     # when / if I have better understanding of the problem.
 
     no warnings qw<redefine once>; ## no mogrify (ProhibitNoWarnings)
-    require Perl::Mogrify::Violation;
-    *Perl::Mogrify::Violation::import = sub { 1 };
+    require Perl::Mogrify::Transformation;
+    *Perl::Mogrify::Transformation::import = sub { 1 };
 }
 
 my @trusted_methods  = get_trusted_methods();

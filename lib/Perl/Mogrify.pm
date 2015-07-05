@@ -15,7 +15,7 @@ use Scalar::Util qw< blessed >;
 
 use Perl::Mogrify::Exception::Configuration::Generic;
 use Perl::Mogrify::Config;
-use Perl::Mogrify::Violation;
+use Perl::Mogrify::Transformation;
 use Perl::Mogrify::Document;
 use Perl::Mogrify::Statistics;
 use Perl::Mogrify::Utils qw< :characters hashify shebang_line >;
@@ -138,12 +138,12 @@ sub _gather_transformations {
     # If requested, rank transformations by their severity and return the top N.
     if ( @transformations && (my $top = $self->config->top()) ) {
         my $limit = @transformations < $top ? $#transformations : $top-1;
-        @transformations = Perl::Mogrify::Violation::sort_by_severity(@transformations);
+        @transformations = Perl::Mogrify::Transformation::sort_by_severity(@transformations);
         @transformations = ( reverse @transformations )[ 0 .. $limit ];  #Slicing...
     }
 
     # Always return transformations sorted by location
-    return Perl::Mogrify::Violation->sort_by_location(@transformations);
+    return Perl::Mogrify::Transformation->sort_by_location(@transformations);
 }
 
 #=============================================================================
@@ -362,8 +362,8 @@ This option has precedence over the C<-severity>, C<-theme>, C<-include>,
 C<-exclude>, and C<-only> options.  You can set the default value for this
 option in your F<.perlmogrifyrc> file.
 
-B<-top> is the maximum number of Violations to return when ranked by their
-severity levels.  This must be a positive integer.  Violations are still
+B<-top> is the maximum number of Transformations to return when ranked by their
+severity levels.  This must be a positive integer.  Transformations are still
 returned in the order that they occur within the file. Unless the C<-severity>
 option is explicitly given, setting C<-top> silently causes the C<-severity>
 to be set to 1.  You can set the default value for this option in your
@@ -395,7 +395,7 @@ See L<"BENDING THE RULES"> for more information.  You can set the default
 value for this option in your F<.perlmogrifyrc> file.
 
 B<-verbose> can be a positive integer (from 1 to 11), or a literal format
-specification.  See L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> for an
+specification.  See L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation> for an
 explanation of format specifications.  You can set the default value for this
 option in your F<.perlmogrifyrc> file.
 
@@ -434,8 +434,8 @@ scalar reference, then it is treated as a string of actual Perl code.  If
 C<$source_code> is a reference to an instance of L<PPI::Document>, then that
 instance is used directly. Otherwise, it is treated as a path to a local file
 containing Perl code.  This method returns a list of
-L<Perl::Mogrify::Violation> objects for each transformation of the loaded Policies.
-The list is sorted in the order that the Violations appear in the code.  If
+L<Perl::Mogrify::Transformation> objects for each transformation of the loaded Policies.
+The list is sorted in the order that the Transformations appear in the code.  If
 there are no transformations, this method returns an empty list.
 
 =item C<< add_policy( -policy => $policy_name, -params => \%param_hash ) >>
@@ -573,7 +573,7 @@ C<add_themes> appends to the default themes for this Transformer.  The argument 
 a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See L<"POLICY THEMES"> for more information.
 
-C<maximum_transformations_per_document> limits the number of Violations the Transformer
+C<maximum_transformations_per_document> limits the number of Transformations the Transformer
 will return for a given document.  Some Policies have a default limit; see the
 documentation for the individual Policies to see whether there is one.  To
 force a Transformer to not have a limit, specify "no_limit" or the empty string for

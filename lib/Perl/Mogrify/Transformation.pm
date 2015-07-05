@@ -1,4 +1,4 @@
-package Perl::Mogrify::Violation;
+package Perl::Mogrify::Transformation;
 
 use 5.006001;
 use strict;
@@ -47,7 +47,7 @@ sub new {
     # be creating new Perl::Mogrify::Transformer modules.
 
     if ( @_ != $CONSTRUCTOR_ARG_COUNT ) {
-        throw_internal 'Wrong number of args to Violation->new()';
+        throw_internal 'Wrong number of args to Transformation->new()';
     }
 
     if ( eval { $elem->isa( 'Perl::Mogrify::Document' ) } ) {
@@ -56,7 +56,7 @@ sub new {
     }
 
     if ( not eval { $elem->isa( 'PPI::Element' ) } ) {
-        throw_internal '3rd arg to Violation->new() must be a PPI::Element';
+        throw_internal '3rd arg to Transformation->new() must be a PPI::Element';
     }
 
     # Strip punctuation.  These are controlled by the user via the
@@ -96,7 +96,7 @@ sub sort_by_location {  ## no mogrify(ArgUnpacking)
     ref $_[0] || shift;              # Can call as object or class method
     return scalar @_ if ! wantarray; # In case we are called in scalar context
 
-    ## TODO: What if $a and $b are not Violation objects?
+    ## TODO: What if $a and $b are not Transformation objects?
     return
         map {$_->[0]}
             sort { ($a->[1] <=> $b->[1]) || ($a->[2] <=> $b->[2]) }
@@ -111,7 +111,7 @@ sub sort_by_severity {  ## no mogrify(ArgUnpacking)
     ref $_[0] || shift;              # Can call as object or class method
     return scalar @_ if ! wantarray; # In case we are called in scalar context
 
-    ## TODO: What if $a and $b are not Violation objects?
+    ## TODO: What if $a and $b are not Transformation objects?
     return
         map {$_->[0]}
             sort { $a->[1] <=> $b->[1] }
@@ -329,30 +329,30 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Violation - A transformation of a Transformer found in some source code.
+Perl::Mogrify::Transformation - A transformation of a Transformer found in some source code.
 
 
 =head1 SYNOPSIS
 
   use PPI;
-  use Perl::Mogrify::Violation;
+  use Perl::Mogrify::Transformation;
 
   my $elem = $doc->child(0);      # $doc is a PPI::Document object
   my $desc = 'Offending code';    # Describe the transformation
   my $expl = [1,45,67];           # Page numbers from PBP
   my $sev  = 5;                   # Severity level of this transformation
 
-  my $vio  = Perl::Mogrify::Violation->new($desc, $expl, $node, $sev);
+  my $vio  = Perl::Mogrify::Transformation->new($desc, $expl, $node, $sev);
 
 
 =head1 DESCRIPTION
 
-Perl::Mogrify::Violation is the generic representation of an individual
+Perl::Mogrify::Transformation is the generic representation of an individual
 Transformer transformation.  Its primary purpose is to provide an abstraction
 layer so that clients of L<Perl::Mogrify|Perl::Mogrify> don't have to
 know anything about L<PPI|PPI>.  The C<transformations> method of all
 L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> subclasses must return a
-list of these Perl::Mogrify::Violation objects.
+list of these Perl::Mogrify::Transformation objects.
 
 
 =head1 INTERFACE SUPPORT
@@ -367,7 +367,7 @@ will go through a deprecation cycle.
 
 =item C<new( $description, $explanation, $element, $severity )>
 
-Returns a reference to a new C<Perl::Mogrify::Violation> object. The
+Returns a reference to a new C<Perl::Mogrify::Transformation> object. The
 arguments are a description of the transformation (as string), an
 explanation for the policy (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
@@ -403,7 +403,7 @@ C<visual_column_number()>, and C<logical_filename()> methods instead.
 
 Returns a five-element array reference containing the line and real &
 virtual column and logical numbers and logical file name where this
-Violation occurred, as in L<PPI::Element|PPI::Element>.
+Transformation occurred, as in L<PPI::Element|PPI::Element>.
 
 
 =item C<line_number()>
@@ -433,50 +433,50 @@ L<PPI::Document/"tab_width [ $width ]">.
 
 =item C<filename()>
 
-Returns the path to the file where this Violation occurred.  In some
+Returns the path to the file where this Transformation occurred.  In some
 cases, the path may be undefined because the source code was not read
 directly from a file.
 
 
 =item C<logical_filename()>
 
-Returns the logical path to the file where the Violation occurred.
+Returns the logical path to the file where the Transformation occurred.
 This can differ from C<filename()> when there was a C<#line> directive
 in the code.
 
 
 =item C<severity()>
 
-Returns the severity of this Violation as an integer ranging from 1 to
+Returns the severity of this Transformation as an integer ranging from 1 to
 5, where 5 is the "most" severe.
 
 
 =item C<sort_by_severity( @transformation_objects )>
 
-If you need to sort Violations by severity, use this handy routine:
+If you need to sort Transformations by severity, use this handy routine:
 
-    @sorted = Perl::Mogrify::Violation::sort_by_severity(@transformations);
+    @sorted = Perl::Mogrify::Transformation::sort_by_severity(@transformations);
 
 
 =item C<sort_by_location( @transformation_objects )>
 
-If you need to sort Violations by location, use this handy routine:
+If you need to sort Transformations by location, use this handy routine:
 
-    @sorted = Perl::Mogrify::Violation::sort_by_location(@transformations);
+    @sorted = Perl::Mogrify::Transformation::sort_by_location(@transformations);
 
 
 =item C<diagnostics()>
 
 Returns a formatted string containing a full discussion of the
 motivation for and details of the Transformer module that created this
-Violation.  This information is automatically extracted from the
+Transformation.  This information is automatically extracted from the
 C<DESCRIPTION> section of the Transformer module's POD.
 
 
 =item C<policy()>
 
 Returns the name of the L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer>
-that created this Violation.
+that created this Transformation.
 
 
 =item C<source()>
@@ -495,14 +495,14 @@ exception.
 
 =item C<set_format( $format )>
 
-Class method.  Sets the format for all Violation objects when they are
+Class method.  Sets the format for all Transformation objects when they are
 evaluated in string context.  The default is C<'%d at line %l, column
 %c. %e'>.  See L<"OVERLOADS"> for formatting options.
 
 
 =item C<get_format()>
 
-Class method. Returns the current format for all Violation objects
+Class method. Returns the current format for all Transformation objects
 when they are evaluated in string context.
 
 
@@ -518,7 +518,7 @@ variable.  See L<"OVERLOADS"> for the details.
 
 =head1 OVERLOADS
 
-Perl::Mogrify::Violation overloads the C<""> operator to produce neat
+Perl::Mogrify::Transformation overloads the C<""> operator to produce neat
 little messages when evaluated in string context.
 
 Formats are a combination of literal and escape characters similar to
@@ -555,16 +555,16 @@ C<%L> are unaffected by those directives.
 
 Here are some examples:
 
-    Perl::Mogrify::Violation::set_format("%m at line %l, column %c.\n");
+    Perl::Mogrify::Transformation::set_format("%m at line %l, column %c.\n");
     # looks like "Mixed case variable name at line 6, column 23."
 
-    Perl::Mogrify::Violation::set_format("%m near '%r'\n");
+    Perl::Mogrify::Transformation::set_format("%m near '%r'\n");
     # looks like "Mixed case variable name near 'my $theGreatAnswer = 42;'"
 
-    Perl::Mogrify::Violation::set_format("%l:%c:%p\n");
+    Perl::Mogrify::Transformation::set_format("%l:%c:%p\n");
     # looks like "6:23:NamingConventions::Capitalization"
 
-    Perl::Mogrify::Violation::set_format("%m at line %l. %e. \n%d\n");
+    Perl::Mogrify::Transformation::set_format("%m at line %l. %e. \n%d\n");
     # looks like "Mixed case variable name at line 6.  See page 44 of PBP.
       Conway's recommended naming convention is to use lower-case words
       separated by underscores.  Well-recognized acronyms can be in ALL

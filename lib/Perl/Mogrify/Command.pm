@@ -17,7 +17,7 @@ use Perl::Mogrify::Utils qw<
     $DEFAULT_VERBOSITY $DEFAULT_VERBOSITY_WITH_FILE_NAME
 >;
 use Perl::Mogrify::Utils::Constants qw< $_MODULE_VERSION_TERM_ANSICOLOR >;
-use Perl::Mogrify::Violation qw<>;
+use Perl::Mogrify::Transformation qw<>;
 
 #-----------------------------------------------------------------------------
 
@@ -312,7 +312,7 @@ sub _render_report {
             : $verbosity;
     my $fmt = Perl::Mogrify::Utils::verbosity_to_format( $verbosity );
     if (not -f $file) { $fmt =~ s< \%[fF] ><STDIN>xms; } #HACK!
-    Perl::Mogrify::Violation::set_format( $fmt );
+    Perl::Mogrify::Transformation::set_format( $fmt );
 
     my $color = $mogrify->config->color();
     _out $color ? _colorize_by_severity(@transformations) : @transformations;
@@ -393,21 +393,21 @@ sub _report_statistics {
     if (defined $transformations_per_file) {
         _out
             sprintf
-                "Violations per file was %.3f.\n",
+                "Transformations per file was %.3f.\n",
                 $transformations_per_file;
     }
     my $transformations_per_statement = $statistics->transformations_per_statement();
     if (defined $transformations_per_statement) {
         _out
             sprintf
-                "Violations per statement was %.3f.\n",
+                "Transformations per statement was %.3f.\n",
                 $transformations_per_statement;
     }
     my $transformations_per_line = $statistics->transformations_per_line_of_code();
     if (defined $transformations_per_line) {
         _out
             sprintf
-                "Violations per line of code was %.3f.\n",
+                "Transformations per line of code was %.3f.\n",
                 $transformations_per_line;
     }
 

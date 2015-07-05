@@ -778,7 +778,7 @@ is(
 
 #-----------------------------------------------------------------------------
 # Most policies apply to a particular type of PPI::Element and usually
-# only return one Violation at a time.  But the next three cases
+# only return one Transformation at a time.  But the next three cases
 # involve policies that apply to the whole document and can return
 # multiple transformations at a time.  These tests make sure that the 'no
 # mogrify' pragmas are effective with those Policies

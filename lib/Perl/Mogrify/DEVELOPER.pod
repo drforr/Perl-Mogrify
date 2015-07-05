@@ -40,7 +40,7 @@ L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> subclasses at the
 appropriate node.  The Transformer can inspect the node, look at the
 surrounding nodes, and do whatever else it wants.  If the Transformer
 decides that a coding standard has been violated, it returns one
-or more L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> objects.
+or more L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation> objects.
 If there are no transformations, then the Transformer returns nothing.
 
 Policies are usually written based on existing policies, so let's look
@@ -233,7 +233,7 @@ case our Transformer is satisfied and we just return nothing.
 But if it is not a L<PPI::Structure::Block|PPI::Structure::Block>,
 then we know that this call to C<grep> must be using the expression
 form, and that violates our Transformer.  So we create and return a new
-L<Perl::Mogrify::Violation|Perl::Mogrify::Violation> object via the
+L<Perl::Mogrify::Transformation|Perl::Mogrify::Transformation> object via the
 L<Perl::Mogrify::Transformer/"transformation"> method, passing in the
 description, explanation, and a reference to the PPI element that
 caused the transformation.  And that's all there is to it!

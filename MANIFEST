@@ -210,7 +210,7 @@ lib/Perl/Mogrify/Utils/Perl.pm
 lib/Perl/Mogrify/Utils/POD.pm
 lib/Perl/Mogrify/Utils/POD/ParseInteriorSequence.pm
 lib/Perl/Mogrify/Utils/PPI.pm
-lib/Perl/Mogrify/Violation.pm
+lib/Perl/Mogrify/Transformation.pm
 lib/Test/Perl/Mogrify/Transformer.pm
 LICENSE
 MANIFEST			This list of files
@@ -229,8 +229,8 @@ t/05_utils_perl.t
 t/05_utils_pod.t
 t/05_utils_ppi.t
 t/06_transformation.d/lib/Perl/Mogrify/Transformer/Test.pm
-t/06_transformation.d/lib/ViolationTest.pm
-t/06_transformation.d/lib/ViolationTest2.pm
+t/06_transformation.d/lib/TransformationTest.pm
+t/06_transformation.d/lib/TransformationTest2.pm
 t/06_transformation.d/source/Line.pm
 t/06_transformation.t
 t/07_command.t

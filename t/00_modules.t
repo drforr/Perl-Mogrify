@@ -164,28 +164,28 @@ can_ok('Perl::Mogrify::Transformer', 'is_safe');
 }
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Violation module interface
+# Test Perl::Mogrify::Transformation module interface
 
-use_ok('Perl::Mogrify::Violation') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Violation', 'description');
-can_ok('Perl::Mogrify::Violation', 'diagnostics');
-can_ok('Perl::Mogrify::Violation', 'explanation');
-can_ok('Perl::Mogrify::Violation', 'get_format');
-can_ok('Perl::Mogrify::Violation', 'location');
-can_ok('Perl::Mogrify::Violation', 'new');
-can_ok('Perl::Mogrify::Violation', 'policy');
-can_ok('Perl::Mogrify::Violation', 'set_format');
-can_ok('Perl::Mogrify::Violation', 'severity');
-can_ok('Perl::Mogrify::Violation', 'sort_by_location');
-can_ok('Perl::Mogrify::Violation', 'sort_by_severity');
-can_ok('Perl::Mogrify::Violation', 'source');
-can_ok('Perl::Mogrify::Violation', 'to_string');
+use_ok('Perl::Mogrify::Transformation') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::Mogrify::Transformation', 'description');
+can_ok('Perl::Mogrify::Transformation', 'diagnostics');
+can_ok('Perl::Mogrify::Transformation', 'explanation');
+can_ok('Perl::Mogrify::Transformation', 'get_format');
+can_ok('Perl::Mogrify::Transformation', 'location');
+can_ok('Perl::Mogrify::Transformation', 'new');
+can_ok('Perl::Mogrify::Transformation', 'policy');
+can_ok('Perl::Mogrify::Transformation', 'set_format');
+can_ok('Perl::Mogrify::Transformation', 'severity');
+can_ok('Perl::Mogrify::Transformation', 'sort_by_location');
+can_ok('Perl::Mogrify::Transformation', 'sort_by_severity');
+can_ok('Perl::Mogrify::Transformation', 'source');
+can_ok('Perl::Mogrify::Transformation', 'to_string');
 
 my $code = q{print 'Hello World';};
 my $doc = PPI::Document->new(\$code);
-my $viol = Perl::Mogrify::Violation->new(undef, undef, $doc, undef);
-isa_ok($viol, 'Perl::Mogrify::Violation');
-is($viol->VERSION(), $version_string, 'Perl::Mogrify::Violation version');
+my $viol = Perl::Mogrify::Transformation->new(undef, undef, $doc, undef);
+isa_ok($viol, 'Perl::Mogrify::Transformation');
+is($viol->VERSION(), $version_string, 'Perl::Mogrify::Transformation version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::Mogrify::UserProfile module interface

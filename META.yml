@@ -600,8 +600,8 @@ provides:
   Perl::Mogrify::Utils::Perl:
     file: lib/Perl/Mogrify/Utils/Perl.pm
     version: '1.125'
-  Perl::Mogrify::Violation:
-    file: lib/Perl/Mogrify/Violation.pm
+  Perl::Mogrify::Transformation:
+    file: lib/Perl/Mogrify/Transformation.pm
     version: '1.125'
   Test::Perl::Mogrify::Transformer:
     file: lib/Test/Perl/Mogrify/Transformer.pm

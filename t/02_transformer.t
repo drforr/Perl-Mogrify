@@ -22,7 +22,7 @@ our $VERSION = '1.125';
 package TransformerTest;
 use base 'Perl::Mogrify::Transformer';
 
-package TransformerTestOverriddenDefaultMaximumViolations;
+package TransformerTestOverriddenDefaultMaximumTransformations;
 use base 'Perl::Mogrify::Transformer';
 
 sub default_maximum_transformations_per_document { return 31; }
@@ -83,8 +83,8 @@ is(
 );
 
 
-my $overridden_default = TransformerTestOverriddenDefaultMaximumViolations->new();
-isa_ok($overridden_default, 'TransformerTestOverriddenDefaultMaximumViolations');
+my $overridden_default = TransformerTestOverriddenDefaultMaximumTransformations->new();
+isa_ok($overridden_default, 'TransformerTestOverriddenDefaultMaximumTransformations');
 
 is(
     $overridden_default->is_enabled(),

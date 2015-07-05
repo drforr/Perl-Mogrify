@@ -34,6 +34,7 @@ sub transform {
 
     my $content = $elem->content;
 
+    $content =~ s{^qx\(}{qx (};
     $content =~ s{^qx}{qqx};
 
     $elem->set_content( $content );

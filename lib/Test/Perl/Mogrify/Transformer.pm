@@ -13,7 +13,7 @@ use Readonly;
 use Test::Builder qw<>;
 use Test::More;
 
-use Perl::Mogrify::Violation;
+use Perl::Mogrify::Transformation;
 use Perl::Mogrify::TestUtils qw<
     pcritique_with_transformations fcritique_with_transformations subtests_in_tree
 >;
@@ -31,7 +31,7 @@ Readonly::Hash  our %EXPORT_TAGS    => (all => \@EXPORT_OK);
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::Violation::set_format( "%m at line %l, column %c.  (%r)\n" );
+Perl::Mogrify::Transformation::set_format( "%m at line %l, column %c.  (%r)\n" );
 Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
