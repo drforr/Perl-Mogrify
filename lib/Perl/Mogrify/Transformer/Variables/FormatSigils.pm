@@ -22,7 +22,10 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Symbol' }
+sub applies_to {
+    return 'PPI::Token::Symbol',
+           'PPI::Token::ArrayIndex'
+}
 
 #-----------------------------------------------------------------------------
 
@@ -34,21 +37,36 @@ sub applies_to           { return 'PPI::Token::Symbol' }
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return if $elem->raw_type eq '@';
-    return if $elem->raw_type eq '%';
+    if ( $elem->isa('PPI::Token::ArrayIndex') ) {
+        my $content = $elem->content;
 
-    if ( $elem->next_sibling ) {
-        my $subscript = $elem->next_sibling;
-        return unless $subscript->isa('PPI::Structure::Subscript');
-        my $new_content = $elem->content;
+        $content =~ s{\$#}{};
 
-        if ( $subscript->start eq '[' ) {
-            substr($new_content, 0, 1) = '@';
+        my $array = PPI::Token::Symbol->new('@' . $content);
+        $elem->insert_before($array);
+        my $dot = PPI::Token::Symbol->new('.');
+        $elem->insert_before($dot);
+        my $end = PPI::Token::Word->new('end');
+        $elem->insert_before($end);
+        $elem->delete;
+    }
+    else {
+        return if $elem->raw_type eq '@';
+        return if $elem->raw_type eq '%';
+
+        if ( $elem->next_sibling ) {
+            my $subscript = $elem->next_sibling;
+            return unless $subscript->isa('PPI::Structure::Subscript');
+            my $new_content = $elem->content;
+
+            if ( $subscript->start eq '[' ) {
+                substr($new_content, 0, 1) = '@';
+            }
+            elsif ( $subscript->start eq '{' ) {
+                substr($new_content, 0, 1) = '%';
+            }
+            $elem->set_content( $new_content );
         }
-        elsif ( $subscript->start eq '{' ) {
-            substr($new_content, 0, 1) = '%';
-        }
-        $elem->set_content( $new_content );
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

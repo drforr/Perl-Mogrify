@@ -22,7 +22,7 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement' }
+sub applies_to           { return 'PPI::Token::Word' }
 
 #-----------------------------------------------------------------------------
 
@@ -37,30 +37,32 @@ sub _make_a_block {
     return $new_block;
 }
 
+my %map = (
+    map => 1,
+    grep => 1
+);
+
 sub transform {
     my ($self, $elem, $doc) = @_;
+    return unless exists $map{$elem->content};
+    return if $elem->snext_sibling and
+              $elem->snext_sibling->isa('PPI::Token::Operator') and
+              $elem->snext_sibling->content eq ',';
+             
+    my $block = $elem->snext_sibling;
 
-    my $token = $elem->first_element;
-    my $content = $token->content;
-    return unless $content eq 'map' or
-                  $content eq 'grep';
-    return if $elem->child(3)->content eq ',';
-
-    if ( $elem->child(2)->isa('PPI::Structure') and
-         $elem->child(2)->start eq '{' and
-         $elem->child(2)->finish eq '}' ) {
+    if ( $block->isa('PPI::Structure') and
+         $block->start eq '{' and
+         $block->finish eq '}' ) {
         my $comma = PPI::Token::Operator->new(',');
-        $elem->child(2)->insert_after( $comma );
+        $block->insert_after( $comma );
     }
-    else {
-        my $next_ssib = $elem->child(2);
-        return if $next_ssib->isa('PPI::Structure::Block');
-
+    elsif ( !$block->isa('PPI::Structure::Block') ) {
         # Can't use find() here because we need to search *forward* from $word,
         # not *down* within $word.
 
-        my $last_sib = $next_ssib; # Can't be a comma, since `map ,` is invalid
-        my @elements_to_move = $last_sib;
+        my $last_sib = $block; # Can't be a comma, since `map ,` is invalid
+        my @elements_to_move = $block;
         while ( $last_sib = $last_sib->next_sibling ) {
             last if $last_sib->isa('PPI::Token::Operator')
                 and $last_sib->content eq ',';
@@ -69,7 +71,7 @@ sub transform {
         return unless $last_sib;
 
         my $new_block = _make_a_block();
-        $next_ssib->insert_before($new_block) or die;
+        $block->insert_before($new_block) or die;
 
         my $s = PPI::Statement->new();
         $_->remove          or die for @elements_to_move;
@@ -92,7 +94,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::FormatMapGreps - Format given()
+Perl::Mogrify::Transformer::CompoundStatements::FormatMapGreps - Format map{}, grep{}
 
 
 =head1 AFFILIATION
