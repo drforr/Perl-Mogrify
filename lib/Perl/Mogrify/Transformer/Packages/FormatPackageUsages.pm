@@ -27,6 +27,10 @@ sub applies_to           { return 'PPI::Statement::Include' }
 
 #-----------------------------------------------------------------------------
 
+my %excluded_pragma = (
+    constant => 1
+);
+
 #
 # 'use Foo;' --> 'use Foo:from<Perl5>;'
 # 'use Foo qw(a);' --> 'use Foo:from<Perl5> <a>;'
@@ -39,6 +43,7 @@ sub transform {
     my $package_name = $elem->child(2);
     return if is_pragma($package_name);
     return unless is_module_name($package_name);
+    return if exists $excluded_pragma{$package_name->content};
 
     my $old_content = $package_name;
     $old_content .= ':from<Perl5>';
