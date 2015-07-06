@@ -33,11 +33,15 @@ sub applies_to           { return 'PPI::Structure::Subscript' }
 sub transform {
     my ($self, $elem, $doc) = @_;
     return unless $elem->start eq '{' and $elem->finish eq '}';
-    return unless $elem->sprevious_sibling->isa('PPI::Token::Symbol');
+#use Data::Dumper; print Dumper $elem->sprevious_sibling;
+    return unless $elem->sprevious_sibling->isa('PPI::Token::Symbol') or
+                  $elem->sprevious_sibling->isa('PPI::Token::Operator');
+#use Data::Dumper; print Dumper $elem;
 
     my $bareword = $elem->child(0)->child(0);
 
     my $old_content = $bareword->content;
+    return if $bareword->{content} =~ /^['"]/;
 
     my $new_content = "'" . $old_content . "'";
 
