@@ -8,7 +8,7 @@ use Test::More (tests => 32);
 use Perl::Mogrify::TransformerFactory (-test => 1);
 
 # common P::C testing tools
-use Perl::Mogrify::TestUtils qw(critique);
+use Perl::Mogrify::TestUtils qw(transform);
 
 #-----------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ print $crap if $condition;  ## no mogrify
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -77,7 +77,7 @@ $baz = $nuts;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -105,7 +105,7 @@ my $noisy = '!';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -133,7 +133,7 @@ my $noisy = '!';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -162,7 +162,7 @@ my $noisy = '!';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -192,7 +192,7 @@ my $empty = '';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -221,7 +221,7 @@ my $empty = '';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -247,7 +247,7 @@ my $empty = '';        ## use mogrify
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -277,7 +277,7 @@ my $empty = '';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -308,7 +308,7 @@ my $empty = '';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {
             -profile  => $profile,
@@ -342,7 +342,7 @@ my $empty = '';  ## no mogrify
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {
             -profile  => $profile,
@@ -377,7 +377,7 @@ my $empty = '';
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {
             -profile  => $profile,
@@ -415,7 +415,7 @@ unless ( $condition1
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -451,7 +451,7 @@ unless ( $condition1
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -476,7 +476,7 @@ sub grep { return $foo; } ## no mogrify
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -500,7 +500,7 @@ sub grep {  ## no mogrify;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity =>1, -theme => 'core'}
     ),
@@ -525,7 +525,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -550,7 +550,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -575,7 +575,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -600,7 +600,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -630,7 +630,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -655,7 +655,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -680,7 +680,7 @@ eval $string;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -717,7 +717,7 @@ my $empty = '';   #Should find this
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'}
     ),
@@ -768,7 +768,7 @@ barf() unless $$ eq '';    ##   no mogrify(Postfix Empty Punctuation)
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -799,7 +799,7 @@ our $VERSION = 1.0;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 5, -theme => 'core'},
     ),
@@ -824,7 +824,7 @@ our $VERSION = 1.0;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 4, -theme => 'core'},
     ),
@@ -847,7 +847,7 @@ our $VERSION = 1.0;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 4, -theme => 'core'},
     ),
@@ -870,7 +870,7 @@ my $noisy = '!'; # should find this
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -898,7 +898,7 @@ the transformations should be supressed.
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -926,7 +926,7 @@ transformations should NOT be supressed.
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),
@@ -953,7 +953,7 @@ our $VERSION = 1;
 END_PERL
 
 is(
-    critique(
+    transform(
         \$code,
         {-profile  => $profile, -severity => 1, -theme => 'core'},
     ),

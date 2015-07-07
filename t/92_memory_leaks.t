@@ -46,7 +46,7 @@ eval 'use Test::Memory::Cycle; 1'
     my $ppi_doc = PPI::Document->new( \$code );
     my $pc_doc  = Perl::Mogrify::Document->new( '-source' => $ppi_doc );
     my $mogrify  = Perl::Mogrify->new( -severity => 1 );
-    my @transformations = $mogrify->critique( $pc_doc );
+    my @transformations = $mogrify->transform( $pc_doc );
     confess 'No transformations were created' if not @transformations;
 
     # One test for each transformation, plus one each for Mogrify and Document.

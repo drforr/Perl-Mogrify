@@ -24,7 +24,7 @@ use Perl::Mogrify::Utils qw< :characters hashify shebang_line >;
 
 our $VERSION = '0.01';
 
-Readonly::Array our @EXPORT_OK => qw(critique);
+Readonly::Array our @EXPORT_OK => qw(transform);
 
 #=============================================================================
 # PUBLIC methods
@@ -70,7 +70,7 @@ sub statistics {
 
 #-----------------------------------------------------------------------------
 
-sub critique {  ## no mogrify (ArgUnpacking)
+sub transform {  ## no mogrify (ArgUnpacking)
 
     #-------------------------------------------------------------------
     # This subroutine can be called as an object method or as a static
@@ -81,12 +81,12 @@ sub critique {  ## no mogrify (ArgUnpacking)
     # of the ways this subroutine might get called:
     #
     # #Object style...
-    # $mogrify->critique( $code );
+    # $mogrify->transform( $code );
     #
     # #Functional style...
-    # critique( $code );
-    # critique( {}, $code );
-    # critique( {-foo => bar}, $code );
+    # transform( $code );
+    # transform( {}, $code );
+    # transform( {-foo => bar}, $code );
     #------------------------------------------------------------------
 
     my ( $self, $source_code ) = @_ >= 2 ? @_ : ( {}, $_[0] );
@@ -130,7 +130,7 @@ sub _gather_transformations {
     # Evaluate each policy
     my @transformers = $self->config->transformers();
     my @ordered_transformers = _futz_with_policy_order(@transformers);
-    my @transformations = map { _critique($_, $doc) } @ordered_transformers;
+    my @transformations = map { _transform($_, $doc) } @ordered_transformers;
 
     # Accumulate statistics
     $self->statistics->accumulate( $doc, \@transformations );
@@ -149,7 +149,7 @@ sub _gather_transformations {
 #=============================================================================
 # PRIVATE functions
 
-sub _critique {
+sub _transform {
     my ($policy, $doc) = @_;
 
     return if not $policy->prepare_to_scan_document($doc);
@@ -233,7 +233,7 @@ Perl::Mogrify - Critique Perl source code for best-practices.
     use Perl::Mogrify;
     my $file = shift;
     my $mogrify = Perl::Mogrify->new();
-    my @transformations = $mogrify->critique($file);
+    my @transformations = $mogrify->transform($file);
     print @transformations;
 
 
@@ -426,7 +426,7 @@ cause only the relevant filenames to be displayed.
 
 =over
 
-=item C<critique( $source_code )>
+=item C<transform( $source_code )>
 
 Runs the C<$source_code> through the Perl::Mogrify engine using all the
 Policies that have been loaded into this engine.  If C<$source_code> is a
@@ -474,22 +474,22 @@ analyzed by this Mogrify.
 
 =head1 FUNCTIONAL INTERFACE
 
-For those folks who prefer to have a functional interface, The C<critique>
+For those folks who prefer to have a functional interface, The C<transform>
 method can be exported on request and called as a static function.  If the
 first argument is a hashref, its contents are used to construct a new
 Perl::Mogrify object internally.  The keys of that hash should be the same as
 those supported by the C<Perl::Mogrify::new()> method.  Here are some examples:
 
-    use Perl::Mogrify qw(critique);
+    use Perl::Mogrify qw(transform);
 
     # Use default parameters...
-    @transformations = critique( $some_file );
+    @transformations = transform( $some_file );
 
     # Use custom parameters...
-    @transformations = critique( {-severity => 2}, $some_file );
+    @transformations = transform( {-severity => 2}, $some_file );
 
     # As a one-liner
-    %> perl -MPerl::Mogrify=critique -e 'print critique(shift)' some_file.pm
+    %> perl -MPerl::Mogrify=transform -e 'print transform(shift)' some_file.pm
 
 None of the other object-methods are currently supported as static
 functions.  Sorry.

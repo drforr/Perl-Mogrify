@@ -25,9 +25,9 @@ use Perl::Mogrify::TransformerFactory (-test => 1);
 our $VERSION = '0.01';
 
 Readonly::Array our @EXPORT_OK => qw(
-    pcritique pcritique_with_transformations
-    critique  critique_with_transformations
-    fcritique fcritique_with_transformations
+    ptransform ptransform_with_transformations
+    transform  transform_with_transformations
+    ftransform ftransform_with_transformations
     subtests_in_tree
     should_skip_author_tests
     get_author_test_skip_message
@@ -50,45 +50,47 @@ sub block_perlmogrifyrc {
 #-----------------------------------------------------------------------------
 # Mogrify a code snippet using only one policy.  Returns the transformations.
 
-sub pcritique_with_transformations {
+sub ptransform_with_transformations {
     my($policy, $code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->apply_transform(-policy => $policy, -config => $config_ref);
-    return $c->critique($code_ref);
+    my @rv = $c->transform($code_ref);
+use Data::Dumper;print Dumper($c);
+    return @rv;
 }
 
 #-----------------------------------------------------------------------------
 # Mogrifyize a code snippet using only one policy.  Returns the number
 # of transformations
 
-sub pcritique {  ##no mogrify(ArgUnpacking)
-    return scalar pcritique_with_transformations(@_);
+sub ptransform {  ##no mogrify(ArgUnpacking)
+    return scalar ptransform_with_transformations(@_);
 }
 
 #-----------------------------------------------------------------------------
 # Mogrifyize a code snippet using a specified config.  Returns the transformations.
 
-sub critique_with_transformations {
+sub transform_with_transformations {
     my ($code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( %{$config_ref} );
-    return $c->critique($code_ref);
+    return $c->transform($code_ref);
 }
 
 #-----------------------------------------------------------------------------
 # Mogrifyize a code snippet using a specified config.  Returns the
 # number of transformations
 
-sub critique {  ##no mogrify(ArgUnpacking)
-    return scalar critique_with_transformations(@_);
+sub transform {  ##no mogrify(ArgUnpacking)
+    return scalar transform_with_transformations(@_);
 }
 
 #-----------------------------------------------------------------------------
-# Like pcritique_with_transformations, but forces a PPI::Document::File context.
+# Like ptransform_with_transformations, but forces a PPI::Document::File context.
 # The $filename arg is a Unix-style relative path, like 'Foo/Bar.pm'
 
 Readonly::Scalar my $TEMP_FILE_PERMISSIONS => oct 700;
 
-sub fcritique_with_transformations {
+sub ftransform_with_transformations {
     my($policy, $code_ref, $filename, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->apply_transform(-policy => $policy, -config => $config_ref);
@@ -108,7 +110,7 @@ sub fcritique_with_transformations {
 
     # Use eval so we can clean up before throwing an exception in case of
     # error.
-    my @v = eval {$c->critique($file)};
+    my @v = eval {$c->transform($file)};
     my $err = $EVAL_ERROR;
     File::Path::rmtree($dir, 0, 1);
     if ($err) {
@@ -118,11 +120,11 @@ sub fcritique_with_transformations {
 }
 
 #-----------------------------------------------------------------------------
-# Like pcritique, but forces a PPI::Document::File context.  The
+# Like ptransform, but forces a PPI::Document::File context.  The
 # $filename arg is a Unix-style relative path, like 'Foo/Bar.pm'
 
-sub fcritique {  ##no mogrify(ArgUnpacking)
-    return scalar fcritique_with_transformations(@_);
+sub ftransform {  ##no mogrify(ArgUnpacking)
+    return scalar ftransform_with_transformations(@_);
 }
 
 # Note: $include_extras is not documented in the POD because I'm not
@@ -387,7 +389,7 @@ interface will go through a deprecation cycle.
 
 =head1 SYNOPSIS
 
-    use Perl::Mogrify::TestUtils qw(critique pcritique fcritique);
+    use Perl::Mogrify::TestUtils qw(transform ptransform ftransform);
 
     my $code = '<<END_CODE';
     package Foo::Bar;
@@ -398,15 +400,15 @@ interface will go through a deprecation cycle.
 
     # Critique code against all loaded transformers...
     my $perl_mogrify_config = { -severity => 2 };
-    my $transformation_count = critique( \$code, $perl_mogrify_config);
+    my $transformation_count = transform( \$code, $perl_mogrify_config);
 
     # Critique code against one policy...
     my $custom_policy = 'Miscellanea::ProhibitFrobulation'
-    my $transformation_count = pcritique( $custom_policy, \$code );
+    my $transformation_count = ptransform( $custom_policy, \$code );
 
     # Critique code against one filename-related policy...
     my $custom_policy = 'Modules::RequireFilenameMatchesPackage'
-    my $transformation_count = fcritique( $custom_policy, \$code, 'Foo/Bar.pm' );
+    my $transformation_count = ftransform( $custom_policy, \$code, 'Foo/Bar.pm' );
 
 
 =head1 DESCRIPTION
@@ -429,35 +431,35 @@ simply call it at the top of your F<.t> program.  Note that this is
 not easily reversible, but that should not matter.
 
 
-=item critique_with_transformations( $code_string_ref, $config_ref )
+=item transform_with_transformations( $code_string_ref, $config_ref )
 
 Test a block of code against the specified Perl::Mogrify::Config
 instance (or C<undef> for the default).  Returns the transformations that
 occurred.
 
 
-=item critique( $code_string_ref, $config_ref )
+=item transform( $code_string_ref, $config_ref )
 
 Test a block of code against the specified Perl::Mogrify::Config
 instance (or C<undef> for the default).  Returns the number of
 transformations that occurred.
 
 
-=item pcritique_with_transformations( $policy_name, $code_string_ref, $config_ref )
+=item ptransform_with_transformations( $policy_name, $code_string_ref, $config_ref )
 
-Like C<critique_with_transformations()>, but tests only a single policy
+Like C<transform_with_transformations()>, but tests only a single policy
 instead of the whole bunch.
 
 
-=item pcritique( $policy_name, $code_string_ref, $config_ref )
+=item ptransform( $policy_name, $code_string_ref, $config_ref )
 
-Like C<critique()>, but tests only a single policy instead of the
+Like C<transform()>, but tests only a single policy instead of the
 whole bunch.
 
 
-=item fcritique_with_transformations( $policy_name, $code_string_ref, $filename, $config_ref )
+=item ftransform_with_transformations( $policy_name, $code_string_ref, $filename, $config_ref )
 
-Like C<pcritique_with_transformations()>, but pretends that the code was
+Like C<ptransform_with_transformations()>, but pretends that the code was
 loaded from the specified filename.  This is handy for testing
 transformers like C<Modules::RequireFilenameMatchesPackage> which care
 about the filename that the source derived from.
@@ -467,9 +469,9 @@ file and all necessary subdirectories will be created via
 L<File::Temp|File::Temp> and will be automatically deleted.
 
 
-=item fcritique( $policy_name, $code_string_ref, $filename, $config_ref )
+=item ftransform( $policy_name, $code_string_ref, $filename, $config_ref )
 
-Like C<pcritique()>, but pretends that the code was loaded from the
+Like C<ptransform()>, but pretends that the code was loaded from the
 specified filename.  This is handy for testing transformers like
 C<Modules::RequireFilenameMatchesPackage> which care about the
 filename that the source derived from.
@@ -485,7 +487,7 @@ Searches the specified directory recursively for F<.run> files.  Each
 one found is parsed and a hash-of-list-of-hashes is returned.  The
 outer hash is keyed on policy short name, like
 C<Modules::RequireEndWithOne>.  The inner hash specifies a single test
-to be handed to C<pcritique()> or C<fcritique()>, including the code
+to be handed to C<ptransform()> or C<ftransform()>, including the code
 string, test name, etc.  See below for the syntax of the F<.run>
 files.
 
@@ -589,12 +591,12 @@ indicate a C<like()> test:
     ## error /Can't load Foo::Bar/
 
 If the policy you are testing cares about the filename of the code,
-you can indicate that C<fcritique> should be used like so (see
-C<fcritique> for more details):
+you can indicate that C<ftransform> should be used like so (see
+C<ftransform> for more details):
 
     ## filename lib/Foo/Bar.pm
 
-The value of C<parms> will get C<eval>ed and passed to C<pcritique()>,
+The value of C<parms> will get C<eval>ed and passed to C<ptransform()>,
 so be careful.
 
 In general, a subtest document runs from the C<## cut> that starts it to

@@ -89,7 +89,7 @@ with full descriptions and other metadata).
 For code generators and template languages that allow inline Perl code.
 
 Yes, somebody has an in-house templating system where they've written a custom
-test module that extracts the perl code from a template and critiques it.
+test module that extracts the perl code from a template and transforms it.
 
 Actually, this would be useful for programs: Module::Build "fixes" shebang
 lines so that there's the bit about invoking perl if the program is attempted
@@ -589,7 +589,7 @@ arguments.  I'd like to extend that pattern to include all object-methods.
 Static methods can still use positional parameters.
 
 
-=item * Enhance P::C::critique() to accept files, directories, or code strings
+=item * Enhance P::C::transform() to accept files, directories, or code strings
 
 Just like F<bin/perlmogrify> does now.
 

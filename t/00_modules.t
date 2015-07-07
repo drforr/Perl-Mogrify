@@ -51,7 +51,7 @@ use_ok('Perl::Mogrify') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::Mogrify', 'new');
 can_ok('Perl::Mogrify', 'apply_transform');
 can_ok('Perl::Mogrify', 'config');
-can_ok('Perl::Mogrify', 'critique');
+can_ok('Perl::Mogrify', 'transform');
 can_ok('Perl::Mogrify', 'transformers');
 
 #Set -profile to avoid messing with .perlmogrifyrc
@@ -307,16 +307,16 @@ can_ok('Perl::Mogrify::Command', 'run');
 #-----------------------------------------------------------------------------
 # Test functional interface to Perl::Mogrify
 
-Perl::Mogrify->import( qw(critique) );
-can_ok('main', 'critique');  #Export test
+Perl::Mogrify->import( qw(transform) );
+can_ok('main', 'transform');  #Export test
 
 # TODO: These tests are weak. They just verify that it doesn't
 # blow up, and that at least one transformation is returned.
-ok( critique( \$code ), 'Functional style, no config' );
-ok( critique( {}, \$code ), 'Functional style, empty config' );
-ok( critique( {severity => 1}, \$code ), 'Functional style, with config');
-ok( !critique(), 'Functional style, no args at all');
-ok( !critique(undef, undef), 'Functional style, undef args');
+ok( transform( \$code ), 'Functional style, no config' );
+ok( transform( {}, \$code ), 'Functional style, empty config' );
+ok( transform( {severity => 1}, \$code ), 'Functional style, with config');
+ok( !transform(), 'Functional style, no args at all');
+ok( !transform(undef, undef), 'Functional style, undef args');
 
 #-----------------------------------------------------------------------------
 

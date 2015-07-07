@@ -64,7 +64,7 @@ my $mogrify =
         -profile => $profile,
         -theme => 'core',
     );
-my @transformations = $mogrify->critique( \$code );
+my @transformations = $mogrify->transform( \$code );
 
 #print @transformations;
 #exit;

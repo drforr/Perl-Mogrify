@@ -15,7 +15,7 @@ use Test::More;
 
 use Perl::Mogrify::Transformation;
 use Perl::Mogrify::TestUtils qw<
-    pcritique_with_transformations fcritique_with_transformations subtests_in_tree
+    ptransform_with_transformations ftransform_with_transformations subtests_in_tree
 >;
 
 #-----------------------------------------------------------------------------
@@ -118,7 +118,7 @@ sub _run_subtest {
     if ( $subtest->{filename} ) {
         eval {
             @transformations =
-                fcritique_with_transformations(
+                ftransform_with_transformations(
                     $policy,
                     \$subtest->{code},
                     $subtest->{filename},
@@ -132,7 +132,7 @@ sub _run_subtest {
     else {
         eval {
             @transformations =
-                pcritique_with_transformations(
+                ptransform_with_transformations(
                     $policy,
                     \$subtest->{code},
                     $subtest->{parms},
@@ -209,7 +209,7 @@ sub _compute_test_count {
 
     my $nsubtests = 0;
     for my $subtest_with_extras ( values %{$subtests_with_extras} ) {
-        # one [pf]critique() test per subtest
+        # one [pf]transform() test per subtest
         $nsubtests += @{ $subtest_with_extras->{subtests} };
     }
 
@@ -372,12 +372,12 @@ indicate a C<like()> test:
     ## error /Can't load Foo::Bar/
 
 If the policy you are testing cares about the filename of the code,
-you can indicate that C<fcritique> should be used like so (see
-C<fcritique> for more details):
+you can indicate that C<ftransform> should be used like so (see
+C<ftransform> for more details):
 
     ## filename lib/Foo/Bar.pm
 
-The value of C<parms> will get C<eval>ed and passed to C<pcritique()>,
+The value of C<parms> will get C<eval>ed and passed to C<ptransform()>,
 so be careful.
 
 In general, a subtest document runs from the C<## cut> that starts it to

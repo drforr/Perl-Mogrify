@@ -35,7 +35,7 @@ ActiveState Twitter
 
 =head1 NAME
 
-C<perlmogrify> - Command-line interface to critique Perl source.
+C<perlmogrify> - Command-line interface to transform Perl source.
 
 
 =head1 SYNOPSIS
@@ -342,7 +342,7 @@ default severity and default themes are shown.
 =item C<--list-enabled>
 
 Displays a condensed listing of all the L<Perl::Mogrify::Transformer> modules that
-I<would> be enforced, if you were actually going to critique a file with this
+I<would> be enforced, if you were actually going to transform a file with this
 command. This is useful when you've constructed a complicated command or
 modified your F<.perlmogrifyrc> file and you want to see exactly which Policies
 are going to be enforced (or not enforced, as the case may be). For each
