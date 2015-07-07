@@ -48,12 +48,12 @@ sub block_perlmogrifyrc {
 }
 
 #-----------------------------------------------------------------------------
-# Mogrifyize a code snippet using only one policy.  Returns the transformations.
+# Mogrify a code snippet using only one policy.  Returns the transformations.
 
 sub pcritique_with_transformations {
     my($policy, $code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
-    $c->add_policy(-policy => $policy, -config => $config_ref);
+    $c->apply_transform(-policy => $policy, -config => $config_ref);
     return $c->critique($code_ref);
 }
 
@@ -91,7 +91,7 @@ Readonly::Scalar my $TEMP_FILE_PERMISSIONS => oct 700;
 sub fcritique_with_transformations {
     my($policy, $code_ref, $filename, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
-    $c->add_policy(-policy => $policy, -config => $config_ref);
+    $c->apply_transform(-policy => $policy, -config => $config_ref);
 
     my $dir = File::Temp::tempdir( 'PerlMogrify-tmpXXXXXX', TMPDIR => 1 );
     $filename ||= 'Temp.pm';

@@ -43,7 +43,7 @@ my $TEST = Test::Builder->new();
 sub all_transformers_ok {
     my (%args) = @_;
     my $wanted_transformers = $args{-transformers};
-    my $test_dir        = $args{'-test-directory'} || 't';
+    my $test_dir            = $args{'-test-directory'} || 't';
 
     my $subtests_with_extras =  subtests_in_tree( $test_dir, 'include extras' );
 

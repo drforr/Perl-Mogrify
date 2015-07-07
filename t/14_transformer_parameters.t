@@ -71,7 +71,7 @@ sub test_supported_parameters {
                  $param_name => $parameter->get_default_string(),
             }
         );
-        eval { $config->add_policy( %args ) };
+        eval { $config->apply_transform( %args ) };
         is(
             $EVAL_ERROR,
             q{},

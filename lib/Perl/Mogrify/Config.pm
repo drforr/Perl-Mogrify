@@ -154,7 +154,7 @@ sub _init {
 
 #-----------------------------------------------------------------------------
 
-sub add_policy {
+sub apply_transform {
 
     my ( $self, %args ) = @_;
 
@@ -166,7 +166,7 @@ sub add_policy {
 
     # If the -policy is already a blessed object, then just add it directly.
     if ( blessed $policy ) {
-        $self->_add_policy_if_enabled($policy);
+        $self->_apply_transform_if_enabled($policy);
         return $self;
     }
 
@@ -176,14 +176,14 @@ sub add_policy {
     my $factory       = $self->{_factory};
     my $policy_object =
         $factory->create_policy(-name=>$policy, -params=>$params);
-    $self->_add_policy_if_enabled($policy_object);
+    $self->_apply_transform_if_enabled($policy_object);
 
     return $self;
 }
 
 #-----------------------------------------------------------------------------
 
-sub _add_policy_if_enabled {
+sub _apply_transform_if_enabled {
     my ( $self, $policy_object ) = @_;
 
     my $config = $policy_object->__get_config()
@@ -218,7 +218,7 @@ sub _load_transformers {
         # If -single-policy is true, only load transformers that match it
         if ( $self->single_policy() ) {
             if ( $self->_policy_is_single_policy( $policy ) ) {
-                $self->add_policy( -policy => $policy );
+                $self->apply_transform( -policy => $policy );
             }
             next;
         }
@@ -239,7 +239,7 @@ sub _load_transformers {
 
 
         next if not $load_me;
-        $self->add_policy( -policy => $policy );
+        $self->apply_transform( -policy => $policy );
     }
 
     # When using -single-policy, only one policy should ever be loaded.
@@ -997,7 +997,7 @@ Not properly documented because you shouldn't be using this.
 
 =over
 
-=item C<< add_policy( -policy => $policy_name, -params => \%param_hash ) >>
+=item C<< apply_transform( -policy => $policy_name, -params => \%param_hash ) >>
 
 Creates a Transformer object and loads it into this Config.  If the object
 cannot be instantiated, it will throw a fatal exception.  Otherwise,

@@ -468,19 +468,19 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
     my $config = Perl::Mogrify::Config->new( -profile => 'NONE' );
 
     # Try adding a bogus policy
-    eval{ $config->add_policy( -policy => 'Bogus::Transformer') };
+    eval{ $config->apply_transform( -policy => 'Bogus::Transformer') };
     like(
         $EVAL_ERROR,
         qr/Unable [ ] to [ ] create [ ] policy/xms,
-        'add_policy w/ bad args',
+        'apply_transform w/ bad args',
     );
 
     # Try adding w/o policy
-    eval { $config->add_policy() };
+    eval { $config->apply_transform() };
     like(
         $EVAL_ERROR,
         qr/The [ ] -policy [ ] argument [ ] is [ ] required/xms,
-        'add_policy w/o args',
+        'apply_transform w/o args',
     );
 
     # Try using bogus named severity level

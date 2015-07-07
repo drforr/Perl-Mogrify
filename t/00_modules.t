@@ -49,7 +49,7 @@ my $version_string = __PACKAGE__->VERSION;
 
 use_ok('Perl::Mogrify') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::Mogrify', 'new');
-can_ok('Perl::Mogrify', 'add_policy');
+can_ok('Perl::Mogrify', 'apply_transform');
 can_ok('Perl::Mogrify', 'config');
 can_ok('Perl::Mogrify', 'critique');
 can_ok('Perl::Mogrify', 'transformers');
@@ -64,7 +64,7 @@ is($mogrify->VERSION(), $version_string, 'Perl::Mogrify version');
 
 use_ok('Perl::Mogrify::Config') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::Mogrify::Config', 'new');
-can_ok('Perl::Mogrify::Config', 'add_policy');
+can_ok('Perl::Mogrify::Config', 'apply_transform');
 can_ok('Perl::Mogrify::Config', 'transformers');
 can_ok('Perl::Mogrify::Config', 'exclude');
 can_ok('Perl::Mogrify::Config', 'force');

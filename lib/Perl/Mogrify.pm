@@ -46,10 +46,10 @@ sub config {
 
 #-----------------------------------------------------------------------------
 
-sub add_policy {
+sub apply_transform {
     my ( $self, @args ) = @_;
     #Delegate to Perl::Mogrify::Config
-    return $self->config()->add_policy( @args );
+    return $self->config()->apply_transform( @args );
 }
 
 #-----------------------------------------------------------------------------
@@ -315,7 +315,7 @@ least restrictive level, then you can use one of these named values:
     -severity => 'cruel'                      -severity => 2
     -severity => 'brutal'                     -severity => 1
 
-The names reflect how severely the code is mogrifyized: a C<gentle>
+The names reflect how severely the code is mogrified: a C<gentle>
 mogrification reports only the most severe transformations, and so on down to a
 C<brutal> mogrification which reports even the most minor transformations.
 
@@ -438,7 +438,7 @@ L<Perl::Mogrify::Transformation> objects for each transformation of the loaded P
 The list is sorted in the order that the Transformations appear in the code.  If
 there are no transformations, this method returns an empty list.
 
-=item C<< add_policy( -policy => $policy_name, -params => \%param_hash ) >>
+=item C<< apply_transform( -policy => $policy_name, -params => \%param_hash ) >>
 
 Creates a Transformer object and loads it into this Mogrify.  If the object cannot
 be instantiated, it will throw a fatal exception.  Otherwise, it returns a
@@ -560,7 +560,7 @@ use one of the equivalent names:
     cruel                                              2
     brutal                                             1
 
-The names reflect how severely the code is mogrifyized: a C<gentle>
+The names reflect how severely the code is mogrified: a C<gentle>
 mogrification reports only the most severe transformations, and so on down to a
 C<brutal> mogrification which reports even the most minor transformations.
 
