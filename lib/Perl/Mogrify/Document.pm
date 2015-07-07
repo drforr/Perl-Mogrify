@@ -27,7 +27,7 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 our $AUTOLOAD;
-sub AUTOLOAD {  ## no mogrify (ProhibitAutoloading,ArgUnpacking)
+sub AUTOLOAD {
     my ( $function_name ) = $AUTOLOAD =~ m/ ([^:\']+) \z /xms;
     return if $function_name eq 'DESTROY';
     my $self = shift;
@@ -76,14 +76,14 @@ sub _init_common {
 
 #-----------------------------------------------------------------------------
 
-sub _init_from_external_source { ## no mogrify (Subroutines::RequireArgUnpacking)
+sub _init_from_external_source {
     my $self = shift;
     my %args;
 
     if (@_ == 1) {
         warnings::warnif(
             'deprecated',
-            'Perl::Mogrify::Document->new($source) deprecated, use Perl::Mogrify::Document->new(-source => $source) instead.' ## no mogrify (ValuesAndExpressions::RequireInterpolationOfMetachars)
+            'Perl::Mogrify::Document->new($source) deprecated, use Perl::Mogrify::Document->new(-source => $source) instead.'
         );
         %args = ('-source' => shift);
     } else {
@@ -508,8 +508,8 @@ sub _caching_finder {
         if ( !$classes ) {
             $classes = [ ref $element ];
             # Use a C-style loop because we append to the classes array inside
-            for ( my $i = 0; $i < @{$classes}; $i++ ) { ## no mogrify(ProhibitCStyleForLoops)
-                no strict 'refs';                       ## no mogrify(ProhibitNoStrict)
+            for ( my $i = 0; $i < @{$classes}; $i++ ) {
+                no strict 'refs';
                 push @{$classes}, @{"$classes->[$i]::ISA"};
                 $cache_ref->{$classes->[$i]} ||= [];
             }

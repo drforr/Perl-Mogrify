@@ -259,7 +259,7 @@ sub _transform {
             }
             else {
                 die qq<Fatal error while critiquing "$file". Unfortunately, >,
-                    q<$@/$EVAL_ERROR >, ## no mogrify (RequireInterpolationOfMetachars)
+                    q<$@/$EVAL_ERROR >,
                     qq<is empty, so the reason can't be shown.\n>;
             }
         }
@@ -327,7 +327,7 @@ sub _set_up_pager {
     return if not $pager_command;
     return if not _at_tty();
 
-    open my $pager, q<|->, $pager_command  ## no mogrify (InputOutput::RequireBriefOpen)
+    open my $pager, q<|->, $pager_command
         or die qq<Unable to pipe to pager "$pager_command": $ERRNO\n>;
 
     $output = $pager;
@@ -563,7 +563,7 @@ sub _this_is_windows {
 #-----------------------------------------------------------------------------
 
 sub _at_tty {
-    return -t STDOUT; ## no mogrify (ProhibitInteractiveTest);
+    return -t STDOUT;
 }
 
 #-----------------------------------------------------------------------------
@@ -635,7 +635,7 @@ sub _render_policy_docs {
     my @matching_transformers  = grep { /$pattern/ixms } @site_transformers;
 
     # "-T" means don't send to pager
-    my @perldoc_output = map {`perldoc -T $_`} @matching_transformers;  ## no mogrify (ProhibitBacktick)
+    my @perldoc_output = map {`perldoc -T $_`} @matching_transformers;
     _out @perldoc_output;
 
     exit $EXIT_SUCCESS;

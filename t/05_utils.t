@@ -1,7 +1,6 @@
 #!perl
 
 ## There's too much use of source code in strings.
-## no mogrify (RequireInterpolationOfMetachars)
 
 use 5.006001;
 use strict;
@@ -161,7 +160,7 @@ sub test_is_script {
         "\n#!perl\n",
     );
 
-    no warnings qw< deprecated >;   ## no mogrify (TestingAndDebugging::ProhibitNoWarnings)
+    no warnings qw< deprecated >;
 
     for my $code (@good) {
         my $doc = PPI::Document->new(\$code) or confess;
@@ -180,7 +179,7 @@ sub test_is_script {
 
 #-----------------------------------------------------------------------------
 
-sub test_is_script_with_PL_files { ## no mogrify (NamingConventions::Capitalization)
+sub test_is_script_with_PL_files {
 
     # Testing for .PL files (e.g. Makefile.PL, Build.PL)
     # See http://rt.cpan.org/Ticket/Display.html?id=20481
@@ -193,7 +192,7 @@ sub test_is_script_with_PL_files { ## no mogrify (NamingConventions::Capitalizat
 
     my $doc = PPI::Document::File->new($temp_file->filename());
 
-    no warnings qw< deprecated >;   ## no mogrify (TestingAndDebugging::ProhibitNoWarnings)
+    no warnings qw< deprecated >;
     ok(is_script($doc), 'is_script, false for .PL files');
 
     return;
@@ -392,7 +391,7 @@ sub test_first_arg {
         q{eval();}                 => undef,
     );
 
-    for (my $i = 0; $i < @tests; $i += 2) { ## no mogrify (ProhibitCStyleForLoops)
+    for (my $i = 0; $i < @tests; $i += 2) {
         my $code = $tests[$i];
         my $expect = $tests[$i+1];
         my $doc = PPI::Document->new(\$code);

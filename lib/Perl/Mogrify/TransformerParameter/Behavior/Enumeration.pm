@@ -50,7 +50,7 @@ sub initialize_parameter {
                 # Normally bad thing, obscuring a variable in a outer scope
                 # with a variable with the same name is being done here in
                 # order to remain consistent with the parser function interface.
-                my ($policy, $parameter, $config_string) = @_;  ## no critic(Variables::ProhibitReusedNames)
+                my ($policy, $parameter, $config_string) = @_;
 
                 my @potential_values;
                 my $value_string = $parameter->get_default_string();
@@ -91,7 +91,7 @@ sub initialize_parameter {
                 # Normally bad thing, obscuring a variable in a outer scope
                 # with a variable with the same name is being done here in
                 # order to remain consistent with the parser function interface.
-                my ($policy, $parameter, $config_string) = @_;  ## no critic(Variables::ProhibitReusedNames)
+                my ($policy, $parameter, $config_string) = @_;
 
                 my $value_string = $parameter->get_default_string();
 

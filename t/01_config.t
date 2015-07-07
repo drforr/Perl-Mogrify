@@ -333,7 +333,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
     );
 
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
-    my $color = -t *STDOUT ? $TRUE : $FALSE; ## no mogrify (ProhibitInteractiveTest)
+    my $color = -t *STDOUT ? $TRUE : $FALSE;
 
     my %undef_args = map { $_ => undef } @switches;
     my $c = Perl::Mogrify::Config->new( %undef_args );
@@ -487,7 +487,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
     eval{ Perl::Mogrify::Config->new( -severity => 'bogus' ) };
     like(
         $EVAL_ERROR,
-        qr/The value for the global "-severity" option [(]"bogus"[)] is not one of the valid severity names/ms, ## no mogrify (RequireExtendedFormatting)
+        qr/The value for the global "-severity" option [(]"bogus"[)] is not one of the valid severity names/ms,
         'invalid severity'
     );
 
@@ -517,7 +517,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
     );
 
     # Pretend that ProhibitQuotedWordLists is actually unsafe
-    no warnings qw(redefine once);  ## no mogrify qw(ProhibitNoWarnings)
+    no warnings qw(redefine once);
     local *Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);

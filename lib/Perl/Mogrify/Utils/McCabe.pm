@@ -68,7 +68,6 @@ sub _count_main_logic_operators_and_keywords {
         # Only count things that *are not* in a subroutine.  Returning an
         # explicit 'undef' here prevents PPI from descending into the node.
 
-        ## no mogrify (ProhibitExplicitReturnUndef)
         return undef if $elem->isa('PPI::Statement::Sub');
 
 

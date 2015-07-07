@@ -42,8 +42,8 @@ Readonly::Array our @EXPORT_OK => qw(
 # don't find the perlmogrifyrc file.
 
 sub block_perlmogrifyrc {
-    no warnings 'redefine';  ## no mogrify (ProhibitNoWarnings);
-    *Perl::Mogrify::UserProfile::_find_profile_path = sub { return }; ## no mogrify (ProtectPrivateVars)
+    no warnings 'redefine';
+    *Perl::Mogrify::UserProfile::_find_profile_path = sub { return };
     return 1;
 }
 
@@ -148,7 +148,7 @@ sub subtests_in_tree {
                     throw_internal 'confusing policy test filename ' . $_;
                 }
 
-                my $policy = join q{::}, @pathparts[-2, -1]; ## no mogrify (MagicNumbers)
+                my $policy = join q{::}, @pathparts[-2, -1];
 
                 my $globals = _globals_from_file( $_ );
                 if ( my $prerequisites = $globals->{prerequisites} ) {
@@ -188,7 +188,6 @@ sub should_skip_author_tests {
 }
 
 sub get_author_test_skip_message {
-    ## no mogrify (RequireInterpolation);
     return 'Author test.  Set $ENV{TEST_AUTHOR_PERL_CRITIC} to a true value to run.';
 }
 
@@ -206,7 +205,7 @@ sub _globals_from_file {
 
     my %globals;
 
-    open my $handle, '<', $test_file   ## no mogrify (RequireBriefOpen)
+    open my $handle, '<', $test_file
         or throw_internal "Couldn't open $test_file: $OS_ERROR";
 
     while ( my $line = <$handle> ) {
@@ -242,7 +241,7 @@ sub _subtests_from_file {
 
     return if -z $test_file;  # Skip if the Transformer has a regular .t file.
 
-    open my $fh, '<', $test_file   ## no mogrify (RequireBriefOpen)
+    open my $fh, '<', $test_file
         or throw_internal "Couldn't open $test_file: $OS_ERROR";
 
     my @subtests;
@@ -254,7 +253,7 @@ sub _subtests_from_file {
     while ( <$fh> ) {
         ++$lineno;
         chomp;
-        my $inheader = /^## name/ .. /^## cut/; ## no mogrify (ExtendedFormatting LineBoundaryMatching DotMatchAnything)
+        my $inheader = /^## name/ .. /^## cut/;
 
         my $line = $_;
 
@@ -319,7 +318,7 @@ sub _finalize_subtest {
         throw_internal "$subtest->{name} does not specify failures";
     }
     if ($subtest->{parms}) {
-        $subtest->{parms} = eval $subtest->{parms}; ## no mogrify(StringyEval)
+        $subtest->{parms} = eval $subtest->{parms};
         if ($EVAL_ERROR) {
             throw_internal
                 "$subtest->{name} has an error in the 'parms' property:\n"
@@ -335,7 +334,7 @@ sub _finalize_subtest {
 
     if (defined $subtest->{error}) {
         if ( $subtest->{error} =~ m{ \A / (.*) / \z }xms) {
-            $subtest->{error} = eval {qr/$1/}; ## no mogrify (ExtendedFormatting LineBoundaryMatching DotMatchAnything)
+            $subtest->{error} = eval {qr/$1/};
             if ($EVAL_ERROR) {
                 throw_internal
                     "$subtest->{name} 'error' has a malformed regular expression";

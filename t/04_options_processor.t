@@ -20,7 +20,7 @@ our $VERSION = '0.01';
 
 {
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
-    my $color = -t *STDOUT ? $TRUE : $FALSE; ## no mogrify (ProhibitInteractiveTest)
+    my $color = -t *STDOUT ? $TRUE : $FALSE;
 
     my $processor = Perl::Mogrify::OptionsProcessor->new();
     is($processor->force(),    0,           'native default force');

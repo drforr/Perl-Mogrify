@@ -70,7 +70,7 @@ sub statistics {
 
 #-----------------------------------------------------------------------------
 
-sub transform {  ## no mogrify (ArgUnpacking)
+sub transform {
 
     #-------------------------------------------------------------------
     # This subroutine can be called as an object method or as a static

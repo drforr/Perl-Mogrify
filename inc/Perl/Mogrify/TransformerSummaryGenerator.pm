@@ -39,7 +39,6 @@ sub generate_policy_summary {
     my @transformers = $configuration->all_transformers_enabled_or_not();
     my $policy_summary = 'lib/Perl/Mogrify/TransformerSummary.pod';
 
-    ## no mogrify (RequireBriefOpen)
     open my $pod_file, '>', $policy_summary
       or confess "Could not open $policy_summary: $ERRNO";
 

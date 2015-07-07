@@ -229,7 +229,6 @@ sub _load_transformers {
         # To load, or not to load -- that is the question.
         my $load_me = $self->only() ? $FALSE : $TRUE;
 
-        ## no mogrify (ProhibitPostfixControls)
         $load_me = $FALSE if     $self->_policy_is_disabled( $policy );
         $load_me = $TRUE  if     $self->_policy_is_enabled( $policy );
         $load_me = $FALSE if     $self->_policy_is_unimportant( $policy );
@@ -635,7 +634,7 @@ sub _validate_and_save_theme {
 
         # eval of an empty string does not reset $@ in Perl 5.6.
         local $EVAL_ERROR = $EMPTY;
-        eval $rule_as_code; ## no mogrify (ProhibitStringyEval, RequireCheckingReturnValueOfEval)
+        eval $rule_as_code;
 
         if ($EVAL_ERROR) {
             $errors->add_exception(
@@ -678,7 +677,7 @@ sub _validate_and_save_pager {
         $pager = $profile->options_processor()->pager();
     }
 
-    if ($pager eq '$PAGER') {   ## no mogrify (RequireInterpolationOfMetachars)
+    if ($pager eq '$PAGER') {
         $pager = $ENV{PAGER};
     }
     $pager ||= $EMPTY;

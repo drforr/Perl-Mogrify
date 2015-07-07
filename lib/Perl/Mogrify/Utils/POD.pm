@@ -367,7 +367,7 @@ sub _get_module_abstract_from_file {
 
 #-----------------------------------------------------------------------------
 
-sub _get_module_abstract_from_filehandle { ## no mogrify (RequireFinalReturn)
+sub _get_module_abstract_from_filehandle {
     my ($file_handle, $parser, $trimmer) = @_;
 
     my $name_section =

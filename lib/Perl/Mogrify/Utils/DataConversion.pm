@@ -21,13 +21,13 @@ Readonly::Array our @EXPORT_OK => qw(
 
 #-----------------------------------------------------------------------------
 
-sub boolean_to_number {  ## no mogrify (RequireArgUnpacking)
+sub boolean_to_number {
     return $_[0] ? $TRUE : $FALSE;
 }
 
 #-----------------------------------------------------------------------------
 
-sub dor {  ## no mogrify (RequireArgUnpacking)
+sub dor {
     foreach (@_) {
         return $_ if defined;
     }
@@ -36,7 +36,7 @@ sub dor {  ## no mogrify (RequireArgUnpacking)
 
 #-----------------------------------------------------------------------------
 
-sub defined_or_empty {  ## no mogrify (RequireArgUnpacking)
+sub defined_or_empty {
     return defined $_[0] ? $_[0] : $EMPTY;
 }
 

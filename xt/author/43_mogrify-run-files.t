@@ -45,7 +45,7 @@ Test::Perl::Mogrify->import( -profile => $rcfile );
 {
     # About to commit evil, but it's against ourselves.
     no warnings qw< redefine >;
-    local *Perl::Mogrify::Utils::_is_perl = sub { 1 }; ## no mogrify (Variables::ProtectPrivateVars)
+    local *Perl::Mogrify::Utils::_is_perl = sub { 1 };
 
     all_mogrify_ok( glob 't/*/*.run' );
 }

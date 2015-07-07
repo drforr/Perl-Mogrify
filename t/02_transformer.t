@@ -18,7 +18,6 @@ our $VERSION = '0.01';
 # Perl::Mogrify::Transformer is an abstract class, so it can't be instantiated
 # directly.  So we test it by declaring test classes that inherit from it.
 
-## no mogrify (ProhibitMultiplePackages, RequireFilenameMatchesPackage)
 package TransformerTest;
 use base 'Perl::Mogrify::Transformer';
 

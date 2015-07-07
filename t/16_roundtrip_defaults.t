@@ -219,7 +219,7 @@ SKIP: {
             $policy_test_count
         if not $policy_counts_match;
 
-    for (my $x = 0; $x < @default_transformers; $x++) { ## no mogrify (ProhibitCStyleForLoops)
+    for (my $x = 0; $x < @default_transformers; $x++) {
         my $derived_policy = $derived_transformers[$x];
         my $default_policy = $default_transformers[$x];
 

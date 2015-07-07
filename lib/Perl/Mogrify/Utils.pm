@@ -213,7 +213,6 @@ Readonly::Scalar our $FALSE        => 0;
 
 
 #-----------------------------------------------------------------------------
-## no mogrify (ProhibitNoisyQuotes);
 
 Readonly::Hash my %PRECEDENCE_OF => (
     '->'   => 1,
@@ -318,7 +317,7 @@ Readonly::Scalar my $MIN_PRECEDENCE_TO_TERMINATE_PARENLESS_ARG_LIST =>
 
 #-----------------------------------------------------------------------------
 
-sub hashify {  ## no mogrify (ArgUnpacking)
+sub hashify {
     return map { $_ => 1 } @_;
 }
 
@@ -326,7 +325,7 @@ sub hashify {  ## no mogrify (ArgUnpacking)
 
 sub interpolate {
     my ( $literal ) = @_;
-    return eval "\"$literal\"" || confess $EVAL_ERROR;  ## no mogrify (StringyEval);
+    return eval "\"$literal\"" || confess $EVAL_ERROR;
 }
 
 #-----------------------------------------------------------------------------
@@ -352,7 +351,6 @@ sub _name_for_sub_or_stringified_element {
 }
 
 #-----------------------------------------------------------------------------
-## no mogrify (ProhibitPackageVars)
 
 Readonly::Hash my %BUILTINS => hashify( @B::Keywords::Functions );
 
@@ -383,7 +381,7 @@ sub _build_globals_without_sigils {
             @B::Keywords::Arrays,
             @B::Keywords::Hashes,
             @B::Keywords::Scalars,
-            '$\\'; ## no mogrify (RequireInterpolationOfMetachars)
+            '$\\';
 
     # Not all of these have sigils
     foreach my $filehandle (@B::Keywords::Filehandles) {
@@ -642,7 +640,6 @@ sub is_perl_builtin_with_one_argument {
 
 #-----------------------------------------------------------------------------
 
-## no mogrify (ProhibitPackageVars)
 Readonly::Hash my %BUILTINS_WHICH_TAKE_OPTIONAL_ARGUMENT =>
     hashify(
         grep { not exists $BUILTINS_WHICH_TAKE_ONE_ARGUMENT{ $_ } }
@@ -843,7 +840,7 @@ sub is_script {
 
     warnings::warnif(
         'deprecated',
-        'Perl::Mogrify::Utils::is_script($doc) deprecated, use $doc->is_program() instead.',  ## no mogrify (ValuesAndExpressions::RequireInterpolationOfMetachars)
+        'Perl::Mogrify::Utils::is_script($doc) deprecated, use $doc->is_program() instead.',
     );
 
     return $doc->is_program()
@@ -856,7 +853,7 @@ sub is_script {
 
 #-----------------------------------------------------------------------------
 
-sub _is_PL_file {  ## no mogrify (NamingConventions::Capitalization)
+sub _is_PL_file {
     my ($doc) = @_;
     return if not $doc->can('filename');
     my $filename = $doc->filename() || return;
@@ -1198,7 +1195,7 @@ sub is_unchecked_call {
         # the elements to this statement to see if we find 'or' or '||'.
 
         my $or_operators = sub  {
-            my (undef, $elem) = @_;  ## no mogrify(Variables::ProhibitReusedNames)
+            my (undef, $elem) = @_;
             return if not $elem->isa('PPI::Token::Operator');
             return if $elem ne q{or} && $elem ne q{||};
             return 1;

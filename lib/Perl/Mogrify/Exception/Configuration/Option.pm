@@ -36,7 +36,6 @@ sub error {
 
 #-----------------------------------------------------------------------------
 
-## no mogrify (Subroutines::RequireFinalReturn)
 sub full_message {
     Perl::Mogrify::Exception::Fatal::Internal->throw(
         'Subclass failed to override abstract method.'

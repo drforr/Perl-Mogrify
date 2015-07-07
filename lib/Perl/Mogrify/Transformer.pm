@@ -406,7 +406,7 @@ sub transform {
 
 #-----------------------------------------------------------------------------
 
-sub transformation {  ## no mogrify (ArgUnpacking)
+sub transformation {
     my ( $self, $desc, $expl, $elem ) = @_;
     # HACK!! Use goto instead of an explicit call because P::C::V::new() uses caller()
     my $sev = $self->get_severity();
@@ -430,7 +430,6 @@ sub new_parameter_value_exception {
 
 #-----------------------------------------------------------------------------
 
-## no mogrify (Subroutines::RequireFinalReturn)
 sub throw_parameter_value_exception {
     my ( $self, $option_name, $option_value, $source, $message_suffix ) = @_;
 
@@ -446,7 +445,7 @@ sub throw_parameter_value_exception {
 
 # Static methods.
 
-sub set_format { return $format = $_[0] }  ## no mogrify(ArgUnpacking)
+sub set_format { return $format = $_[0] }
 sub get_format { return $format         }
 
 #-----------------------------------------------------------------------------
