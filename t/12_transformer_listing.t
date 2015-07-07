@@ -21,9 +21,9 @@ our $VERSION = '0.01';
 my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
 my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
 my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
-my @policies = map { $factory->create_policy( -name => $_ ) } @policy_names;
-my $listing = Perl::Mogrify::TransformerListing->new( -policies => \@policies );
-my $policy_count = scalar @policies;
+my @transformers = map { $factory->create_policy( -name => $_ ) } @policy_names;
+my $listing = Perl::Mogrify::TransformerListing->new( -transformers => \@transformers );
+my $policy_count = scalar @transformers;
 
 plan( tests => $policy_count + 1);
 
@@ -35,7 +35,7 @@ plan( tests => $policy_count + 1);
 my $listing_as_string = "$listing";
 my @listing_lines = split m/ \n /xms, $listing_as_string;
 my $line_count = scalar @listing_lines;
-is( $line_count, $policy_count, qq{Listing has all $policy_count policies} );
+is( $line_count, $policy_count, qq{Listing has all $policy_count transformers} );
 
 
 my $listing_pattern = qr< \A \d [ ] [\w:]+ [ ] \[ [\w\s]+ \] \z >xms;

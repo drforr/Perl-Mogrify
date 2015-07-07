@@ -19,7 +19,7 @@ sub new {
 
     my $self = bless {}, $class;
 
-    $self->{_policies} = $args{-policies} || [];
+    $self->{_transformers} = $args{-transformers} || [];
 
     return $self;
 }
@@ -30,7 +30,7 @@ sub to_string {
     my ($self) = @_;
 
     my %themes;
-    foreach my $policy ( @{ $self->{_policies} } ) {
+    foreach my $policy ( @{ $self->{_transformers} } ) {
         my @themes = $policy->get_themes();
         @themes{ @themes } = @themes;
     }
@@ -67,7 +67,7 @@ to change without notice.
 
 =over
 
-=item C<< new( -policies => \@POLICY_OBJECTS ) >>
+=item C<< new( -transformers => \@POLICY_OBJECTS ) >>
 
 Returns a reference to a new C<Perl::Mogrify::ThemeListing> object.
 

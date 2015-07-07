@@ -13,10 +13,10 @@ use Perl::Mogrify::Utils qw{ :characters };
 use Perl::Mogrify::TestUtils qw{ starting_points_including_examples };
 
 # Note: "use PolicyFactory" *must* appear after "use TestUtils" for the
-# -extra-test-policies option to work.
+# -extra-test-transformers option to work.
 use Perl::Mogrify::PolicyFactory (
     '-test' => 1,
-    '-extra-test-policies' => [ qw{ ErrorHandling::RequireUseOfExceptions } ],
+    '-extra-test-transformers' => [ qw{ ErrorHandling::RequireUseOfExceptions } ],
 );
 
 use Test::More;

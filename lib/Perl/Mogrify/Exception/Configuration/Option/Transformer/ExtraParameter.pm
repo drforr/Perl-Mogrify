@@ -95,7 +95,7 @@ See L<Exception::Class/"new">.
 =item C<full_message()>
 
 Provide a standard message for values for non-existent parameters for
-policies.  See L<Exception::Class/"full_message">.
+transformers.  See L<Exception::Class/"full_message">.
 
 
 =back

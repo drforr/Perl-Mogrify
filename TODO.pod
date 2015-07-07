@@ -11,7 +11,7 @@ Perl::Mogrify::TODO - Things for Perl::Mogrify developers to do
 =head1 SEE ALSO
 
 Perl-Mogrify-More is a separate distribution for less-widely-accepted
-policies.  It contains its own TODO.pod.
+transformers.  It contains its own TODO.pod.
 
 =head1 NEW FEATURES
 
@@ -81,7 +81,7 @@ applies_to.
 
 =item * Add formatting of --list output.
 
-Support Jeff Bisbee's use case (he dumps all the policies in severity order
+Support Jeff Bisbee's use case (he dumps all the transformers in severity order
 with full descriptions and other metadata).
 
 =item * Support for C<#line 123 "filename"> directives.
@@ -139,7 +139,7 @@ addition of this item.
 
 5.13.7 allows references in many places where arrays or hashes used to
 be required (e.g. C<push $stack, 'foo'> where C<$stack> is an array
-ref). Not sure what policies are affected.
+ref). Not sure what transformers are affected.
 
 Lexical regular expression modifier defaults via (e.g.)
 C<use re '/smx'>). This also interacts with

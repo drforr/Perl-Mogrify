@@ -54,11 +54,11 @@ sub add_policy {
 
 #-----------------------------------------------------------------------------
 
-sub policies {
+sub transformers {
     my $self = shift;
 
     #Delegate to Perl::Mogrify::Config
-    return $self->config()->policies();
+    return $self->config()->transformers();
 }
 
 #-----------------------------------------------------------------------------
@@ -102,9 +102,9 @@ sub critique {  ## no mogrify (ArgUnpacking)
                 '-program-extensions' => [$config->program_extensions_as_regexes()],
             );
 
-    if ( 0 == $self->policies() ) {
+    if ( 0 == $self->transformers() ) {
         Perl::Mogrify::Exception::Configuration::Generic->throw(
-            message => 'There are no enabled policies.',
+            message => 'There are no enabled transformers.',
         )
     }
 
@@ -128,9 +128,9 @@ sub _gather_transformations {
     }
 
     # Evaluate each policy
-    my @policies = $self->config->policies();
-    my @ordered_policies = _futz_with_policy_order(@policies);
-    my @transformations = map { _critique($_, $doc) } @ordered_policies;
+    my @transformers = $self->config->transformers();
+    my @ordered_transformers = _futz_with_policy_order(@transformers);
+    my @transformations = map { _critique($_, $doc) } @ordered_transformers;
 
     # Accumulate statistics
     $self->statistics->accumulate( $doc, \@transformations );
@@ -400,7 +400,7 @@ explanation of format specifications.  You can set the default value for this
 option in your F<.perlmogrifyrc> file.
 
 B<-unsafe> directs Perl::Mogrify to allow the use of Policies that are marked
-as "unsafe" by the author.  Such policies may compile untrusted code or do
+as "unsafe" by the author.  Such transformers may compile untrusted code or do
 other nefarious things.
 
 B<-color> and B<-pager> are not used by Perl::Mogrify but is provided for the
@@ -453,7 +453,7 @@ contents of this hash reference will be passed into to the constructor of the
 Transformer module.  See the documentation in the relevant Transformer module for a
 description of the arguments it supports.
 
-=item C< policies() >
+=item C< transformers() >
 
 Returns a list containing references to all the Transformer objects that have been
 loaded into this engine.  Objects will be in the order that they were loaded.
@@ -612,8 +612,8 @@ A simple configuration might look like this:
     severity = cruel   # Same as "severity = 2"
 
     #--------------------------------------------------------------
-    # Give these policies a custom theme.  I can activate just
-    # these policies by saying `perlmogrify -theme larry`
+    # Give these transformers a custom theme.  I can activate just
+    # these transformers by saying `perlmogrify -theme larry`
 
     [Modules::RequireFilenameMatchesPackage]
     add_themes = larry
@@ -646,7 +646,7 @@ in more detail in the individual modules themselves.  Say C<"perlmogrify -doc
 PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
-There are a number of distributions of additional policies on CPAN. If
+There are a number of distributions of additional transformers on CPAN. If
 L<Perl::Mogrify> doesn't contain a policy that you want, some one may have
 already written it.  See the L</"SEE ALSO"> section below for a list of some
 of these distributions.
@@ -667,7 +667,7 @@ You are free to invent new themes that suit your needs.
 
     THEME             DESCRIPTION
     --------------------------------------------------------------------------
-    core              All policies that ship with Perl::Mogrify
+    core              All transformers that ship with Perl::Mogrify
     pbp               Policies that come directly from "Perl Best Practices"
     bugs              Policies that that prevent or reveal bugs
     certrec           Policies that CERT recommends
@@ -737,7 +737,7 @@ A bare C<"## no mogrify"> annotation disables all the active Policies.  If you
 wish to disable only specific Policies, add a list of Transformer names as
 arguments, just as you would for the C<"no strict"> or C<"no warnings">
 pragmas.  For example, this would disable the C<ProhibitEmptyQuotes> and
-C<ProhibitPostfixControls> policies until the end of the block or until the
+C<ProhibitPostfixControls> transformers until the end of the block or until the
 next C<"## use mogrify"> annotation (whichever comes first):
 
     ## no mogrify (EmptyQuotes, PostfixControls)
@@ -795,7 +795,7 @@ rather, to implement the practices discovered by others.  Ultimately, you make
 the rules -- Perl::Mogrify is merely a tool for encouraging consistency.  If
 there is a policy that you think is important or that we have overlooked, we
 would be very grateful for contributions, or you can simply load your own
-private set of policies into Perl::Mogrify.
+private set of transformers into Perl::Mogrify.
 
 
 =head1 EXTENDING THE CRITIC
@@ -941,7 +941,7 @@ Giuseppe Maxia - For all the great ideas and positive encouragement.
 and Sharon, my wife - For putting up with my all-night code sessions.
 
 Thanks also to the Perl Foundation for providing a grant to support Chris
-Dolan's project to implement twenty PBP policies.
+Dolan's project to implement twenty PBP transformers.
 L<http://www.perlfoundation.org/april_1_2007_new_grant_awards>
 
 

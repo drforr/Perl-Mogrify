@@ -21,8 +21,8 @@ our $VERSION = '0.01';
 my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
 my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
 my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
-my @policies = map { $factory->create_policy( -name => $_ ) } @policy_names;
-my $listing = Perl::Mogrify::ThemeListing->new( -policies => \@policies );
+my @transformers = map { $factory->create_policy( -name => $_ ) } @policy_names;
+my $listing = Perl::Mogrify::ThemeListing->new( -transformers => \@transformers );
 
 my $expected = <<'END_EXPECTED';
 bugs

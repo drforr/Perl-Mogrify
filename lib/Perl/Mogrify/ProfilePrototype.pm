@@ -19,8 +19,8 @@ sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
 
-    my $policies = $args{-policies} || [];
-    $self->{_policies} = [ sort _by_type @{ $policies } ];
+    my $transformers = $args{-transformers} || [];
+    $self->{_transformers} = [ sort _by_type @{ $transformers } ];
 
     my $comment_out_parameters = $args{'-comment-out-parameters'};
     if (not defined $comment_out_parameters) {
@@ -40,10 +40,10 @@ sub new {
 
 #-----------------------------------------------------------------------------
 
-sub _get_policies {
+sub _get_transformers {
     my ($self) = @_;
 
-    return $self->{_policies};
+    return $self->{_transformers};
 }
 
 sub _comment_out_parameters {
@@ -161,7 +161,7 @@ sub to_string {
 
     Perl::Mogrify::Transformer::set_format( $self->_proto_format() );
 
-    my $policy_prototypes = join qq{\n}, map { "$_" } @{ $self->_get_policies() };
+    my $policy_prototypes = join qq{\n}, map { "$_" } @{ $self->_get_transformers() };
     $policy_prototypes =~ s/\s+ \z//xms; # Trim trailing whitespace
     return $prototype . "\n\n" . $policy_prototypes . "\n";
 }
@@ -229,7 +229,7 @@ to change without notice.
 
 =over
 
-=item C<< new( -policies => \@POLICY_OBJECTS ) >>
+=item C<< new( -transformers => \@POLICY_OBJECTS ) >>
 
 Returns a reference to a new C<Perl::Mogrify::ProfilePrototype> object.
 

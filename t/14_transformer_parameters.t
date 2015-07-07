@@ -34,14 +34,14 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 # Figure out how many tests there will be...
-my @all_policies = bundled_policy_names();
-my @all_params   = map { $_->supported_parameters() } @all_policies;
-my $ntests       = @all_policies + 2 * @all_params;
+my @all_transformers = bundled_policy_names();
+my @all_params   = map { $_->supported_parameters() } @all_transformers;
+my $ntests       = @all_transformers + 2 * @all_params;
 plan( tests => $ntests );
 
 #-----------------------------------------------------------------------------
 
-for my $policy ( @all_policies ) {
+for my $policy ( @all_transformers ) {
     test_has_declared_parameters( $policy );
     test_invalid_parameters( $policy );
     test_supported_parameters( $policy );

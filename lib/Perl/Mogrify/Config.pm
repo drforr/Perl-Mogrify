@@ -136,13 +136,13 @@ sub _init {
     $self->{_factory} = $factory;
 
     # Initialize internal storage for Policies
-    $self->{_all_policies_enabled_or_not} = [];
-    $self->{_policies} = [];
+    $self->{_all_transformers_enabled_or_not} = [];
+    $self->{_transformers} = [];
 
-    # "NONE" means don't load any policies
+    # "NONE" means don't load any transformers
     if ( not defined $profile_source or $profile_source ne 'NONE' ) {
         # Heavy lifting here...
-        $self->_load_policies($errors);
+        $self->_load_transformers($errors);
     }
 
     if ( $errors->has_exceptions() ) {
@@ -191,10 +191,10 @@ sub _add_policy_if_enabled {
             q{Transformer was not set up properly because it does not have }
                 . q{a value for its config attribute.};
 
-    push @{ $self->{_all_policies_enabled_or_not} }, $policy_object;
+    push @{ $self->{_all_transformers_enabled_or_not} }, $policy_object;
     if ( $policy_object->initialize_if_enabled( $config ) ) {
         $policy_object->__set_enabled($TRUE);
-        push @{ $self->{_policies} }, $policy_object;
+        push @{ $self->{_transformers} }, $policy_object;
     }
     else {
         $policy_object->__set_enabled($FALSE);
@@ -205,17 +205,17 @@ sub _add_policy_if_enabled {
 
 #-----------------------------------------------------------------------------
 
-sub _load_policies {
+sub _load_transformers {
 
     my ( $self, $errors ) = @_;
     my $factory  = $self->{_factory};
-    my @policies = $factory->create_all_policies( $errors );
+    my @transformers = $factory->create_all_transformers( $errors );
 
     return if $errors->has_exceptions();
 
-    for my $policy ( @policies ) {
+    for my $policy ( @transformers ) {
 
-        # If -single-policy is true, only load policies that match it
+        # If -single-policy is true, only load transformers that match it
         if ( $self->single_policy() ) {
             if ( $self->_policy_is_single_policy( $policy ) ) {
                 $self->add_policy( -policy => $policy );
@@ -223,7 +223,7 @@ sub _load_policies {
             next;
         }
 
-        # Always exclude unsafe policies, unless instructed not to
+        # Always exclude unsafe transformers, unless instructed not to
         next if not ( $policy->is_safe() or $self->unsafe_allowed() );
 
         # To load, or not to load -- that is the question.
@@ -243,7 +243,7 @@ sub _load_policies {
     }
 
     # When using -single-policy, only one policy should ever be loaded.
-    if ($self->single_policy() && scalar $self->policies() != 1) {
+    if ($self->single_policy() && scalar $self->transformers() != 1) {
         $self->_add_single_policy_exception_to($errors);
     }
 
@@ -331,14 +331,14 @@ sub _add_single_policy_exception_to {
     my $message_suffix = $EMPTY;
     my $patterns = join q{", "}, $self->single_policy();
 
-    if (scalar $self->policies() == 0) {
+    if (scalar $self->transformers() == 0) {
         $message_suffix =
-            q{did not match any policies (in combination with }
+            q{did not match any transformers (in combination with }
                 . q{other policy restrictions).};
     }
     else {
-        $message_suffix  = qq{matched multiple policies:\n\t};
-        $message_suffix .= join qq{,\n\t}, apply { chomp } sort $self->policies();
+        $message_suffix  = qq{matched multiple transformers:\n\t};
+        $message_suffix .= join qq{,\n\t}, apply { chomp } sort $self->transformers();
     }
 
     $errors->add_exception(
@@ -776,16 +776,16 @@ sub _profile {
 
 #-----------------------------------------------------------------------------
 
-sub all_policies_enabled_or_not {
+sub all_transformers_enabled_or_not {
     my ($self) = @_;
-    return @{ $self->{_all_policies_enabled_or_not} };
+    return @{ $self->{_all_transformers_enabled_or_not} };
 }
 
 #-----------------------------------------------------------------------------
 
-sub policies {
+sub transformers {
     my ($self) = @_;
-    return @{ $self->{_policies} };
+    return @{ $self->{_transformers} };
 }
 
 #-----------------------------------------------------------------------------
@@ -1014,7 +1014,7 @@ constructor of the Transformer module.  See the documentation in the
 relevant Transformer module for a description of the arguments it supports.
 
 
-=item C< all_policies_enabled_or_not() >
+=item C< all_transformers_enabled_or_not() >
 
 Returns a list containing references to all the Transformer objects that
 have been seen.  Note that the state of these objects is not
@@ -1022,7 +1022,7 @@ trustworthy.  In particular, it is likely that some of them are not
 prepared to examine any documents.
 
 
-=item C< policies() >
+=item C< transformers() >
 
 Returns a list containing references to all the Transformer objects that
 have been enabled and loaded into this Config.
@@ -1259,8 +1259,8 @@ A simple configuration might look like this:
     severity = 2
 
     #--------------------------------------------------------------
-    # Give these policies a custom theme.  I can activate just
-    # these policies by saying (-theme => 'larry + curly')
+    # Give these transformers a custom theme.  I can activate just
+    # these transformers by saying (-theme => 'larry + curly')
 
     [Modules::RequireFilenameMatchesPackage]
     add_themes = larry
@@ -1307,7 +1307,7 @@ needs.
 
     THEME             DESCRIPTION
     --------------------------------------------------------------------------
-    core              All policies that ship with Perl::Mogrify
+    core              All transformers that ship with Perl::Mogrify
     pbp               Policies that come directly from "Perl Best Practices"
     bugs              Policies that prevent or reveal bugs
     maintenance       Policies that affect the long-term health of the code
@@ -1316,7 +1316,7 @@ needs.
     security          Policies that relate to security issues
     tests             Policies that are specific to test programs
 
-Say C<`perlmogrify -list`> to get a listing of all available policies
+Say C<`perlmogrify -list`> to get a listing of all available transformers
 and the themes that are associated with each one.  You can also change
 the theme for any Transformer in your F<.perlmogrifyrc> file.  See the
 L<"CONFIGURATION"> section for more information about that.
@@ -1338,19 +1338,19 @@ examples:
 
    Expression                  Meaning
    ----------------------------------------------------------------------------
-   pbp * bugs                  All policies that are "pbp" AND "bugs"
+   pbp * bugs                  All transformers that are "pbp" AND "bugs"
    pbp and bugs                Ditto
 
-   bugs + cosmetic             All policies that are "bugs" OR "cosmetic"
+   bugs + cosmetic             All transformers that are "bugs" OR "cosmetic"
    bugs or cosmetic            Ditto
 
-   pbp - cosmetic              All policies that are "pbp" BUT NOT "cosmetic"
+   pbp - cosmetic              All transformers that are "pbp" BUT NOT "cosmetic"
    pbp not cosmetic            Ditto
 
-   -maintenance                All policies that are NOT "maintenance"
+   -maintenance                All transformers that are NOT "maintenance"
    not maintenance             Ditto
 
-   (pbp - bugs) * complexity     All policies that are "pbp" BUT NOT "bugs",
+   (pbp - bugs) * complexity     All transformers that are "pbp" BUT NOT "bugs",
                                     AND "complexity"
    (pbp not bugs) and complexity  Ditto
 

@@ -44,7 +44,7 @@ if (open my ($fh), '<', $summary_file) {
 
     my $profile = Perl::Mogrify::UserProfile->new();
     my $factory = Perl::Mogrify::PolicyFactory->new( -profile => $profile );
-    my %found_policies = map { ref $_ => $_ } $factory->create_all_policies();
+    my %found_transformers = map { ref $_ => $_ } $factory->create_all_transformers();
 
     my %descriptions = $content =~ m/^=head2 [ ]+ L<[\w:]+[|]([\w:]+)>\n\n([^\n]+)/gxms;
     for my $policy_name (keys %descriptions) {
@@ -70,8 +70,8 @@ if (open my ($fh), '<', $summary_file) {
         is( $has_summary, 1, $label );
 
         my $summary_severity = $descriptions{$policy_name}->{severity};
-        my $real_severity = $found_policies{$policy_name} &&
-          $found_policies{$policy_name}->default_severity;
+        my $real_severity = $found_transformers{$policy_name} &&
+          $found_transformers{$policy_name}->default_severity;
         is( $summary_severity, $real_severity, "severity for $policy_name" );
     }
 

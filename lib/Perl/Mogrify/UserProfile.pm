@@ -107,7 +107,7 @@ sub policy_is_enabled {
 
 #-----------------------------------------------------------------------------
 
-sub listed_policies {
+sub listed_transformers {
 
     my ( $self, $policy ) = @_;
     my @normalized_policy_names = ();
@@ -380,7 +380,7 @@ object or the name of one, returns a reference to a hash of the user's
 configuration parameters for that policy.
 
 
-=item C< listed_policies() >
+=item C< listed_transformers() >
 
 Returns a list of the names of all the Policies that are mentioned in
 the profile.  The Transformer names will be fully qualified (e.g.

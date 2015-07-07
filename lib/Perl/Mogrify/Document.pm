@@ -407,7 +407,7 @@ sub line_is_disabled_for_policy {
     # HACK: This Transformer is special.  If it is active, it cannot be
     # disabled by a "## no mogrify" annotation.  Rather than create a general
     # hook in Transformer.pm for enabling this behavior, we chose to hack
-    # it here, since this isn't the kind of thing that most policies do
+    # it here, since this isn't the kind of thing that most transformers do
 
     return 0 if $policy_name eq
         'Perl::Mogrify::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic';
@@ -426,12 +426,12 @@ sub add_annotation {
     for my $annotation (@annotations) {
 
         my ($start, $end) = $annotation->effective_range();
-        my @affected_policies = $annotation->disables_all_policies ?
-            qw(ALL) : $annotation->disabled_policies();
+        my @affected_transformers = $annotation->disables_all_transformers ?
+            qw(ALL) : $annotation->disabled_transformers();
 
         # TODO: Find clever way to do this with hash slices
         for my $line ($start .. $end) {
-            for my $policy (@affected_policies) {
+            for my $policy (@affected_transformers) {
                 $self->{_disabled_line_map}->{$line}->{$policy} = 1;
             }
         }
@@ -811,7 +811,7 @@ here.
 =item C<< process_annotations() >>
 
 Causes this Document to scan itself and mark which lines &
-policies are disabled by the C<"## no mogrify"> annotations.
+transformers are disabled by the C<"## no mogrify"> annotations.
 
 
 =item C<< line_is_disabled_for_policy($line, $policy_object) >>

@@ -14,7 +14,7 @@ use Perl::Mogrify::Config qw<>;
 use Perl::Mogrify::TransformerFactory (-test => 1);
 use Perl::Mogrify::TestUtils qw<
     bundled_policy_names
-    names_of_policies_willing_to_work
+    names_of_transformers_willing_to_work
 >;
 use Perl::Mogrify::Utils qw< :booleans :characters :severities >;
 use Perl::Mogrify::Utils::Constants qw< :color_severity >;
@@ -31,13 +31,13 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
-my @names_of_policies_willing_to_work =
-    names_of_policies_willing_to_work(
+my @names_of_transformers_willing_to_work =
+    names_of_transformers_willing_to_work(
         -severity   => $SEVERITY_LOWEST,
         -theme      => 'core',
     );
 my @native_policy_names  = bundled_policy_names();
-my $total_policies   = scalar @names_of_policies_willing_to_work;
+my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 
 #-----------------------------------------------------------------------------
 
@@ -49,26 +49,26 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
                     -severity   => $SEVERITY_LOWEST,
                     -theme      => 'core',
                 )
-                ->all_policies_enabled_or_not();
+                ->all_transformers_enabled_or_not();
 
     plan tests => 93 + $all_policy_count;
 }
 
 #-----------------------------------------------------------------------------
 # Test default config.  Increasing the severity should yield
-# fewer and fewer policies.  The exact number will fluctuate
+# fewer and fewer transformers.  The exact number will fluctuate
 # as we introduce new polices and/or change their severity.
 
 {
-    my $last_policy_count = $total_policies + 1;
+    my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my $configuration =
             Perl::Mogrify::Config->new(
                 -severity   => $severity,
                 -theme      => 'core',
             );
-        my $policy_count = scalar $configuration->policies();
-        my $test_name = "Count native policies, severity: $severity";
+        my $policy_count = scalar $configuration->transformers();
+        my $test_name = "Count native transformers, severity: $severity";
         cmp_ok($policy_count, '<', $last_policy_count, $test_name);
         $last_policy_count = $policy_count;
     }
@@ -80,7 +80,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 {
     my %profile = map { $_ => {} } @native_policy_names;
-    my $last_policy_count = $total_policies + 1;
+    my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my %pc_args = (
             -profile    => \%profile,
@@ -88,8 +88,8 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
             -theme      => 'core',
         );
         my $mogrify = Perl::Mogrify::Config->new( %pc_args );
-        my $policy_count = scalar $mogrify->policies();
-        my $test_name = "Count all policies, severity: $severity";
+        my $policy_count = scalar $mogrify->transformers();
+        my $test_name = "Count all transformers, severity: $severity";
         cmp_ok($policy_count, '<', $last_policy_count, $test_name);
         $last_policy_count = $policy_count;
     }
@@ -103,12 +103,12 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
             -severity   => $SEVERITY_LOWEST,
             -theme      => 'core',
         );
-    my %policies_by_name =
-        map { $_->get_short_name() => $_ } $configuration->policies();
+    my %transformers_by_name =
+        map { $_->get_short_name() => $_ } $configuration->transformers();
 
-    foreach my $policy ( $configuration->all_policies_enabled_or_not() ) {
+    foreach my $policy ( $configuration->all_transformers_enabled_or_not() ) {
         my $enabled = $policy->is_enabled();
-        if ( delete $policies_by_name{ $policy->get_short_name() } ) {
+        if ( delete $transformers_by_name{ $policy->get_short_name() } ) {
             ok(
                 $enabled,
                 $policy->get_short_name() . ' is enabled.',
@@ -141,17 +141,17 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 #        );
 #
 #        eval {
-#            Perl::Mogrify::Config->new( %pc_args )->policies();
+#            Perl::Mogrify::Config->new( %pc_args )->transformers();
 #        };
 #        my $exception = Perl::Mogrify::Exception::AggregateConfiguration->caught();
 #        ok(
 #            defined $exception,
-#            "got exception when no policies were enabled at severity $severity_string.",
+#            "got exception when no transformers were enabled at severity $severity_string.",
 #        );
 #        like(
 #            $exception,
-#            qr<There are no enabled policies>,
-#            "got correct exception message when no policies were enabled at severity $severity_string.",
+#            qr<There are no enabled transformers>,
+#            "got correct exception message when no transformers were enabled at severity $severity_string.",
 #        );
 #    }
 #}
@@ -166,7 +166,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 {
     my %profile = ();
     my $severity = $SEVERITY_HIGHEST;
-    for my $index ( 0 .. $#names_of_policies_willing_to_work ) {
+    for my $index ( 0 .. $#names_of_transformers_willing_to_work ) {
         if ($index and $index % 10 == 0) {
             $severity--;
         }
@@ -174,7 +174,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
             $severity = $SEVERITY_LOWEST;
         }
 
-        $profile{$names_of_policies_willing_to_work[$index]} =
+        $profile{$names_of_transformers_willing_to_work[$index]} =
             {severity => $severity};
     }
 
@@ -185,18 +185,18 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
             -theme      => 'core',
         );
         my $mogrify = Perl::Mogrify::Config->new( %pc_args );
-        my $policy_count = scalar $mogrify->policies();
+        my $policy_count = scalar $mogrify->transformers();
         my $expected_count = ($SEVERITY_HIGHEST - $severity + 1) * 10;
         my $test_name = "user-defined severity level: $severity";
         is( $policy_count, $expected_count, $test_name );
     }
 
-    # All remaining policies should be at the lowest severity
+    # All remaining transformers should be at the lowest severity
     my %pc_args = (-profile => \%profile, -severity => $SEVERITY_LOWEST);
     my $mogrify = Perl::Mogrify::Config->new( %pc_args );
-    my $policy_count = scalar $mogrify->policies();
+    my $policy_count = scalar $mogrify->transformers();
     my $expected_count = $SEVERITY_HIGHEST * 10;
-    my $test_name = 'user-defined severity, all remaining policies';
+    my $test_name = 'user-defined severity, all remaining transformers';
     cmp_ok( $policy_count, '>=', $expected_count, $test_name);
 }
 
@@ -245,9 +245,9 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 {
     # In this test, we'll use a custom profile to deactivate some
-    # policies, and then use the -include option to re-activate them.  So
+    # transformers, and then use the -include option to re-activate them.  So
     # the net result is that we should still end up with the all the
-    # policies.
+    # transformers.
 
     my %profile = (
         '-BasicTypes::Strings::FormatShellStrings' => {},
@@ -261,32 +261,32 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
         -include    => \@include,
         -theme      => 'core',
     );
-    my @policies = Perl::Mogrify::Config->new( %pc_args )->policies();
-    is(scalar @policies, $total_policies, 'include pattern matching');
+    my @transformers = Perl::Mogrify::Config->new( %pc_args )->transformers();
+    is(scalar @transformers, $total_transformers, 'include pattern matching');
 }
 
 #-----------------------------------------------------------------------------
 
 {
     # For this test, we'll load the default config, but deactivate some of
-    # the policies using the -exclude option.  Then we make sure that none
-    # of the remaining policies match the -exclude patterns.
+    # the transformers using the -exclude option.  Then we make sure that none
+    # of the remaining transformers match the -exclude patterns.
 
     my @exclude = qw(quote mixed VALUES); #Some assorted pattterns
     my %pc_args = (
         -severity   => 1,
         -exclude    => \@exclude,
     );
-    my @policies = Perl::Mogrify::Config->new( %pc_args )->policies();
-    my $matches = grep { my $pol = ref; grep { $pol !~ /$_/ixms} @exclude } @policies;
-    is(scalar @policies, $matches, 'exclude pattern matching');
+    my @transformers = Perl::Mogrify::Config->new( %pc_args )->transformers();
+    my $matches = grep { my $pol = ref; grep { $pol !~ /$_/ixms} @exclude } @transformers;
+    is(scalar @transformers, $matches, 'exclude pattern matching');
 }
 
 #-----------------------------------------------------------------------------
 
 {
     # In this test, we set -include and -exclude patterns to both match
-    # some of the same policies.  The -exclude option should have
+    # some of the same transformers.  The -exclude option should have
     # precendece.
 
     my @include = qw(builtinfunc); #Include BuiltinFunctions::*
@@ -296,17 +296,17 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
         -include    => \@include,
         -exclude    => \@exclude,
     );
-    my @policies = Perl::Mogrify::Config->new( %pc_args )->policies();
-    my @pol_names = map {ref} @policies;
+    my @transformers = Perl::Mogrify::Config->new( %pc_args )->transformers();
+    my @pol_names = map {ref} @transformers;
     is_deeply(
         [grep {/block/ixms} @pol_names],
         [],
-        'include/exclude pattern match had no "block" policies',
+        'include/exclude pattern match had no "block" transformers',
     );
     # This odd construct arises because "any" can't be used with parens without syntax error(!)
     ok(
         @{[any {/builtinfunc/ixms} @pol_names]},
-        'include/exclude pattern match had "builtinfunc" policies',
+        'include/exclude pattern match had "builtinfunc" transformers',
     );
 }
 
@@ -413,8 +413,8 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     );
 
     my %pc_config = (-severity => 1, -only => 1, -profile => \%profile);
-    my @policies = Perl::Mogrify::Config->new( %pc_config )->policies();
-    is(scalar @policies, 2, '-only switch');
+    my @transformers = Perl::Mogrify::Config->new( %pc_config )->transformers();
+    is(scalar @transformers, 2, '-only switch');
 }
 
 #-----------------------------------------------------------------------------
@@ -422,8 +422,8 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
 
 {
     my %pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
-    my @policies = Perl::Mogrify::Config->new( %pc_config )->policies();
-    is(scalar @policies, 1, '-single-policy switch');
+    my @transformers = Perl::Mogrify::Config->new( %pc_config )->transformers();
+    is(scalar @transformers, 1, '-single-policy switch');
 }
 
 #-----------------------------------------------------------------------------
@@ -495,7 +495,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     eval{ Perl::Mogrify::Config->new( '-single-policy' => q<.*> ) };
     like(
         $EVAL_ERROR,
-        qr/matched [ ] multiple [ ] policies/xms,
+        qr/matched [ ] multiple [ ] transformers/xms,
         'vague -single-policy',
     );
 
@@ -503,7 +503,7 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     eval{ Perl::Mogrify::Config->new( '-single-policy' => 'bogus' ) };
     like(
         $EVAL_ERROR,
-        qr/did [ ] not [ ] match [ ] any [ ] policies/xms,
+        qr/did [ ] not [ ] match [ ] any [ ] transformers/xms,
         'invalid -single-policy',
     );
 }
@@ -521,15 +521,15 @@ my $total_policies   = scalar @names_of_policies_willing_to_work;
     local *Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);
-    my @p = Perl::Mogrify::Config->new( %safe_pc_config )->policies();
-    is(scalar @p, 1, 'Only loaded safe policies without -unsafe switch');
+    my @p = Perl::Mogrify::Config->new( %safe_pc_config )->transformers();
+    is(scalar @p, 1, 'Only loaded safe transformers without -unsafe switch');
 
     my %unsafe_pc_config = (%safe_pc_config, '-allow-unsafe' => 1);
-    @p = Perl::Mogrify::Config->new( %unsafe_pc_config )->policies();
-    is(scalar @p, 2, 'Also loaded unsafe policies with -allow-unsafe switch');
+    @p = Perl::Mogrify::Config->new( %unsafe_pc_config )->transformers();
+    is(scalar @p, 2, 'Also loaded unsafe transformers with -allow-unsafe switch');
 
     my %singular_pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
-    @p = Perl::Mogrify::Config->new( %singular_pc_config )->policies();
+    @p = Perl::Mogrify::Config->new( %singular_pc_config )->transformers();
     is(scalar @p, 1, '-single-policy always loads Transformer, even if unsafe');
 }
 

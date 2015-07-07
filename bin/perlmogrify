@@ -189,7 +189,7 @@ option is also given, then all shortcut options are silently ignored.
 =item C<--theme RULE>
 
 Directs C<perlmogrify> to apply only Policies with themes that satisfy the
-C<RULE>.  Themes are arbitrary names for groups of related policies.  You can
+C<RULE>.  Themes are arbitrary names for groups of related transformers.  You can
 combine theme names with boolean operators to create an arbitrarily complex
 C<RULE>.  For example, the following would apply only Policies that have a
 'bugs' AND 'pbp' theme:
@@ -209,7 +209,7 @@ the severity settings at the command-line.  For example:
 
     perlmogrify --include=layout my_file.pl
 
-This would cause C<perlmogrify> to apply all the C<CodeLayout::*> policies even
+This would cause C<perlmogrify> to apply all the C<CodeLayout::*> transformers even
 if they have a severity level that is less than the default level of 5, or
 have been disabled in your F<.perlmogrifyrc> file.  You can specify multiple
 C<--include> options and you can use it in conjunction with the C<--exclude>
@@ -618,8 +618,8 @@ A simple configuration might look like this:
     severity = cruel   # Same as "severity = 2"
 
     #--------------------------------------------------------------
-    # Give these policies a custom theme.  I can activate just
-    # these policies by saying "perlmogrify --theme 'larry || curly'"
+    # Give these transformers a custom theme.  I can activate just
+    # these transformers by saying "perlmogrify --theme 'larry || curly'"
 
     [Modules::RequireFilenameMatchesPackage]
     add_themes = larry
@@ -637,7 +637,7 @@ A simple configuration might look like this:
     # For all other Policies, I accept the default severity,
     # so no additional configuration is required for them.
 
-Note that all policies included with the Perl::Mogrify distribution that have
+Note that all transformers included with the Perl::Mogrify distribution that have
 integer parameters accept underscores ("_") in their values, as with Perl
 numeric literals.  For example,
 
@@ -659,7 +659,7 @@ in more detail in the individual modules themselves.  Say C<"perlmogrify --doc
 PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
-There are a number of distributions of additional policies on CPAN. If
+There are a number of distributions of additional transformers on CPAN. If
 L<Perl::Mogrify> doesn't contain a policy that you want, some one may have
 already written it.  See L<Perl::Mogrify/"SEE ALSO"> for a list of some of
 these distributions.
@@ -680,7 +680,7 @@ groupings.  You are free to invent new themes that suit your needs.
 
     THEME             DESCRIPTION
     ------------------------------------------------------------------------
-    core              All policies that ship with Perl::Mogrify
+    core              All transformers that ship with Perl::Mogrify
     pbp               Policies that come directly from "Perl Best Practices"
     bugs              Policies that that prevent or reveal bugs
     certrec           Policies that CERT recommends
@@ -691,7 +691,7 @@ groupings.  You are free to invent new themes that suit your needs.
     security          Policies that relate to security issues
     tests             Policies that are specific to test programs
 
-Say C<"perlmogrify --list"> to get a listing of all available policies and the
+Say C<"perlmogrify --list"> to get a listing of all available transformers and the
 themes that are associated with each one.  You can also change the theme for
 any Transformer in your F<.perlmogrifyrc> file.  See the L<"CONFIGURATION"> section
 for more information about that.
@@ -749,7 +749,7 @@ A bare C<"## no mogrify"> annotation disables all the active Policies.  If you
 wish to disable only specific Policies, add a list of Transformer names as
 arguments just as you would for the C<"no strict"> or C<"no warnings"> pragma.
 For example, this would disable the C<ProhibitEmptyQuotes> and
-C<ProhibitPostfixControls> policies until the end of the block or until the
+C<ProhibitPostfixControls> transformers until the end of the block or until the
 next C<"## use mogrify"> annotation (whichever comes first):
 
     ## no mogrify (EmptyQuotes, PostfixControls);
@@ -792,13 +792,13 @@ Some Policies like C<Documentation::RequirePodSections> apply to the entire
 document, in which case transformations are reported at line 1.  But if the file
 requires a shebang line, it is impossible to put C<"## no mogrify"> on the
 first line of the file.  This is a known limitation and it will be addressed
-in a future release.  As a workaround, you can disable the affected policies
+in a future release.  As a workaround, you can disable the affected transformers
 at the command-line or in your F<.perlmogrifyrc> file.  But beware that this
 will affect the analysis of B<all> files.
 
 Use this feature wisely.  C<"## no mogrify"> should be used in the smallest
 possible scope, or only on individual lines of code. And you should always be
-as specific as possible about which policies you want to disable (i.e. never
+as specific as possible about which transformers you want to disable (i.e. never
 use a bare C<"## no mogrify">).  If Perl::Mogrify complains about your code, try
 and find a compliant solution before resorting to this feature.
 
@@ -878,7 +878,7 @@ rather, to implement the practices discovered by others.  Ultimately, you make
 the rules -- Perl::Mogrify is merely a tool for encouraging consistency.  If
 there is a policy that you think is important or that we have overlooked, we
 would be very grateful for contributions, or you can simply load your own
-private set of policies into Perl::Mogrify.
+private set of transformers into Perl::Mogrify.
 
 =back
 
@@ -971,7 +971,7 @@ Giuseppe Maxia - For all the great ideas and positive encouragement.
 and Sharon, my wife - For putting up with my all-night code sessions.
 
 Thanks also to the Perl Foundation for providing a grant to support Chris
-Dolan's project to implement twenty PBP policies.
+Dolan's project to implement twenty PBP transformers.
 L<http://www.perlfoundation.org/april_1_2007_new_grant_awards>
 
 

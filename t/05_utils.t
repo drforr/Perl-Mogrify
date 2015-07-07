@@ -43,7 +43,7 @@ test_is_backup();
 test_first_arg();
 test_parse_arg_list();
 test_is_function_call();
-test_find_bundled_policies();
+test_find_bundled_transformers();
 test_is_unchecked_call();
 
 #-----------------------------------------------------------------------------
@@ -451,13 +451,13 @@ sub test_is_function_call {
 
 #-----------------------------------------------------------------------------
 
-sub test_find_bundled_policies {
+sub test_find_bundled_transformers {
     Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
-    my @native_policies = bundled_policy_names();
+    my @native_transformers = bundled_policy_names();
     my $policy_dir = File::Spec->catfile( qw(lib Perl Mogrify Transformer) );
-    my @found_policies  = all_perl_files( $policy_dir );
-    is( scalar @found_policies, scalar @native_policies, 'Find all perl code');
+    my @found_transformers  = all_perl_files( $policy_dir );
+    is( scalar @found_transformers, scalar @native_transformers, 'Find all perl code');
 
     return;
 }

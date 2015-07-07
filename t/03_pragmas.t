@@ -18,7 +18,7 @@ our $VERSION = '0.01';
 
 Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
-# Configure Mogrify not to load certain policies.  This
+# Configure Mogrify not to load certain transformers.  This
 # just makes it a little easier to create test cases
 my $profile = {
     '-CodeLayout::RequireTidyCode'                               => {},
@@ -777,9 +777,9 @@ is(
 );
 
 #-----------------------------------------------------------------------------
-# Most policies apply to a particular type of PPI::Element and usually
+# Most transformers apply to a particular type of PPI::Element and usually
 # only return one Transformation at a time.  But the next three cases
-# involve policies that apply to the whole document and can return
+# involve transformers that apply to the whole document and can return
 # multiple transformations at a time.  These tests make sure that the 'no
 # mogrify' pragmas are effective with those Policies
 #-----------------------------------------------------------------------------

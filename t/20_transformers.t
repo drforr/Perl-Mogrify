@@ -5,7 +5,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_policies_ok >;
+use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
 
 #-----------------------------------------------------------------------------
 
@@ -13,15 +13,15 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 # Notice that you can pass arguments to this test, which limit the testing to
-# specific policies.  The arguments must be shortened policy names. When using
+# specific transformers.  The arguments must be shortened policy names. When using
 # prove(1), any arguments that follow '::' will be passed to the test script.
 
-my %args = @ARGV ? ( -policies => [ @ARGV ] ) : ();
-all_policies_ok(%args);
+my %args = @ARGV ? ( -transformers => [ @ARGV ] ) : ();
+all_transformers_ok(%args);
 
 #-----------------------------------------------------------------------------
 # ensure we return true if this test is loaded by
-# 20_policies.t_without_optional_dependencies.t
+# 20_transformers.t_without_optional_dependencies.t
 
 1;
 

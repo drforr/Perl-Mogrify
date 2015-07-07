@@ -2,7 +2,7 @@
 
 # Extra self-compliance tests for Transformer classes.  This just checks for
 # additional POD sections that we want in every Transformer module.  See the
-# 41_perlmogrifyrc-policies file for the precise configuration.
+# 41_perlmogrifyrc-transformers file for the precise configuration.
 
 use strict;
 use warnings;
@@ -43,7 +43,7 @@ if ( $ENV{PERL_CRITIC_CACHE} ) {
 #-----------------------------------------------------------------------------
 # Run mogrify against all of our own files
 
-my $rcfile = File::Spec->catfile( qw< xt author 41_perlmogrifyrc-policies > );
+my $rcfile = File::Spec->catfile( qw< xt author 41_perlmogrifyrc-transformers > );
 Test::Perl::Mogrify->import( -profile => $rcfile );
 
 my $path =

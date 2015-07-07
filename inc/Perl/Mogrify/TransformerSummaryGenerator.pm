@@ -36,7 +36,7 @@ sub generate_policy_summary {
     my $configuration =
       Perl::Mogrify::Config->new(-profile => $EMPTY, -severity => 1, -theme => 'core');
 
-    my @policies = $configuration->all_policies_enabled_or_not();
+    my @transformers = $configuration->all_transformers_enabled_or_not();
     my $policy_summary = 'lib/Perl/Mogrify/TransformerSummary.pod';
 
     ## no mogrify (RequireBriefOpen)
@@ -77,7 +77,7 @@ my $format = <<'END_POLICY';
 END_POLICY
 
 eval {
-    foreach my $policy (@policies) {
+    foreach my $policy (@transformers) {
         my $module_abstract = $policy->get_raw_abstract();
 
         printf

@@ -125,7 +125,7 @@ t/10_user_profile.t
 t/11_policy_factory.t
 t/12_policy_listing.t
 t/12_theme_listing.t
-t/13_bundled_policies.t
+t/13_bundled_transformers.t
 t/14_policy_parameter_behavior_boolean.t
 t/14_policy_parameter_behavior_enumeration.t
 t/14_policy_parameter_behavior_integer.t
@@ -134,7 +134,7 @@ t/14_policy_parameter_behavior_string.t
 t/14_policy_parameters.t
 t/15_statistics.t
 t/16_roundtrip_defaults.t
-t/20_policies.t
+t/20_transformers.t
 t/20_policy_pod_spelling.d/stop-words.txt
 t/20_policy_pod_spelling.t
 t/20_policy_prohibit_evil_modules.t
@@ -148,8 +148,8 @@ tools/ppidump
 xt/author/40_mogrifyize-code.t
 xt/author/40_perlmogrifyrc-code
 xt/author/40_stop_words
-xt/author/41_mogrifyize-policies.t
-xt/author/41_perlmogrifyrc-policies
+xt/author/41_mogrifyize-transformers.t
+xt/author/41_perlmogrifyrc-transformers
 xt/author/42_mogrifyize-tests.t
 xt/author/42_perlmogrifyrc-tests
 xt/author/43_mogrifyize-run-files.t

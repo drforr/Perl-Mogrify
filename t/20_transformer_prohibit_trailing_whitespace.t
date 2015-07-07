@@ -17,7 +17,7 @@ our $VERSION = '0.01';
 
 Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 
-# This specific policy is being tested without 20_policies.t because the .run file
+# This specific policy is being tested without 20_transformers.t because the .run file
 # would have to contain invisible characters.
 
 my $code;

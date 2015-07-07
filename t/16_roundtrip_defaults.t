@@ -26,12 +26,12 @@ my $default_configuration =
         -severity => 1,
         -theme => 'core',
     );
-my @default_policies = $default_configuration->policies();
+my @default_transformers = $default_configuration->transformers();
 
 my $policy_test_count;
 
-$policy_test_count = 4 * @default_policies;
-foreach my $policy (@default_policies) {
+$policy_test_count = 4 * @default_transformers;
+foreach my $policy (@default_transformers) {
     if (
             $policy->parameter_metadata_available()
         and not $policy->isa('Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode')
@@ -46,7 +46,7 @@ plan tests => $test_count;
 
 my $profile_generator =
     Perl::Mogrify::ProfilePrototype->new(
-        -policies                   => \@default_policies,
+        -transformers                   => \@default_transformers,
         '-comment-out-parameters'   => 0,
         -config                     => $default_configuration,
     );
@@ -204,24 +204,24 @@ cmp_deeply(
 
 #-----------------------------------------------------------------------------
 
-my @derived_policies = $derived_configuration->policies();
+my @derived_transformers = $derived_configuration->transformers();
 
 my $policy_counts_match =
     is(
-        scalar @derived_policies,
-        scalar @default_policies,
+        scalar @derived_transformers,
+        scalar @default_transformers,
         'same policy count'
     );
 
 SKIP: {
     skip
-        q{because there weren't the same number of policies},
+        q{because there weren't the same number of transformers},
             $policy_test_count
         if not $policy_counts_match;
 
-    for (my $x = 0; $x < @default_policies; $x++) { ## no mogrify (ProhibitCStyleForLoops)
-        my $derived_policy = $derived_policies[$x];
-        my $default_policy = $default_policies[$x];
+    for (my $x = 0; $x < @default_transformers; $x++) { ## no mogrify (ProhibitCStyleForLoops)
+        my $derived_policy = $derived_transformers[$x];
+        my $default_policy = $default_transformers[$x];
 
         is(
             $derived_policy->get_short_name(),

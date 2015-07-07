@@ -95,7 +95,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 }
 
 #-----------------------------------------------------------------------------
-# Test warnings about bogus policies
+# Test warnings about bogus transformers
 
 {
     my $last_warning = q{}; #Trap warning messages here

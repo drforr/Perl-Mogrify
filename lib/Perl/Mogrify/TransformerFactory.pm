@@ -44,7 +44,7 @@ sub import {
 
     my ( $class, %args ) = @_;
     my $test_mode = $args{-test};
-    my $extra_test_policies = $args{'-extra-test-policies'};
+    my $extra_test_transformers = $args{'-extra-test-transformers'};
 
     if ( not @site_policy_names ) {
         my $eval_worked = eval {
@@ -71,7 +71,7 @@ sub import {
         }
     }
 
-    # In test mode, only load native policies, not third-party ones.  So this
+    # In test mode, only load native transformers, not third-party ones.  So this
     # filters out any policy that was loaded from within a directory called
     # "blib".  During the usual "./Build test" process this works fine,
     # but it doesn't work if you are using prove to test against the code
@@ -80,9 +80,9 @@ sub import {
     if ( $test_mode && any {m/\b blib \b/xms} @INC ) {
         @site_policy_names = _modules_from_blib( @site_policy_names );
 
-        if ($extra_test_policies) {
+        if ($extra_test_transformers) {
             my @extra_policy_full_names =
-                map { "${POLICY_NAMESPACE}::$_" } @{$extra_test_policies};
+                map { "${POLICY_NAMESPACE}::$_" } @{$extra_test_transformers};
 
             push @site_policy_names, @extra_policy_full_names;
         }
@@ -149,7 +149,7 @@ sub _init {
                     : Perl::Mogrify::Exception::AggregateConfiguration->new();
         }
 
-        $self->_validate_policies_in_profile( $errors );
+        $self->_validate_transformers_in_profile( $errors );
 
         if (
                 not $incoming_errors
@@ -199,7 +199,7 @@ sub create_policy {
 
 #-----------------------------------------------------------------------------
 
-sub create_all_policies {
+sub create_all_transformers {
 
     my ( $self, $incoming_errors ) = @_;
 
@@ -207,7 +207,7 @@ sub create_all_policies {
         $incoming_errors
             ? $incoming_errors
             : Perl::Mogrify::Exception::AggregateConfiguration->new();
-    my @policies;
+    my @transformers;
 
     foreach my $name ( site_policy_names() ) {
         my $policy = eval { $self->create_policy( -name => $name ) };
@@ -215,7 +215,7 @@ sub create_all_policies {
         $errors->add_exception_or_rethrow( $EVAL_ERROR );
 
         if ( $policy ) {
-            push @policies, $policy;
+            push @transformers, $policy;
         }
     }
 
@@ -223,7 +223,7 @@ sub create_all_policies {
         $errors->rethrow();
     }
 
-    return @policies;
+    return @transformers;
 }
 
 #-----------------------------------------------------------------------------
@@ -291,14 +291,14 @@ sub _handle_policy_instantiation_exception {
 
 #-----------------------------------------------------------------------------
 
-sub _validate_policies_in_profile {
+sub _validate_transformers_in_profile {
     my ($self, $errors) = @_;
 
     my $profile = $self->_profile();
-    my %known_policies = hashify( $self->site_policy_names() );
+    my %known_transformers = hashify( $self->site_policy_names() );
 
-    for my $policy_name ( $profile->listed_policies() ) {
-        if ( not exists $known_policies{$policy_name} ) {
+    for my $policy_name ( $profile->listed_transformers() ) {
+        if ( not exists $known_transformers{$policy_name} ) {
             my $message = qq{Transformer "$policy_name" is not installed.};
 
             if ( $errors ) {
@@ -391,7 +391,7 @@ L<Perl::Mogrify::Transformer/"initialize_if_enabled"> invoked on it, so it
 may not yet be usable.
 
 
-=item C< create_all_policies() >
+=item C< create_all_transformers() >
 
 Constructs and returns one instance of each
 L<Perl::Mogrify::Transformer|Perl::Mogrify::Transformer> subclass that is

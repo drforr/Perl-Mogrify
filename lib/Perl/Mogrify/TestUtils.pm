@@ -33,7 +33,7 @@ Readonly::Array our @EXPORT_OK => qw(
     get_author_test_skip_message
     starting_points_including_examples
     bundled_policy_names
-    names_of_policies_willing_to_work
+    names_of_transformers_willing_to_work
 );
 
 #-----------------------------------------------------------------------------
@@ -348,20 +348,20 @@ sub bundled_policy_names {
     require ExtUtils::Manifest;
     my $manifest = ExtUtils::Manifest::maniread();
     my @policy_paths = map {m{\A lib/(Perl/Mogrify/Transformer/.*).pm \z}xms} keys %{$manifest};
-    my @policies = map { join q{::}, split m{/}xms } @policy_paths;
-    my @sorted_policies = sort @policies;
-    return @sorted_policies;
+    my @transformers = map { join q{::}, split m{/}xms } @policy_paths;
+    my @sorted_transformers = sort @transformers;
+    return @sorted_transformers;
 }
 
-sub names_of_policies_willing_to_work {
+sub names_of_transformers_willing_to_work {
     my %configuration = @_;
 
-    my @policies_willing_to_work =
+    my @transformers_willing_to_work =
         Perl::Mogrify::Config
             ->new( %configuration )
-            ->policies();
+            ->transformers();
 
-    return map { ref } @policies_willing_to_work;
+    return map { ref } @transformers_willing_to_work;
 }
 
 1;
@@ -396,7 +396,7 @@ interface will go through a deprecation cycle.
     1;
     END_CODE
 
-    # Critique code against all loaded policies...
+    # Critique code against all loaded transformers...
     my $perl_mogrify_config = { -severity => 2 };
     my $transformation_count = critique( \$code, $perl_mogrify_config);
 
@@ -459,7 +459,7 @@ whole bunch.
 
 Like C<pcritique_with_transformations()>, but pretends that the code was
 loaded from the specified filename.  This is handy for testing
-policies like C<Modules::RequireFilenameMatchesPackage> which care
+transformers like C<Modules::RequireFilenameMatchesPackage> which care
 about the filename that the source derived from.
 
 The C<$filename> parameter must be a relative path, not absolute.  The
@@ -470,7 +470,7 @@ L<File::Temp|File::Temp> and will be automatically deleted.
 =item fcritique( $policy_name, $code_string_ref, $filename, $config_ref )
 
 Like C<pcritique()>, but pretends that the code was loaded from the
-specified filename.  This is handy for testing policies like
+specified filename.  This is handy for testing transformers like
 C<Modules::RequireFilenameMatchesPackage> which care about the
 filename that the source derived from.
 
@@ -516,9 +516,9 @@ F<lib/Perl/Mogrify/Transformer/*.pm> and converts the results to package
 names.
 
 
-=item names_of_policies_willing_to_work( %configuration )
+=item names_of_transformers_willing_to_work( %configuration )
 
-Returns a list of the packages of policies that are willing to
+Returns a list of the packages of transformers that are willing to
 function on the current system using the specified configuration.
 
 

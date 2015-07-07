@@ -229,7 +229,7 @@ sub _critique {
 
     require Perl::Mogrify;
     $mogrify = Perl::Mogrify->new( %{$opts_ref} );
-    $mogrify->policies() || die "No policies selected.\n";
+    $mogrify->transformers() || die "No transformers selected.\n";
 
     _set_up_pager($mogrify->config()->pager());
 
@@ -432,12 +432,12 @@ sub _report_statistics {
         _out "\n";
 
         my %policy_transformations = %{ $statistics->transformations_by_policy() };
-        my @policies = sort keys %policy_transformations;
+        my @transformers = sort keys %policy_transformations;
         $width =
             max
                 map { length _commaify( $policy_transformations{$_} ) }
-                    @policies;
-        foreach my $policy (@policies) {
+                    @transformers;
+        foreach my $policy (@transformers) {
             _out
                 sprintf
                     "%*s transformations of %s.\n",
@@ -582,8 +582,8 @@ sub _render_policy_listing {
     require Perl::Mogrify::TransformerListing;
     require Perl::Mogrify;
 
-    my @policies = Perl::Mogrify->new( %pc_params )->policies();
-    my $listing = Perl::Mogrify::TransformerListing->new( -policies => \@policies );
+    my @transformers = Perl::Mogrify->new( %pc_params )->transformers();
+    my $listing = Perl::Mogrify::TransformerListing->new( -transformers => \@transformers );
     _out $listing;
 
     exit $EXIT_SUCCESS;
@@ -597,8 +597,8 @@ sub _render_theme_listing {
     require Perl::Mogrify;
 
     my %pc_params = (-profile => $EMPTY, -severity => $SEVERITY_LOWEST);
-    my @policies = Perl::Mogrify->new( %pc_params )->policies();
-    my $listing = Perl::Mogrify::ThemeListing->new( -policies => \@policies );
+    my @transformers = Perl::Mogrify->new( %pc_params )->transformers();
+    my $listing = Perl::Mogrify::ThemeListing->new( -transformers => \@transformers );
     _out $listing;
 
     exit $EXIT_SUCCESS;
@@ -612,8 +612,8 @@ sub _render_profile_prototype {
     require Perl::Mogrify;
 
     my %pc_params = (-profile => $EMPTY, -severity => $SEVERITY_LOWEST);
-    my @policies = Perl::Mogrify->new( %pc_params )->policies();
-    my $prototype = Perl::Mogrify::ProfilePrototype->new( -policies => \@policies );
+    my @transformers = Perl::Mogrify->new( %pc_params )->transformers();
+    my $prototype = Perl::Mogrify::ProfilePrototype->new( -transformers => \@transformers );
     _out $prototype;
 
     exit $EXIT_SUCCESS;
@@ -631,11 +631,11 @@ sub _render_policy_docs {
     _set_up_pager($mogrify->config()->pager());
 
     require Perl::Mogrify::TransformerFactory;
-    my @site_policies  = Perl::Mogrify::TransformerFactory->site_policy_names();
-    my @matching_policies  = grep { /$pattern/ixms } @site_policies;
+    my @site_transformers  = Perl::Mogrify::TransformerFactory->site_policy_names();
+    my @matching_transformers  = grep { /$pattern/ixms } @site_transformers;
 
     # "-T" means don't send to pager
-    my @perldoc_output = map {`perldoc -T $_`} @matching_policies;  ## no mogrify (ProhibitBacktick)
+    my @perldoc_output = map {`perldoc -T $_`} @matching_transformers;  ## no mogrify (ProhibitBacktick)
     _out @perldoc_output;
 
     exit $EXIT_SUCCESS;

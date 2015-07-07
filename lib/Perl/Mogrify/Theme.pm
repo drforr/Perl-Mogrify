@@ -136,7 +136,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Theme - Construct thematic sets of policies.
+Perl::Mogrify::Theme - Construct thematic sets of transformers.
 
 
 =head1 DESCRIPTION

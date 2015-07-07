@@ -48,7 +48,7 @@ plan tests => 13 + scalar @color_severity_params;
 
 Readonly::Scalar my $PROFILE => 't/01_bad_perlmogrifyrc';
 Readonly::Scalar my $NO_ENABLED_POLICIES_MESSAGE =>
-    q<There are no enabled policies.>;
+    q<There are no enabled transformers.>;
 Readonly::Scalar my $INVALID_PARAMETER_MESSAGE =>
     q<The BuiltinFunctions::RequireBlockGrep policy doesn't take a "no_such_parameter" option.>;
 Readonly::Scalar my $REQUIRE_POD_SECTIONS_SOURCE_MESSAGE_PREFIX =>

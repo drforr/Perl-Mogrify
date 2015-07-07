@@ -32,9 +32,9 @@ can_ok('Perl::Mogrify::Annotation', 'new');
 can_ok('Perl::Mogrify::Annotation', 'create_annotations');
 can_ok('Perl::Mogrify::Annotation', 'element');
 can_ok('Perl::Mogrify::Annotation', 'effective_range');
-can_ok('Perl::Mogrify::Annotation', 'disabled_policies');
+can_ok('Perl::Mogrify::Annotation', 'disabled_transformers');
 can_ok('Perl::Mogrify::Annotation', 'disables_policy');
-can_ok('Perl::Mogrify::Annotation', 'disables_all_policies');
+can_ok('Perl::Mogrify::Annotation', 'disables_all_transformers');
 can_ok('Perl::Mogrify::Annotation', 'disables_line');
 
 annotate( <<"EOD", 0, 'Null case. Un-annotated document' );
@@ -54,8 +54,8 @@ my $note = choose_annotation( 0 );
 ok( $note, 'Single block annotation defined' );
 SKIP: {
     $note or skip( 'No annotation found', 4 );
-    ok( $note->disables_all_policies(),
-        'Single block annotation disables all policies' );
+    ok( $note->disables_all_transformers(),
+        'Single block annotation disables all transformers' );
     ok( $note->disables_line( 4 ),
         'Single block annotation disables line 4' );
     my( $start, $finish ) = $note->effective_range();
@@ -78,8 +78,8 @@ $note = choose_annotation( 0 );
 ok( $note, 'Block annotation defined' );
 SKIP: {
     $note or skip( 'No annotation found', 4 );
-    ok( $note->disables_all_policies(),
-        'Block annotation disables all policies' );
+    ok( $note->disables_all_transformers(),
+        'Block annotation disables all transformers' );
     ok( $note->disables_line( 5 ),
         'Block annotation disables line 5' );
     my( $start, $finish ) = $note->effective_range();
@@ -109,8 +109,8 @@ EOD
 
     SKIP: {
         $note or skip( 'Bogus annotation not found', 4 );
-        ok( ! $note->disables_all_policies(),
-            'Bogus annotation does not disable all policies' );
+        ok( ! $note->disables_all_transformers(),
+            'Bogus annotation does not disable all transformers' );
         ok( $note->disables_line( 3 ),
             'Bogus annotation disables line 3' );
         my( $start, $finish ) = $note->effective_range();
@@ -123,7 +123,7 @@ EOD
 
 SKIP: {
     @bundled_policy_names >= 8
-        or skip( 'Need at least 8 bundled policies', 49 );
+        or skip( 'Need at least 8 bundled transformers', 49 );
     my $max = 0;
     my $doc;
     my @annot;
@@ -140,14 +140,14 @@ SKIP: {
         $doc .= "## $note\n## use mogrify\n";
     }
 
-    annotate( $doc, $max, 'Specific policies in various formats' );
+    annotate( $doc, $max, 'Specific transformers in various formats' );
     foreach my $inx ( 0 .. $max - 1 ) {
         $note = choose_annotation( $inx );
         ok( $note, "Specific annotation $inx ($annot[$inx]) defined" );
         SKIP: {
             $note or skip( "No annotation $inx found", 5 );
-            ok( ! $note->disables_all_policies(),
-                "Specific annotation $inx does not disable all policies" );
+            ok( ! $note->disables_all_transformers(),
+                "Specific annotation $inx does not disable all transformers" );
             my ( $policy_name ) = $bundled_policy_names[$inx] =~
                 m/ ( \w+ :: \w+ ) \z /smx;
             ok ( $note->disables_policy( $bundled_policy_names[$inx] ),
@@ -175,8 +175,8 @@ $note = choose_annotation( 0 );
 ok( $note, 'Split statement annotation found' );
 SKIP: {
     $note or skip( 'Split statement annotation not found', 4 );
-    ok( ! $note->disables_all_policies(),
-        'Split statement annotation does not disable all policies' );
+    ok( ! $note->disables_all_transformers(),
+        'Split statement annotation does not disable all transformers' );
     ok( $note->disables_line( 3 ),
         'Split statement annotation disables line 3' );
     my( $start, $finish ) = $note->effective_range();

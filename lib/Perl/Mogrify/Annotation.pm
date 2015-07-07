@@ -50,9 +50,9 @@ sub _init {
     my $annotation_element = $args{-element} || confess '-element argument is required';
     $self->{_element} = $annotation_element;
 
-    my %disabled_policies = _parse_annotation( $annotation_element );
-    $self->{_disables_all_policies} = %disabled_policies ? 0 : 1;
-    $self->{_disabled_policies} = \%disabled_policies;
+    my %disabled_transformers = _parse_annotation( $annotation_element );
+    $self->{_disables_all_transformers} = %disabled_transformers ? 0 : 1;
+    $self->{_disabled_transformers} = \%disabled_transformers;
 
     # Grab surrounding nodes to determine the context.
     # This determines whether the annotation applies to
@@ -138,25 +138,25 @@ sub effective_range {
 
 #-----------------------------------------------------------------------------
 
-sub disabled_policies {
+sub disabled_transformers {
     my $self = shift;
-    return keys %{ $self->{_disabled_policies} };
+    return keys %{ $self->{_disabled_transformers} };
 }
 
 #-----------------------------------------------------------------------------
 
 sub disables_policy {
     my ($self, $policy_name) = @_;
-    return 1 if $self->{_disabled_policies}->{$policy_name};
-    return 1 if $self->disables_all_policies();
+    return 1 if $self->{_disabled_transformers}->{$policy_name};
+    return 1 if $self->disables_all_transformers();
     return 0;
 }
 
 #-----------------------------------------------------------------------------
 
-sub disables_all_policies {
+sub disables_all_transformers {
     my ($self) = @_;
-    return $self->{_disables_all_policies};
+    return $self->{_disables_all_transformers};
 }
 
 #-----------------------------------------------------------------------------
@@ -283,10 +283,10 @@ Perl::Mogrify::Annotation - A "## no mogrify" annotation in a document.
 
   $bool = $annotation->disables_line( $number );
   $bool = $annotation->disables_policy( $policy_object );
-  $bool = $annotation->disables_all_policies();
+  $bool = $annotation->disables_all_transformers();
 
   ($start, $end) = $annotation->effective_range();
-  @disabled_policy_names = $annotation->disabled_policies();
+  @disabled_policy_names = $annotation->disabled_transformers();
 
 
 =head1 DESCRIPTION
@@ -354,10 +354,10 @@ Returns true if this Annotation disables C<$polciy_object> or
 C<$policy_name> at any (or all) lines.
 
 
-=item C<< disables_all_policies() >>
+=item C<< disables_all_transformers() >>
 
 Returns true if this Annotation disables all Policies at any (or all)
-lines.  If this method returns true, C<disabled_policies> will return
+lines.  If this method returns true, C<disabled_transformers> will return
 an empty list.
 
 
@@ -367,11 +367,11 @@ Returns a two-element list, representing the first and last line
 numbers where this Annotation has effect.
 
 
-=item C<< disabled_policies() >>
+=item C<< disabled_transformers() >>
 
 Returns a list of the names of the Policies that are affected by this
 Annotation.  If this list is empty, then it means that all Policies
-are affected by this Annotation, and C<disables_all_policies()> should
+are affected by this Annotation, and C<disables_all_transformers()> should
 return true.
 
 

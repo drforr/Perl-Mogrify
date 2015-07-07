@@ -26,7 +26,7 @@ our $VERSION = '0.01';
 
 use Exporter 'import';
 
-Readonly::Array our @EXPORT_OK      => qw< all_policies_ok >;
+Readonly::Array our @EXPORT_OK      => qw< all_transformers_ok >;
 Readonly::Hash  our %EXPORT_TAGS    => (all => \@EXPORT_OK);
 
 #-----------------------------------------------------------------------------
@@ -40,21 +40,21 @@ my $TEST = Test::Builder->new();
 
 #-----------------------------------------------------------------------------
 
-sub all_policies_ok {
+sub all_transformers_ok {
     my (%args) = @_;
-    my $wanted_policies = $args{-policies};
+    my $wanted_transformers = $args{-transformers};
     my $test_dir        = $args{'-test-directory'} || 't';
 
     my $subtests_with_extras =  subtests_in_tree( $test_dir, 'include extras' );
 
-    if ($wanted_policies) {
-        _validate_wanted_policy_names($wanted_policies, $subtests_with_extras);
-        _filter_unwanted_subtests($wanted_policies, $subtests_with_extras);
+    if ($wanted_transformers) {
+        _validate_wanted_policy_names($wanted_transformers, $subtests_with_extras);
+        _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
     }
 
     $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
-    my $policies_to_test = join q{, }, keys %{$subtests_with_extras};
-    $TEST->note("Running tests for policies: $policies_to_test");
+    my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
+    $TEST->note("Running tests for transformers: $transformers_to_test");
 
     for my $policy ( sort keys %{$subtests_with_extras} ) {
 
@@ -81,27 +81,27 @@ sub all_policies_ok {
 #-----------------------------------------------------------------------------
 
 sub _validate_wanted_policy_names {
-    my ($wanted_policies, $subtests_with_extras) = @_;
-    return 1 if not $wanted_policies;
-    my @all_testable_policies = keys %{ $subtests_with_extras };
-    my @wanted_policies = @{ $wanted_policies };
+    my ($wanted_transformers, $subtests_with_extras) = @_;
+    return 1 if not $wanted_transformers;
+    my @all_testable_transformers = keys %{ $subtests_with_extras };
+    my @wanted_transformers = @{ $wanted_transformers };
 
 
-    my @invalid = grep {my $p = $_; none { $_ =~ $p } @all_testable_policies}  @wanted_policies;
-    croak( q{No tests found for policies matching: } . join q{, }, @invalid ) if @invalid;
+    my @invalid = grep {my $p = $_; none { $_ =~ $p } @all_testable_transformers}  @wanted_transformers;
+    croak( q{No tests found for transformers matching: } . join q{, }, @invalid ) if @invalid;
     return 1;
 }
 
 #-----------------------------------------------------------------------------
 
 sub _filter_unwanted_subtests {
-    my ($wanted_policies, $subtests_with_extras) = @_;
-    return 1 if not $wanted_policies;
-    my @all_testable_policies = keys %{ $subtests_with_extras };
-    my @wanted_policies = @{ $wanted_policies };
+    my ($wanted_transformers, $subtests_with_extras) = @_;
+    return 1 if not $wanted_transformers;
+    my @all_testable_transformers = keys %{ $subtests_with_extras };
+    my @wanted_transformers = @{ $wanted_transformers };
 
-    for my $p (@all_testable_policies) {
-        if (none {$p =~ m/$_/xism} @wanted_policies) {
+    for my $p (@all_testable_transformers) {
+        if (none {$p =~ m/$_/xism} @wanted_transformers) {
             delete $subtests_with_extras->{$p}; # side-effects!
         }
     }
@@ -205,7 +205,7 @@ sub _compute_test_count {
     my ($subtests_with_extras) = @_;
 
     # one can_ok() for each policy
-    my $npolicies = scalar keys %{ $subtests_with_extras };
+    my $ntransformers = scalar keys %{ $subtests_with_extras };
 
     my $nsubtests = 0;
     for my $subtest_with_extras ( values %{$subtests_with_extras} ) {
@@ -213,7 +213,7 @@ sub _compute_test_count {
         $nsubtests += @{ $subtest_with_extras->{subtests} };
     }
 
-    return $nsubtests + $npolicies;
+    return $nsubtests + $ntransformers;
 }
 
 #-----------------------------------------------------------------------------
@@ -258,24 +258,24 @@ Test::Perl::Mogrify::Transformer - A framework for testing your custom Policies
 
 =head1 SYNOPSIS
 
-    use Test::Perl::Mogrify::Transformer qw< all_policies_ok >;
+    use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
 
     # Assuming .run files are inside 't' directory...
-    all_policies_ok()
+    all_transformers_ok()
 
     # Or if your .run files are in a different directory...
-    all_policies_ok( '-test-directory' => 'run' );
+    all_transformers_ok( '-test-directory' => 'run' );
 
     # And if you just want to run tests for some polices...
-    all_policies_ok( -policies => ['Some::Transformer', 'Another::Transformer'] );
+    all_transformers_ok( -transformers => ['Some::Transformer', 'Another::Transformer'] );
 
     # If you want your test program to accept short Transformer names as
     # command-line parameters...
     #
     # You can then test a single policy by running
     # "perl -Ilib t/policy-test.t My::Transformer".
-    my %args = @ARGV ? ( -policies => [ @ARGV ] ) : ();
-    all_policies_ok(%args);
+    my %args = @ARGV ? ( -transformers => [ @ARGV ] ) : ();
+    all_transformers_ok(%args);
 
 
 =head1 DESCRIPTION
@@ -296,12 +296,12 @@ against this module until it has stabilized.
 
 =over
 
-=item all_policies_ok('-test-directory' => $path, -policies => \@policy_names)
+=item all_transformers_ok('-test-directory' => $path, -transformers => \@policy_names)
 
 Loads all the F<*.run> files beneath the C<-test-directory> and runs the
 tests.  If C<-test-directory> is not specified, it defaults to F<t/>.
-C<-policies> is an optional reference to an array of shortened Transformer names.
-If C<-policies> specified, only the tests for Policies that match one of the
+C<-transformers> is an optional reference to an array of shortened Transformer names.
+If C<-transformers> specified, only the tests for Policies that match one of the
 C<m/$POLICY_NAME/imx> will be run.
 
 

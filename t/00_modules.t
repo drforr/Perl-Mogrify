@@ -52,7 +52,7 @@ can_ok('Perl::Mogrify', 'new');
 can_ok('Perl::Mogrify', 'add_policy');
 can_ok('Perl::Mogrify', 'config');
 can_ok('Perl::Mogrify', 'critique');
-can_ok('Perl::Mogrify', 'policies');
+can_ok('Perl::Mogrify', 'transformers');
 
 #Set -profile to avoid messing with .perlmogrifyrc
 my $mogrify = Perl::Mogrify->new( -profile => 'NONE' );
@@ -65,7 +65,7 @@ is($mogrify->VERSION(), $version_string, 'Perl::Mogrify version');
 use_ok('Perl::Mogrify::Config') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::Mogrify::Config', 'new');
 can_ok('Perl::Mogrify::Config', 'add_policy');
-can_ok('Perl::Mogrify::Config', 'policies');
+can_ok('Perl::Mogrify::Config', 'transformers');
 can_ok('Perl::Mogrify::Config', 'exclude');
 can_ok('Perl::Mogrify::Config', 'force');
 can_ok('Perl::Mogrify::Config', 'include');
