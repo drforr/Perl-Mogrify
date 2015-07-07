@@ -49,14 +49,18 @@ sub block_perlmogrifyrc {
 
 #-----------------------------------------------------------------------------
 # Mogrify a code snippet using only one policy.  Returns the transformations.
+#
+# Also uses a secret escape hatch in $c->transform() so we can get at the
+# raw PPI::Document object without breaking AUTOLOAD.
 
 sub ptransform_with_transformations {
     my($policy, $code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->apply_transform(-policy => $policy, -config => $config_ref);
-    my @rv = $c->transform($code_ref);
-use Data::Dumper;print Dumper($c);
-    return @rv;
+    #my @rv = $c->transform($code_ref);
+    my $doc;
+    my @rv = $c->transform($code_ref, doc => \$doc);
+    return ($doc, @rv);
 }
 
 #-----------------------------------------------------------------------------

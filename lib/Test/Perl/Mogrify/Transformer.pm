@@ -110,9 +110,31 @@ sub _filter_unwanted_subtests {
 
 #-----------------------------------------------------------------------------
 
+sub __parse_results {
+    my ($doc) = @_;
+    my (@from, @to);
+
+    my $in_to;
+    for (split /\n/, $doc) {
+        next if /^$/; # Skip blank lines (yes, I'm ignoring you, heredoc.)
+        next if /^#/;
+        if ( /^#-->/ ) {
+            $in_to = 1;
+            next;
+        }
+        if ( $in_to ) { push @to, $_ }
+        else { push @from, $_ }
+    }
+
+    $TEST->is_deeply(\@from,\@to);
+}
+
+#-----------------------------------------------------------------------------
+
 sub _run_subtest {
     my ($policy, $subtest) = @_;
 
+    my $document;
     my @transformations;
     my $error;
     if ( $subtest->{filename} ) {
@@ -131,7 +153,7 @@ sub _run_subtest {
     }
     else {
         eval {
-            @transformations =
+            ($document, @transformations) =
                 ptransform_with_transformations(
                     $policy,
                     \$subtest->{code},
@@ -142,6 +164,7 @@ sub _run_subtest {
             $error = $EVAL_ERROR || 'An unknown problem occurred.';
         };
     }
+    __parse_results($document) if $document;
 
     return ($error, @transformations);
 }

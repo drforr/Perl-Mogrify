@@ -77,16 +77,23 @@ sub transform {
     # function.  In the latter case, the first argument can be a
     # hashref of configuration parameters that shall be used to create
     # an object behind the scenes.  Note that this object does not
-    # persist.  In other words, it is not a singleton.  Here are some
-    # of the ways this subroutine might get called:
+    # persist.  In other words, it is not a singleton.
+    #
+    # In addition, if it is called with a trailing 'doc => \$ref'
+    # named argument, the reference is populated with the serialized document.
+    # This is only really needed for test suites.
+    #
+    # Here are some of the ways this subroutine might get called:
     #
     # #Object style...
     # $mogrify->transform( $code );
+    # $mogrify->transform( $code, doc => \$my_doc );
     #
     # #Functional style...
     # transform( $code );
     # transform( {}, $code );
     # transform( {-foo => bar}, $code );
+    # transform( {-foo => bar}, $code, doc => \$my_doc );
     #------------------------------------------------------------------
 
     my ( $self, $source_code ) = @_ >= 2 ? @_ : ( {}, $_[0] );
@@ -109,6 +116,12 @@ sub transform {
     }
 
     my @transformations = $self->_gather_transformations($doc);
+
+    # Never thought I'd be smuggling myself in one of these.
+    #
+    if ( $_[-2] and $_[-2] eq 'doc' ) {
+        ${$_[-1]} = $doc->serialize;
+    }
     open my $fh, '>', $source_code . '.pl6'
         or die "Could not write to '$source_code.pl6': $!";
         print $fh $doc->serialize;
