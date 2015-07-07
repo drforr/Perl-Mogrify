@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::Variables::FormatSigils - Give variables their proper sigils.
+Perl::Mogrify::Transformer::FormatConstants - Transform Readonly and constant
 
 
 =head1 AFFILIATION
@@ -110,14 +110,10 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 uses the sigil type as the data type now, and this is probably the most common operation people will want to do to their file. This transformer doesn't alter hash keys or array indices, those are left to transformers down the line:
+Perl6 has real constants, so we don't need modules or pragmas:
 
-  @foo = () --> @foo = ()
-  $foo[1] --> @foo[1]
-  %foo = () --> %foo = ()
-  $foo{a} --> %foo{a} # Not %foo<a> or %foo{'a'} yet.
-
-Transforms variables outside of comments, heredocs, strings and POD.
+  use constant FOO => 1 --> constant $FOO = 1
+  Readonly my @FOO => (1) --> my constant @FOO = (1)
 
 =head1 CONFIGURATION
 
