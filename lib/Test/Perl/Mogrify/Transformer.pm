@@ -7,6 +7,7 @@ use warnings;
 
 use Carp qw< croak confess >;
 use English qw< -no_match_vars >;
+use List::Util qw< min >;
 use List::MoreUtils qw< all none >;
 use Readonly;
 
@@ -112,21 +113,55 @@ sub _filter_unwanted_subtests {
 
 sub __parse_results {
     my ($doc) = @_;
-    my (@from, @to);
-
+    my $results = { to => [], from => [] };
     my $in_to;
     for (split /\n/, $doc) {
-        next if /^$/; # Skip blank lines (yes, I'm ignoring you, heredoc.)
-        next if /^#/;
-        if ( /^#-->/ ) {
+        s{\s*##.+$}{};
+        if ( /^#--/ ) {
             $in_to = 1;
             next;
         }
-        if ( $in_to ) { push @to, $_ }
-        else { push @from, $_ }
+        if ( $in_to ) { push @{ $results->{to} }, $_ }
+        else { push @{ $results->{from} }, $_ }
     }
+    return $results;
+}
 
-    $TEST->is_deeply(\@from,\@to);
+#-----------------------------------------------------------------------------
+
+sub __browse_deeply {
+    my ($policy, $subtest, $results) = @_;
+
+    my $num_errors;
+    my $last_line = min( $#{ $results->{from} }, $#{ $results->{to} } );
+    my $first_different_line = 0;
+    for my $idx ( 0 .. $last_line ) {
+        next if $results->{from}[$idx] eq $results->{to}[$idx];
+        $first_different_line = $idx + 1;
+        last;
+    }
+    if ( $first_different_line ) {
+        $TEST->diag(
+            "Output begins to differ at line $first_different_line:\n".
+            join( "\n", @{ $results->{from} }, '====', @{ $results->{to} } )
+        );
+        $num_errors++;
+    }
+    elsif ( $#{ $results->{from} } > $#{ $results->{to} } ) {
+        $TEST->diag(
+            "Transformed file missing lines from original:\n".
+            join( "\n", @{ $results->{from} }, '====', @{ $results->{to} } )
+        );
+        $num_errors++;
+    }
+    elsif ( $#{ $results->{from} } < $#{ $results->{to} } ) {
+        $TEST->diag(
+            "Transformed file has more lines than original:\n".
+            join( "\n", @{ $results->{from} }, '====', @{ $results->{to} } )
+        );
+        $num_errors++;
+    }
+    return $num_errors;
 }
 
 #-----------------------------------------------------------------------------
@@ -164,9 +199,13 @@ sub _run_subtest {
             $error = $EVAL_ERROR || 'An unknown problem occurred.';
         };
     }
-    __parse_results($document) if $document;
+    my $results = __parse_results($document);
+    my $num_errors = __browse_deeply($policy, $subtest, $results);
 
-    return ($error, @transformations);
+    if ( $num_errors ) {
+        $TEST->ok(0==1, "$policy - $subtest->{name} - failed");
+    }
+    return;
 }
 
 #-----------------------------------------------------------------------------
