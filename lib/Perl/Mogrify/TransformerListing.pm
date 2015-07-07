@@ -19,8 +19,8 @@ sub new {
 
     my $self = bless {}, $class;
 
-    my $policies = $args{-policies} || [];
-    $self->{_policies} = [ sort _by_type @{ $policies } ];
+    my $transformers = $args{-transformers} || [];
+    $self->{_transformers} = [ sort _by_type @{ $transformers } ];
 
     return $self;
 }
@@ -32,7 +32,7 @@ sub to_string {
 
     Perl::Mogrify::Transformer::set_format( "%s %p [%t]\n" );
 
-    return join q{}, map { "$_" } @{ $self->{_policies} };
+    return join q{}, map { "$_" } @{ $self->{_transformers} };
 }
 
 #-----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ to change without notice.
 
 =over
 
-=item C<< new( -policies => \@POLICY_OBJECTS ) >>
+=item C<< new( -transformers => \@POLICY_OBJECTS ) >>
 
 Returns a reference to a new C<Perl::Mogrify::TransformerListing> object.
 

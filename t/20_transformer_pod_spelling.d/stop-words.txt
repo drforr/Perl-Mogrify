@@ -1,5 +1,0 @@
-# It's a comment!
-
-foo
-arglbargl    # Some other comment.
-bar

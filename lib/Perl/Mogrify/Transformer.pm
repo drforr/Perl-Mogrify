@@ -789,7 +789,7 @@ C<BEGIN> or C<CHECK> blocks that affect files or connect to databases, is not
 a safe thing to do.  If you are writing a such a Transformer, then you should
 override this method to return false.
 
-By default L<Perl::Mogrify|Perl::Mogrify> will not run unsafe policies.
+By default L<Perl::Mogrify|Perl::Mogrify> will not run unsafe transformers.
 
 
 
