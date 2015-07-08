@@ -1,0 +1,9 @@
+## name transformed
+## parms {}
+## failures 0
+## cut
+use Foo;
+use Foo qw(a b);
+#-->
+use Foo:from<Perl5>;
+use Foo:from<Perl5> qw(a b);

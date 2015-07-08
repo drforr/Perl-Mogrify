@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::CompoundStatements::FormatGivens;
+package Perl::Mogrify::Transformer::FormatSpecialLiterals;
 
 use 5.006001;
 use strict;
@@ -13,31 +13,40 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform 'given()' to 'given ()'};
-Readonly::Scalar my $EXPL =>
-    q{unless() needs whitespace in order to not be interpreted as a function call};
+Readonly::Scalar my $DESC => q{Transform '__END__' etc.};
+Readonly::Scalar my $EXPL => q{__END__ and __DATA__ are now POD markers};
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::Given' }
+sub applies_to           {
+    return 'PPI::Token::Separator',
+           'PPI::Token::End',
+           'PPI::Token::Word'
+}
 
 #-----------------------------------------------------------------------------
 
+my %map = (
+    '__END__'     => '=finish',
+    '__FILE__'    => '$?FILE',
+    '__LINE__'    => '$?LINE',
+    '__PACKAGE__' => '$?PACKAGE',
+);
+
 sub transform {
     my ($self, $elem, $doc) = @_;
-
-    my $token = $elem->first_element;
-    return unless $token->content eq 'given';
-
-    return unless $token->next_sibling;
-    return if $token->next_sibling->isa('PPI::Token::Whitespace');
-
-    my $space = PPI::Token::Whitespace->new();
-    $space->set_content(' ');
-    $token->insert_after( $space );
+    return unless exists $map{$elem->content};
+    if ( $elem->isa('PPI::Token::Word') ) {
+        my $new_content = $elem->content;
+        $elem->set_content($map{$new_content});
+    }
+    elsif ( $elem->isa('PPI::Token::Separator') ) {
+        my $new_content = $elem->content;
+        $elem->set_content($map{$new_content});
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -52,8 +61,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::FormatGivens - Format given()
-
+Perl::Mogrify::Transformer::FormatSpecialLiterals - Format __END__, __LINE__ &c
 
 =head1 AFFILIATION
 
@@ -63,10 +71,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<given> and the opening parenthesis to avoid being interpreted as a function call:
+__END__ is replaced with the POD marker '=finish', and you can read beyond this boundary with the filehandle C<$*FINISH>:
 
-  given(1) { } --> given (1) { }
-  given (1) { } --> given (1) { }
+  __END__ --> =finish
+  __LINE__ --> $?LINE
+  __FILE__ --> $?FILE
+  __PACKAGE__ --> $?PACKAGE
 
 =head1 CONFIGURATION
 

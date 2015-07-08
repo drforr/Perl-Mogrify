@@ -1,0 +1,13 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+map {$_++} @x;
+map /x/ @x;
+grep {$_++} @x;
+grep /x/ @x;
+#-->
+map {$_++}, @x;
+map {/x/}, @x;
+grep {$_++}, @x;
+grep {/x/}, @x;

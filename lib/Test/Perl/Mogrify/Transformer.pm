@@ -48,33 +48,34 @@ sub all_transformers_ok {
 
     my $subtests_with_extras =  subtests_in_tree( $test_dir, 'include extras' );
 
-    if ($wanted_transformers) {
-        _validate_wanted_policy_names($wanted_transformers, $subtests_with_extras);
-        _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
-    }
-
-    $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
-    my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
-    $TEST->note("Running tests for transformers: $transformers_to_test");
-
-    for my $policy ( sort keys %{$subtests_with_extras} ) {
-
-        my ($full_policy_name, $method) = ("Perl::Mogrify::Transformer::$policy", 'transform');
-        my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
-        $TEST->ok( $full_policy_name->can($method), $can_ok_label );
-
-        for my $subtest ( @{ $subtests_with_extras->{$policy}{subtests} } ) {
-            my $todo = $subtest->{TODO};
-            if ($todo) { $TEST->todo_start( $todo ); }
-
-            my ($error, @transformations) = _run_subtest($policy, $subtest);
-            my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@transformations);
-            $TEST->ok( $ok, _create_test_name($policy, $subtest) );
-
-            if (@diag) { $TEST->diag(@diag); }
-            if ($todo) { $TEST->todo_end(); }
-        }
-    }
+use Data::Dumper;die Dumper($subtests_with_extras);
+#    if ($wanted_transformers) {
+#        _validate_wanted_policy_names($wanted_transformers, $subtests_with_extras);
+#        _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
+#    }
+#
+#    $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
+#    my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
+#    $TEST->note("Running tests for transformers: $transformers_to_test");
+#
+#    for my $policy ( sort keys %{$subtests_with_extras} ) {
+#
+#	    my ($full_policy_name, $method) = ("Perl::Mogrify::Transformer::$policy", 'transform');
+#	    my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
+#	    $TEST->ok( $full_policy_name->can($method), $can_ok_label );
+#
+#	    for my $subtest ( @{ $subtests_with_extras->{$policy}{subtests} } ) {
+#		    my $todo = $subtest->{TODO};
+#		    if ($todo) { $TEST->todo_start( $todo ); }
+#
+#		    my ($error, @transformations) = _run_subtest($policy, $subtest);
+#		    my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@transformations);
+#		    $TEST->ok( $ok, _create_test_name($policy, $subtest) );
+#
+#		    if (@diag) { $TEST->diag(@diag); }
+#		    if ($todo) { $TEST->todo_end(); }
+#	    }
+#    }
 
     return;
 }

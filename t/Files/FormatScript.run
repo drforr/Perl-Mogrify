@@ -1,0 +1,8 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+#!perl
+#-->
+#!perl
+use v6;

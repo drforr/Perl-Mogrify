@@ -1,0 +1,7 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+$x = $y > 1 ? 0 : 1;
+#-->
+$x = $y > 1 ?? 0 !! 1;

@@ -1,0 +1,20 @@
+## name unchanged
+## parms {}
+## failures 0
+## cut
+%$foo;
+@$foo;
+#-->
+%$foo;
+@$foo;
+#------------------------------------------------------------------------------
+
+## name transform
+## parms {}
+## failures 0
+## cut
+%{$foo};
+@{$foo};
+#-->
+%($foo);
+@($foo);

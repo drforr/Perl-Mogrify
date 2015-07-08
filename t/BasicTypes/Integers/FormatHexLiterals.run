@@ -1,0 +1,13 @@
+## name unchanged
+## parms {}
+## failures 0
+## cut
+0x01;
+0x01ef;
+0x010_ab;
+0x_010_ab;
+#-->
+:16<01>;
+:16<01ef>;
+:16<010_ab>;
+:16<010_ab>;

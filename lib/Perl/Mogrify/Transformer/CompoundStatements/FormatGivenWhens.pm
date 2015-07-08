@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::CompoundStatements::FormatWhens;
+package Perl::Mogrify::Transformer::CompoundStatements::FormatGivenWhens;
 
 use 5.006001;
 use strict;
@@ -22,15 +22,23 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::When' }
+sub applies_to           {
+    return 'PPI::Statement::Given',
+           'PPI::Statement::When'
+}
 
 #-----------------------------------------------------------------------------
+
+my %map = (
+    given => 1,
+    when => 1
+);
 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $token = $elem->first_element;
-    return unless $token->content eq 'when';
+    return unless exists $map{$token->content};
 
     return unless $token->next_sibling;
     return if $token->next_sibling->isa('PPI::Token::Whitespace');
@@ -52,7 +60,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::FormatWhens - Format when()
+Perl::Mogrify::Transformer::CompoundStatements::FormatGivenWhens - Format given(), when()
 
 
 =head1 AFFILIATION
@@ -63,10 +71,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<when> and the opening parenthesis to avoid being interpreted as a function call:
+While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<given> and the opening parenthesis to avoid being interpreted as a function call:
 
-  when(1) { } --> when (1) { }
-  when (1) { } --> when (1) { }
+  given(1) { }  --> given (1) { }
+  when(1) { }   --> when (1) { }
+  given (1) { } --> given (1) { }
+  when (1) { }  --> when (1) { }
 
 =head1 CONFIGURATION
 

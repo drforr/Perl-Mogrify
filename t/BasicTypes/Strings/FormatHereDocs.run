@@ -1,0 +1,9 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+<<EOF;
+EOF
+#-->
+q:to/EOF/;
+EOF
