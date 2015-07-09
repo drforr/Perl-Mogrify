@@ -3,6 +3,8 @@
 ## failures 0
 ## cut
 "The $x bit";
+my$x="The $x bit";
+my $x = "The $x bit";
 "The $x-30 bit";
 "The \l$x bit";
 "The \v bit";
@@ -10,6 +12,8 @@
 "The \${x}rd bit";
 #-->
 "The $x bit";
+my$x="The $x bit";
+my $x = "The $x bit";
 "The $x\-30 bit";
 "The {lc $x} bit";
 "The  bit";

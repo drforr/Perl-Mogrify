@@ -22,7 +22,7 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Word' }
+sub applies_to           { return 'PPI::Token::Word'  }
 
 #-----------------------------------------------------------------------------
 
@@ -38,47 +38,44 @@ sub _make_a_block {
 }
 
 my %map = (
-    map => 1,
+    map  => 1,
     grep => 1
 );
 
 sub transform {
     my ($self, $elem, $doc) = @_;
     return unless exists $map{$elem->content};
-    return if $elem->snext_sibling and
-              $elem->snext_sibling->isa('PPI::Token::Operator') and
-              $elem->snext_sibling->content eq ',';
-             
-    my $block = $elem->snext_sibling;
+    my $token = $elem->snext_sibling;
 
-    if ( $block->isa('PPI::Structure') and
-         $block->start eq '{' and
-         $block->finish eq '}' ) {
+    if ( $token->isa('PPI::Structure::Block') and
+         $token->start eq '{' and
+         $token->finish eq '}' ) {
+        return if $token->snext_sibling->isa('PPI::Token::Operator') and
+                  $token->snext_sibling->content eq ',';
         my $comma = PPI::Token::Operator->new(',');
-        $block->insert_after( $comma );
+        $token->insert_after( $comma );
     }
-    elsif ( !$block->isa('PPI::Structure::Block') ) {
-        # Can't use find() here because we need to search *forward* from $word,
-        # not *down* within $word.
-
-        my $last_sib = $block; # Can't be a comma, since `map ,` is invalid
-        my @elements_to_move = $block;
-        while ( $last_sib = $last_sib->next_sibling ) {
-            last if $last_sib->isa('PPI::Token::Operator')
-                and $last_sib->content eq ',';
-            push @elements_to_move, $last_sib;
+    else {
+        my $point = $token;
+        my @elem_to_move;
+my @elem_to_remove;
+        while ( $token and $token->next_sibling ) {
+            last if $token->content eq ',';
+            push @elem_to_move, $token->clone;
+            push @elem_to_remove, $token;
+            $token = $token->next_sibling;
         }
-        return unless $last_sib;
+#$_->remove for @elem_to_remove;
 
         my $new_block = _make_a_block();
-        $block->insert_before($new_block) or die;
+        my $new_statement = PPI::Statement->new;
+        $new_block->add_element($new_statement);
 
-        my $s = PPI::Statement->new();
-        $_->remove          or die for @elements_to_move;
-        $s->add_element($_) or die for @elements_to_move;
+        $new_statement->add_element($_) for @elem_to_move;
+#        $_->remove for @elem_to_move;
 
-        $new_block->add_element($s)
-            or die;
+        $point->insert_before($new_block);
+        $point->remove;
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );
