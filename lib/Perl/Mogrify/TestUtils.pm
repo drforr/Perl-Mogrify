@@ -57,8 +57,8 @@ sub ptransform_with_transformations {
     my($policy, $code_ref, $config_ref) = @_;
     my $c = Perl::Mogrify->new( -profile => 'NONE' );
     $c->apply_transform(-policy => $policy, -config => $config_ref);
-    #my @rv = $c->transform($code_ref);
     my $doc;
+    $code_ref = \join("\n",@{$code_ref});
     my @rv = $c->transform($code_ref, doc => \$doc);
     return ($doc, @rv);
 }
@@ -152,7 +152,13 @@ sub subtests_in_tree {
                     throw_internal 'confusing policy test filename ' . $_;
                 }
 
-                my $policy = join q{::}, @pathparts[-2, -1];
+#                my $policy = join q{::}, @pathparts[-2, -1];
+		my @remaining_path = @pathparts;
+
+		shift @remaining_path if $remaining_path[0] eq 't';
+		shift @remaining_path if $remaining_path[0] eq 'Perl';
+		shift @remaining_path if $remaining_path[0] eq 'Mogrify';
+		my $policy = join q{::}, @remaining_path;
 
                 my $globals = _globals_from_file( $_ );
                 if ( my $prerequisites = $globals->{prerequisites} ) {
@@ -177,6 +183,7 @@ sub subtests_in_tree {
         },
         $start
     );
+use YAML;print Dump \%subtests;
 
     return \%subtests;
 }
@@ -309,11 +316,33 @@ sub _subtests_from_file {
     return @subtests;
 }
 
+sub _split_subtest {
+    my $code = shift;
+
+    my (@original, @sample);
+    my $original_done;
+    for ( @{ $code } ) {
+        if ( /^#-->/ ) {
+            $original_done = 1;
+            next;
+        }
+        elsif ( $original_done ) {
+            push @sample, $_;
+        }
+        else {
+            push @original, $_;
+        }
+    }
+    return (\@original, \@sample);
+}
+
 sub _finalize_subtest {
     my $subtest = shift;
 
     if ( $subtest->{code} ) {
-        $subtest->{code} = join "\n", @{$subtest->{code}};
+        my $code = delete $subtest->{code};
+        @{$subtest}{qw(original sample)} = _split_subtest($code);
+        delete $subtest->{code};
     }
     else {
         throw_internal "$subtest->{name} has no code lines";

@@ -1,16 +1,11 @@
-## name unchanged
+## name test
 ## parms {}
 ## failures 0
 ## cut
 for(@a) { }
-#-->
-for(@a) { }
-## name transform
-## parms {}
-## failures 0
-## cut
 for($i=0;$i<1;$i++) { }
 for ($i=0;$i<1;$i++) { }
 #-->
+for(@a) { }
 loop ($i=0;$i<1;$i++) { }
 loop ($i=0;$i<1;$i++) { }

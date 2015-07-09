@@ -3,11 +3,19 @@
 ## failures 0
 ## cut
 map {$_++} @x;
+my @a = map {$_++} @x;
 map /x/ @x;
+my @b = map /x/ @x;
 grep {$_++} @x;
+my @c = grep {$_++} @x;
 grep /x/ @x;
+my @d = grep /x/ @x;
 #-->
 map {$_++}, @x;
+my @a = map {$_++}, @x;
 map {/x/}, @x;
+my @b = map {/x/}, @x;
 grep {$_++}, @x;
+my @c = grep {$_++}, @x;
 grep {/x/}, @x;
+my @d = grep {/x/}, @x;

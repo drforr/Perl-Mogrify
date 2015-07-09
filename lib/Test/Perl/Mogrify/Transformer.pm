@@ -48,34 +48,35 @@ sub all_transformers_ok {
 
     my $subtests_with_extras =  subtests_in_tree( $test_dir, 'include extras' );
 
-use Data::Dumper;die Dumper($subtests_with_extras);
-#    if ($wanted_transformers) {
-#        _validate_wanted_policy_names($wanted_transformers, $subtests_with_extras);
-#        _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
-#    }
-#
-#    $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
-#    my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
-#    $TEST->note("Running tests for transformers: $transformers_to_test");
-#
-#    for my $policy ( sort keys %{$subtests_with_extras} ) {
-#
-#	    my ($full_policy_name, $method) = ("Perl::Mogrify::Transformer::$policy", 'transform');
-#	    my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
-#	    $TEST->ok( $full_policy_name->can($method), $can_ok_label );
-#
-#	    for my $subtest ( @{ $subtests_with_extras->{$policy}{subtests} } ) {
-#		    my $todo = $subtest->{TODO};
-#		    if ($todo) { $TEST->todo_start( $todo ); }
-#
-#		    my ($error, @transformations) = _run_subtest($policy, $subtest);
+    if ($wanted_transformers) {
+        _validate_wanted_policy_names($wanted_transformers, $subtests_with_extras);
+        _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
+    }
+
+    $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
+    my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
+    $TEST->note("Running tests for transformers: $transformers_to_test");
+
+    for my $policy ( sort keys %{$subtests_with_extras} ) {
+
+	    my ($full_policy_name, $method) = ("Perl::Mogrify::Transformer::$policy", 'transform');
+	    my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
+	    $TEST->ok( $full_policy_name->can($method), $can_ok_label );
+
+	    for my $subtest ( @{ $subtests_with_extras->{$policy}{subtests} } ) {
+		    my $todo = $subtest->{TODO};
+		    if ($todo) { $TEST->todo_start( $todo ); }
+
+#use YAML;print Dump $subtest;
+
+		    my ($error, @transformations) = _run_subtest($policy, $subtest);
 #		    my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@transformations);
 #		    $TEST->ok( $ok, _create_test_name($policy, $subtest) );
 #
 #		    if (@diag) { $TEST->diag(@diag); }
 #		    if ($todo) { $TEST->todo_end(); }
-#	    }
-#    }
+	    }
+    }
 
     return;
 }
@@ -112,53 +113,39 @@ sub _filter_unwanted_subtests {
 
 #-----------------------------------------------------------------------------
 
-sub __parse_results {
-    my ($doc) = @_;
-    my $results = { to => [], from => [] };
-    my $in_to;
-    for (split /\n/, $doc) {
-        s{\s*##.+$}{};
-        if ( /^#--/ ) {
-            $in_to = 1;
-            next;
-        }
-        if ( $in_to ) { push @{ $results->{to} }, $_ }
-        else { push @{ $results->{from} }, $_ }
-    }
-    return $results;
-}
-
-#-----------------------------------------------------------------------------
-
-sub __browse_deeply {
-    my ($policy, $subtest, $results) = @_;
+sub __is_deeply {
+    my ($policy, $subtest) = @_;
 
     my $num_errors;
-    my $last_line = min( $#{ $results->{from} }, $#{ $results->{to} } );
+    my $last_line = min( $#{ $subtest->{sample} },
+                         $#{ $subtest->{modified} } );
     my $first_different_line = 0;
     for my $idx ( 0 .. $last_line ) {
-        next if $results->{from}[$idx] eq $results->{to}[$idx];
+        next if $subtest->{sample}[$idx] eq $subtest->{modified}[$idx];
         $first_different_line = $idx + 1;
         last;
     }
     if ( $first_different_line ) {
         $TEST->diag(
             "Output begins to differ at line $first_different_line:\n".
-            join( "\n", @{ $results->{from} }, '====', @{ $results->{to} } )
+            join( "\n", @{ $subtest->{sample} }, '====',
+                        @{ $subtest->{modified} } )
         );
         $num_errors++;
     }
-    elsif ( $#{ $results->{from} } > $#{ $results->{to} } ) {
+    elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{modified} } ) {
         $TEST->diag(
             "Transformed file missing lines from original:\n".
-            join( "\n", @{ $results->{from} }, '====', @{ $results->{to} } )
+            join( "\n", @{ $subtest->{sample} }, '====',
+                        @{ $subtest->{modified} } )
         );
         $num_errors++;
     }
-    elsif ( $#{ $results->{from} } < $#{ $results->{to} } ) {
+    elsif ( $#{ $subtest->{sample} } < $#{ $subtest->{modified} } ) {
         $TEST->diag(
             "Transformed file has more lines than original:\n".
-            join( "\n", @{ $results->{from} }, '====', @{ $results->{to} } )
+            join( "\n", @{ $subtest->{sample} }, '====',
+                        @{ $subtest->{modified} } )
         );
         $num_errors++;
     }
@@ -192,7 +179,7 @@ sub _run_subtest {
             ($document, @transformations) =
                 ptransform_with_transformations(
                     $policy,
-                    \$subtest->{code},
+                    $subtest->{original},
                     $subtest->{parms},
                 );
             1;
@@ -200,8 +187,8 @@ sub _run_subtest {
             $error = $EVAL_ERROR || 'An unknown problem occurred.';
         };
     }
-    my $results = __parse_results($document);
-    my $num_errors = __browse_deeply($policy, $subtest, $results);
+    $subtest->{modified} = [split /\n/,$document];
+    my $num_errors = __is_deeply($policy, $subtest);
 
     if ( $num_errors ) {
         $TEST->ok(0==1, "$policy - $subtest->{name} - failed");

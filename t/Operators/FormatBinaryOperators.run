@@ -1,17 +1,11 @@
-## name unchanged
-## parms {}
-## failures 0
-## cut
-1 + 1;
-#-->
-1 + 1;
-
 ## name transformed
 ## parms {}
 ## failures 0
 ## cut
+1 + 1;
 '1' . '1';
 Foo->new();
 #-->
+1 + 1;
 '1' ~ '1';
 Foo.new();

@@ -26,8 +26,8 @@ sub applies_to           { return 'PPI::Token::Number::Octal' }
 #-----------------------------------------------------------------------------
 
 #
-# 0o0123 --> :8<0123>
-# 0o0123_4567 --> :8<0123_4567>
+# 0123 --> :8<0123>
+# 0123_4567 --> :8<0123_4567>
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
@@ -35,9 +35,9 @@ sub transform {
     my $old_content = $elem->content;
 
     #
-    # Remove leading '0o' or '0' and optional leading underscore
+    # Remove leading '0' and optional leading underscore
     #
-    $old_content =~ s{^0[o]?[_]?}{}i;
+    $old_content =~ s{^0[_]?}{}i;
 
     my $new_content = ':8<' . $old_content . '>';
     $elem->set_content( $new_content );
@@ -66,12 +66,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 octal literals have the format ':8<01_01_01_01>'. PPI treats leading-0 and 0o numbers the same. Existing separators are preserved:
+Perl6 octal literals have the format ':8<01_01_01_01>'. Existing separators are preserved:
 
   001      -> :8<01>
-  0o0167   -> :8<0167>
-  0o010_10 -> :8<010_10>
-  0o_010_10 -> :8<010_10>
+  0167     -> :8<0167>
+  010_67   -> :8<010_67>
+  0_010_67 -> :8<010_67>
 
 Transforms octal numbers outside of comments, heredocs, strings and POD.
 =head1 CONFIGURATION

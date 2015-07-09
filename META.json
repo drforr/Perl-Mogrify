@@ -196,27 +196,27 @@
          "file" : "lib/Perl/Mogrify/Transformer/FormatConstants.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Integers/FormatOctalLiterals" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Integers::FormatOctalLiterals" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Integers/FormatOctalLiterals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Integers/FormatBinaryLiterals" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Integers::FormatBinaryLiterals" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Integers/FormatBinaryLiterals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Integers/FormatHexLiterals" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Integers::FormatHexLiterals" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Integers/FormatHexLiterals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Rationals/FormatRationals" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Rationals::FormatRationals" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Rationals/FormatRationals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Strings/FormatRegexp" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::FormatRegexp" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatRegexp.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Strings/FormatHereDocs" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::FormatHereDocs" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatHereDocs.pm",
          "version" : "0.01"
       },
@@ -224,7 +224,7 @@
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatInterpolatedStrings.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Strings/FormatShellStrings" : {
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings" : {
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatShellStrings.pm",
          "version" : "0.01"
       },
@@ -232,39 +232,39 @@
          "file" : "lib/Perl/Mogrify/Transformer/FormatBuiltins.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Pragmas/FormatPragmas" : {
+      "Perl::Mogrify::Transformer::Pragmas::FormatPragmas" : {
          "file" : "lib/Perl/Mogrify/Transformer/Pragmas/FormatPragmas.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Files/FormatScript" : {
+      "Perl::Mogrify::Transformer::Files::FormatScript" : {
          "file" : "lib/Perl/Mogrify/Transformer/Files/FormatScript.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements/FormatConditionals" : {
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatConditionals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements/FormatWhens" : {
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatWhens" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatWhens.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements/FormatLoops" : {
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatLoops" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatLoops.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements/FormatUntils" : {
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatUntils" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatUntils.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements/FormatGivens" : {
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatGivens" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatGivens.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements/FormatMapGreps" : {
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatMapGreps" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatMapGreps.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Arrays/FormatArrayQws" : {
+      "Perl::Mogrify::Transformer::Arrays::FormatArrayQws" : {
          "file" : "lib/Perl/Mogrify/Transformer/Arrays/FormatArrayQws.pm",
          "version" : "0.01"
       },
@@ -272,43 +272,43 @@
          "file" : "lib/Perl/Mogrify/Transformer/FormatSpecialLiterals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Variables/FormatHashKeys" : {
+      "Perl::Mogrify::Transformer::Variables::FormatHashKeys" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/FormatHashKeys.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Variables/FormatSigils" : {
+      "Perl::Mogrify::Transformer::Variables::FormatSigils" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/FormatSigils.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Variables/FormatSpecialVariables" : {
+      "Perl::Mogrify::Transformer::Variables::FormatSpecialVariables" : {
          "file" : "lib/Perl/Mogrify/Transformer/Variables/FormatSpecialVariables.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Operators/FormatUnaryOperators" : {
+      "Perl::Mogrify::Transformer::Operators::FormatUnaryOperators" : {
          "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatUnaryOperators.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Operators/FormatTernaryOperators" : {
+      "Perl::Mogrify::Transformer::Operators::FormatTernaryOperators" : {
          "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatTernaryOperators.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Operators/FormatBinaryOperators" : {
+      "Perl::Mogrify::Transformer::Operators::FormatBinaryOperators" : {
 	 "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatBinaryOperators.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Operators/FormatCircumfixOperators" : {
+      "Perl::Mogrify::Transformer::Operators::FormatCircumfixOperators" : {
          "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatCircumfixOperators.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Packages/FormatPackageDeclarations" : {
+      "Perl::Mogrify::Transformer::Packages::FormatPackageDeclarations" : {
          "file" : "lib/Perl/Mogrify/Transformer/Packages/FormatPackageDeclarations.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Packages/FormatPackageUsages" : {
+      "Perl::Mogrify::Transformer::Packages::FormatPackageUsages" : {
           "file" : "lib/Perl/Mogrify/Transformer/Packages/FormatPackageUsages.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::References/FormatDereferences" : {
+      "Perl::Mogrify::Transformer::References::FormatDereferences" : {
           "file" : "lib/Perl/Mogrify/Transformer/References/FormatDereferences.pm",
          "version" : "0.01"
       },
