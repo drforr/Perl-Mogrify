@@ -183,6 +183,7 @@ sub subtests_in_tree {
         },
         $start
     );
+use YAML;print Dump \%subtests;
 
     return \%subtests;
 }
