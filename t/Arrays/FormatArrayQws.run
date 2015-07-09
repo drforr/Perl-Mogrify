@@ -2,10 +2,10 @@
 ## parms {}
 ## failures 0
 ## cut
+qw{a b c};
+qw<a b c>;
 qw(a b c);
-qw{a b c};
-qw<a b c>;
 #-->
-qw (a b c);
 qw{a b c};
 qw<a b c>;
+qw (a b c);

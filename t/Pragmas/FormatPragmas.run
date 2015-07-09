@@ -2,19 +2,12 @@
 ## parms {}
 ## failures 0
 ## cut
-use constant FOO => 1;
-use base qw(Foo);
-#-->
-use constant FOO => 1;
-use base qw(Foo);
-#------------------------------------------------------------------------------
-
-## name transformed
-## parms {}
-## failures 0
-## cut
 use strict;
 use warnings;
+use constant FOO => 1;
+use base qw(Foo);
 #-->
 
 
+use constant FOO => 1;
+use base qw(Foo);
