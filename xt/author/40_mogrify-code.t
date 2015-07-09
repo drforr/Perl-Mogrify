@@ -37,7 +37,7 @@ use Perl::Mogrify::Transformer::ErrorHandling::RequireUseOfExceptions;
 #-----------------------------------------------------------------------------
 # Set up PPI caching for speed (used primarily during development)
 
-if ( $ENV{PERL_CRITIC_CACHE} ) {
+if ( $ENV{PERL_MOGRIFY_CACHE} ) {
     require PPI::Cache;
     my $cache_path =
         File::Spec->catdir(

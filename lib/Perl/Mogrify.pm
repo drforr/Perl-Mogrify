@@ -122,10 +122,12 @@ sub transform {
     if ( $_[-2] and $_[-2] eq 'doc' ) {
         ${$_[-1]} = $doc->serialize;
     }
-    open my $fh, '>', $source_code . '.pl6'
-        or die "Could not write to '$source_code.pl6': $!";
+    unless( ref $source_code ) {
+        open my $fh, '>', $source_code . '.pl6'
+            or die "Could not write to '$source_code.pl6': $!";
         print $fh $doc->serialize;
-    close $fh;
+        close $fh;
+    }
     return @transformations;
 }
 
@@ -303,7 +305,7 @@ follows:
 B<-profile> is a path to a configuration file. If C<$FILE> is not defined,
 Perl::Mogrify::Config attempts to find a F<.perlmogrifyrc> configuration file in
 the current directory, and then in your home directory.  Alternatively, you
-can set the C<PERLCRITIC> environment variable to point to a file in another
+can set the C<PERLMOGRIFY> environment variable to point to a file in another
 location.  If a configuration file can't be found, or if C<$FILE> is an empty
 string, then all Policies will be loaded with their default configuration.
 See L<"CONFIGURATION"> for more information.
@@ -514,7 +516,7 @@ Most of the settings for Perl::Mogrify and each of the Transformer modules can b
 controlled by a configuration file.  The default configuration file is called
 F<.perlmogrifyrc>.  Perl::Mogrify will look for this file in the current
 directory first, and then in your home directory. Alternatively, you can set
-the C<PERLCRITIC> environment variable to explicitly point to a different file
+the C<PERLMOGRIFY> environment variable to explicitly point to a different file
 in another location.  If none of these files exist, and the C<-profile> option
 is not given to the constructor, then all the modules that are found in the
 Perl::Mogrify::Transformer namespace will be loaded with their default
@@ -811,7 +813,7 @@ would be very grateful for contributions, or you can simply load your own
 private set of transformers into Perl::Mogrify.
 
 
-=head1 EXTENDING THE CRITIC
+=head1 EXTENDING THE MOGRIFIER
 
 The modular design of Perl::Mogrify is intended to facilitate the addition of
 new Policies.  You'll need to have some understanding of L<PPI>, but most

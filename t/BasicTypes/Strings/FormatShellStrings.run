@@ -5,5 +5,5 @@
 qx{};
 qx();
 #-->
-qqx{}
-qqx ()
+qqx{};
+qqx ();

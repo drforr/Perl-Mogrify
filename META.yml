@@ -324,4 +324,4 @@ resources:
   license: http://dev.perl.org/licenses/
   repository: git://github.com/Perl-Mogrify/Perl-Mogrify.git
 version: '0.01'
-x_authority: cpan:CRITICRE
+x_authority: cpan:JGOFF

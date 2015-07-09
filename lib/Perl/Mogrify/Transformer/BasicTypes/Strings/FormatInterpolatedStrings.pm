@@ -42,9 +42,10 @@ sub transform {
     $old_content =~ s{\\v}{}g;
     $old_content =~ s{\\l\$x}{{lc \$x}}g;
     $old_content =~ s{\\u\$x}{{uc \$x}}g;
-    $old_content =~ s{(\$\w+)-}{$1\-}g;
+    $old_content =~ s{(\$\w+)-}{$1\\-}g;
     $old_content =~ s{\\N\{(\w+)\}}{\\c[$1]};
-    $old_content =~ s{ (?: ^ | [^\\] ) \$\{(\w+)\} }{ '{$'.$1.'}' }gex;
+    $old_content =~ s{ [\\] \$\{(\w+)\} }{ '\\$\\{' . $1 .'\\}' }gex;
+    $old_content =~ s{ ( ^ | [^\\] ) \$\{(\w+)\} }{ $1 . '{$' . $2 . '}' }gex;
 
     $elem->set_content( $old_content );
 

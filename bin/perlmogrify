@@ -524,7 +524,7 @@ Most of the settings for Perl::Mogrify and each of the Transformer modules can b
 controlled by a configuration file.  The default configuration file is called
 F<.perlmogrifyrc>.  C<perlmogrify> will look for this file in the current
 directory first, and then in your home directory. Alternatively, you can set
-the C<PERLCRITIC> environment variable to explicitly point to a different file
+the C<PERLMOGRIFY> environment variable to explicitly point to a different file
 in another location.  If none of these files exist, and the C<--profile>
 option is not given on the command-line, then all Policies will be loaded with
 their default configuration.
@@ -883,7 +883,7 @@ private set of transformers into Perl::Mogrify.
 =back
 
 
-=head1 EXTENDING THE CRITIC
+=head1 EXTENDING THE MOGRIFIER
 
 The modular design of Perl::Mogrify is intended to facilitate the addition of
 new Policies.  You'll need to have some understanding of L<PPI>, but most

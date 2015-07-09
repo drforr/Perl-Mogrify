@@ -67,7 +67,7 @@ my $builder = Perl::Mogrify::Module::Build->new(
                 >
             ],
         },
-        x_authority => 'cpan:CRITICRE',
+        x_authority => 'cpan:JGOFF',
     },
 
     add_to_cleanup      => [

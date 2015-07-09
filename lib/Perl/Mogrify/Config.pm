@@ -669,8 +669,8 @@ sub _validate_and_save_pager {
     if ( $args_value ) {
         $pager = defined $args_value ? $args_value : $EMPTY;
     }
-    elsif ( $ENV{PERLCRITIC_PAGER} ) {
-        $pager = $ENV{PERLCRITIC_PAGER};
+    elsif ( $ENV{PERLMOGRIFY_PAGER} ) {
+        $pager = $ENV{PERLMOGRIFY_PAGER};
     }
     else {
         my $profile = $self->_profile();
@@ -1168,7 +1168,7 @@ can be controlled by a configuration file.  The default configuration
 file is called F<.perlmogrifyrc>.
 L<Perl::Mogrify::Config|Perl::Mogrify::Config> will look for this file
 in the current directory first, and then in your home directory.
-Alternatively, you can set the C<PERLCRITIC> environment variable to
+Alternatively, you can set the C<PERLMOGRIFY> environment variable to
 explicitly point to a different file in another location.  If none of
 these files exist, and the C<-profile> option is not given to the
 constructor, then all Policies will be loaded with their default

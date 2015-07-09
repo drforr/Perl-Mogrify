@@ -127,7 +127,9 @@ sub __is_deeply {
     }
     if ( $first_different_line ) {
         $TEST->diag(
-            "Output begins to differ at line $first_different_line:\n".
+            "Output begins to differ at line " .
+            ($first_different_line + 1) .
+            ":\n" .
             join( "\n", @{ $subtest->{sample} }, '====',
                         @{ $subtest->{modified} } )
         );

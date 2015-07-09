@@ -245,7 +245,7 @@ sub _find_profile_path {
     my $rc_file = '.perlmogrifyrc';
 
     #Check explicit environment setting
-    return $ENV{PERLCRITIC} if exists $ENV{PERLCRITIC};
+    return $ENV{PERLMOGRIFY} if exists $ENV{PERLMOGRIFY};
 
     #Check current directory
     return $rc_file if -f $rc_file;

@@ -94,7 +94,7 @@ THE Perl::Mogrify PHILOSOPHY
     and probably already exists on CPAN but I'm already pulling in quite a few
     dependencies for this module as it is.
 
-EXTENDING THE CRITIC
+EXTENDING THE MOGRIFIER
     The simplest way to go about this is find a module in the list that
     performs a task like what you want, copy that, and start walking its PPI
     tree. Each module is presumed to act on one node of the tree at a time, in

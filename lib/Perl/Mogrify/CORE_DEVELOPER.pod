@@ -28,7 +28,7 @@ thoroughly unclear.
 the source and rummage around in it.
 
 ** Subscribe to the developers' mailing list. There are instructions
-in L<Perl::Mogrify/EXTENDING THE CRITIC>. The F<commits> mailing list
+in L<Perl::Mogrify/EXTENDING THE MOGRIFIER>. The F<commits> mailing list
 is another good one.
 
 ** You will need to be registered as a developer before you can
@@ -321,7 +321,7 @@ users of Perl::Mogrify.
 Before deprecating public code, the potential deprecator must discuss
 the issues on the Perl::Mogrify developers' mailing list. There are
 instructions on how to subscribe to this list in
-L<Perl::Mogrify/EXTENDING THE CRITIC>.
+L<Perl::Mogrify/EXTENDING THE MOGRIFIER>.
 
 Once agreement is reached, the technical details of the deprecation
 are fairly simple.

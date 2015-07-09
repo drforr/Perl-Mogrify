@@ -313,9 +313,9 @@ END_PROFILE
 # Test profile finding
 
 {
-    my $expected = local $ENV{PERLCRITIC} = 'foo';
+    my $expected = local $ENV{PERLMOGRIFY} = 'foo';
     my $got = Perl::Mogrify::UserProfile::_find_profile_path();
-    is( $got, $expected, 'PERLCRITIC environment variable');
+    is( $got, $expected, 'PERLMOGRIFY environment variable');
 }
 
 #-----------------------------------------------------------------------------
