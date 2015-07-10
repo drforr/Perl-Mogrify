@@ -28,6 +28,9 @@ our @EXPORT_OK = qw(
     get_constant_name_element_from_declaring_statement
     get_next_element_in_same_simple_statement
     get_previous_module_used_on_same_line
+
+    is_ppi_token_word
+    is_ppi_token_operator
 );
 
 our %EXPORT_TAGS = (
@@ -35,6 +38,18 @@ our %EXPORT_TAGS = (
 );
 
 #-----------------------------------------------------------------------------
+
+sub is_ppi_token_word {
+    my ($elem, %map) = @_;
+    $elem->isa('PPI::Token::Word') and
+    exists $map{$elem->content};
+}
+
+sub is_ppi_token_operator {
+    my ($elem, %map) = @_;
+    $elem->isa('PPI::Token::Operator') and
+    exists $map{$elem->content};
+}
 
 sub is_ppi_expression_or_generic_statement {
     my $element = shift;

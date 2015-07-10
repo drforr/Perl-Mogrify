@@ -5,7 +5,8 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils qw{ :severities };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_word };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -31,8 +32,7 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        $_[1]->isa('PPI::Token::Word') and
-        exists $map{$_[1]->content}
+        is_ppi_token_word($_[1], %map)
     }
 }
 
