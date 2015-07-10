@@ -1,4 +1,4 @@
-## name quote barewords
+## name quote barewords - Doesn't alter sigils.
 ## parms {}
 ## failures 0
 ## cut

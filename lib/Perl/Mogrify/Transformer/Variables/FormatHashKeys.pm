@@ -28,7 +28,8 @@ sub applies_to           {
         $_[1]->start->content eq '{' and
         $_[1]->finish->content eq '}' and
         ( $_[1]->sprevious_sibling->isa('PPI::Token::Symbol') or
-          $_[1]->sprevious_sibling->isa('PPI::Token::Operator') )
+          $_[1]->sprevious_sibling->isa('PPI::Token::Operator') ) and
+        not $_[1]->schild(0)->schild(0)->isa('PPI::Token::Quote')
     }
 }
 
@@ -41,11 +42,11 @@ sub applies_to           {
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my $bareword = $elem->child(0)->child(0);
-
-    return if $bareword->content =~ /^['"]/;
+    my $bareword = $elem->schild(0)->schild(0);
 
     my $old_content = $bareword->content;
+
+    $old_content =~ s{'}{\\'}g;
 
     my $new_content = "'" . $old_content . "'";
 
