@@ -63,25 +63,18 @@ sub transform {
     }
     else {
         my $point = $token;
-        my @elem_to_move;
-my @elem_to_remove;
-        while ( $token and $token->next_sibling ) {
-            last if $token->content eq ',';
-            push @elem_to_move, $token->clone;
-            push @elem_to_remove, $token;
-            $token = $token->next_sibling;
-        }
-#$_->remove for @elem_to_remove;
 
         my $new_block = _make_a_block();
         my $new_statement = PPI::Statement->new;
         $new_block->add_element($new_statement);
 
-        $new_statement->add_element($_) for @elem_to_move;
-#        $_->remove for @elem_to_move;
+        while ( $token and $token->next_sibling ) {
+            last if $token->content eq ',';
+            $new_statement->add_element($token->clone);
+            $token = $token->next_sibling;
+        }
 
         $point->insert_before($new_block);
-        $point->remove;
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

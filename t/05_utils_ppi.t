@@ -61,7 +61,6 @@ can_ok('main', 'is_ppi_expression_or_generic_statement');
 can_ok('main', 'is_ppi_generic_statement');
 can_ok('main', 'is_ppi_statement_subclass');
 can_ok('main', 'is_subroutine_declaration');
-can_ok('main', 'is_in_subroutine');
 
 #-----------------------------------------------------------------------------
 #  is_ppi_expression_or_generic_statement tests
@@ -308,69 +307,6 @@ can_ok('main', 'is_in_subroutine');
     $test->(undef,              0);
     $test->('{ sub foo {} }' => 0);
     $test->('sub foo;'       => 1);
-}
-
-#-----------------------------------------------------------------------------
-#  is_in_subroutine() tests
-
-{
-    my $test = sub {
-        my ($code, $transform, $result) = @_;
-
-        my $doc;
-        my $input;
-
-        if (defined $code) {
-            $doc = PPI::Document->new(\$code, readonly => 1);
-        }
-        if (defined $doc) {
-            $input = $transform->($doc);
-        }
-
-        my $name = defined $code ? $code : '<undef>';
-
-        local $Test::Builder::Level = $Test::Builder::Level + 1; ## no mogrify (Variables::ProhibitPackageVars)
-        is(
-            ! ! is_in_subroutine( $input ),
-            ! ! $result,
-            "is_in_subroutine(): $name"
-        );
-
-        return;
-    };
-
-    $test->(undef, sub {}, 0);
-
-    ## no mogrify (ValuesAndExpressions::RequireInterpolationOfMetachars)
-    $test->('my $foo = 42', sub {}, 0);
-
-    $test->(
-        'sub foo { my $foo = 42 }',
-        sub {
-            my ($doc) = @_;
-            $doc->find_first('PPI::Statement::Variable');
-        },
-        1,
-    );
-
-    $test->(
-        'sub { my $foo = 42 };',
-        sub {
-            my ($doc) = @_;
-            $doc->find_first('PPI::Statement::Variable');
-        },
-        1,
-    );
-
-    $test->(
-        '{ my $foo = 42 };',
-        sub {
-            my ($doc) = @_;
-            $doc->find_first('PPI::Statement::Variable');
-        },
-        0,
-    );
-    ## use mogrify
 }
 
 #-----------------------------------------------------------------------------

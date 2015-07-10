@@ -19,7 +19,6 @@ our @EXPORT_OK = qw(
     is_ppi_generic_statement
     is_ppi_statement_subclass
     is_ppi_simple_statement
-    is_ppi_constant_element
     is_module_name
     is_version_number
     is_pragma
@@ -95,27 +94,6 @@ sub is_ppi_simple_statement {
     my $element_class = blessed( $element ) or return;
 
     return $SIMPLE_STATEMENT_CLASS{ $element_class };
-}
-
-#-----------------------------------------------------------------------------
-
-sub is_ppi_constant_element {
-    my $element = shift or return;
-
-    blessed( $element ) or return;
-
-    # TODO implement here documents once PPI::Token::HereDoc grows the
-    # necessary PPI::Token::Quote interface.
-    return
-            $element->isa( 'PPI::Token::Number' )
-        ||  $element->isa( 'PPI::Token::Quote::Literal' )
-        ||  $element->isa( 'PPI::Token::Quote::Single' )
-        ||  $element->isa( 'PPI::Token::QuoteLike::Words' )
-        ||  (
-                $element->isa( 'PPI::Token::Quote::Double' )
-            ||  $element->isa( 'PPI::Token::Quote::Interpolate' ) )
-            &&  $element->string() !~ m< (?: \A | [^\\] ) (?: \\\\)* [\$\@] >smx
-        ;
 }
 
 #-----------------------------------------------------------------------------
@@ -202,21 +180,6 @@ sub is_subroutine_declaration {
                 $first_element
             and $first_element->isa('PPI::Token::Word')
             and $first_element->content() eq 'sub';
-    }
-
-    return;
-}
-
-#-----------------------------------------------------------------------------
-
-sub is_in_subroutine {
-    my ($element) = @_;
-
-    return if not $element;
-    return 1 if is_subroutine_declaration($element);
-
-    while ( $element = $element->parent() ) {
-        return 1 if is_subroutine_declaration($element);
     }
 
     return;
@@ -361,28 +324,6 @@ L<PPI::Statement::Include|PPI::Statement::Include>,
 L<PPI::Statement::Null|PPI::Statement::Null>,
 L<PPI::Statement::Package|PPI::Statement::Package>, or
 L<PPI::Statement::Variable|PPI::Statement::Variable>.
-
-
-=item C<is_ppi_constant_element( $element )>
-
-Answers whether the parameter represents a constant value, i.e. whether the
-parameter is a L<PPI::Token::Number|PPI::Token::Number>,
-L<PPI::Token::Quote::Literal|PPI::Token::Quote::Literal>,
-L<PPI::Token::Quote::Single|PPI::Token::Quote::Single>, or
-L<PPI::Token::QuoteLike::Words|PPI::Token::QuoteLike::Words>, or is a
-L<PPI::Token::Quote::Double|PPI::Token::Quote::Double> or
-L<PPI::Token::Quote::Interpolate|PPI::Token::Quote::Interpolate> which does
-not in fact contain any interpolated variables.
-
-This subroutine does B<not> interpret any form of here document as a constant
-value, and may not until L<PPI::Token::HereDoc|PPI::Token::HereDoc> acquires
-the relevant portions of the L<PPI::Token::Quote|PPI::Token::Quote> interface.
-
-This subroutine also does B<not> interpret entities created by the
-L<Readonly|Readonly> module or the L<constant|constant> pragma as constants,
-because the infrastructure to detect these appears not to be present, and the
-author of this subroutine (B<not> Mr. Shank or Mr. Thalhammer) lacks the
-knowledge/expertise/gumption to put it in place.
 
 
 =item C<is_subroutine_declaration( $element )>

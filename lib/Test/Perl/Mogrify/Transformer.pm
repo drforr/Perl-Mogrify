@@ -136,6 +136,7 @@ sub __is_deeply {
         $num_errors++;
     }
     elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{modified} } ) {
+        warn "Error was [$@\]\n";
         $TEST->diag(
             "Transformed file missing lines from original:\n".
             join( "\n", @{ $subtest->{sample} }, '====',
