@@ -55,7 +55,7 @@ sub transform {
         return if $elem->raw_type eq '%';
 
         if ( $elem->next_sibling ) {
-            my $subscript = $elem->next_sibling;
+            my $subscript = $elem->snext_sibling;
             return unless $subscript->isa('PPI::Structure::Subscript');
             my $new_content = $elem->content;
 

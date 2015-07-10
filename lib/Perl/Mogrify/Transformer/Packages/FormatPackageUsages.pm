@@ -20,16 +20,25 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::Include' }
+my %map = (
+    constant => 1
+);
 
 #-----------------------------------------------------------------------------
 
-my %excluded_pragma = (
-    constant => 1
-);
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Statement::Include') and
+        not is_pragma($_[1]->child(2)) and
+        is_module_name($_[1]->child(2)) and
+        not exists $map{$_[1]->child(2)->content}
+    }
+}
+
+#-----------------------------------------------------------------------------
 
 #
 # 'use Foo;' --> 'use Foo:from<Perl5>;'
@@ -41,9 +50,6 @@ sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $package_name = $elem->child(2);
-    return if is_pragma($package_name);
-    return unless is_module_name($package_name);
-    return if exists $excluded_pragma{$package_name->content};
 
     my $old_content = $package_name;
     $old_content .= ':from<Perl5>';

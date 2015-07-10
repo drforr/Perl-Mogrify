@@ -22,7 +22,15 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Structure::Subscript' }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Structure::Subscript') and
+        $_[1]->start->content eq '{' and
+        $_[1]->finish->content eq '}' and
+        ( $_[1]->sprevious_sibling->isa('PPI::Token::Symbol') or
+          $_[1]->sprevious_sibling->isa('PPI::Token::Operator') )
+    }
+}
 
 #-----------------------------------------------------------------------------
 
@@ -32,22 +40,18 @@ sub applies_to           { return 'PPI::Structure::Subscript' }
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return unless $elem->start eq '{' and $elem->finish eq '}';
-#use Data::Dumper; print Dumper $elem->sprevious_sibling;
-    return unless $elem->sprevious_sibling->isa('PPI::Token::Symbol') or
-                  $elem->sprevious_sibling->isa('PPI::Token::Operator');
-#use Data::Dumper; print Dumper $elem;
 
     my $bareword = $elem->child(0)->child(0);
 
+    return if $bareword->content =~ /^['"]/;
+
     my $old_content = $bareword->content;
-    return if $bareword->{content} =~ /^['"]/;
 
     my $new_content = "'" . $old_content . "'";
 
-    my $word = PPI::Token::Quote::Single->new($new_content);
-
-    $bareword->insert_after($word);
+    $bareword->insert_after(
+        PPI::Token::Quote::Single->new($new_content)
+    );
     $bareword->delete;
 
     return $self->transformation( $DESC, $EXPL, $elem );

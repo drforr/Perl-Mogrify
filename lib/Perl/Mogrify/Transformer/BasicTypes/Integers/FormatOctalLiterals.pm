@@ -38,6 +38,8 @@ sub transform {
     # Remove leading '0' and optional leading underscore
     #
     $old_content =~ s{^0[_]?}{}i;
+    $old_content =~ s{[_]$}{};
+    $old_content =~ s{[_]+}{_}g;
 
     my $new_content = ':8<' . $old_content . '>';
     $elem->set_content( $new_content );
@@ -66,12 +68,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 octal literals have the format ':8<01_01_01_01>'. Existing separators are preserved:
+Perl6 octal literals have the format ':8<01_67>'. Perl6 enforces the rule that separators must occur between digits, and only one separator character at a time:
 
-  001      -> :8<01>
-  0167     -> :8<0167>
-  010_67   -> :8<010_67>
-  0_010_67 -> :8<010_67>
+  017        -> :8<17>
+  00167      -> :8<0167>
+  0010_67    -> :8<010_67>
+  0_010__67_ -> :8<010_67>
 
 Transforms octal numbers outside of comments, heredocs, strings and POD.
 =head1 CONFIGURATION

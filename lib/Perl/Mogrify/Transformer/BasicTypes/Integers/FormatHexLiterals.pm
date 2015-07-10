@@ -37,6 +37,8 @@ sub transform {
     # Remove leading '0x' and optional leading underscore
     #
     $old_content =~ s{^0x[_]?}{}i;
+    $old_content =~ s{[_]$}{};
+    $old_content =~ s{[_]+}{_}g;
 
     my $new_content = ':16<' . $old_content . '>';
     $elem->set_content( $new_content );
@@ -65,12 +67,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 binary literals have the format ':2<01_01_01_01>'. Existig separators are preserved:
+Perl6 hexadecimal literals have the format ':16<01_78_ab_ef>'. Perl6 enforces the rule that separators must occur between digits, and only one separator character at a time:
 
-  0x01     -> :16<01>
-  0x01ef   -> :16<01ef>
-  0x010_ab -> :16<010_ab>
-  0x_010_ab -> :16<010_ab>
+  0x01        -> :16<01>
+  0x01af      -> :16<01af>
+  0x010_af    -> :16<010_af>
+  0x_010__af_ -> :16<010_af>
 
 Transforms hexadecimal numbers outside of comments, heredocs, strings and POD.
 

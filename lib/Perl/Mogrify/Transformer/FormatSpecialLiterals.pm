@@ -18,17 +18,6 @@ Readonly::Scalar my $EXPL => q{__END__ and __DATA__ are now POD markers};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           {
-    return 'PPI::Token::Separator',
-           'PPI::Token::End',
-           'PPI::Token::Word'
-}
-
-#-----------------------------------------------------------------------------
-
 my %map = (
     '__END__'     => '=finish',
     '__FILE__'    => '$?FILE',
@@ -36,9 +25,25 @@ my %map = (
     '__PACKAGE__' => '$?PACKAGE',
 );
 
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        ( $_[1]->isa('PPI::Token::Separator') or
+          $_[1]->isa('PPI::Token::End') or
+          $_[1]->isa('PPI::Token::Word') ) and
+        exists $map{$_[1]->content}
+    }
+}
+
+#-----------------------------------------------------------------------------
+
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return unless exists $map{$elem->content};
+
     if ( $elem->isa('PPI::Token::Word') ) {
         my $new_content = $elem->content;
         $elem->set_content($map{$new_content});

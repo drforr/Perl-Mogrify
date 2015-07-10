@@ -1,11 +1,11 @@
-## name unchanged
+## name quote barewords
 ## parms {}
 ## failures 0
 ## cut
-$a{a}++;
-$a{'a'}++;
-$a{"a"}++;
+$a { a }++;
+$a { 'a' }++;
+$a { "a" }++;
 #-->
-$a{'a'}++;
-$a{'a'}++;
-$a{"a"}++;
+$a { 'a' }++;
+$a { 'a' }++;
+$a { "a" }++;

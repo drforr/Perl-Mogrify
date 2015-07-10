@@ -19,14 +19,7 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::Compound' }
-
-#-----------------------------------------------------------------------------
-
-my %conditional = (
+my %map = (
     if      => 'if',
     elsif   => 'elsif',
     unless  => 'unless',
@@ -36,16 +29,29 @@ my %conditional = (
     foreach => 'for',
 );
 
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Statement::Compound') and
+        exists $map{$_[1]->first_element->content} and 
+        $_[1]->first_element->snext_sibling
+    }
+}
+
+#-----------------------------------------------------------------------------
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $token = $elem->first_element;
 
     my $old_content = $token->content;
-    return unless $conditional{$old_content};
-    return unless $token->next_sibling;
 
-    $token->set_content($conditional{$old_content});
+    $token->set_content($map{$old_content});
 
     return if $token->next_sibling->isa('PPI::Token::Whitespace');
 

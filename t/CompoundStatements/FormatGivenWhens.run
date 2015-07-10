@@ -2,12 +2,12 @@
 ## parms {}
 ## failures 0
 ## cut
-given(1) { }
-given (1) { }
-when(1) { }
-when (1) { }
+given( 1 ) { }
+given ( 1 ) { }
+when( 1 ) { }
+when ( 1 ) { }
 #-->
-given (1) { }
-given (1) { }
-when (1) { }
-when (1) { }
+given ( 1 ) { }
+given ( 1 ) { }
+when ( 1 ) { }
+when ( 1 ) { }

@@ -7,9 +7,11 @@ print STDOUT;
 print $`;
 print $&;
 print @+;
+print $1;
 #-->
 ## I'm not sure any special variables *didn't* get renamed...
 print $*OUT;
-print $/.prematch
+print $/.prematch;
 print ~$/;
 print (map {.from},$/[*]);
+print $0;

@@ -20,19 +20,28 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::Include' }
-
-#-----------------------------------------------------------------------------
-
-my %excluded_pragma = (
+my %map = (
     v6 => 1,
     constant => 1, # 'use constant FOO => 1' --> 'constant FOO = 1' later
     base => 1, # 'use base "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
     parent => 1, # 'use parent "Foo::Mommy' --> 'class Foo is Foo::Mommy' later
 );
+
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Statement::Include') and
+        ( is_version_number($_[1]->child(2))  or
+          is_pragma($_[1]->child(2)) ) and
+        not exists $map{$_[1]->child(2)->content}
+    }
+}
+
+#-----------------------------------------------------------------------------
 
 #
 # 'use strict;' --> ''
@@ -45,11 +54,6 @@ my %excluded_pragma = (
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
-
-    my $package_name = $elem->child(2);
-    return unless is_version_number($package_name) or
-                  is_pragma($package_name);
-    return if exists $excluded_pragma{$package_name->content};
 
     $elem->remove;
 

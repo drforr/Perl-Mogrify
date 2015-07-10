@@ -5,9 +5,9 @@
 use strict;
 use warnings;
 use constant FOO => 1;
-use base qw(Foo);
+use base qw( Foo );
 #-->
 
 
 use constant FOO => 1;
-use base qw(Foo);
+use base qw( Foo );

@@ -22,13 +22,17 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Operator' }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Token::Operator') and
+        $_[1]->content eq '?'
+    }
+}
 
 #-----------------------------------------------------------------------------
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return unless $elem->content eq '?';
 
     # right    ?:
 

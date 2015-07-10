@@ -19,10 +19,22 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
+my %map = (
+    map  => 1,
+    grep => 1
+);
+
+#-----------------------------------------------------------------------------
+
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Word'  }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Token::Word') and
+        exists $map{$_[1]->content}
+    }
+}
 
 #-----------------------------------------------------------------------------
 
@@ -37,14 +49,8 @@ sub _make_a_block {
     return $new_block;
 }
 
-my %map = (
-    map  => 1,
-    grep => 1
-);
-
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return unless exists $map{$elem->content};
     my $token = $elem->snext_sibling;
 
     if ( $token->isa('PPI::Structure::Block') and

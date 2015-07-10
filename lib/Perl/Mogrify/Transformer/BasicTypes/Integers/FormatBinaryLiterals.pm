@@ -28,18 +28,19 @@ sub applies_to           { return 'PPI::Token::Number::Binary' }
 #
 # 0b0101       --> :2<0101>
 # 0b010_101_01 --> :2<010_101_01>
+# 0b010__101_01 --> :2<010_101_01>
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $old_content = $elem->content;
 
-    #
-    # Remove leading '0b' and optional leading underscore
-    #
     $old_content =~ s{^0b[_]?}{}i;
+    $old_content =~ s{[_]$}{};
+    $old_content =~ s{[_]+}{_}g;
 
     my $new_content = ':2<' . $old_content . '>';
+
     $elem->set_content( $new_content );
 
     return $self->transformation( $DESC, $EXPL, $elem );
@@ -65,12 +66,12 @@ This Transformer is part of the core L<Perl::Mogrify|Perl::Mogrify> distribution
 
 =head1 DESCRIPTION
 
-Perl6 binary literals have the format ':2<01_01_01_01>'. Existing separators are preserved:
+Perl6 binary literals have the format ':2<01_01_01_01>'. Perl6 enforces the rule that separators must occur between digits, and only one separator character at a time:
 
-  0b01     -> :2<01>
-  0b0101   -> :2<0101>
-  0b010_10 -> :2<010_10>
-  0b_010_10 -> :2<010_10>
+  0b01        -> :2<01>
+  0b0101      -> :2<0101>
+  0b010_10    -> :2<010_10>
+  0b_010__10_ -> :2<010_10>
 
 Transforms binary numbers outside of comments, heredocs, strings and POD.
 

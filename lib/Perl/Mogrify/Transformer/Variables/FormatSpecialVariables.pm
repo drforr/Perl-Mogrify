@@ -21,7 +21,10 @@ Readonly::Scalar my $EXPL => q{Perl6 changes many special variables};
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Symbol' }
+sub applies_to           {
+    return 'PPI::Token::Symbol',
+           'PPI::Token::Word',
+}
 
 #-----------------------------------------------------------------------------
 
@@ -145,22 +148,22 @@ my %eliminated = (
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
-
     my $old_content = $elem->content;
-    return unless exists $map{$old_content};
 
     if ( exists $map{$old_content} ) {
         my $new_content = $map{$old_content};
 
         $elem->set_content( $new_content );
+        return $self->transformation( $DESC, $EXPL, $elem );
     }
     elsif ( $old_content =~ /^\$(\d+)$/ ) {
-        my $new_content = '$' . $1 - 1;
+        my $new_content = '$' . ($1 - 1);
    
         $elem->set_content( $new_content );
+        return $self->transformation( $DESC, $EXPL, $elem );
     }
 
-    return $self->transformation( $DESC, $EXPL, $elem );
+    return;
 }
 
 1;

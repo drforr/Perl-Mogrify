@@ -3,7 +3,11 @@
 ## failures 0
 ## cut
 qx{};
+my $x = qx{};
 qx();
+my $x = qx();
 #-->
 qqx{};
+my $x = qqx{};
 qqx ();
+my $x = qqx ();

@@ -22,7 +22,6 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Structure::For' }
 
 #-----------------------------------------------------------------------------
 
@@ -53,9 +52,17 @@ sub _is_c_style {
     return;
 }
 
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Structure::For') and
+        _is_c_style($_[1])
+    }
+}
+
+#-----------------------------------------------------------------------------
+
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return unless _is_c_style($elem);
 
     $elem->sprevious_sibling->set_content('loop');
     if ( !$elem->previous_sibling->isa('PPI::Token::Whitespace') ) {

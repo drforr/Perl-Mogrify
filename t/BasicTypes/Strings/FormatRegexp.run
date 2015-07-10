@@ -3,7 +3,11 @@
 ## failures 0
 ## cut
 qr{};
+my $x = qr{};
 qr();
+my $x = qr();
 #-->
 rx{};
+my $x = rx{};
 rx ();
+my $x = rx ();

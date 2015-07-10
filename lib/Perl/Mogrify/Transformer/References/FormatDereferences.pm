@@ -22,7 +22,24 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Cast' }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Token::Cast') and
+        $_[1]->next_sibling->isa('PPI::Structure::Block') and
+        $_[1]->next_sibling->start->content eq '{' and
+        $_[1]->next_sibling->finish->content eq '}'
+        
+# Redundant checks for the tests below.
+#
+#        not $_[1]->next_sibling->isa('PPI::Token::Symbol') and
+#        # Not two casts in a row, like \% in \%{"$pack\:\:SUBS"} .
+#        not( $_[1]->next_sibling->isa('PPI::Token::Cast') and
+#             $_[1]->next_sibling->content eq '\\' ) and
+#        # \( $x, $y ) are not the constructs we're looking for.
+#        not( $_[1]->next_sibling->isa('PPI::Structure::List') and
+#             $_[1]->next_sibling->content eq '\\' )
+    }
+}
 
 #-----------------------------------------------------------------------------
 
@@ -33,18 +50,6 @@ sub applies_to           { return 'PPI::Token::Cast' }
 sub transform {
     my ($self, $elem, $doc) = @_;
     my $next = $elem->next_sibling;
-
-    return if $next->isa('PPI::Token::Symbol');
-    # Two casts in a row, like \% in \%{"$pack\:\:SUBS"} .
-    return if $next->isa('PPI::Token::Cast') and
-              $elem->content eq '\\';
-    # \( $x, $y ) is not the construct we are looking for.
-    return if $next->isa('PPI::Structure::List') and
-              $elem->content eq '\\';
-
-    return unless $next->isa('PPI::Structure::Block');
-    return unless $next->start->content eq '{' and
-                  $next->finish->content eq '}';
 
     # %{...} becomes %(...). Same with @{...} and ${...}.
     $next->start->set_content('(');

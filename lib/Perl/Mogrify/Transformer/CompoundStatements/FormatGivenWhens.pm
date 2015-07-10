@@ -19,33 +19,33 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           {
-    return 'PPI::Statement::Given',
-           'PPI::Statement::When'
-}
-
-#-----------------------------------------------------------------------------
-
 my %map = (
     given => 1,
     when => 1
 );
 
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        ( $_[1]->isa('PPI::Statement::Given') or
+          $_[1]->isa('PPI::Statement::When') ) and
+        exists $map{$_[1]->first_element->content} and
+        not $_[1]->first_element->next_sibling->isa('PPI::Token::Whitespace');
+    }
+}
+
+#-----------------------------------------------------------------------------
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my $token = $elem->first_element;
-    return unless exists $map{$token->content};
-
-    return unless $token->next_sibling;
-    return if $token->next_sibling->isa('PPI::Token::Whitespace');
-
-    my $space = PPI::Token::Whitespace->new();
-    $space->set_content(' ');
-    $token->insert_after( $space );
+    $elem->first_element->insert_after(
+        PPI::Token::Whitespace->new(' ')
+    );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

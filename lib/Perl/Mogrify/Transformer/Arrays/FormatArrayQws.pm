@@ -13,8 +13,7 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC =>
-    q{Transform qw(...) to qw (...)};
+Readonly::Scalar my $DESC => q{Transform qw(...) to qw (...)};
 Readonly::Scalar my $EXPL =>
     q{qw<>, qw{} &c are fine, but qw() is now a function call. Add ' ' to avoid this};
 
@@ -23,14 +22,17 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return ()                             }
 sub default_severity     { return $SEVERITY_HIGHEST              }
 sub default_themes       { return qw(core bugs)                  }
-sub applies_to           { return 'PPI::Token::QuoteLike::Words' }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Token::QuoteLike::Words') and
+        $_[1]->content =~ /^qw\(/
+    }
+}
 
 #-----------------------------------------------------------------------------
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-    return unless $elem->content =~ /^qw\(/;
-
     my $old_content = $elem->content;
 
     $old_content =~ s{^qw\(}{qw (};

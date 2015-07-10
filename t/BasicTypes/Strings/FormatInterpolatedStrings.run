@@ -3,19 +3,27 @@
 ## failures 0
 ## cut
 "The $x bit";
-my$x="The $x bit";
 my $x = "The $x bit";
 "The $x-30 bit";
+my $x = "The $x-30 bit";
 "The \l$x bit";
+my $x = "The \l$x bit";
 "The \v bit";
+my $x = "The \v bit";
 "The ${x}rd bit";
+my $x = "The ${x}rd bit";
 "The \${x}rd bit";
+my $x = "The \${x}rd bit";
 #-->
 "The $x bit";
-my$x="The $x bit";
 my $x = "The $x bit";
 "The $x\-30 bit";
+my $x = "The $x\-30 bit";
 "The {lc $x} bit";
+my $x = "The {lc $x} bit";
 "The  bit";
+my $x = "The  bit";
 "The {$x}rd bit";
+my $x = "The {$x}rd bit";
 "The \$\{x\}rd bit";
+my $x = "The \$\{x\}rd bit";

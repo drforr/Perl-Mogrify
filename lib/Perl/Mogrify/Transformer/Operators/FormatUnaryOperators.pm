@@ -19,14 +19,7 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Document'   }
-
-#-----------------------------------------------------------------------------
-
-my %unary = (
+my %map = (
     # '++', '--' are unchanged.
     # '!' is unchanged.
     # 'not' is unchanged.
@@ -35,6 +28,20 @@ my %unary = (
     '^' => '+^',
     '!' => '?^',
 );
+
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Token::Operator') and
+        exists $map{$_[1]->content}
+    }
+}
+
+#-----------------------------------------------------------------------------
 
 sub transform {
     my ($self, $elem, $doc) = @_;
@@ -57,9 +64,8 @@ sub transform {
     # right    not
 
     my $old_content = $elem->content;
-    return unless exists $unary{$old_content};
 
-    $elem->set_content( $unary{$old_content} );
+    $elem->set_content( $map{$old_content} );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
