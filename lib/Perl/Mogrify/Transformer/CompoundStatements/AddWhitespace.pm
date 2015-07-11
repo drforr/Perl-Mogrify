@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals;
+package Perl::Mogrify::Transformer::CompoundStatements::AddWhitespace;
 
 use 5.006001;
 use strict;
@@ -20,13 +20,13 @@ Readonly::Scalar my $EXPL =>
 #-----------------------------------------------------------------------------
 
 my %map = (
-    if      => 'if',
-    elsif   => 'elsif',
-    unless  => 'unless',
-    while   => 'while',
-    until   => 'until',
-    for     => 'for',
-    foreach => 'for',
+    if      => 1,
+    elsif   => 1,
+    unless  => 1,
+    while   => 1,
+    until   => 1,
+    for     => 1,
+    foreach => 1,
 );
 
 #-----------------------------------------------------------------------------
@@ -37,8 +37,7 @@ sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Statement::Compound') and
-        exists $map{$_[1]->first_element->content} and 
-        $_[1]->first_element->snext_sibling
+        exists $map{$_[1]->child(0)->content}
     }
 }
 
@@ -49,36 +48,32 @@ sub applies_to           {
 #
 # $elem (PPI::Statement::Compound)
 #  \
-#   \ 0     1     2   # count by child()
-#    \0     1     2   # count by schild()
-#     +-----+-----+
-#     |     |     |
-#     if    (...) {...}
+#   \ 0     1     2     3 # count by child()
+#    \0     1     2     3 # count by schild()
+#     +-----+-----+-----+
+#     |     |     |     |
+#     if    (...) {...} elsif (...)
 #
 # After insertion, the tree looks like this:
 #
 # $elem (PPI::Statement::Compound)
 #  \
-#   \ 0     1     2     3 # count by child()
-#    \0           1     2 # count by schild()
-#     +-----+-----+-----+
-#     |     |     |     |
-#     if    ' '   (...) {...}
+#   \ 0     1     2     3     4     5 # count by child()
+#    \0           1     2     4       # count by schild()
+#     +-----+-----+-----+-----+-----+
+#     |     |     |     |     |     |
+#     if    ' '   (...) {...} elsif ' '
 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my $token = $elem->first_element;
-
-    my $old_content = $token->content;
-
-    $token->set_content($map{$old_content});
-
-    return if $token->next_sibling->isa('PPI::Token::Whitespace');
-
-    $token->insert_after(
-        PPI::Token::Whitespace->new(' ')
-    );
+    for my $child ( $elem->schildren ) {
+        next if $child->next_sibling and
+                $child->next_sibling->isa('PPI::Token::Whitespace');
+        $child->insert_after(
+            PPI::Token::Whitespace->new(' ')
+        );
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -93,7 +88,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals - Format if(), elsif(), unless()
+Perl::Mogrify::Transformer::CompoundStatements::AddWhitespace - Add whitespace between conditionals 'if', 'unless' &c and ()
 
 
 =head1 AFFILIATION
@@ -106,8 +101,8 @@ distribution.
 
 While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<if> and the opening parenthesis to avoid being interpreted as a function call:
 
-  if(1) { } --> if (1) { }
-  if (1) { } --> if (1) { }
+  if(1) { } elsif(){} --> if (1) { } elsif(){}
+  if (1) { } elsif(){} --> if (1) { } elsif(){}
 
 =head1 CONFIGURATION
 

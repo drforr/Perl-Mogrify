@@ -1,0 +1,13 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+if( 1 ) { }
+if ( 1 ) { }
+if( 1 ) { } elsif( 1 ) { }
+if( 1 ) { } elsif ( 1 ) { }
+#-->
+if ( 1 ) { }
+if ( 1 ) { }
+if ( 1 ) { } elsif ( 1 ) { }
+if ( 1 ) { } elsif ( 1 ) { }

@@ -1,0 +1,13 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+for( 1 ) { }
+foreach( 1 ) { }
+for ( 1 ) { }
+foreach ( 1 ) { }
+#-->
+for( 1 ) { }
+for( 1 ) { }
+for ( 1 ) { }
+for ( 1 ) { }

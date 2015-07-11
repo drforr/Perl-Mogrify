@@ -2,8 +2,10 @@
 ## parms {}
 ## failures 0
 ## cut
+for ( @x ) { }
 for $x ( @x ) { }
 for my $x ( @x ) { }
 #-->
+for ( @x ) { }
 for ( @x ) -> $x { }
 for ( @x ) -> $x { }

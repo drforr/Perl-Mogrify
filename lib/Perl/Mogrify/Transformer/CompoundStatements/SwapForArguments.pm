@@ -39,75 +39,72 @@ my %scope_map = (
 
 sub applies_to           {
     return sub {
-        is_ppi_statement_compound($_[1], %map)
+        is_ppi_statement_compound($_[1], %map) and
+        ( $_[1]->schild(1)->isa('PPI::Token::Word') or
+          $_[1]->schild(1)->isa('PPI::Token::Symbol') )
+      
     }
 }
 
 #-----------------------------------------------------------------------------
 
-#
-# Just to help others keep track of what goes on here:
-#
-# The original statement
-#
-# $elem (PPI::Statement::Compound)
-#  \
-#   \ 0     1     2     3     4     5     6     7     8     # count by child()
-#    \0           1           2           3           4     # count by schild
-#     +-----+-----+-----+-----+-----+-----+-----+-----+
-#     |     |     |     |     |     |     |     |     |
-#     for  [' '   my]   ' '   $x    ' '   (@x)  ' '   {...}
-#
-# After removing the optional ' my' (not forgetting the whitespace)
-#
-# $elem (PPI::Statement::Compound)
-#  \
-#   \ 0     1     2     3     4     5     6     # count by child()
-#    \0           1           2           3     # count by schild()
-#     +-----+-----+-----+-----+-----+-----+
-#     |     |     |     |     |     |     |
-#     for   ' '   $x    ' '   (@x)  ' '   {...}
-#
-# After stashing the optional whitespace:
-#
-# $elem (PPI::Statement::Compound)
-#  \
-#   \ 0     1     2     3     4     5     # count by child()
-#    \0     1           2           3     # count by schild()
-#     +-----+-----+-----+-----+-----+
-#     |     |     |     |     |     |
-#     for   $x    ' '   (@x)  ' '   {...}
-#
-# After stashing the loop variable:
-#
-# $elem (PPI::Statement::Compound)
-#  \
-#   \ 0     1     2     3     4     # count by child()
-#    \0           1           2     # count by schild()
-#     +-----+-----+-----+-----+
-#     |     |     |     |     |
-#     for   ' '   (@x)  ' '   {...}
- 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
+    # This ASCII art may be of use.
+    #
+    # $elem                        $loop_variable
+    # |                            |
+    # |                            |      $whitespace
+    # |                            |      |
+    # [ q{for}, q{ }, q{my}, q{ }, q{$x}, q{ }, q{(@x)} ]
+    #   |       |     |      |     |      |     |
+    #   |       |     X      X     |      |     |
+    #   |       |                  |      |     |
+    #   |       |     ,-----------'       |     |
+    #   |       |     |      ,------------'     |
+    #   |       |     |      |     ,------------'
+    #   |       |     |      |     |
+    #   V       |     V      V     V
+    # [ q{for}, q{ }, q{$x}, q{ }, q{(@x)} ]
+    #   |       |     |      |     |
+    #   |       |     '------|-----|--------------,
+    #   |       `-------------,    |              |
+    #   |                    | |   |              |
+    #   |       ,------------' |   |              |
+    #   |       |      .-------|---'              |
+    #   |       |     |        |                  |
+    #   |       |     |        |     +      +     |
+    #   V       V     V        |     |      |     V
+    # [ q{for}, q{ }, q{(@x)}, q{ }, q{->}, q{ }, q{$x} ]
+    #
     if ( $scope_map{$elem->schild(1)->content} ) {
-        if ( $elem->child(1)->isa('PPI::Token::Whitespace') ) {
-            $elem->child(1)->remove;
+        if ( $elem->schild(1)->next_sibling->isa('PPI::Token::Whitespace') ) {
+            $elem->schild(1)->next_sibling->remove;
         }
-   
-        $elem->schild(1)->remove;
+        $elem->schild(1)->delete;
     }
 
     my $whitespace;
-    if ( $elem->child(1)->isa('PPI::Token::WHitespace') ) {
-        $whitespace = $elem->child(1)->clone;
-        $elem->child(1)->remove;
+    if ( $elem->schild(1)->next_sibling->isa('PPI::Token::Whitespace') ) {
+        $whitespace = $elem->schild(1)->next_sibling->clone;
+        $elem->schild(1)->next_sibling->remove;
     }
-    my $variable = $elem->child(1)->clone;
-    $elem->child(1)->remove;
+    my $loop_variable = $elem->schild(1)->clone;
+    $elem->schild(1)->remove;
 
-#use YAML;warn Dump $elem;
+    $elem->schild(1)->insert_after(
+        $loop_variable
+    );
+    $elem->schild(1)->insert_after(
+        PPI::Token::Whitespace->new(' ')
+    );
+    $elem->schild(1)->insert_after(
+        PPI::Token::Operator->new('->')
+    );
+    $elem->schild(1)->insert_after(
+        PPI::Token::Whitespace->new(' ')
+    );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
