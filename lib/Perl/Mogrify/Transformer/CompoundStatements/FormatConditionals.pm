@@ -44,6 +44,27 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+#
+# Note to the reader:
+#
+# $elem (PPI::Statement::Compound)
+#  \
+#   \ 0     1     2   # count by child()
+#    \0     1     2   # count by schild()
+#     +-----+-----+
+#     |     |     |
+#     if    (...) {...}
+#
+# After insertion, the tree looks like this:
+#
+# $elem (PPI::Statement::Compound)
+#  \
+#   \ 0     1     2     3 # count by child()
+#    \0           1     2 # count by schild()
+#     +-----+-----+-----+
+#     |     |     |     |
+#     if    ' '   (...) {...}
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
@@ -55,9 +76,9 @@ sub transform {
 
     return if $token->next_sibling->isa('PPI::Token::Whitespace');
 
-    my $space = PPI::Token::Whitespace->new();
-    $space->set_content(' ');
-    $token->insert_after( $space );
+    $token->insert_after(
+        PPI::Token::Whitespace->new(' ')
+    );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

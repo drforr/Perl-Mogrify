@@ -31,6 +31,14 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+#
+# Note to the reader:
+#
+# A PPI::Token::QuoteLike::Words object contains a single string which has the
+# entire 'qw{...}' token. Therefore we can't add a Token::Whitespace between
+# the 'qw' and '{..}' like we can with loops and conditionals.
+#
+
 sub transform {
     my ($self, $elem, $doc) = @_;
     my $old_content = $elem->content;

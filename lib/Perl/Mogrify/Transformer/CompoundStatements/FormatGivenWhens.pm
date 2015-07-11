@@ -40,6 +40,27 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+#
+# Note to the reader:
+#
+# PPI::Statement::{Given,When}
+#  \
+#   \ 0     1     2   # count by child()
+#    \0     1     2   # count by schild()
+#     +-----+-----+
+#     |     |     |
+#     given (...) {...}
+#
+# After insertion, the tree looks like this:
+#
+# PPI::Statement::{Given,When}
+#  \
+#   \ 0     1     2     3 # count by child()
+#    \0           1     2 # count by schild()
+#     +-----+-----+-----+
+#     |     |     |     |
+#     given ' '   (...) {...}
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 

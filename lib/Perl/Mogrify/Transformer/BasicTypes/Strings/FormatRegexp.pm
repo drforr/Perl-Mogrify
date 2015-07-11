@@ -27,6 +27,14 @@ sub applies_to           { return 'PPI::Token::QuoteLike::Regexp' }
 #-----------------------------------------------------------------------------
 
 #
+# Note to the reader:
+#
+# A PPI::Token::QuoteLike::Regexp object contains a single string which has the
+# entire 'qr{...}' token. Therefore we can't add a Token::Whitespace between
+# the 'qr' and '{..}' like we can with loops and conditionals.
+#
+
+#
 # qr{...} --> rx{...}
 #
 sub transform {

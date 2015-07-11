@@ -27,6 +27,12 @@ sub applies_to           { return 'PPI::Token::QuoteLike::Command' }
 #-----------------------------------------------------------------------------
 
 #
+# A PPI::Token::QuoteLike::Command object contains a single string which has
+# the entire 'qx{...}' token. Therefore we can't add a Token::Whitespace
+# between the 'qr' and '{..}' like we can with loops and conditionals.
+#
+
+#
 # qx{...} --> qqx{...}
 #
 sub transform {

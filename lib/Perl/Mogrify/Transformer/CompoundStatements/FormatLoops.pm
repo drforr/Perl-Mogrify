@@ -52,6 +52,19 @@ sub _is_c_style {
     return;
 }
 
+#
+# There's a tradeoff at work here.
+#
+# While the PPI::Structure::For object is the correct type to look for
+# (specifically, it accurately matches the 'for ( ) ...' construct)
+# it matches the '(...)' element, not the structure containing the emtire 'for'
+# block.
+#
+# So we search for the PPI::Structure::For object, and when the time comes
+# to transform the object, we just move our "pointer" up to the parent,
+# which contains the entire 'for () {}' construct.
+#
+
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Structure::For') and
@@ -61,13 +74,46 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+# Note to reader: (after moving $elem up one layer) the structure looks like
+#
+# $elem (PPI::Statement::Compound)
+#  \
+#   \ 0    1  # count by child()
+#    \0    1  # count by schild()
+#     +----+
+#     |    |
+#     for  ( )
+#
+# After changing child(0):
+#
+# $elem (PPI::Statement::Compound)
+#  \
+#   \ 0    1  # count by child()
+#    \0    1  # count by schild()
+#     +----+
+#     |    |
+#     loop ( )
+#
+# After inserting ' ' after schild(0):
+#
+# $elem (PPI::Statement::Compound)
+#  \
+#   \ 0    1    2  # count by child()
+#    \0         1  # count by schild()
+#     +----+----+
+#     |    |    |
+#     loop ' ' ( )
+
 sub transform {
     my ($self, $elem, $doc) = @_;
+    $elem = $elem->parent;
 
-    $elem->sprevious_sibling->set_content('loop');
-    if ( !$elem->previous_sibling->isa('PPI::Token::Whitespace') ) {
-        my $whitespace = PPI::Token::Whitespace->new(' ');
-        $elem->insert_before($whitespace);
+    $elem->schild(0)->set_content('loop');
+
+    if ( !$elem->child(1)->isa('PPI::Token::Whitespace') ) {
+        $elem->schild(0)->insert_after(
+            PPI::Token::Whitespace->new(' ')
+        );
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

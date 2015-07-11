@@ -31,6 +31,7 @@ our @EXPORT_OK = qw(
 
     is_ppi_token_word
     is_ppi_token_operator
+    is_ppi_statement_compound
 );
 
 our %EXPORT_TAGS = (
@@ -45,70 +46,20 @@ sub is_ppi_token_word {
     exists $map{$elem->content};
 }
 
+#-----------------------------------------------------------------------------
+
 sub is_ppi_token_operator {
     my ($elem, %map) = @_;
     $elem->isa('PPI::Token::Operator') and
     exists $map{$elem->content};
 }
 
-sub is_ppi_expression_or_generic_statement {
-    my $element = shift;
-
-    return if not $element;
-    return if not $element->isa('PPI::Statement');
-    return 1 if $element->isa('PPI::Statement::Expression');
-
-    my $element_class = blessed($element);
-
-    return if not $element_class;
-    return $element_class eq 'PPI::Statement';
-}
-
 #-----------------------------------------------------------------------------
 
-sub is_ppi_generic_statement {
-    my $element = shift;
-
-    my $element_class = blessed($element);
-
-    return if not $element_class;
-    return if not $element->isa('PPI::Statement');
-
-    return $element_class eq 'PPI::Statement';
-}
-
-#-----------------------------------------------------------------------------
-
-sub is_ppi_statement_subclass {
-    my $element = shift;
-
-    my $element_class = blessed($element);
-
-    return if not $element_class;
-    return if not $element->isa('PPI::Statement');
-
-    return $element_class ne 'PPI::Statement';
-}
-
-#-----------------------------------------------------------------------------
-
-# Can not use hashify() here because Perl::Mogrify::Utils already depends on
-# this module.
-Readonly::Hash my %SIMPLE_STATEMENT_CLASS => map { $_ => 1 } qw<
-    PPI::Statement
-    PPI::Statement::Break
-    PPI::Statement::Include
-    PPI::Statement::Null
-    PPI::Statement::Package
-    PPI::Statement::Variable
->;
-
-sub is_ppi_simple_statement {
-    my $element = shift or return;
-
-    my $element_class = blessed( $element ) or return;
-
-    return $SIMPLE_STATEMENT_CLASS{ $element_class };
+sub is_ppi_statement_compound {
+    my ($elem, %map) = @_;
+    $elem->isa('PPI::Statement::Compound') and
+    exists $map{$elem->first_element->content};
 }
 
 #-----------------------------------------------------------------------------
