@@ -153,6 +153,9 @@ provides:
   Perl::Mogrify::Transformer::CompoundStatements::FormatMapGreps:
     file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatMapGreps.pm
     version: '0.01'
+  Perl::Mogrify::Transformer::CompoundStatements::SwapForArguments:
+    file: lib/Perl/Mogrify/Transformer/CompoundStatements/SwapForArguments.pm
+    version: '0.01'
   Perl::Mogrify::Transformer::Arrays/FormatArrayQws:
     file: lib/Perl/Mogrify/Transformer::Arrays::FormatArrayQws.pm
     version: '0.01'

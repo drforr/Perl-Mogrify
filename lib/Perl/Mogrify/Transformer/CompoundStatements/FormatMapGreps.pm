@@ -75,6 +75,13 @@ sub transform {
         }
 
         $point->insert_before($new_block);
+        while ( $point and
+                not ( $point->isa('PPI::Token::Operator') and
+                      $point->content eq ',' ) ) {
+            my $temp = $point->next_sibling;
+            $point->remove;
+            $point = $temp;
+        }
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

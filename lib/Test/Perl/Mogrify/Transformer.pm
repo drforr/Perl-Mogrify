@@ -133,10 +133,11 @@ sub __is_deeply {
             join( "\n", @{ $subtest->{sample} }, '====',
                         @{ $subtest->{modified} } )
         );
+        $TEST->diag( "Error: $!" );
         $num_errors++;
     }
     elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{modified} } ) {
-        warn "Error was [$@\]\n";
+        warn "Error was [$@]\n" if $@;
         $TEST->diag(
             "Transformed file missing lines from original:\n".
             join( "\n", @{ $subtest->{sample} }, '====',
@@ -190,7 +191,12 @@ sub _run_subtest {
             $error = $EVAL_ERROR || 'An unknown problem occurred.';
         };
     }
-    $subtest->{modified} = [split /\n/,$document];
+    if ( $document ) {
+        $subtest->{modified} = [split /\n/,$document];
+    }
+    else {
+        die "*** caught error $error!\n";
+    }
     my $num_errors = __is_deeply($policy, $subtest);
 
     if ( $num_errors ) {
