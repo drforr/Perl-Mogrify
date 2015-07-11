@@ -26,6 +26,36 @@ sub applies_to           { return 'PPI::Token::Operator' }
 
 #-----------------------------------------------------------------------------
 
+my %map = (
+    # ',' is unchanged.
+    # '+', '-', '*', '/', '%', '**' are unchanged.
+    # '&&', '||', '^' are unchanged.
+    # 'and', 'or', 'xor' are unchanged.
+    # '==', '!=', '<', '>', '<=', '>=' are unchanged.
+    # 'eq', 'ne', 'lt', 'gt', 'le', 'ge' are unchanged.
+
+    # '<=>' behaves similarly.
+    # 'cmp' is now named 'leg'.
+    # '~~' is unchanged, but the semantics are wildly different.
+    'cmp' => 'leg',
+
+    # '&', '|', '^' are changed, and string semantics are different.
+    '&'   => '+&', '&=' => '+&=',
+    '|'   => '+|', '|=' => '+|=',
+    '^'   => '+^', '^=' => '+^=',
+
+    '<<' => '+<', '<<=' => '+<=',
+    '>>' => '+>', '>>=' => '+>=',
+
+    '.'  => '~', '.=' => '~=',
+
+    '->' => '.',
+
+    '=~' => '~~',
+);
+
+#-----------------------------------------------------------------------------
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
@@ -80,32 +110,6 @@ sub transform {
     # left     and
     # left     or
     # left     xor
-
-    my %map = (
-        # ',' is unchanged.
-        # '+', '-', '*', '/', '%', '**' are unchanged.
-        # '&&', '||', '^' are unchanged.
-        # 'and', 'or', 'xor' are unchanged.
-        # '==', '!=', '<', '>', '<=', '>=' are unchanged.
-        # 'eq', 'ne', 'lt', 'gt', 'le', 'ge' are unchanged.
-
-        # '<=>' behaves similarly.
-        # 'cmp' is now named 'leg'.
-        # '~~' is unchanged, but the semantics are wildly different.
-        'cmp' => 'leg',
-
-        # '&', '|', '^' are changed, and string semantics are different.
-        '&'   => '+&',
-        '|'   => '+|',
-        '^'   => '+^',
-
-        '<<' => '+<',
-        '>>' => '+>',
-
-        '.'  => '~',
-
-        '->' => '.',
-    );
 
     my $old_content = $elem->content;
     if ( $old_content eq '=>' ) { # XXX This is a special case.
