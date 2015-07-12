@@ -34,7 +34,6 @@ sub applies_to           {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-use YAML;print Dump $elem;
 
     my $num_modifiers = keys %{ $elem->get_modifiers };
     my $modifiers =
