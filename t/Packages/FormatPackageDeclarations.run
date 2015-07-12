@@ -4,6 +4,10 @@
 ## cut
 package Foo;
 package Foo { ... }
+package #
+Foo;
 #-->
 unit class Foo;
 class Foo { ... }
+unit class #
+Foo;

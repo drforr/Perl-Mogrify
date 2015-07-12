@@ -6,6 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_word };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -18,32 +19,40 @@ Readonly::Scalar my $EXPL => q{The Perl6 equivalent of packages are classes.};
 
 #-----------------------------------------------------------------------------
 
+my %map = (
+    package => 1
+);
+
+#-----------------------------------------------------------------------------
+
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement::Package' }
+sub applies_to           {
+    return sub {
+        is_ppi_token_word($_[1],%map)
+    }
+}
 
 #-----------------------------------------------------------------------------
 
 #
 # 'package Foo;' --> 'unit class Foo;'
 # 'package Foo { ... }' --> 'class Foo { ... }'
+# 'package #\nFoo;' --> 'unit class #\nFoo;'
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    if ( $elem->child(3)->isa('PPI::Token::Structure') and
-         $elem->child(3)->content eq ';' ) {
-        $elem->first_element->set_content('class');
-        $elem->first_element->insert_before(
-            PPI::Token::Whitespace->new(' ')
-        );
-        $elem->first_element->insert_before(
-            PPI::Token::Word->new('unit')
-        );
-    }
-    else {
-        $elem->first_element->set_content('class');
+    $elem->set_content('class');
+    my $next = $elem;
+    while ( $next = $next->snext_sibling ) {
+        last if $next->isa('PPI::Structure::Block');
+        next if $next->isa('PPI::Token::Word');
+        next if $next->isa('PPI::Token::Comment');
+        $elem->insert_before( PPI::Token::Word->new('unit') );
+        $elem->insert_before( PPI::Token::Whitespace->new(' ') );
+        last;
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );
@@ -73,6 +82,8 @@ distribution.
 The Perl6 equivalent of a Perl5 package is 'class'. Older Perl5 source uses C<package Foo;> while some more modern source uses C<package Foo { .. }> to delineate package boundaries:
 
   package Foo; --> unit class Foo;
+  package
+  Foo;         --> unit class\nFoo;
   package Foo { ... } --> class Foo { ... }
 
 Other transformers will be responsible for ensuring that perl5 classes inherit correctly.
