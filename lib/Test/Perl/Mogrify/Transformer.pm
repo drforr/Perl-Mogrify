@@ -118,10 +118,10 @@ sub __is_deeply {
 
     my $num_errors;
     my $last_line = min( $#{ $subtest->{sample} },
-                         $#{ $subtest->{modified} } );
+                         $#{ $subtest->{transformed} } );
     my $first_different_line = 0;
     for my $idx ( 0 .. $last_line ) {
-        next if $subtest->{sample}[$idx] eq $subtest->{modified}[$idx];
+        next if $subtest->{sample}[$idx] eq $subtest->{transformed}[$idx];
         $first_different_line = $idx + 1;
         last;
     }
@@ -130,26 +130,29 @@ sub __is_deeply {
             "Output begins to differ at line " .
             ($first_different_line + 1) .
             ":\n" .
-            join( "\n", @{ $subtest->{sample} }, '====',
-                        @{ $subtest->{modified} } )
+            join( "\n", @{ $subtest->{original} }, '====??====>',
+                        @{ $subtest->{sample} }, '====!!====>',
+                        @{ $subtest->{transformed} } )
         );
         $TEST->diag( "Error: $!" );
         $num_errors++;
     }
-    elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{modified} } ) {
+    elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{transformed} } ) {
         warn "Error was [$@]\n" if $@;
         $TEST->diag(
             "Transformed file missing lines from original:\n".
-            join( "\n", @{ $subtest->{sample} }, '====',
-                        @{ $subtest->{modified} } )
+            join( "\n", @{ $subtest->{original} }, '====??====>',
+                        @{ $subtest->{sample} }, '====!!====>',
+                        @{ $subtest->{transformed} } )
         );
         $num_errors++;
     }
-    elsif ( $#{ $subtest->{sample} } < $#{ $subtest->{modified} } ) {
+    elsif ( $#{ $subtest->{sample} } < $#{ $subtest->{transformed} } ) {
         $TEST->diag(
             "Transformed file has more lines than original:\n".
-            join( "\n", @{ $subtest->{sample} }, '====',
-                        @{ $subtest->{modified} } )
+            join( "\n", @{ $subtest->{original} }, '====??====>',
+                        @{ $subtest->{sample} }, '====!!====>',
+                        @{ $subtest->{transformed} } )
         );
         $num_errors++;
     }
@@ -192,7 +195,7 @@ sub _run_subtest {
         };
     }
     if ( $document ) {
-        $subtest->{modified} = [split /\n/,$document];
+        $subtest->{transformed} = [split /\n/,$document];
     }
     else {
         die "*** caught error $error!\n";

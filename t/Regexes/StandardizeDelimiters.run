@@ -1,0 +1,24 @@
+## name match transformed
+## parms {}
+## failures 0
+## cut
+/foo/
+m/foo/
+m gfoog
+m f\foof
+m f\f/oof
+#-->
+/foo/
+m/foo/
+m/foo/
+m/\foo/
+m/\f\/oo/
+## name match with modifiers
+## parms {}
+## failures 0
+## cut
+m mo\mma
+s b\bookkeebpber
+#-->
+m/o\m/a
+s/\bookkee/p/er

@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::Regexes::SwapRegexModifiers;
+package Perl::Mogrify::Transformer::Regexes::SwapModifiers;
 
 use 5.006001;
 use strict;
@@ -24,7 +24,12 @@ Readonly::Scalar my $EXPL =>
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Regexp' }
+sub applies_to           {
+    return sub {
+        $_[1]->isa('PPI::Token::Regexp') and
+        keys %{ $_[1]->get_modifiers }
+    }
+}
 
 #-----------------------------------------------------------------------------
 
@@ -32,26 +37,15 @@ sub transform {
     my ($self, $elem, $doc) = @_;
 #use YAML;warn Dump $elem;
 
-    my $old_content = $elem->content;
-    my %modifiers = $elem->get_modifiers;
-    if ( keys %modifiers ) {
-        my $modifiers = join '', sort keys %modifiers;
-#warn "[$modifiers]";
-        unless ( $elem->{operator} ) {
-            $elem->{operator} = 'm';
-            $elem->set_content( 'm' . $elem->content );
-        }
-
-        my $new_content = $elem->content;
-        my $delim = (split //,($elem->get_delimiters)[-1])[-1];
-#warn "[$delim]";
-warn "[$new_content]";
-        $new_content =~ s{^(.)}{$1:$modifiers};
-warn "[$new_content]";
-        $new_content =~ s{$delim.+?$}{$delim}e;
-warn "[$new_content]";
-        $elem->set_content( $new_content );
+    unless ( $elem->{operator} ) {
+        $elem->{operator} = 'm';
+        $elem->set_content( 'm' . $elem->content );
     }
+#use YAML;warn Dump $elem;
+
+    my $modifiers = join('', keys %{ $elem->get_modifiers } );
+    my $new_content = $elem->content;
+use YAML;warn $modifiers;
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -66,7 +60,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::Operators::FormatBinaryOperators - Transform binary operators to Perl6 equivalents
+Perl::Mogrify::Transformer::Regexex::SwapModifiers
 
 
 =head1 AFFILIATION
@@ -77,14 +71,12 @@ distribution.
 
 =head1 DESCRIPTION
 
-Several Perl5 operators such as '->' and '.' have changed names, hopefully without changing precedence. Most binary operators transform in straightforward fashion, '->' changes to '.' and '.' changes to '~', but some, like 'x' are more complex and depend upon their context:
+In Perl6, modifiers have moved to the start of the regular expression declaration, and some are no longer needed:
 
-  1 + 1     --> 1 + 1
-  1 % 7     --> 1 % 7
-  Foo->[0]  --> Foo.[0]
-  Foo->new  --> Foo.new
-  'a' x 7   --> 'a' x 7
-  ('a') x 7 --> 'a' xx 7
+  /foo/ --> /foo/
+  m/foo/ --> m/foo/
+  m/foo/x --> m/foo/
+  m/foo/i --> m:i/foo/
 
 Transforms operators outside of comments, heredocs, strings and POD.
 
