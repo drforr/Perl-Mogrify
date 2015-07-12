@@ -83,7 +83,7 @@ BENDING THE RULES
 THE Perl::Mogrify PHILOSOPHY
 
     For the moment, there is no facility for defining the order that
-    transformers are run i, so each individual module cannot rely on other
+    transformers are run in, so each individual module cannot rely on other
     transformations being done. So far during development this hasn't been a
     problem, but I do make allowances at certain points, for instance there
     are two separate transformation modules for the C<for> loop, and the last
@@ -95,32 +95,70 @@ THE Perl::Mogrify PHILOSOPHY
     dependencies for this module as it is.
 
 EXTENDING THE MOGRIFIER
-    The simplest way to go about this is find a module in the list that
-    performs a task like what you want, copy that, and start walking its PPI
-    tree. Each module is presumed to act on one node of the tree at a time, in
-    other words C<$elem> will always be a single element of the type you're
-    modifying. This keeps code simple, and lets the main body collect
-    statistics about what it's modifying.
+    The simplest place to start is decide on a transformation you want to
+    accomplish, say, C<qw(a b c)> to a more Perl6ish style, such as
+    C< <a b c> >. Looking through the existing Transformer libraries, you'll
+    see an Arrays/FormatArrayQws file that adds whitespace following 'qw'.
 
-    For instance, when running it you'll get an *awful* lot of output about what
-    the modules are doing, complete with line and column numbers of where the
-    modifications are happening. This is more or less so that you can trace back
-    to the point of origin when a module does something you don't expect.
+    This means that the module already searches for 'qw()' constructs in a
+    perl5 document, so that's a good place to start modifying.
 
-    Your module receives the original document in C<$doc> and the element to
-    process in C<$elem>. If you make no modifications to the element, just
-    return. Otherwise, calling C<transformation()> tells the main application
-    that your module has changed source.
+    Create a new Transformer:: module, say, L<Transformer::Arrays::Perl6Style>
+    and copy L<t/Arrays/FormatArrayQws.run> to L<t/Arrays/Perl6Style.run>.
+
+    You'll need to modify the C<package> declaration of course, an probably
+    want to update the documentation. Now, pay attemtion to the new
+    L<t/Arrays/Perl6Style.run> file. It's a pretty simple format, put a sample
+    of what you're looking for, say C<qw(a b c)> above the '#-->' line, and
+    what you want it to look like, say C< <a b c> >, below the line.
+    
+    At this point it's worth pointing out some ideas that'll let you test
+    faster and more accurately. L<PPI> has generally two kinds of tree-walking
+    functions, those that are sensitive to whitespace and those that are
+    insensitive. Most of the time you want to use the insensitive versions,
+    which are prefixed by 's' as in C<schild(0)> vs. C<child(0)>.
+
+    A good habit to form is always adding whitespace (except where the
+    whitespace itself is the point) to your test lines, for instance preferring
+    C<for $x ( @x )> to C<for$x(@x)>. It's easier to read, and as a bonus if
+    you do that, when you forget to use C<snext_sibling> instead of
+    C<next_sibling> you'll find your bug faster.
+
+    Transformer Layout
+
+    You'll pay the most atention to two methods: C<applies_to> and
+    C<transform>. C<transform> does the dirty work, and C<applies_to> tells
+    the transformer what it's suppoed to run on.
+
+    It's tempting to cheat, and just make C<applies_to> tell the processor to
+    look for C<PPI::Document>, which applies your transformer to the whole
+    document. And in a few cases, of course, you'll have to do this.
+
+    But most of the time it's easier to use one of the two forms to tell
+    the processor exactly what to look for, so your transformer can explicitly
+    target the construct you're after.
+
+    So, try in general to supply the most restrictive definition of the L<PPI>
+    term you can to C<applies_to>, and I encourage you to look in
+    L<Perl::Mogrify::Utils::PPI> to find some premade matchers, for tokens
+    and such.
+
+    That way, when C<transform> runs, you can assume that the C<$elem> argument
+    is exactly what you're looking for, and you don't need to do any sort of
+    checking in the function, but can step directly in to running C<content>
+    to see what the node looks like, and C<set_content> to change the node's
+    content.
+
+    Philosophy
+
+    Blatantly mimcking the UNIX philosophy in general (at least until recently)
+    transformers do one small change, and pass the changed result down to the
+    next transformer in line.
 
     Just to keep the source tree clean and reasonably Perlish, I try to create
     new tokens for whitespace and such where it's practical. Please also note
     that at some points I'm forced to violate PPI encapsulation, for instance
     changing brace styles or a heredoc's marker.
-
-    I'd also strongly recommend that all of your tests include whitespace
-    wherever legal. This helps catch errors where your transformer walks lists
-    using 'next_sibling', thus landing on a whitespace rather than the token
-    your algorithm was expecting.
 
     Feel free to send me a pull request on GitHub if you've developed a module
     and want it integrated.
