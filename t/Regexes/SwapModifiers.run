@@ -5,8 +5,6 @@
 /foo/
 m/foo/
 m<foo>
-/foo/i
-/foo/gi
 m/foo/i
 m<foo>i
 m<foo>gi
@@ -15,10 +13,8 @@ m<foo>gi
 m/foo/
 m<foo>
 m:i/foo/
-m:gi/foo/
-m:i/foo/
 m:i<foo>
-m<foo>gi
+m:gi<foo>
 ## name substitute
 ## parms {}
 ## failures 0

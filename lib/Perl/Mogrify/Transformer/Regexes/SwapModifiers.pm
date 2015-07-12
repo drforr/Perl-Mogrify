@@ -6,7 +6,6 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_operator };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -35,17 +34,27 @@ sub applies_to           {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-#use YAML;warn Dump $elem;
+use YAML;print Dump $elem;
 
-    unless ( $elem->{operator} ) {
-        $elem->{operator} = 'm';
-        $elem->set_content( 'm' . $elem->content );
+    my $num_modifiers = keys %{ $elem->get_modifiers };
+    my $modifiers =
+        substr( $elem->content, -$num_modifiers, $num_modifiers, '' );
+
+    for ( @{ $elem->{sections} } ) {
+        $_->{position} += $num_modifiers + 1;
     }
-#use YAML;warn Dump $elem;
 
-    my $modifiers = join('', keys %{ $elem->get_modifiers } );
     my $new_content = $elem->content;
-use YAML;warn $modifiers;
+
+    if( $elem->{operator} eq '/' ) {
+        $new_content = 'm' . $new_content;
+        $elem->{operator} = 'm';
+    }
+    $new_content =~ s{^(m|s|y|tr)}{$1:$modifiers};
+    $elem->{operator} = $1;
+    $new_content =~ s{$modifiers$}{};
+
+    $elem->set_content($new_content);
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -73,12 +82,11 @@ distribution.
 
 In Perl6, modifiers have moved to the start of the regular expression declaration, and some are no longer needed:
 
-  /foo/ --> /foo/
   m/foo/ --> m/foo/
   m/foo/x --> m/foo/
-  m/foo/i --> m:i/foo/
+  m/foo/gi --> m:gi/foo/
 
-Transforms operators outside of comments, heredocs, strings and POD.
+Transforms regular expressions outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 
