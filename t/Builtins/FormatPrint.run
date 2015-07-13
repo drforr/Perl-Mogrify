@@ -1,0 +1,15 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+print FOO "hi";
+print FOO "hi" if 1;
+print FOO "hi" unless 1;
+print $FOO "hi";
+print $FOO "hi", "there";
+#-->
+FOO.print("hi");
+FOO.print("hi") if 1;
+FOO.print("hi") unless 1;
+$FOO.print("hi");
+$FOO.print("hi", "there");

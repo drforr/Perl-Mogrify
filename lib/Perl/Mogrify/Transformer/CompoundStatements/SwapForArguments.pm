@@ -42,7 +42,6 @@ sub applies_to           {
         is_ppi_statement_compound($_[1], %map) and
         ( $_[1]->schild(1)->isa('PPI::Token::Word') or
           $_[1]->schild(1)->isa('PPI::Token::Symbol') )
-      
     }
 }
 

@@ -6,6 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_statement_compound };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -30,8 +31,7 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        $_[1]->isa('PPI::Statement::Compound') and
-        exists $map{$_[1]->first_element->content} and
+        is_ppi_statement_compound($_[1], %map) and
         $_[1]->first_element->next_sibling and
         not $_[1]->first_element->next_sibling->isa('PPI::Token::Whitespace')
     }

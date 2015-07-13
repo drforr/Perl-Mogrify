@@ -31,7 +31,10 @@ our @EXPORT_OK = qw(
 
     is_ppi_token_word
     is_ppi_token_operator
+    is_ppi_statement
     is_ppi_statement_compound
+
+    is_ppi_token_quotelike_words_like
 );
 
 our %EXPORT_TAGS = (
@@ -56,10 +59,26 @@ sub is_ppi_token_operator {
 
 #-----------------------------------------------------------------------------
 
+sub is_ppi_statement {
+    my ($elem, %map) = @_;
+    $elem->isa('PPI::Statement') and
+    exists $map{$elem->first_element->content};
+}
+
+#-----------------------------------------------------------------------------
+
 sub is_ppi_statement_compound {
     my ($elem, %map) = @_;
     $elem->isa('PPI::Statement::Compound') and
     exists $map{$elem->first_element->content};
+}
+
+#-----------------------------------------------------------------------------
+
+sub is_ppi_token_quotelike_words_like {
+    my ($elem, $qr) = @_;
+    $elem->isa('PPI::Token::QuoteLike::Words') and
+    $elem->content =~ $qr
 }
 
 #-----------------------------------------------------------------------------
