@@ -6,7 +6,7 @@ use warnings;
 
 use Readonly;
 
-use Scalar::Util qw< blessed readonly looks_like_number >;
+use Scalar::Util qw< looks_like_number >;
 
 use Exporter 'import';
 
@@ -22,12 +22,6 @@ our @EXPORT_OK = qw(
     is_module_name
     is_version_number
     is_pragma
-    is_subroutine_declaration
-    is_version_number
-    is_in_subroutine
-    get_constant_name_element_from_declaring_statement
-    get_next_element_in_same_simple_statement
-    get_previous_module_used_on_same_line
 
     is_ppi_token_word
     is_ppi_token_operator
@@ -35,6 +29,9 @@ our @EXPORT_OK = qw(
     is_ppi_statement_compound
 
     is_ppi_token_quotelike_words_like
+
+    make_ppi_structure_list
+    make_ppi_structure_block
 );
 
 our %EXPORT_TAGS = (
@@ -151,100 +148,24 @@ sub is_pragma {
 
 #-----------------------------------------------------------------------------
 
-sub is_subroutine_declaration {
-    my $element = shift;
-
-    return if not $element;
-
-    return 1 if $element->isa('PPI::Statement::Sub');
-
-    if ( is_ppi_generic_statement($element) ) {
-        my $first_element = $element->first_element();
-
-        return 1 if
-                $first_element
-            and $first_element->isa('PPI::Token::Word')
-            and $first_element->content() eq 'sub';
-    }
-
-    return;
-}
-
-#-----------------------------------------------------------------------------
-
-sub get_constant_name_element_from_declaring_statement {
-    my ($element) = @_;
-
-    warnings::warnif(
-        'deprecated',
-        'Perl::Mogrify::Utils::PPI::get_constant_name_element_from_declaring_statement() is deprecated. Use PPIx::Utilities::Statement::get_constant_name_elements_from_declaring_statement() instead.',
+sub make_ppi_structure_block {
+    my $new_list = PPI::Structure::Block->new(
+        PPI::Token::Structure->new('{'),
     );
+    $new_list->{finish} = PPI::Token::Structure->new('}');
 
-    return if not $element;
-    return if not $element->isa('PPI::Statement');
-
-    if ( $element->isa('PPI::Statement::Include') ) {
-        my $pragma;
-        if ( $pragma = $element->pragma() and $pragma eq 'constant' ) {
-            return _constant_name_from_constant_pragma($element);
-        }
-    }
-    elsif (
-            is_ppi_generic_statement($element)
-        and $element->schild(0)->content() =~ m< \A Readonly \b >xms
-    ) {
-        return $element->schild(2);
-    }
-
-    return;
-}
-
-sub _constant_name_from_constant_pragma {
-    my ($include) = @_;
-
-    my @arguments = $include->arguments() or return;
-
-    my $follower = $arguments[0];
-    return if not defined $follower;
-
-    return $follower;
+    return $new_list;
 }
 
 #-----------------------------------------------------------------------------
 
-sub get_next_element_in_same_simple_statement {
-    my $element = shift or return;
+sub make_ppi_structure_list {
+    my $new_list = PPI::Structure::List->new(
+        PPI::Token::Structure->new('('),
+    );
+    $new_list->{finish} = PPI::Token::Structure->new(')');
 
-    while ( $element and (
-            not is_ppi_simple_statement( $element )
-            or $element->parent()
-            and $element->parent()->isa( 'PPI::Structure::List' ) ) ) {
-        my $next;
-        $next = $element->snext_sibling() and return $next;
-        $element = $element->parent();
-    }
-    return;
-
-}
-
-#-----------------------------------------------------------------------------
-
-sub get_previous_module_used_on_same_line {
-    my $element = shift or return;
-
-    my ( $line ) = @{ $element->location() || []};
-
-    while (not is_ppi_simple_statement( $element )) {
-        $element = $element->parent() or return;
-    }
-
-    while ( $element = $element->sprevious_sibling() ) {
-        ( @{ $element->location() || []} )[0] == $line or return;
-        $element->isa( 'PPI::Statement::Include' )
-            and return $element->schild( 1 );
-    }
-
-    return;
+    return $new_list;
 }
 
 #-----------------------------------------------------------------------------
@@ -310,85 +231,13 @@ L<PPI::Statement::Null|PPI::Statement::Null>,
 L<PPI::Statement::Package|PPI::Statement::Package>, or
 L<PPI::Statement::Variable|PPI::Statement::Variable>.
 
-
-=item C<is_subroutine_declaration( $element )>
-
-Is the parameter a subroutine declaration, named or not?
-
-
-=item C<is_in_subroutine( $element )>
-
-Is the parameter a subroutine or inside one?
-
-
-=item C<get_constant_name_element_from_declaring_statement($statement)>
-
-B<This subroutine is deprecated.> You should use
-L<PPIx::Utilities::Statement/get_constant_name_elements_from_declaring_statement()>
-instead.
-
-Given a L<PPI::Statement|PPI::Statement>, if the statement is a C<use
-constant> or L<Readonly|Readonly> declaration statement, return the name of
-the thing being defined.
-
-Given
-
-    use constant 1.16 FOO => 'bar';
-
-this will return "FOO".  Similarly, given
-
-    Readonly::Hash my %FOO => ( bar => 'baz' );
-
-this will return "%FOO".
-
-B<Caveat:> in the case where multiple constants are declared using the same
-C<use constant> statement (e.g. C<< use constant { FOO => 1, BAR => 2 }; >>,
-this subroutine will return the declaring
-L<PPI::Structure::Constructor|PPI::Structure::Constructor>. In the case of
-C<< use constant 1.16 { FOO => 1, BAR => 2 }; >> it may return a
-L<PPI::Structure::Block|PPI::Structure::Block> instead of a
-L<PPI::Structure::Constructor|PPI::Structure::Constructor>, due to a parse
-error in L<PPI|PPI>.
-
-
-=item C<get_next_element_in_same_simple_statement( $element )>
-
-Given a L<PPI::Element|PPI::Element>, this subroutine returns the next element
-in the same simple statement as defined by is_ppi_simple_statement(). If no
-next element can be found, this subroutine simply returns.
-
-If the $element is undefined or unblessed, we simply return.
-
-If the $element satisfies C<is_ppi_simple_statement()>, we return, B<unless>
-it has a parent which is a L<PPI::Structure::List|PPI::Structure::List>.
-
-If the $element is the last significant element in its L<PPI::Node|PPI::Node>,
-we replace it with its parent and iterate again.
-
-Otherwise, we return C<< $element->snext_sibling() >>.
-
-
-=item C<get_previous_module_used_on_same_line( $element )>
-
-Given a L<PPI::Element|PPI::Element>, returns the L<PPI::Element|PPI::Element>
-representing the name of the module included by the previous C<use> or
-C<require> on the same line as the $element. If none is found, simply returns.
-
-For example, with the line
-
-    use version; our $VERSION = ...;
-
-given the L<PPI::Token::Symbol|PPI::Token::Symbol> instance for C<$VERSION>, this will return
-"version".
-
-If the given element is in a C<use> or <require>, the return is from the
-previous C<use> or C<require> on the line, if any.
-
-
 =back
 
-
 =head1 AUTHOR
+
+Jeffrey Goff <drforr@pobox.com>
+
+=head1 AUTHOR EMERITUS
 
 Elliot Shank <perl@galumph.com>
 

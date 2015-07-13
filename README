@@ -34,10 +34,14 @@ WHAT DOES IT DO
             Floating-point trailing decimal
             Here-docs
             Interpolated values ("${x}", "$x-foo" etc.)
+        Builtins
+            'print $fh "text", $x'
         Q types
             qw(), qr(), qx()
         Conditional constructs ('if', 'elsif', 'unless', 'when')
         Looping constructs ('for', 'foreach', 'while', 'until')
+            'for(1;2;3)'
+            'for $x (@y)'
             Transformation of C-style loops
         First-order operators
             'map {} @foo', 'grep !2 @a'

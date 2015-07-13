@@ -6,7 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :severities };
-use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_word };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_word make_ppi_structure_block };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -38,17 +38,6 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
-sub _make_a_block {
-    # XXX Flaw in PPI: Cannot simply create PPI::Structure::* with ->new().
-    # See https://rt.cpan.org/Public/Bug/Display.html?id=31564
-    my $new_block = PPI::Structure::Block->new(
-        PPI::Token::Structure->new('{'),
-    ) or die;
-    $new_block->{finish} = PPI::Token::Structure->new('}');
-
-    return $new_block;
-}
-
 sub transform {
     my ($self, $elem, $doc) = @_;
     my $token = $elem->snext_sibling;
@@ -64,7 +53,7 @@ sub transform {
     else {
         my $point = $token;
 
-        my $new_block = _make_a_block();
+        my $new_block = make_ppi_structure_block;
         my $new_statement = PPI::Statement->new;
         $new_block->add_element($new_statement);
 

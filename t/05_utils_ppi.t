@@ -78,43 +78,6 @@ can_ok('main', 'is_ppi_token_word');
 }
 
 #-----------------------------------------------------------------------------
-#  is_subroutine_declaration() tests
-
-{
-    my $test = sub {
-        my ($code, $result) = @_;
-
-        my $doc;
-        my $input;
-
-        if (defined $code) {
-            $doc = PPI::Document->new(\$code, readonly => 1);
-        }
-        if (defined $doc) {
-            $input = $doc->first_element();
-        }
-
-        my $name = defined $code ? $code : '<undef>';
-
-        local $Test::Builder::Level = $Test::Builder::Level + 1; ## no mogrify (Variables::ProhibitPackageVars)
-        is(
-            ! ! is_subroutine_declaration( $input ),
-            ! ! $result,
-            "is_subroutine_declaration(): $name"
-        );
-
-        return;
-    };
-
-    $test->('sub {};'        => 1);
-    $test->('sub {}'         => 1);
-    $test->('{}'             => 0);
-    $test->(undef,              0);
-    $test->('{ sub foo {} }' => 0);
-    $test->('sub foo;'       => 1);
-}
-
-#-----------------------------------------------------------------------------
 
 # ensure we return true if this test is loaded by
 # t/05_utils_ppi.t_without_optional_dependencies.t

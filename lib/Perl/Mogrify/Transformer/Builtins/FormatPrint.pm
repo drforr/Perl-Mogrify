@@ -6,7 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::PPI qw{ is_ppi_statement };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_statement make_ppi_structure_list };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -39,15 +39,30 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
-sub _make_a_list {
-    # XXX Flaw in PPI: Cannot simply create PPI::Structure::* with ->new().
-    # See https://rt.cpan.org/Public/Bug/Display.html?id=31564
-    my $new_list = PPI::Structure::List->new(
-        PPI::Token::Structure->new('('),
-    ) or die;
-    $new_list->{finish} = PPI::Token::Structure->new(')');
+my %postfix_modifier = (
+    if => 1,
+    unless => 1,
+    while => 1,
+    until => 1,
+    for => 1,
+    foreach => 1
+);
 
-    return $new_list;
+sub _is_end_of_print_expression {
+    my $elem = shift;
+    return 1 if $elem->isa('PPI::Token::Structure') and
+                $elem->content eq ';';
+    return 1 if $elem->isa('PPI::Token::Word') and
+                exists $postfix_modifier{$elem->content};
+    return;
+}
+
+sub _is_almost_end_of_print_expression {
+    my $elem = shift;
+    return 1 if _is_end_of_print_expression($elem) or
+                $elem->isa('PPI::Token::Whitespace') and
+                _is_end_of_print_expression($elem->snext_sibling);
+    return;
 }
 
 sub transform {
@@ -57,26 +72,19 @@ sub transform {
 
     my $point = $token;
 
-    my $new_list = _make_a_list();
+    my $new_list = make_ppi_structure_list;
     my $new_statement = PPI::Statement->new;
     $new_list->add_element($new_statement);
 
     while ( $token and $token->next_sibling ) {
-        last if $token->content eq ';' or
-                $token->content eq 'if' or
-                $token->content eq 'unless';
+        last if _is_almost_end_of_print_expression($token);
         $new_statement->add_element($token->clone);
         $token = $token->next_sibling;
     }
 
     $point->insert_before($new_list);
     while ( $point and
-            not ( $point->isa('PPI::Token::Word') and
-                  $point->content eq 'if' ) and
-            not ( $point->isa('PPI::Token::Word') and
-                  $point->content eq 'unless' ) and
-            not ( $point->isa('PPI::Token::Structure') and
-                  $point->content eq ';' ) ) {
+            not _is_almost_end_of_print_expression($point) ) {
         my $temp = $point->next_sibling;
         $point->remove;
         $point = $temp;
@@ -108,7 +116,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::Variables::FormatSigils - Give variables their proper sigils.
+Perl::Mogrify::Transformer::Builtins::FormatPrint - Format 'print $fh "expr"'
 
 
 =head1 AFFILIATION
@@ -119,12 +127,9 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 uses the sigil type as the data type now, and this is probably the most common operation people will want to do to their file. This transformer doesn't alter hash keys or array indices, those are left to transformers down the line:
+Perl6 now uses a C<print> method on filehandles as opposed to the old C<print $fh>:
 
-  @foo = () --> @foo = ()
-  $foo[1] --> @foo[1]
-  %foo = () --> %foo = ()
-  $foo{a} --> %foo{a} # Not %foo<a> or %foo{'a'} yet.
+  print $fh $x --> $fh.print($x)
 
 Transforms variables outside of comments, heredocs, strings and POD.
 
