@@ -36,7 +36,8 @@ sub transform {
     my $old_content = $elem->content;
  
     my ( $lhs, $rhs ) = split( '\.', $old_content );
-    return unless $rhs eq '';
+    return unless $rhs and
+                  $rhs eq '';
  
     $rhs = '0' if $rhs eq '';
     my $new_content = $lhs . '.' . $rhs;

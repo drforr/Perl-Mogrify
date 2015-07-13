@@ -45,7 +45,8 @@ sub transform {
 
     my $new_content = $elem->content;
 
-    if( $elem->{operator} eq '/' ) {
+    if( $elem->{operator} and
+        $elem->{operator} eq '/' ) {
         $new_content = 'm' . $new_content;
         $elem->{operator} = 'm';
     }
