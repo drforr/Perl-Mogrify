@@ -6,7 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::PPI qw{ is_ppi_statement make_ppi_structure_list };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_word make_ppi_structure_list };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -30,21 +30,18 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_statement($_[1],%map) and
-        not ( $_[1]->schild(2) and
-              $_[1]->schild(2)->isa('PPI::Token::Operator') and
-              $_[1]->schild(2)->content eq ',' )
+        is_ppi_token_word($_[1], %map)
     }
 }
 
 #-----------------------------------------------------------------------------
 
 my %postfix_modifier = (
-    if => 1,
-    unless => 1,
-    while => 1,
-    until => 1,
-    for => 1,
+    if      => 1,
+    unless  => 1,
+    while   => 1,
+    until   => 1,
+    for     => 1,
     foreach => 1
 );
 
@@ -68,7 +65,7 @@ sub _is_almost_end_of_print_expression {
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my $token = $elem->schild(2);
+    my $token = $elem->snext_sibling->snext_sibling;
 
     my $point = $token;
 
@@ -90,18 +87,18 @@ sub transform {
         $point = $temp;
     }
 
-    if ( $elem->schild(0)->next_sibling->isa('PPI::Token::Whitespace') ) {
-        $elem->schild(0)->next_sibling->remove;
+    if ( $elem->next_sibling->isa('PPI::Token::Whitespace') ) {
+        $elem->next_sibling->remove;
     }
-    my $filehandle_variable = $elem->schild(1)->clone;
-    $elem->schild(1)->remove;
-    if ( $elem->schild(0)->next_sibling->isa('PPI::Token::Whitespace') ) {
-        $elem->schild(0)->next_sibling->remove;
+    my $filehandle_variable = $elem->snext_sibling->clone;
+    $elem->snext_sibling->remove;
+    if ( $elem->next_sibling->isa('PPI::Token::Whitespace') ) {
+        $elem->next_sibling->remove;
     }
-    $elem->schild(0)->insert_before(
+    $elem->insert_before($filehandle_variable);
+    $elem->insert_before(
         PPI::Token::Operator->new('.')
     );
-    $elem->schild(0)->insert_before($filehandle_variable);
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

@@ -128,6 +128,13 @@ EXTENDING THE MOGRIFIER
     you do that, when you forget to use C<snext_sibling> instead of
     C<next_sibling> you'll find your bug faster.
 
+    Something else to keep in mind as you're creating tests is that the
+    expression you're looking for won't always begin at the start of a
+    L<PPI::Statement>. As a trivial example, C<$x++> may occur at the end of
+    a long statement, such as C<1 if $x++>. So, when creating your test suites
+    be sure that at least a few of your test cases don't begin precisely at
+    the statement boundary.
+
     Transformer Layout
 
     You'll pay the most atention to two methods: C<applies_to> and

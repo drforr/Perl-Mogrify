@@ -121,6 +121,13 @@ tokens for whitespace and such where it's practical. Please also note that
 at some points I'm forced to violate PPI encapsulation, for instance
 changing brace styles or a heredoc's marker.
 
+Something else to keep in mind as you're creating tests is that the
+expression you're looking for won't always begin at the start of a
+L<PPI::Statement>. As a trivial example, C<$x++> may occur at the end of
+a long statement, such as C<1 if $x++>. So, when creating your test suites
+be sure that at least a few of your test cases don't begin precisely at
+the statement boundary.
+
 Feel free to send me a pull request on GitHub if you've developed a module
 and want it integrated.
 
