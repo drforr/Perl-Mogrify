@@ -1,0 +1,13 @@
+## name transform
+## parms {}
+## failures 0
+## cut
+sub { }
+sub foo { }
+sub foo($) { }
+sub foo($a) { }
+#-->
+sub { }
+sub foo { }
+sub foo { }
+sub foo($a) { }
