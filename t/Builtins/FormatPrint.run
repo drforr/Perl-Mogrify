@@ -4,14 +4,16 @@
 ## cut
 print FOO "hi";
 print FOO "hi" if 1;
-print FOO "hi" unless 1;
+print FOO "hi" and 1;
+1 if print FOO "hi";
+1 and print FOO "hi";
 print $FOO "hi";
 print $FOO "hi", "there";
-1 and print FOO "hi";
 #-->
 FOO.print("hi");
 FOO.print("hi") if 1;
-FOO.print("hi") unless 1;
+FOO.print("hi") and 1;
+1 if FOO.print("hi");
+1 and FOO.print("hi");
 $FOO.print("hi");
 $FOO.print("hi", "there");
-1 and FOO.print("hi");

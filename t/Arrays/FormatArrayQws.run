@@ -3,6 +3,10 @@
 ## failures 0
 ## cut
 qw{a b c};
+qw{a b c} if 1;
+qw{a b c} and 1;
+(1) if qw{a b c};
+(1) and qw{a b c};
 my @a = qw{a b c}, 'a';
 qw<a b c>;
 my @a = qw<a b c>, 'a';
@@ -10,6 +14,10 @@ qw(a b c);
 my @a = qw(a b c), 'a';
 #-->
 qw{a b c};
+qw{a b c} if 1;
+qw{a b c} and 1;
+(1) if qw{a b c};
+(1) and qw{a b c};
 my @a = qw{a b c}, 'a';
 qw<a b c>;
 my @a = qw<a b c>, 'a';

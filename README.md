@@ -37,6 +37,8 @@ As of the initial release, it contains transformers for:
         Floating-point trailing decimal
         Here-docs
         Interpolated values ("${x}", "$x-foo" etc.)
+    Builtins
+        'print $fh "text hee"'
     Q types
         qw(), qr(), qx()
     Conditional constructs ('if', 'elsif', 'unless', 'when')

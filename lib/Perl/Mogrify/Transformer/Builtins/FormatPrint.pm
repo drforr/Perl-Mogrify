@@ -45,12 +45,23 @@ my %postfix_modifier = (
     foreach => 1
 );
 
+my %operator = (
+    and  => 1,
+    or   => 1,
+    xor  => 1,
+    '&&' => 1,
+    '||' => 1,
+    '^^' => 1
+);
+
 sub _is_end_of_print_expression {
     my $elem = shift;
     return 1 if $elem->isa('PPI::Token::Structure') and
                 $elem->content eq ';';
     return 1 if $elem->isa('PPI::Token::Word') and
                 exists $postfix_modifier{$elem->content};
+    return 1 if $elem->isa('PPI::Token::Operator') and
+                exists $operator{$elem->content};
     return;
 }
 
