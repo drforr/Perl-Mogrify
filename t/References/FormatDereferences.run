@@ -10,6 +10,7 @@
 @$foo;
 %{ $foo };
 @{ $foo };
+$#{ $foo };
 #-->
 %$foo;
 %$foo if 1;
@@ -19,3 +20,4 @@
 @$foo;
 %( $foo );
 @( $foo );
+@( $foo ).end;

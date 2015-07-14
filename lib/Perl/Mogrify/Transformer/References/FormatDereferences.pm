@@ -28,25 +28,11 @@ sub applies_to           {
         $_[1]->next_sibling->isa('PPI::Structure::Block') and
         $_[1]->next_sibling->start->content eq '{' and
         $_[1]->next_sibling->finish->content eq '}'
-        
-# Redundant checks for the tests below.
-#
-#        not $_[1]->next_sibling->isa('PPI::Token::Symbol') and
-#        # Not two casts in a row, like \% in \%{"$pack\:\:SUBS"} .
-#        not( $_[1]->next_sibling->isa('PPI::Token::Cast') and
-#             $_[1]->next_sibling->content eq '\\' ) and
-#        # \( $x, $y ) are not the constructs we're looking for.
-#        not( $_[1]->next_sibling->isa('PPI::Structure::List') and
-#             $_[1]->next_sibling->content eq '\\' )
     }
 }
 
 #-----------------------------------------------------------------------------
 
-#
-# %foo{'a'} --> %foo{'a'}
-# %foo{a}   --> %foo{'a'}
-#
 sub transform {
     my ($self, $elem, $doc) = @_;
     my $next = $elem->next_sibling;
@@ -54,6 +40,15 @@ sub transform {
     # %{...} becomes %(...). Same with @{...} and ${...}.
     $next->start->set_content('(');
     $next->finish->set_content(')');
+    if ( $elem->content eq '$#' ) {
+        $elem->set_content('@');
+        $elem->snext_sibling->insert_after(
+            PPI::Token::Word->('end')
+        );
+        $elem->snext_sibling->insert_after(
+            PPI::Token::Operator->('.')
+        );
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
