@@ -37,7 +37,6 @@ sub transform {
     my ($self, $elem, $doc) = @_;
     my $next = $elem->next_sibling;
 
-    # %{...} becomes %(...). Same with @{...} and ${...}.
     $next->start->set_content('(');
     $next->finish->set_content(')');
     if ( $elem->content eq '$#' ) {

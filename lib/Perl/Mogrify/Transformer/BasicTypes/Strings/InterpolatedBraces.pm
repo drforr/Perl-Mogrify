@@ -1,9 +1,10 @@
-package Perl::Mogrify::Transformer::BasicTypes::Strings::FormatInterpolatedStrings;
+package Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces;
 
 use 5.006001;
 use strict;
 use warnings;
 use Readonly;
+use Text::Balanced qw{ extract_bracketed };
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
 
@@ -31,23 +32,41 @@ sub applies_to {
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # "\v"    --> ""
-    # "$x"    --> "$x"
-    # "$x-30" --> "$x\-30"
-    # "${x}"  --> "{$x}"
-    # "\${x}" --> "\$\{x\}"
-
     my $old_content = $elem->content;
+    my $new_content;
+    my ( $expression, $remainder );
 
-    $old_content =~ s{\\v}{}g;
-    $old_content =~ s{\\l\$x}{{lc \$x}}g;
-    $old_content =~ s{\\u\$x}{{uc \$x}}g;
-    $old_content =~ s{(\$\w+)-}{$1\\-}g;
-    $old_content =~ s{\\N\{(\w+)\}}{\\c[$1]};
-    $old_content =~ s{ [\\] \$\{(\w+)\} }{ '\\$\\{' . $1 .'\\}' }gex;
-    $old_content =~ s{ ( ^ | [^\\] ) \$\{(\w+)\} }{ $1 . '{$' . $2 . '}' }gex;
+    if ( $old_content =~ m/\{/ ) {
+        while ( $old_content and
+                $old_content =~ s{ ^ ([^\{]+) }{}x ) {
+            $new_content .= $1;
+            ( $expression, $remainder ) = extract_bracketed($old_content,'{}');
+            if ( $expression ) {
+                my $unbraced = substr( $expression, 1, -1 );
+                if ( $new_content =~ s{( [\\]? [\$@] | \\N )$}{}x ) {
+                    $expression = $1 . $expression;
+                }
+ 
+                if ( $expression =~ m{ ^ \\N }x ) {
+                    $expression = qq{\\c[$unbraced]};
+                }
+                elsif ( $expression =~ m{ ^ \\ \$ }x ) {
+                    $expression = qq{\\\$\\{$unbraced\\}};
+                }
+                elsif ( $expression =~ m{ ^ \$ }x ) {
+                    $expression = qq{{\$$unbraced}};
+                }
+ 
+                $new_content .= $expression;
+                $old_content = $remainder;
+            }
+        }
+    }
+    else {
+        $new_content = $old_content;
+    }
 
-    $elem->set_content( $old_content );
+    $elem->set_content( $new_content );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -77,6 +96,7 @@ In Perl6, contents inside {} are now executable code. That means that inside int
 
   "The $x bit"      --> "The $x bit"
   "The $x-30 bit"   --> "The $x\-30 bit"
+  "\N{FOO}"         --> "\c{FOO}"
   "The \l$x bit"    --> "The {lc $x} bit"
   "The \v bit"      --> "The  bit"
   "The ${x}rd bit"  --> "The {$x}rd bit"

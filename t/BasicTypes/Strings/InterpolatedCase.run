@@ -1,0 +1,44 @@
+## name Braced blocks pass through unaltered
+## parms {}
+## failures 0
+## cut
+"Hello ${x} {$x} \{$x\}"
+#-->
+"Hello ${x} {$x} \{$x\}"
+## name lc/uc on literals
+## parms {}
+## failures 0
+## cut
+"\lax"
+qq{\lax}
+"\lAx"
+"\lR\Elax"
+"\l\l\l\lax"
+"\l\l\l\lAx"
+"\uax"
+"\uAx"
+"\u\l\l\lax"
+"\u\l\l\lAx"
+#-->
+"{lcfirst('a')}x"
+qq{{lcfirst('A')}x}
+"{lcfirst('a')}x"
+"{lcfirst('R')}lax"
+"{lcfirst('A')}x"
+"{ucfirst('a')}x"
+"{ucfirst('A')}x"
+"{ucfirst('a')}x"
+"{ucfirst('A')}x"
+## name L/U on literals
+## parms {}
+## failures 0
+## cut
+"\Labrador"
+"\Lam\E horse"
+"\Umbra"
+"\Utiliti\Es"
+#-->
+"{lc('abrador')}"
+"{lc('am')} horse"
+"{uc('mbra')}"
+"{uc('tiliti')}s"
