@@ -31,6 +31,7 @@ sub applies_to {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
+print "[".$doc->content."]\n";
 
     my $old_content = $elem->content;
     my $new_content;
@@ -68,6 +69,7 @@ sub transform {
 
     $elem->set_content( $new_content );
 
+print "[".$doc->content."]\n";
     return $self->transformation( $DESC, $EXPL, $elem );
 }
 

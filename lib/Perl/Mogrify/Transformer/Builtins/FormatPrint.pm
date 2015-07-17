@@ -75,6 +75,7 @@ sub _is_almost_end_of_print_expression {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
+#print "[".$doc->content."]\n";
 
     my $token = $elem->snext_sibling->snext_sibling;
 
@@ -110,6 +111,7 @@ sub transform {
     $elem->insert_before(
         PPI::Token::Operator->new('.')
     );
+#print "[".$doc->content."]\n";
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

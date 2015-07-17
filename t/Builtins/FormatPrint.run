@@ -3,6 +3,7 @@
 ## failures 0
 ## cut
 print FOO "hi";
+print OUT "{\n";
 print FOO "hi" if 1;
 print FOO "hi" and 1;
 1 if print FOO "hi";
@@ -11,6 +12,7 @@ print $FOO "hi";
 print $FOO "hi", "there";
 #-->
 FOO.print("hi");
+OUT.print("{\n");
 FOO.print("hi") if 1;
 FOO.print("hi") and 1;
 1 if FOO.print("hi");
