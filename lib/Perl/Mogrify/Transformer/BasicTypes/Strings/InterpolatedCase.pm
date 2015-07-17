@@ -13,8 +13,8 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Handle \l,\u,\L,\U,\E};
-Readonly::Scalar my $EXPL => q{Handle \l,\u,\L,\U,\E};
+Readonly::Scalar my $DESC => q{Handle \l,\u,\L..\E,\U..\E};
+Readonly::Scalar my $EXPL => q{Handle \l,\u,\L..\E,\U..\E};
 
 #-----------------------------------------------------------------------------
 
@@ -31,125 +31,146 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
-# This is a very sharp edge case, and admittedly nost people won't cut
-# themselves on it.
+# This is how migraines begin.
 #
-# Basically, "\lADY" lower-cases the first character of the string "ADY", so
-# that you get 'aDY' on your output. This works with variables too, so:
-# "\l$ady" lowercases te first character of whatever's in $ady.
+# Let's start with the easy modifiers, q{\l} and q{\u}. All they do is
+# case-shift the next character or first character of the variable they're
+# next to. like so:
 #
-# Perl6 no longer has these "operators", so we have to emulate them.
+# "l\lAdy" --> "lady"
+# $x="Ady"; "l\l$x" --> "lady"
+# %x=(Ady => 1); "l\l%x" --> illegal, but we'll pretend like it's lc('%').
+# @x=("Ady"); "l\l@x" --> illegal, but we'll pretend like it's lc('@').
 #
-# It would be easy to simply do the work ourselves, and outupt "aDY" in the
-# first case, and {lcfirst $ady} in the second. But Perl6 and Perl5
-# case semantics may not necessarily match, so what we do instead in the
-# cases are:
+# The Perl6 equivalent of this looks like:
 #
-# "\lADY" --> "{lcfirst('A')}DY"
-# "\l$ady" --> "{lcfirst($ady)}"
+# "l{lcfirst('A')dy"
+# $x="Ady"; "l{lcfirst($x)}dy"
+# @x=("Ady"); "l{lcfirst('@')}dy"
 #
-# Really lc() would suffice, but lcfirst() is more explicit.
+# Stacking 'operators' is legal but pointless, as the first 'operator' is what
+# is used:
 #
-# \L and \U are even more fun, in that they force case until they run out of
-# string to modify, or \E.
+# "l\l\u\u\uAdy" --> "lady"
 #
-# So, we get output like this:
+# Fairly straightforward, you say. And you'd be right.
+# But, I hear you asking, what about case-shifting an arbitrary substring?
 #
-# "\Lady $bug ${Lady}\E" --> "{lc('ady ' ~ $bug ~ ' ' ~ $Lady)}"
+# That's where the \L..\E and \U..\E operators come in.
+# (There's also \Q..\E, but let's jump off that bridge when we come to it.)
 #
-# The parser assumes that anything other than '$' after a \l &c is a single
-# character that the programmer wanted to case-shift.
+# Here's how they look when applied singly:
 #
-# Thankfully only \l$foo is legal, \l@foo and \l%foo were never implemented.
-# That throws a syntax error, but the parser ignores that.
+# "l\LADY\E" --> "lady"
+# $x="Ady"; "l-\lLa-\lla-l\L$x\E" --> "l-la-la-lady"
+#
+# The Perl6 equivalents look like this:
+#
+# "l{lcfirst('ADY')}" --> "lady"
+# $x="Ady"; "l-{lcfirst('L')}a-{lcfirst('L')}a-l{lcfirst($x)}" -->
+#           "l-la-la-lady"
+#
+# It gets better. They nest:
+#
+# "l\lAdy l\LADY\E l-\lL-\lL-LADY\E\E" --> "lady lady l-l-lady"
+#
+# Which translates to this:
+#
+# "l{lcfirst('A')}dy l{lc('ADY')} l-{lc('L-' ~ lc('L-LADY'))}"
+#
+# And how do they interact with \l and \u? They nullify them:
+#
+# "\L WHISKY \uTANGO FOXTROT\E" --> "whisky tango foxtrot"
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my $old_content = $elem->content;
-    my $new_content;
-    my ( $expression, $remainder );
+    my $old_content = $elem->string;
+    my ( $new_content, $token );
 
-    # The string has a \l, \u, \L or \U operator in it somewhere.
-    # For the moment, *IGNORE* \${...} and @{[...]} "operators."
+    # Strings of \l\l\u\u modifiers are equivalent to the first modifier.
+    # Remove these before splitting, it simplifies the algorithm.
     #
-    # Everything up to the first \\ is just static text, so that immediately
-    # gets pushed onto the waste string.
+    # \L\L\U\U modifiers are syntax errors, but remove them anyway.
     #
-    while ( $old_content and
-            $old_content =~ s{ ^ ([^\\]+) }{}x ) {
-        $new_content .= $1;
+    $old_content =~ s/(\\[lu])(?:\\[lu])+/$1/g;
+    $old_content =~ s/(\\[LU])(?:\\[LU])+/$1/g;
 
-        # The string now starts with some sort of \\ character.
-        # First, check to see if it's a \l or \u operator.
+    my ( $start_delim ) = $elem->content =~ m{ ^ ( " | qq[^ ] | qq[ ](.) ) }x;
+    my ( $start_escape ) = substr( $start_delim, -1, 1 );
+    my ( $end_delim ) = $elem->content =~ m{ ( . ) $ }x;
+    my ( $end_escape ) = $end_delim;
+
+    #
+    # Because Perl6 is 'turtles all the way down" so to speak, anything *inside*
+    # a Perl6 codeblock is a full Perl6 expression.
+    #
+    # So, while "foo{'x'+'y'}bar" is a legitimate expression,
+    # so is "foo{"x"+"y"}bar", even *with* the "" inside braces.
+    #
+
+    # Performing a bit of evil in the split() expression here.
+    # Specifically, splitting on either '\lX' where X is the next character,
+    # or '\L' without the next character.
+    #
+    # This is because \lfoo only affects the next character, and we can
+    # rewrite just this one character in the expression.
+    #
+    my $depth = 0;
+    for my $v ( split /(\\[lu].|\\[LUE])/, $old_content ) {
+
+        # Skip \E if we're outside a \[LU]..\E block.
+        next if $v eq '\E' and $depth == 0;
+
+        # Skip \[lu] if we're *inside* a \[LU]..\E block.
         #
-        if ( $old_content =~ s{ ^ \\([lu]) }{}x ) {
-            my $case = $1;
+        next if $v =~ /\\[lu]/ and $depth > 0;
 
-            # Ignore further \l, \u, and even \E because there's no \[LU]
-            # to start.
-            #
-            $old_content =~ s{ ^ (\\[luE])+ }{}x;
-
-            # \l and \u on a scalar act as 'lcfirst'/'ucfirst'.
-            #
-            # So, capture the variable name (whether '$foo' or '${foo}'),
-            # enclose it in a Perl6 block and apply 'lcfirst' or 'ucfirst'
-            # as needed.
-            #
-            if ( $old_content =~ s{ ^ \$(\w+) }{}x or
-                 $old_content =~ s{ ^ \$\{(\w+)\} }{}x ) {
-                my $variable = $1;
-                $new_content .= qq{{${case}cfirst(\$$variable)}};
-            }
-
-            # \l and \u on arrays and hashes are thankfully illegal, so:
-            #
-            # \l on *any* other character than '$' is treated as case-shifting
-            # that character.
-            #
-            elsif ( $old_content =~ s{ ^ (.) }{}x ) {
-                my $character = $1;
-                $character = q{\\'} if $character eq "'";
-                $new_content .= qq{{${case}cfirst('$character')}};
-            }
+        if ( $v =~ /^\\l(.)/ ) {
+            $new_content .= qq{{lcfirst(${start_delim}$1${end_delim})}};
         }
-
-        #
-        # \L, \U case-shift everything until the first \E, or EOS
-        # 
-        elsif ( $old_content =~ s{ ^ \\([LU]) (.+?)( \\E | $ ) }{}x ) {
-            my $case = lc($1);
-            my $shifted = $2;
-
-            # Filter out any other \l, \u, \L, \U operators
-            #
-            $shifted =~ s{ ^ (\\[luLU])+ }{}xg;
-
-            my $perlified;
-
-            while ( $shifted =~ s{ ^ ([^\$]+) }{}x ) {
-                $perlified .= qq{'$1'};
- 
-                if ( $shifted =~ s{ ^ \$(\w+) }{}x ) {
-                    $perlified .= qq{ ~ \$$1};
-                }
-                elsif ( $shifted =~ s{ ^ \$\{(\w+)\} }{}x ) {
-                    $perlified .= qq{ ~ \$$1};
-                }
-            }
-
-            $new_content .= qq{{${case}c($perlified)}};
+        elsif ( $v =~ /\\u(.)/ ) {
+            $new_content .= qq{{ucfirst(${start_delim}$1${end_delim})}};
         }
-
-        # Pass other escapes through.
-        #
-        elsif ( $old_content =~ s{ ^ \\(.) }{}x ) {
-            $new_content .= qq{\\$1};
+        elsif ( $v eq '\\L' ) {
+            if ( $depth == 0 ) {
+                $new_content .= '{' if $depth == 0;
+            }
+            else {
+                $new_content .= '~' if $new_content !~ /\($/;
+            }
+            $new_content .= 'lc(';
+            $depth++;
+        }
+        elsif ( $v eq '\\U' ) {
+            if ( $depth == 0 ) {
+                $new_content .= '{' if $depth == 0;
+            }
+            else {
+                $new_content .= '~' if $new_content !~ /\($/;
+            }
+            $new_content .= 'uc(';
+            $depth++;
+        }
+        elsif ( $v eq '\\E' ) {
+            $new_content .= ')';
+            $depth--;
+            $new_content .= '}' if $depth == 0;
+        }
+        elsif ( $v =~ /./ and $depth == 0 ) {
+            $new_content .= $v;
+        }
+        elsif ( $v =~ /./ ) {
+            $v =~ s{$start_escape}{\\$start_escape}g;
+            $v =~ s{$end_escape}{\\$end_escape}g;
+            $new_content .= '~' if $depth > 0 and $new_content =~ /\)$/;
+            $new_content .= qq{${start_delim}$v${end_delim}};
         }
     }
 
-    $elem->set_content( $new_content );
+    $new_content .= ')}' while $depth-- > 0;
+
+    $elem->set_content(  $start_delim . $new_content . $end_delim );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -164,7 +185,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Strings::FormatInterpolatedStrings - Format C<${x}> correctly
+Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolateCase - Format "\Lfoo\E" and friends
 
 
 =head1 AFFILIATION
@@ -175,15 +196,15 @@ distribution.
 
 =head1 DESCRIPTION
 
-In Perl6, contents inside {} are now executable code. That means that inside interpolated strings, C<"${x}"> will be parsed as C<"${x()}"> and throw an exception if C<x()> is not defined. As such, this transforms C<"${x}"> into C<"{$x}">:
+This one takes a bit of explanation. In Perl5 there are some fairly obscure "modifiers" you can use to change case in strings while they're inline. For instance, C<print "In \Uheidelberg"> will print C<"In Heidelberg">, shifting the case of 'H'.
 
-  "The $x bit"      --> "The $x bit"
-  "The $x-30 bit"   --> "The $x\-30 bit"
-  "\N{FOO}"         --> "\c{FOO}"
-  "The \l$x bit"    --> "The {lc $x} bit"
-  "The \v bit"      --> "The  bit"
-  "The ${x}rd bit"  --> "The {$x}rd bit"
-  "The \${x}rd bit" --> "The \$\{x\}rd bit"
+In Perl6, C<{}> delimits a new block wherever it occurs, even inside strings. As a consequence, C<"foo{$x+1}"> evaluates correctly, B<as does> C<"foo{print "foo"}">, even though the quoting would ordinarily seem to mean the statement parses as C<"foo{print ">, C<foo>, C<"}">.
+
+So, we take advantage of that in the translation, like so:
+
+  "foo" --> "foo" # No change.
+  "\lfoo" --> "{lcfirst("f")}oo" # Yes, Virginia, it really *does* compile.
+  "\LLOWER\Uupper\Enormal\E" -->  "{lc("LOWER"~uc("upper")~"normal")}"
 
 Transforms only interpolated strings outside of comments, heredocs and POD.
 

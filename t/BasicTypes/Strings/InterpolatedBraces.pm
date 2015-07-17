@@ -12,7 +12,7 @@
 "\N{LATIN CAPITAL LETTER X}";
 #-->
 "\c[LATIN CAPITAL LETTER X]";
-## name transform
+## name interpolation of bracketed variables
 ## parms {}
 ## failures 0
 ## cut
@@ -21,3 +21,14 @@
 #-->
 "{$x}";
 "\$\{x\}";
+## name uninterpolated braces
+## parms {}
+## failures 0
+## cut
+"{x";
+"x}";
+"${x";
+#-->
+"\{x";
+"x\}";
+"$\{x";
