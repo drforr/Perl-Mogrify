@@ -1,0 +1,17 @@
+## name Replace undef in general
+## parms {}
+## failures 0
+## cut
+undef = 1;
+$x = undef;
+say undef;
+foo(undef);
+foo 1,undef;
+undef(3);
+#-->
+undef = 1;
+$x = Any;
+say Any;
+foo(Any);
+foo 1,Any;
+undef(3);

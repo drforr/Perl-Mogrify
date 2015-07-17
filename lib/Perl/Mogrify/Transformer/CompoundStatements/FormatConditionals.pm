@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::References::FormatDereferences;
+package Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals;
 
 use 5.006001;
 use strict;
@@ -13,9 +13,21 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform %x{a} to %x{'a'}};
+Readonly::Scalar my $DESC => q{Transform 'if()' to 'if ()'};
 Readonly::Scalar my $EXPL =>
-    q{Perl6 assumes that braces are code blocks, so any content must be compilable};
+    q{if(), elsif() and unless() need whitespace in order to not be interpreted as function calls};
+
+#-----------------------------------------------------------------------------
+
+my %map = (
+    if      => 'if',
+    elsif   => 'elsif',
+    unless  => 'unless',
+    while   => 'while',
+    until   => 'until',
+    for     => 'for',
+    foreach => 'for',
+);
 
 #-----------------------------------------------------------------------------
 
@@ -24,10 +36,9 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        $_[1]->isa('PPI::Token::Cast') and
-        $_[1]->next_sibling->isa('PPI::Structure::Block') and
-        $_[1]->next_sibling->start->content eq '{' and
-        $_[1]->next_sibling->finish->content eq '}'
+        $_[1]->isa('PPI::Statement::Compound') and
+        exists $map{$_[1]->first_element->content} and 
+        $_[1]->first_element->snext_sibling
     }
 }
 
@@ -35,19 +46,18 @@ sub applies_to           {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-    my $next = $elem->next_sibling;
 
-    $next->start->set_content('(');
-    $next->finish->set_content(')');
-    if ( $elem->content eq '$#' ) {
-        $elem->set_content('@');
-        $elem->snext_sibling->insert_after(
-            PPI::Token::Word->new('end')
-        );
-        $elem->snext_sibling->insert_after(
-            PPI::Token::Operator->new('.')
-        );
-    }
+    my $token = $elem->first_element;
+
+    my $old_content = $token->content;
+
+    $token->set_content($map{$old_content});
+
+    return if $token->next_sibling->isa('PPI::Token::Whitespace');
+
+    my $space = PPI::Token::Whitespace->new();
+    $space->set_content(' ');
+    $token->insert_after( $space );
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -62,7 +72,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::References::FormatDereferences - Transform %{$foo} to %($foo)
+Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals - Format if(), elsif(), unless()
 
 
 =head1 AFFILIATION
@@ -73,14 +83,10 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 dereferencing uses C<%()> and C<@()> because C<()> would be a code block otherwise:
+While Perl6 conditionals allow parentheses, they need whitespace between the bareword C<if> and the opening parenthesis to avoid being interpreted as a function call:
 
-  %{$foo} --> %($foo)
-  %$foo   --> %$foo
-  @{$foo} --> @($foo)
-  @$foo   --> @$foo
-
-Transforms dereferences outside of comments, heredocs, strings and POD.
+  if(1) { } --> if (1) { }
+  if (1) { } --> if (1) { }
 
 =head1 CONFIGURATION
 

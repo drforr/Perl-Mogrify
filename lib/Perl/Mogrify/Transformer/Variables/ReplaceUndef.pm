@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::References::FormatDereferences;
+package Perl::Mogrify::Transformer::Variables::ReplaceUndef;
 
 use 5.006001;
 use strict;
@@ -6,6 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_word };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -13,21 +14,30 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform %x{a} to %x{'a'}};
+Readonly::Scalar my $DESC =>
+    q{'undef' no longer exists, 'Any' is a reasonable approximation};
 Readonly::Scalar my $EXPL =>
-    q{Perl6 assumes that braces are code blocks, so any content must be compilable};
+    q{'undef' no longer exists, 'Any' is a reasonable approximation};
+
+#-----------------------------------------------------------------------------
+
+my %map = (
+    undef => 1
+);
 
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub default_severity     { return $SEVERITY_HIGHEST  }
+sub default_themes       { return qw(core bugs)      }
 sub applies_to           {
     return sub {
-        $_[1]->isa('PPI::Token::Cast') and
-        $_[1]->next_sibling->isa('PPI::Structure::Block') and
-        $_[1]->next_sibling->start->content eq '{' and
-        $_[1]->next_sibling->finish->content eq '}'
+        is_ppi_token_word($_[1], %map) and
+        ( not ( $_[1]->snext_sibling and
+                $_[1]->snext_sibling->isa('PPI::Structure::List') ) ) and
+        ( not ( $_[1]->snext_sibling and
+                $_[1]->snext_sibling->isa('PPI::Token::Operator') and
+                $_[1]->snext_sibling->content eq '=' ) )
     }
 }
 
@@ -35,19 +45,8 @@ sub applies_to           {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-    my $next = $elem->next_sibling;
 
-    $next->start->set_content('(');
-    $next->finish->set_content(')');
-    if ( $elem->content eq '$#' ) {
-        $elem->set_content('@');
-        $elem->snext_sibling->insert_after(
-            PPI::Token::Word->new('end')
-        );
-        $elem->snext_sibling->insert_after(
-            PPI::Token::Operator->new('.')
-        );
-    }
+    $elem->set_content('Any');
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
@@ -62,7 +61,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::References::FormatDereferences - Transform %{$foo} to %($foo)
+Perl::Mogrify::Transformer::Variables::FormatSigils - Give variables their proper sigils.
 
 
 =head1 AFFILIATION
@@ -73,14 +72,14 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 dereferencing uses C<%()> and C<@()> because C<()> would be a code block otherwise:
+Perl6 uses the sigil type as the data type now, and this is probably the most common operation people will want to do to their file. This transformer doesn't alter hash keys or array indices, those are left to transformers down the line:
 
-  %{$foo} --> %($foo)
-  %$foo   --> %$foo
-  @{$foo} --> @($foo)
-  @$foo   --> @$foo
+  @foo = () --> @foo = ()
+  $foo[1] --> @foo[1]
+  %foo = () --> %foo = ()
+  $foo{a} --> %foo{a} # Not %foo<a> or %foo{'a'} yet.
 
-Transforms dereferences outside of comments, heredocs, strings and POD.
+Transforms variables outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 
