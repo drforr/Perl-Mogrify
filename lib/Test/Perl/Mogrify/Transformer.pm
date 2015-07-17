@@ -113,6 +113,14 @@ sub _filter_unwanted_subtests {
 
 #-----------------------------------------------------------------------------
 
+sub __results_string {
+    my ($subtest) = @_;
+
+    join( "\n", ( map { ">$_<" } @{ $subtest->{original} } ), '====??====>',
+                ( map { ">$_<" } @{ $subtest->{sample} } ), '====!!====>',
+                ( map { ">$_<" } @{ $subtest->{transformed} } ) )
+}
+
 sub __is_deeply {
     my ($policy, $subtest) = @_;
 
@@ -130,9 +138,7 @@ sub __is_deeply {
             "Output begins to differ at line " .
             ($first_different_line + 1) .
             ":\n" .
-            join( "\n", @{ $subtest->{original} }, '====??====>',
-                        @{ $subtest->{sample} }, '====!!====>',
-                        @{ $subtest->{transformed} } )
+            __results_string($subtest)
         );
         $TEST->diag( "Error: $!" );
         $num_errors++;
@@ -141,18 +147,14 @@ sub __is_deeply {
         warn "Error was [$@]\n" if $@;
         $TEST->diag(
             "Transformed file missing lines from original:\n".
-            join( "\n", @{ $subtest->{original} }, '====??====>',
-                        @{ $subtest->{sample} }, '====!!====>',
-                        @{ $subtest->{transformed} } )
+            __results_string($subtest)
         );
         $num_errors++;
     }
     elsif ( $#{ $subtest->{sample} } < $#{ $subtest->{transformed} } ) {
         $TEST->diag(
             "Transformed file has more lines than original:\n".
-            join( "\n", @{ $subtest->{original} }, '====??====>',
-                        @{ $subtest->{sample} }, '====!!====>',
-                        @{ $subtest->{transformed} } )
+            __results_string($subtest)
         );
         $num_errors++;
     }
