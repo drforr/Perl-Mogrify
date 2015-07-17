@@ -9,7 +9,7 @@ use Carp qw< confess >;
 use File::Spec;
 use List::MoreUtils qw(any);
 
-use Perl::Mogrify::PolicyFactory ( -test => 1 );
+use Perl::Mogrify::TransformerFactory ( -test => 1 );
 use Perl::Mogrify::TestUtils qw{ bundled_policy_names };
 
 use Test::More;
@@ -43,7 +43,7 @@ if (open my ($fh), '<', $summary_file) {
     }
 
     my $profile = Perl::Mogrify::UserProfile->new();
-    my $factory = Perl::Mogrify::PolicyFactory->new( -profile => $profile );
+    my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
     my %found_transformers = map { ref $_ => $_ } $factory->create_all_transformers();
 
     my %descriptions = $content =~ m/^=head2 [ ]+ L<[\w:]+[|]([\w:]+)>\n\n([^\n]+)/gxms;

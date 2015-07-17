@@ -120,11 +120,14 @@ provides:
   Perl::Mogrify::Transformer::BasicTypes::Strings::FormatHereDocs:
     file: lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatHereDocs.pm
     version: '0.01'
-  Perl::Mogrify::Transformer::BasicTypes::Strings::FormatInterpolatedStrings:
-    file: lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatInterpolatedStrings.pm
-    version: '0.01'
   Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings:
     file: lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatShellStrings.pm
+    version: '0.01'
+  Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces:
+    file: lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedBraces.pm
+    version: '0.01'
+  Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedCase:
+    file: lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedCase.pm
     version: '0.01'
   Perl::Mogrify::Transformer::FormatBuiltins:
     file: lib/Perl/Mogrify/Transformer/FormatBuiltins.pm
@@ -138,17 +141,14 @@ provides:
   Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals:
     file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatConditionals.pm
     version: '0.01'
-  Perl::Mogrify::Transformer::CompoundStatements::FormatWhens:
-    file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatWhens.pm
-    version: '0.01'
   Perl::Mogrify::Transformer::CompoundStatements/FormatLoops:
     file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatLoops.pm
     version: '0.01'
   Perl::Mogrify::Transformer::CompoundStatements::FormatUntils:
     file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatUntils.pm
     version: '0.01'
-  Perl::Mogrify::Transformer::CompoundStatements::FormatGivens:
-    file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatGivens.pm
+  Perl::Mogrify::Transformer::CompoundStatements::FormatGivenWhens:
+    file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatGivenWhens.pm
     version: '0.01'
   Perl::Mogrify::Transformer::CompoundStatements::FormatMapGreps:
     file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatMapGreps.pm

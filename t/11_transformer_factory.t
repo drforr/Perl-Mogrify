@@ -23,7 +23,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 {
-    my $policy_name = 'Perl::Mogrify::Transformer::Modules::ProhibitEvilModules';
+    my $policy_name = 'Perl::Mogrify::Transformer::Packages::FormatPackageUsages';
     my $params = {severity => 2, set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
@@ -44,7 +44,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 # Using short module name.
 {
-    my $policy_name = 'Variables::ProhibitPunctuationVars';
+    my $policy_name = 'Variables::ReplaceUndef';
     my $params = {set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
@@ -84,7 +84,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     # Try using a bogus severity level
-    my $policy_name = 'Modules::RequireVersionVar';
+    my $policy_name = 'Packages::FormatPackageUsages';
     my $policy_params = {severity => 'bogus'};
     eval{ $pf->create_policy( -name => $policy_name, -params => $policy_params)};
     like(

@@ -54,11 +54,23 @@ Use C<<:8<1234567>>> instead of C<01234567>.
 
 [Mandatory]
 
-=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::FormatInterpolatedStrings>
+=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::FormatHereDocs>
+
+[Mandatory]
+
+=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::FormatRegexp>
 
 [Mandatory]
 
 =head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings>
+
+[Mandatory]
+
+=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces>
+
+[Mandatory]
+
+=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedCase>
 
 [Mandatory]
 
@@ -90,7 +102,7 @@ Use C<<:8<1234567>>> instead of C<01234567>.
 
 [Mandatory]
 
-=head2 L<Perl::Mogrify::Transformer::CompoundStatements::FormatGivens>
+=head2 L<Perl::Mogrify::Transformer::CompoundStatements::FormatGivenWhens>
 
 [Mandatory]
 

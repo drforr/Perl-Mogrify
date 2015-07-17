@@ -220,12 +220,24 @@
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatHereDocs.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes/Strings/FormatInterpolatedStrings" : {
-         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatInterpolatedStrings.pm",
+      "Perl::Mogrify::Transformer::BasicTypes/Strings/FormatHereDocs" : {
+         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatHereDocs.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings" : {
-         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatShellStrings.pm",
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::FormatRegexp" : {
+         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatRegexp.pm",
+         "version" : "0.01"
+      },
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellString" : {
+         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatShellString.pm",
+         "version" : "0.01"
+      },
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces" : {
+         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedBraces.pm",
+         "version" : "0.01"
+      },
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedCase" : {
+         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedCase.pm",
          "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::FormatBuiltins" : {
@@ -244,10 +256,6 @@
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatConditionals.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements::FormatWhens" : {
-         "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatWhens.pm",
-         "version" : "0.01"
-      },
       "Perl::Mogrify::Transformer::CompoundStatements::FormatLoops" : {
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatLoops.pm",
          "version" : "0.01"
@@ -256,8 +264,8 @@
          "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatUntils.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::CompoundStatements::FormatGivens" : {
-         "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatGivens.pm",
+      "Perl::Mogrify::Transformer::CompoundStatements::FormatGivenWhens" : {
+         "file" : "lib/Perl/Mogrify/Transformer/CompoundStatements/FormatGivenWhens.pm",
          "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::CompoundStatements::FormatMapGreps" : {

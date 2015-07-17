@@ -17,10 +17,6 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-use Test::Perl::Mogrify;
-
-#-----------------------------------------------------------------------------
-
 # Set up PPI caching for speed (used primarily during development)
 
 if ( $ENV{PERL_MOGRIFY_CACHE} ) {

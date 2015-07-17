@@ -17,7 +17,7 @@
 # match one of the patterns.  To specify multiple patterns, separate them
 # with whitespace.  Do not put quotes around anything.
 
-exclude = Documentation Naming
+exclude = Array Variables
 
 #-----------------------------------------------------------------------------
 # include: Directs Perl::Mogrify to always apply Policies with names that
@@ -139,8 +139,8 @@ program-extensions =
 # will never be applied unless you use the "-include" option to apply
 # it explicitly.
 
-[-NamingConventions::Capitalization]
-[-TestingAndDebugging::RequireUseWarnings]
+[-Arrays::FormatArrayQws]
+[-BasicTypes::Strings::FormatHereDocs]
 
 #-----------------------------------------------------------------------------
 # If you agree with a Transformer, but feel that it's severity level is not
@@ -148,13 +148,13 @@ program-extensions =
 # defined this should be an integer from 1 to 5, where 5 is the
 # highest severity.
 
-[BuiltinFunctions::RequireBlockGrep]
+[Builtins::FormatPrint]
 severity = 2
 
-[CodeLayout::ProhibitHardTabs]
+[CompoundStatements::FormatConditionals]
 severity = 1
 
-[ClassHierarchies::ProhibitAutoloading]
+[Files::FormatScript]
 severity = 5
 
 #-----------------------------------------------------------------------------
@@ -163,11 +163,11 @@ severity = 5
 # them to any Transformer.  If defined, this should be a string of
 # whitespace-delimited words.
 
-[RegularExpressions::RequireExtendedFormatting]
+[Operators::AddWhitespace]
 add_themes = client_foo
 severity   = 3
 
-[RegularExpressions::RequireExtendedFormatting]
+[Packages::FormatPackageDeclarations]
 add_themes = client_foo client_bar
 severity   = 3
 
@@ -177,11 +177,11 @@ severity   = 3
 # POD for the appropriate Transformer for a complete discussion of its
 # configuration parameters.
 
-[ControlStructures::ProhibitPostfixControls]
+[PostfixExpressions::AddWhitespace]
 allow    = for if
 severity = 4
 
-[Documentation::RequirePodSections]
+[Pragmas::FormatPragmas]
 lib_sections = NAME | SYNOPSIS | METHODS | AUTHOR
 add_themes = my_favorites
 severity   = 4
@@ -193,9 +193,9 @@ severity   = 4
 # Policies.  So just create blocks for any other Policies that you
 # want to use.
 
-[ValuesAndExpressions::ProhibitInterpolationOfLiterals]
-[ValuesAndExpressions::ProhibitLeadingZeros]
-[InputOutput::ProhibitBarewordFileHandles]
-[Miscellanea::ProhibitTies]
+[Packages::FormatPackageDeclarations]
+[Packages::FormatPackageUsages]
+[Regexes::SwapModifiers]
+[Subroutines::RemovePrototypes]
 
 

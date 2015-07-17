@@ -57,7 +57,7 @@ END_PERL
 #-----------------------------------------------------------------------------
 
 # Just don't get involved with Perl::Tidy.
-my $profile = { '-CodeLayout::RequireTidyCode' => {} };
+my $profile = { '-Arrays::FormatArrayQws' => {} };
 my $mogrify =
     Perl::Mogrify->new(
         -severity => 1,

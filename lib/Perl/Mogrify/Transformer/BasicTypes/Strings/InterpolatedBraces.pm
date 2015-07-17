@@ -83,7 +83,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Strings::FormatInterpolatedStrings - Format C<${x}> correctly
+Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces - Format C<${x}> correctly
 
 
 =head1 AFFILIATION

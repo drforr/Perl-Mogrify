@@ -5,18 +5,18 @@ verbose = %f: %m at line %l, column %c.  %e.  (Severity: %s, %p)\n
 
 #-----------------------------------------------------------------------------
 
-[BuiltinFunctions::ProhibitStringyEval]
+[Arrays::FormatArrayQws]
 allow_includes = 1
 
-[CodeLayout::ProhibitQuotedWordLists]
+[BasicTypes::Strings::FormatRegexp]
 strict = 1
 
-[CodeLayout::ProhibitHardTabs]
+[CompoundStatements::FormatLoops]
 allow_leading_tabs = 0
 
-[-CodeLayout::RequireTidyCode]
+[-CompoundStatements::FormatMapGreps]
 
-[ControlStructures::ProhibitPostfixControls]
+[Files::FormatScript]
 flowcontrol = warn die carp croak cluck confess goto exit plan skip
 
 # None of our tests contain real POD, but POD::Spell gets confused by the code

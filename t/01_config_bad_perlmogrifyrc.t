@@ -52,7 +52,7 @@ Readonly::Scalar my $NO_ENABLED_POLICIES_MESSAGE =>
 Readonly::Scalar my $INVALID_PARAMETER_MESSAGE =>
     q<The BuiltinFunctions::RequireBlockGrep policy doesn't take a "no_such_parameter" option.>;
 Readonly::Scalar my $REQUIRE_POD_SECTIONS_SOURCE_MESSAGE_PREFIX =>
-    q<The value for the Documentation::RequirePodSections "source" option ("Zen_and_the_Art_of_Motorcycle_Maintenance") is not one of the allowed values: >;
+    q<The value for the Variables::FormatHashKeys "source" option ("Zen_and_the_Art_of_Motorcycle_Maintenance") is not one of the allowed values: >;
 
 eval {
     Perl::Mogrify->new( '-profile' => $PROFILE );
@@ -126,11 +126,11 @@ is(
 );
 
 # Test that we get an exception for bad individual policy configuration.
-# The selection of RequirePodSections is arbitrary.
+# The selection of FormatHashKeys is arbitrary.
 is(
     ( scalar grep { is_require_pod_sections_source_exception($_) } @exceptions ),
     1,
-    'should have received an invalid source exception for RequirePodSections',
+    'should have received an invalid source exception for FormatHashKeys',
 );
 
 sub generate_global_message_regex {

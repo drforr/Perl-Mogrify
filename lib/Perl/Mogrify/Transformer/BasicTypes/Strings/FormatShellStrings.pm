@@ -58,7 +58,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Strings::FormatInterpolatedStrings - Format C<${x}> correctly
+Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings - Format qx{}
 
 
 =head1 AFFILIATION

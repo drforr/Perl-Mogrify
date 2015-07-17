@@ -21,13 +21,13 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 # Configure Mogrify not to load certain transformers.  This
 # just makes it a little easier to create test cases
 my $profile = {
-    '-CodeLayout::RequireTidyCode'                               => {},
-    '-Documentation::PodSpelling'                                => {},
-    '-ErrorHandling::RequireCheckingReturnValueOfEval'           => {},
-    '-Miscellanea::ProhibitUnrestrictedNoCritic'                 => {},
-    '-Miscellanea::ProhibitUselessNoCritic'                      => {},
-    '-ValuesAndExpressions::ProhibitMagicNumbers'                => {},
-    '-Variables::ProhibitReusedNames'                            => {},
+    '-Arrays::FormatArrayQws'            => {},
+    '-BasicTypes::Strings::FormatRegexp' => {},
+    '-Builtins::FormatPrint'             => {},
+    '-CompoundStatements::AddWhitespace' => {},
+    '-Files::FormatScript'               => {},
+    '-Operators::FormatUnaryOperators'   => {},
+    '-Variables::ReplaceUndef'           => {},
 };
 
 my $code = undef;

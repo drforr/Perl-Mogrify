@@ -59,7 +59,8 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 # fewer and fewer transformers.  The exact number will fluctuate
 # as we introduce new polices and/or change their severity.
 
-{
+SKIP: {
+    skip "For now all transformers are the same 'severity'", 4;
     my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my $configuration =
@@ -78,7 +79,8 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 #-----------------------------------------------------------------------------
 # Same tests as above, but using a generated config
 
-{
+SKIP: {
+    skip "For now all transformers are the same 'severity'", 4;
     my %profile = map { $_ => {} } @native_policy_names;
     my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
@@ -97,7 +99,8 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 
 #-----------------------------------------------------------------------------
 
-{
+SKIP: {
+    skip "For now all transformers are the same 'severity'", 1;
     my $configuration =
         Perl::Mogrify::Config->new(
             -severity   => $SEVERITY_LOWEST,
@@ -124,38 +127,6 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 
 }
 
-
-#-----------------------------------------------------------------------------
-# Test all-off config w/ various severity levels.  In this case, the
-# severity level should not affect the number of polices because we've
-# turned them all off in the profile.
-
-#{
-#    my %profile = map { '-' . $_ => {} } @native_policy_names;
-#    for my $severity (undef, $SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
-#        my $severity_string = $severity ? $severity : '<undef>';
-#        my %pc_args = (
-#            -profile    => \%profile,
-#            -severity   => $severity,
-#            -theme      => 'core',
-#        );
-#
-#        eval {
-#            Perl::Mogrify::Config->new( %pc_args )->transformers();
-#        };
-#        my $exception = Perl::Mogrify::Exception::AggregateConfiguration->caught();
-#        ok(
-#            defined $exception,
-#            "got exception when no transformers were enabled at severity $severity_string.",
-#        );
-#        like(
-#            $exception,
-#            qr<There are no enabled transformers>,
-#            "got correct exception message when no transformers were enabled at severity $severity_string.",
-#        );
-#    }
-#}
-
 #-----------------------------------------------------------------------------
 # Test config w/ multiple severity levels.  In this profile, we
 # define an arbitrary severity for each Transformer so that severity
@@ -163,7 +134,8 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 # are in the 1st severity level.
 
 
-{
+SKIP: {
+    skip "For now all transformers are the same 'severity'", 1;
     my %profile = ();
     my $severity = $SEVERITY_HIGHEST;
     for my $index ( 0 .. $#names_of_transformers_willing_to_work ) {
@@ -208,7 +180,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
     my $profile = File::Spec->catfile( $examples_dir, 'perlmogrifyrc' );
     my $c = Perl::Mogrify::Config->new( -profile => $profile );
 
-    is_deeply([$c->exclude()], [ qw(Documentation Naming) ],
+    is_deeply([$c->exclude()], [ qw(Array Variables) ],
               'user default exclude from file' );
 
     is_deeply([$c->include()], [ qw(CodeLayout Modules) ],
@@ -243,7 +215,8 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 #Test pattern matching
 
 
-{
+SKIP: {
+    skip "For now all transformers are the same 'severity'", 1;
     # In this test, we'll use a custom profile to deactivate some
     # transformers, and then use the -include option to re-activate them.  So
     # the net result is that we should still end up with the all the

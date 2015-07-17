@@ -11,17 +11,13 @@ use English qw< -no_match_vars >;
 
 use File::Spec qw<>;
 
-use Perl::Mogrify::PolicyFactory ( '-test' => 1 );
+use Perl::Mogrify::TransformerFactory ( '-test' => 1 );
 
 use Test::More;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
-use Test::Perl::Mogrify;
 
 #-----------------------------------------------------------------------------
 

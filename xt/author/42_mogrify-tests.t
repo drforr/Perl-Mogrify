@@ -12,9 +12,9 @@ use File::Spec qw();
 use Perl::Mogrify::Utils qw{ :characters };
 use Perl::Mogrify::TestUtils qw{ starting_points_including_examples };
 
-# Note: "use PolicyFactory" *must* appear after "use TestUtils" for the
+# Note: "use TransformerFactory" *must* appear after "use TestUtils" for the
 # -extra-test-transformers option to work.
-use Perl::Mogrify::PolicyFactory (
+use Perl::Mogrify::TransformerFactory (
     '-test' => 1,
     '-extra-test-transformers' => [ qw{ ErrorHandling::RequireUseOfExceptions } ],
 );
@@ -24,10 +24,6 @@ use Test::More;
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
-use Test::Perl::Mogrify;
 
 #-----------------------------------------------------------------------------
 

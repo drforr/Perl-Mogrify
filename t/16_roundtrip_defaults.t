@@ -34,7 +34,7 @@ $policy_test_count = 4 * @default_transformers;
 foreach my $policy (@default_transformers) {
     if (
             $policy->parameter_metadata_available()
-        and not $policy->isa('Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode')
+        and not $policy->isa('Perl::Mogrify::Transformer::Arrays::FormatArrayQws')
     ) {
         $policy_test_count += scalar @{$policy->get_parameters()};
     }
@@ -246,7 +246,7 @@ SKIP: {
 
         if (
                 $default_policy->parameter_metadata_available()
-            and not $default_policy->isa('Perl::Mogrify::Transformer::CodeLayout::RequireTidyCode')
+            and not $default_policy->isa('Perl::Mogrify::Transformer::Arrays::FOrmatArrayQws')
         ) {
             # Encapsulation transformation alert!
             foreach my $parameter ( @{$default_policy->get_parameters()} ) {
