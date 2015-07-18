@@ -5,28 +5,32 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'BasicTypes::Integers::FormatHexLiterals' ]
-);
+transform_ok( 'BasicTypes::Integers::FormatHexLiterals', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: transform
+0x01;
+0x01 if 1;
+0x01 and 1;
+1 if 0x01;
+1 and 0x01;
+my $x = 0x01;
+0x01ef;
+0x010_ab;
+0x_010_ab;
+##-->
+:16<01>;
+:16<01> if 1;
+:16<01> and 1;
+1 if :16<01>;
+1 and :16<01>;
+my $x = :16<01>;
+:16<01ef>;
+:16<010_ab>;
+:16<010_ab>;

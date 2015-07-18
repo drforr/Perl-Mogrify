@@ -5,28 +5,35 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'Variables::FormatSpecialVariables' ]
-);
+transform_ok( 'Variables::FormatSpecialVariables', *DATA );
 
 #-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: transform
+## I'm not sure any special variables *didn't* get renamed...
+print STDOUT;
+print STDOUT if 1;
+print STDOUT and 1;
+1 if print STDOUT;
+1 and print STDOUT;
+print $`;
+print $&;
+print @+;
+print $1;
+##-->
+## I'm not sure any special variables *didn't* get renamed...
+print $*OUT;
+print $*OUT if 1;
+print $*OUT and 1;
+1 if print $*OUT;
+1 and print $*OUT;
+print $/.prematch;
+print ~$/;
+print (map {.from},$/[*]);
+print $0;

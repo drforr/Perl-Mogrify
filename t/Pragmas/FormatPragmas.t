@@ -5,28 +5,22 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'Pragmas::FormatPragmas' ]
-);
+transform_ok( 'Pragmas::FormatPragmas', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
+__DATA__
+## name: unchanged
+use strict;
+use warnings;
+use constant FOO => 1;
+use base qw( Foo );
+##-->
 
-1;
 
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+use constant FOO => 1;
+use base qw( Foo );

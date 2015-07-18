@@ -5,28 +5,98 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'CompoundStatements::FormatMapGreps' ]
-);
+transform_ok( 'CompoundStatements::FormatMapGreps', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: blocks in void
+map { $_++ } @x;
+map { $_++ } @x if 1;
+map { $_++ } @x and 1;
+1 if map { $_++ } @x;
+1 and map { $_++ } @x;
+map { $_++ } @x, @y;
+map { $_++ } ();
+grep { $_++ } @x;
+grep { $_++ } @x, @y;
+grep { $_++ } ();
+##-->
+map { $_++ }, @x;
+map { $_++ }, @x if 1;
+map { $_++ }, @x and 1;
+1 if map { $_++ }, @x;
+1 and map { $_++ }, @x;
+map { $_++ }, @x, @y;
+map { $_++ }, ();
+grep { $_++ }, @x;
+grep { $_++ }, @x, @y;
+grep { $_++ }, ();
+## name: blocks in expression
+my @y = map { $_++ } @x;
+my @y = map { $_++ } @x, @y;
+my @y = map { $_++ } ();
+my @y = grep { $_++ } @x;
+my @y = grep { $_++ } @x, @y;
+my @y = grep { $_++ } ();
+##-->
+my @y = map { $_++ }, @x;
+my @y = map { $_++ }, @x, @y;
+my @y = map { $_++ }, ();
+my @y = grep { $_++ }, @x;
+my @y = grep { $_++ }, @x, @y;
+my @y = grep { $_++ }, ();
+## name: compound blocks in void
+map { $_++, 1; 3 } @x;
+map { $_++, 1; 3 } @x, @y;
+map { $_++, 1; 3 } ();
+grep { $_++, 1; 3 } @x;
+grep { $_++, 1; 3 } @x, @y;
+grep { $_++, 1; 3 } ();
+##-->
+map { $_++, 1; 3 }, @x;
+map { $_++, 1; 3 }, @x, @y;
+map { $_++, 1; 3 }, ();
+grep { $_++, 1; 3 }, @x;
+grep { $_++, 1; 3 }, @x, @y;
+grep { $_++, 1; 3 }, ();
+## name: compound blocks in expression
+my @y = map { $_++, 1; 3 } @x;
+my @y = map { $_++, 1; 3 } @x, @y;
+my @y = map { $_++, 1; 3 } ();
+my @y = grep { $_++, 1; 3 } @x;
+my @y = grep { $_++, 1; 3 } @x, @y;
+my @y = grep { $_++, 1; 3 } ();
+##-->
+my @y = map { $_++, 1; 3 }, @x;
+my @y = map { $_++, 1; 3 }, @x, @y;
+my @y = map { $_++, 1; 3 }, ();
+my @y = grep { $_++, 1; 3 }, @x;
+my @y = grep { $_++, 1; 3 }, @x, @y;
+my @y = grep { $_++, 1; 3 }, ();
+## name: multiple expressions
+map { } grep { } @a;
+map { } grep { } ();
+##-->
+map { }, grep { }, @a;
+map { }, grep { }, ();
+## name: transform
+map /x/, @x;
+map /x/, @x, @y;
+map /x/, ();
+map /x/, (), ();
+grep /x/, @x;
+grep !$x, @x;
+grep !$x, ();
+##-->
+map {/x/}, @x;
+map {/x/}, @x, @y;
+map {/x/}, ();
+map {/x/}, (), ();
+grep {/x/}, @x;
+grep {!$x}, @x;
+grep {!$x}, ();

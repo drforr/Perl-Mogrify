@@ -5,28 +5,68 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'Variables::FormatSigils' ]
-);
+transform_ok( 'Variables::FormatSigils', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: empty assignment
+$a = '';
+@a = ( );
+%a = ( );
+##-->
+$a = '';
+@a = ( );
+%a = ( );
+## name: basic types
+$a = 'a';
+$a = [ 0 ];
+$a = [ 'a' ];
+$a [ 0 ] = 'a';
+$a [ 0 ] = 'a' if 1;
+$a [ 0 ] = 'a' and 1;
+1 if $a [ 0 ] = 'a';
+1 and $a [ 0 ] = 'a';
+$a { a } = 'a';
+$a { 'a' } = 'a';
+$a -> [ 0 ] = 'a';
+$a -> { a } = 'a';
+$a [ 0 ] = 'a';
+$a { a } = 'a';
+##-->
+$a = 'a';
+$a = [ 0 ];
+$a = [ 'a' ];
+@a [ 0 ] = 'a';
+@a [ 0 ] = 'a' if 1;
+@a [ 0 ] = 'a' and 1;
+1 if @a [ 0 ] = 'a';
+1 and @a [ 0 ] = 'a';
+%a { a } = 'a';
+%a { 'a' } = 'a';
+$a -> [ 0 ] = 'a';
+$a -> { a } = 'a';
+@a [ 0 ] = 'a';
+%a { a } = 'a';
+## name: references
+$a = [ 0 ];
+$a = [ 'a' ];
+$a -> [ 0 ] = 'a';
+$a -> { a } = 'a';
+##-->
+$a = [ 0 ];
+$a = [ 'a' ];
+$a -> [ 0 ] = 'a';
+$a -> { a } = 'a';
+## name: slices
+$a [ 0, 1 ] = ( 'a', 'b' );
+$a { 'a', 'b' } = ( 'a', 'b' );
+$a { qw( a b ) } = ( 'a', 'b' );
+##-->
+@a [ 0, 1 ] = ( 'a', 'b' );
+%a { 'a', 'b' } = ( 'a', 'b' );
+%a { qw( a b ) } = ( 'a', 'b' );

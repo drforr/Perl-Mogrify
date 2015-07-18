@@ -5,28 +5,30 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'BasicTypes::Strings::FormatShellStrings' ]
-);
+transform_ok( 'BasicTypes::Strings::FormatShellStrings', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: transform
+qx{};
+qx{} if 1;
+qx{} and 1;
+1 if qx{};
+1 and qx{};
+my $x = qx{};
+qx();
+my $x = qx();
+##-->
+qqx{};
+qqx{} if 1;
+qqx{} and 1;
+1 if qqx{};
+1 and qqx{};
+my $x = qqx{};
+qqx ();
+my $x = qqx ();

@@ -5,28 +5,32 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'BasicTypes::Integers::FormatOctalLiterals' ]
-);
+transform_ok( 'BasicTypes::Integers::FormatOctalLiterals', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: unchanged
+001;
+001 if 1;
+001 and 1;
+1 if 001;
+1 and 001;
+my $x= 001;
+00167;
+0010_10;
+0_010_10;
+##-->
+:8<01>;
+:8<01> if 1;
+:8<01> and 1;
+1 if :8<01>;
+1 and :8<01>;
+my $x= :8<01>;
+:8<0167>;
+:8<010_10>;
+:8<010_10>;

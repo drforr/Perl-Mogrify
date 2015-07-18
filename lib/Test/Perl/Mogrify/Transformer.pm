@@ -27,8 +27,8 @@ our $VERSION = '0.01';
 
 use Exporter 'import';
 
-Readonly::Array our @EXPORT_OK      => qw< all_transformers_ok >;
-Readonly::Hash  our %EXPORT_TAGS    => (all => \@EXPORT_OK);
+Readonly::Array our @EXPORT_OK   => qw< all_transformers_ok transform_ok >;
+Readonly::Hash  our %EXPORT_TAGS => (all => \@EXPORT_OK);
 
 #-----------------------------------------------------------------------------
 
@@ -38,6 +38,57 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 my $TEST = Test::Builder->new();
+
+#-----------------------------------------------------------------------------
+
+sub transform_ok {
+    my ($transformer, $fh) = @_;
+    my $subtests_with_extras =  subtests_in_tree( 't', 'include extras' );
+
+    my $subtests = [];
+    my ( @original, @sample );
+    my $in_sample;
+    for my $line (<$fh>) {
+        chomp $line;
+        if ( $line =~ /^## name: (.+)$/ ) {
+            $in_sample = undef;
+            push @{ $subtests }, {
+                name => $1,
+                failures => 0,#$args->{failures},
+                lineno   => 1,#$args->{lineno},
+                parms    => {},#$args->{parms},
+                original => [],
+                sample => [],
+            }
+        }
+        elsif ( $in_sample ) { push @{ $subtests->[-1]{sample} }, $line }
+        elsif ( $line eq '##-->' ) { $in_sample = 1 }
+        else { push @{ $subtests->[-1]{original} }, $line }
+    }
+
+    $TEST->plan( tests => 1 );
+    $TEST->note("Running tests for transformer: $transformer");
+
+    my ($full_policy_name, $method) =
+        ("Perl::Mogrify::Transformer::$transformer", 'transform');
+    my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
+    $TEST->ok( $full_policy_name->can($method), $can_ok_label );
+
+    for my $subtest ( @{ $subtests } ) {
+        my $todo = $subtest->{TODO};
+        if ($todo) { $TEST->todo_start( $todo ); }
+
+        my ($error, @transformations) = _run_subtest($transformer, $subtest);
+#        my ($ok, @diag)=
+#            _evaluate_test_results($subtest, $error, \@transformations);
+#        $TEST->ok( $ok, _create_test_name($transformer, $subtest) );
+#
+#        if (@diag) { $TEST->diag(@diag); }
+#        if ($todo) { $TEST->todo_end(); }
+    }
+
+    return;
+}
 
 #-----------------------------------------------------------------------------
 

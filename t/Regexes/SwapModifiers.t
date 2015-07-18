@@ -5,28 +5,51 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'Regexes::SwapModifiers' ]
-);
+transform_ok( 'Regexes::SwapModifiers', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name match transformed
+## parms {}
+## failures 0
+## cut
+/foo/
+m/foo/
+m<foo>
+m/foo/i
+m/foo/i if 1
+m/foo/i and 1
+1 if m/foo/i
+1 and m/foo/i
+m<foo>i
+m<foo>gi
+#-->
+/foo/
+m/foo/
+m<foo>
+m:i/foo/
+m:i/foo/ if 1
+m:i/foo/ and 1
+1 if m:i/foo/
+1 and m:i/foo/
+m:i<foo>
+m:gi<foo>
+## name: substitute
+s/foo/bar/
+s{foo}<bar>
+s(foo)(bar)
+s/foo/bar/i
+s{foo}<bar>i
+s(foo)(bar)i
+##-->
+s/foo/bar/
+s{foo}<bar>
+s(foo)(bar)
+s:i/foo/bar/
+s:i{foo}<bar>
+s:i(foo)(bar)

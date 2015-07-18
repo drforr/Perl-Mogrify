@@ -5,28 +5,38 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'Regexes::StandardizeDelimiters' ]
-);
+transform_ok( 'Regexes::StandardizeDelimiters', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: match transformed
+/foo/
+m/foo/
+m gfoog
+m gfoog if 1
+m gfoog and 1
+1 if m gfoog
+1 and m gfoog
+m f\foof
+m f\f/oof
+##-->
+/foo/
+m/foo/
+m/foo/
+m/foo/ if 1
+m/foo/ and 1
+1 if m/foo/
+1 and m/foo/
+m/\foo/
+m/\f\/oo/
+## name: match with modifiers
+m mo\mma
+s b\bookkeebpber
+##-->
+m/o\m/a
+s/\bookkee/p/er

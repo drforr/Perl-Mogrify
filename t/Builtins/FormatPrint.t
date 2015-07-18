@@ -5,28 +5,30 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
+use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
-all_transformers_ok(
-    -transformers => [ 'Builtins::FormatPrint' ]
-);
+transform_ok( 'Builtins::FormatPrint', *DATA );
 
-#-----------------------------------------------------------------------------
-# ensure we return true if this test is loaded by
-# 20_transformers.t_without_optional_dependencies.t
-
-1;
-
-#-----------------------------------------------------------------------------
-# Local Variables:
-#   mode: cperl
-#   cperl-indent-level: 4
-#   fill-column: 78
-#   indent-tabs-mode: nil
-#   c-indentation-style: bsd
-# End:
-# ex: set ts=8 sts=4 sw=4 tw=78 ft=perl expandtab shiftround :
+__DATA__
+## name: transform
+print FOO "hi";
+print OUT "{\n";
+print FOO "hi" if 1;
+print FOO "hi" and 1;
+1 if print FOO "hi";
+1 and print FOO "hi";
+print $FOO "hi";
+print $FOO "hi", "there";
+##-->
+FOO.print("hi");
+OUT.print("{\n");
+FOO.print("hi") if 1;
+FOO.print("hi") and 1;
+1 if FOO.print("hi");
+1 and FOO.print("hi");
+$FOO.print("hi");
+$FOO.print("hi", "there");
