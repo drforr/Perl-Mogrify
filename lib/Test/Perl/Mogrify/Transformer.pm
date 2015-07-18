@@ -141,7 +141,6 @@ sub __is_deeply {
             ":\n" .
             __results_string($subtest)
         );
-        $TEST->diag( "Error: $!" );
         $num_errors++;
     }
     elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{transformed} } ) {

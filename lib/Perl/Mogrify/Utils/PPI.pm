@@ -34,6 +34,8 @@ our @EXPORT_OK = qw(
 
     is_ppi_token_quotelike_words_like
 
+    set_string
+
     make_ppi_structure_list
     make_ppi_structure_block
 );
@@ -153,6 +155,33 @@ sub is_pragma {
     return 1 if exists $pragma{$content};
 
     return;
+}
+
+#-----------------------------------------------------------------------------
+
+sub set_string {
+    my ($elem, $string) = @_;
+
+    my $content = $elem->content;
+    if ($content =~ m/ ^ ['"] /x ) {
+        substr($content, 1, -1) = $string;
+    }
+    elsif ($content =~ m/^qq ./ ) {
+        substr($content, 4, -1) = $string;
+    }
+    elsif ($content =~ m/^qq./ ) {
+        substr($content, 3, -1) = $string;
+    }
+    elsif ($content =~ m/^q ./ ) {
+        substr($content, 3, -1) = $string;
+    }
+    elsif ($content =~ m/^q./ ) {
+        substr($content, 2, -1) = $string;
+    }
+    else {
+        die "Unknown string delimiters!\n";
+    }
+    $elem->set_content( $content );
 }
 
 #-----------------------------------------------------------------------------

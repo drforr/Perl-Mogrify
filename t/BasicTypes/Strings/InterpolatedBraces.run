@@ -17,9 +17,11 @@
 ## failures 0
 ## cut
 "${x}";
+qq{${x}};
 "\${x}";
 #-->
 "{$x}";
+qq{{$x}};
 "\$\{x\}";
 ## name uninterpolated braces
 ## parms {}

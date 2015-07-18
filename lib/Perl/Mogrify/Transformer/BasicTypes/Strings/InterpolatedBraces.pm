@@ -7,6 +7,7 @@ use Readonly;
 use Text::Balanced qw{ extract_bracketed };
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils::PPI qw{ set_string };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -26,45 +27,63 @@ sub applies_to           {
     return sub {
         ( $_[1]->isa('PPI::Token::Quote::Interpolate') or
           $_[1]->isa('PPI::Token::Quote::Double') ) and
-        $_[1]->string =~ /\{/
+        $_[1]->string =~ /[\{\}]/
     }
 }
 
 #-----------------------------------------------------------------------------
 
+sub _concatenate_expression {
+    my ($new_content, $expression) = @_;
+    my $unbraced = substr($expression, 1, -1);
+
+    if ( $new_content =~ s< \\N $ ><\\c>x ) {
+        $new_content .= '[' . $unbraced . ']';
+    }
+    elsif ( $new_content =~ m< \\ \$ $ >x ) {
+        $new_content .=
+            '\\{' . $unbraced . '\\}';
+    }
+    elsif ( $new_content =~ s< \$ $ ><\{\$>x ) {
+        $new_content .= $unbraced . '}';
+    }
+    else {
+        $new_content .= '\\{' . $unbraced . '\\}';
+    }
+
+    $new_content;
+}
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    my $old_content = $elem->content;
+    my $old_content = $elem->string;
     my $new_content;
 
     while ( $old_content and
-            $old_content =~ s{ ^ ([^\{]+) }{}x ) {
+            $old_content =~ s{ ^ ([^\{\}]+) }{}x ) {
         $new_content .= $1;
 
-        my ( $expression, $remainder ) = extract_bracketed($old_content,'{}');
-        if ( $expression ) {
-            my $unbraced = substr( $expression, 1, -1 );
-            if ( $new_content =~ s{( [\\]? [\$@] | \\N )$}{}x ) {
-                $expression = $1 . $expression;
+        if ( $old_content =~ m< ^ \{ >x ) {
+            my ( $expression, $remainder ) =
+                extract_bracketed($old_content,'{}');
+            if ( $expression ) {
+                $new_content =
+                    _concatenate_expression($new_content, $expression);
+                $old_content = $remainder;
             }
- 
-            if ( $expression =~ m{ ^ \\N }x ) {
-                $expression = qq{\\c[$unbraced]};
+            else {
+                $new_content .= $old_content;
+                $old_content = '';
             }
-            elsif ( $expression =~ m{ ^ \\ \$ }x ) {
-                $expression = qq{\\\$\\{$unbraced\\}};
-            }
-            elsif ( $expression =~ m{ ^ \$ }x ) {
-                $expression = qq{{\$$unbraced}};
-            }
- 
-            $new_content .= $expression;
-            $old_content = $remainder;
+        }
+        else {
+            $old_content =~ s< ^ ( \} [^\{\}]*?) ><>x;
+            $new_content .= '\\' . $1;
         }
     }
 
-    $elem->set_content( $new_content );
+    set_string($elem,$new_content);
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
