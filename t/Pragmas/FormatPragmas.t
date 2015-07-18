@@ -11,13 +11,9 @@ use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
 
 our $VERSION = '0.01';
 
-#-----------------------------------------------------------------------------
-# Notice that you can pass arguments to this test, which limit the testing to
-# specific transformers.  The arguments must be shortened policy names. When using
-# prove(1), any arguments that follow '::' will be passed to the test script.
-
-my %args = @ARGV ? ( -transformers => [ @ARGV ] ) : ();
-all_transformers_ok(%args);
+all_transformers_ok(
+    -transformers => [ 'Pragmas::FormatPragmas' ]
+);
 
 #-----------------------------------------------------------------------------
 # ensure we return true if this test is loaded by

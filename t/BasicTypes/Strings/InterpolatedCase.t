@@ -12,7 +12,7 @@ use Test::Perl::Mogrify::Transformer qw< all_transformers_ok >;
 our $VERSION = '0.01';
 
 all_transformers_ok(
-    -transformers => [ 'Arrays::FormatArrayQws' ]
+    -transformers => [ 'BasicTypes::Strings::InterpolatedCase' ]
 );
 
 #-----------------------------------------------------------------------------

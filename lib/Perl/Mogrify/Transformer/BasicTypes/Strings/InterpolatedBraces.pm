@@ -22,54 +22,50 @@ Readonly::Scalar my $EXPL => q{Braces in Perl6 now delimit code blocks, so {x} i
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to {
-    return 'PPI::Token::Quote::Interpolate',
-           'PPI::Token::Quote::Double';
+sub applies_to           {
+    return sub {
+        ( $_[1]->isa('PPI::Token::Quote::Interpolate') or
+          $_[1]->isa('PPI::Token::Quote::Double') ) and
+        $_[1]->string =~ /\{/
+    }
 }
 
 #-----------------------------------------------------------------------------
 
 sub transform {
     my ($self, $elem, $doc) = @_;
-print "[".$doc->content."]\n";
 
     my $old_content = $elem->content;
     my $new_content;
-    my ( $expression, $remainder );
 
-    if ( $old_content =~ m/\{/ ) {
-        while ( $old_content and
-                $old_content =~ s{ ^ ([^\{]+) }{}x ) {
-            $new_content .= $1;
-            ( $expression, $remainder ) = extract_bracketed($old_content,'{}');
-            if ( $expression ) {
-                my $unbraced = substr( $expression, 1, -1 );
-                if ( $new_content =~ s{( [\\]? [\$@] | \\N )$}{}x ) {
-                    $expression = $1 . $expression;
-                }
- 
-                if ( $expression =~ m{ ^ \\N }x ) {
-                    $expression = qq{\\c[$unbraced]};
-                }
-                elsif ( $expression =~ m{ ^ \\ \$ }x ) {
-                    $expression = qq{\\\$\\{$unbraced\\}};
-                }
-                elsif ( $expression =~ m{ ^ \$ }x ) {
-                    $expression = qq{{\$$unbraced}};
-                }
- 
-                $new_content .= $expression;
-                $old_content = $remainder;
+    while ( $old_content and
+            $old_content =~ s{ ^ ([^\{]+) }{}x ) {
+        $new_content .= $1;
+
+        my ( $expression, $remainder ) = extract_bracketed($old_content,'{}');
+        if ( $expression ) {
+            my $unbraced = substr( $expression, 1, -1 );
+            if ( $new_content =~ s{( [\\]? [\$@] | \\N )$}{}x ) {
+                $expression = $1 . $expression;
             }
+ 
+            if ( $expression =~ m{ ^ \\N }x ) {
+                $expression = qq{\\c[$unbraced]};
+            }
+            elsif ( $expression =~ m{ ^ \\ \$ }x ) {
+                $expression = qq{\\\$\\{$unbraced\\}};
+            }
+            elsif ( $expression =~ m{ ^ \$ }x ) {
+                $expression = qq{{\$$unbraced}};
+            }
+ 
+            $new_content .= $expression;
+            $old_content = $remainder;
         }
-    }
-    else {
-        $new_content = $old_content;
     }
 
     $elem->set_content( $new_content );
 
-print "[".$doc->content."]\n";
     return $self->transformation( $DESC, $EXPL, $elem );
 }
 
