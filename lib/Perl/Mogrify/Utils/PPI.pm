@@ -20,6 +20,9 @@ our @EXPORT_OK = qw(
     is_ppi_statement_subclass
     is_ppi_simple_statement
     is_ppi_constant_element
+
+    is_package_boundary
+
     is_module_name
     is_version_number
     is_pragma
@@ -240,6 +243,18 @@ sub is_ppi_constant_element {
             ||  $element->isa( 'PPI::Token::Quote::Interpolate' ) )
             &&  $element->string() !~ m< (?: \A | [^\\] ) (?: \\\\)* [\$\@] >smx
         ;
+}
+
+#-----------------------------------------------------------------------------
+
+sub is_package_boundary {
+    my ($elem) = @_;
+    return unless $elem;
+    return 1 if $elem->isa('PPI::Statement::Package');
+    return 1 if $elem->isa('PPI::Statement::End');
+    return 1 if $elem->isa('PPI::Statement::Data');
+    return 1 if $elem->isa('PPI::Token::Separator');
+    return;
 }
 
 #-----------------------------------------------------------------------------

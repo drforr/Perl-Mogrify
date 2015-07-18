@@ -1,38 +1,13 @@
-## name standalone package
+## name Single package with no content
 ## parms {}
 ## failures 0
 ## cut
 package Foo;
+$a = "foo";
+package Bar;
+package Baz;
 #-->
-unit class Foo;
-## name multiple standalone packages
-## parms {}
-## failures 0
-## cut
-package Foo;
-$x++;
-package main;
-$y++;
-#-->
-class Foo {
-$x++;
-};
-class main {
-$y++;
-}
-## name standalone package with separator
-## parms {}
-## failures 0
-## cut
-package # stuff
-Foo;
-#-->
-unit class # stuff
-Foo;
-## name braced package declaration
-## parms {}
-## failures 0
-## cut
-package Foo { ... }
-#-->
-class Foo { ... }
+class Foo{
+$a = "foo";
+};class Bar{
+};class Baz{};
