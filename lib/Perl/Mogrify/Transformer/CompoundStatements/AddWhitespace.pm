@@ -48,28 +48,30 @@ sub applies_to           {
 #
 # $elem (PPI::Statement::Compound)
 #  \
-#   \ 0     1     2     3 # count by child()
-#    \0     1     2     3 # count by schild()
-#     +-----+-----+-----+
-#     |     |     |     |
+#   \ 0     1     2     3     4 # count by child()
+#    \0     1     2     3     4 # count by schild()
+#     +-----+-----+-----+-----+
+#     |     |     |     |     |
+#     V     V     V     V     V
 #     if    (...) {...} elsif (...)
 #
 # After insertion, the tree looks like this:
 #
 # $elem (PPI::Statement::Compound)
 #  \
-#   \ 0     1     2     3     4     5 # count by child()
-#    \0           1     2     4       # count by schild()
-#     +-----+-----+-----+-----+-----+
-#     |     |     |     |     |     |
-#     if    ' '   (...) {...} elsif ' '
+#   \ 0     1     2     3     4     5    6 # count by child()
+#    \0           1     2     3          4 # count by schild()
+#     +-----+-----+-----+-----+-----+----+
+#     |     |     |     |     |     |    |
+#     V     V     V     V     V     V    V
+#     if    ' '   (...) {...} elsif ' '  (...)
 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     for my $child ( $elem->schildren ) {
-        next if $child->next_sibling and
-                $child->next_sibling->isa('PPI::Token::Whitespace');
+        next unless is_ppi_token_word($child, %map) and
+                    not $child->next_sibling->isa('PPI::Token::Whitespace');
         $child->insert_after(
             PPI::Token::Whitespace->new(' ')
         );
