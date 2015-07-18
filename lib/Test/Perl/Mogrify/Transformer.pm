@@ -53,7 +53,8 @@ sub all_transformers_ok {
         _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
     }
 
-    $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
+#    $TEST->plan( tests => _compute_test_count($subtests_with_extras) );
+    $TEST->plan( tests => 1 );
     my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
     $TEST->note("Running tests for transformers: $transformers_to_test");
 

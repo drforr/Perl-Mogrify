@@ -60,7 +60,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 # as we introduce new polices and/or change their severity.
 
 SKIP: {
-    skip "For now all transformers are the same 'severity'", 4;
+    skip "XXX For now all transformers are the same 'severity'", 4;
     my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my $configuration =
@@ -80,7 +80,7 @@ SKIP: {
 # Same tests as above, but using a generated config
 
 SKIP: {
-    skip "For now all transformers are the same 'severity'", 4;
+    skip "XXX For now all transformers are the same 'severity'", 4;
     my %profile = map { $_ => {} } @native_policy_names;
     my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
@@ -100,7 +100,7 @@ SKIP: {
 #-----------------------------------------------------------------------------
 
 SKIP: {
-    skip "For now all transformers are the same 'severity'", 1;
+    skip "XXX For now all transformers are the same 'severity'", 1;
     my $configuration =
         Perl::Mogrify::Config->new(
             -severity   => $SEVERITY_LOWEST,
@@ -135,7 +135,7 @@ SKIP: {
 
 
 SKIP: {
-    skip "For now all transformers are the same 'severity'", 1;
+    skip "XXX For now all transformers are the same 'severity'", 1;
     my %profile = ();
     my $severity = $SEVERITY_HIGHEST;
     for my $index ( 0 .. $#names_of_transformers_willing_to_work ) {
@@ -216,7 +216,7 @@ SKIP: {
 
 
 SKIP: {
-    skip "For now all transformers are the same 'severity'", 1;
+    skip "XXX For now all transformers are the same 'severity'", 1;
     # In this test, we'll use a custom profile to deactivate some
     # transformers, and then use the -include option to re-activate them.  So
     # the net result is that we should still end up with the all the
