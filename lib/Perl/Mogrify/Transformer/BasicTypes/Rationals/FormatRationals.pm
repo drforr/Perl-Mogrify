@@ -21,26 +21,19 @@ Readonly::Scalar my $EXPL => q{'1.' is no longer a valid floating-point number f
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Number::Float'   }
+sub applies_to           { return 'PPI::Token::Number::Float' }
 
 #-----------------------------------------------------------------------------
 
-#
-# 1.0 --> 1.0
-# .1 --> .1
-# 1. --> 1.0
-#
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $old_content = $elem->content;
  
-    my ( $lhs, $rhs ) = split( '\.', $old_content );
-    return unless $rhs and
-                  $rhs eq '';
+    my ( $lhs, $rhs ) = split( /\./, $old_content );
+    return if $rhs and $rhs ne '';
  
-    $rhs = '0' if $rhs eq '';
-    my $new_content = $lhs . '.' . $rhs;
+    my $new_content = $lhs . '.0';
     
     $elem->set_content( $new_content );
 

@@ -6,7 +6,10 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
-use Perl::Mogrify::Utils::PPI qw{ is_ppi_statement_compound };
+use Perl::Mogrify::Utils::PPI qw{
+    is_ppi_statement_compound
+    is_ppi_token_word
+};
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -90,7 +93,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::CompoundStatements::AddWhitespace - Add whitespace between conditionals 'if', 'unless' &c and ()
+Perl::Mogrify::Transformer::CompoundStatements::AddWhitespace - Add whitespace between conditionals 'if', 'unless' &c and '(...)'
 
 
 =head1 AFFILIATION
