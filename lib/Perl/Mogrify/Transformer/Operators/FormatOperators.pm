@@ -1,4 +1,4 @@
-package Perl::Mogrify::Transformer::Operators::FormatBinaryOperators;
+package Perl::Mogrify::Transformer::Operators::FormatOperators;
 
 use 5.006001;
 use strict;
@@ -6,6 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils::PPI qw{ is_ppi_token_operator };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -13,20 +14,24 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform binary operators to perl6 equivalents};
+Readonly::Scalar my $DESC => q{Transform operators to perl6 equivalents};
 Readonly::Scalar my $EXPL =>
-    q{Binary operators, notably '->' and '.', change names in Perl6};
-
-#-----------------------------------------------------------------------------
-
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Token::Operator' }
+    q{Operators, notably '->' and '!', change names in Perl6};
 
 #-----------------------------------------------------------------------------
 
 my %map = (
+    # From the unary operators:
+    #
+    # '++', '--' are unchanged.
+    # '!' is unchanged.
+    # 'not' is unchanged.
+
+    # '^', '!' are changed.
+    '^' => '+^',
+    '!' => '?^',
+    '~' => '+^',
+
     # ',' is unchanged.
     # '+', '-', '*', '/', '%', '**' are unchanged.
     # '&&', '||', '^' are unchanged.
@@ -53,66 +58,50 @@ my %map = (
 
     '=~' => '~~',
     '!~' => '!~~',
+
+    # And finally, the lone ternary operator:
+    #
+    '?' => '??',
+    ':' => '!!',
 );
+
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        is_ppi_token_operator($_[1], %map)
+    }
+}
 
 #-----------------------------------------------------------------------------
 
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    # left     ->
-    # right    **
-    # right    and
-
+    # nonassoc ++
+    # nonassoc --
+    # right    !
+    # right    ~
+    # right    \
     # right    +
     # right    -
-    # left     =~
-    # left     !~
     # left     *
-    # left     /
     # left     %
-    # left     x
-    # left     .
-    # left     <<
-    # left     >>
 
-    # nonassoc <
-    # nonassoc >
-    # nonassoc <=
-    # nonassoc >=
-    # nonassoc lt
-    # nonassoc gt
-    # nonassoc le
-    # nonassoc ge
-    # nonassoc ==
-    # nonassoc !=
-    # nonassoc <=>
-    # nonassoc eq
-    # nonassoc ne
-    # nonassoc cmp
     # nonassoc ~~
     # left     &
-    # left     |
-    # left     ^
-    # left     &&
-    # left     ||
-    # left     //
-    # nonassoc ..
-    # nonassoc ...
-    # right    =
-    # right    +=
-    # right    -=
     # right    *= etc. goto last next redo dump
-    # left     ,
-    # left     =>
 
     # nonassoc list operators (rightward)
     # right    not
-    # left     and
-    # left     or
-    # left     xor
 
     my $old_content = $elem->content;
+
+    $elem->set_content( $map{$old_content} );
+
     if ( $old_content eq '=>' ) { # XXX This is a special case.
     }
     elsif ( $old_content eq 'x' ) { # XXX This is a special case.
@@ -130,8 +119,14 @@ $elem->set_content('fff XXX');
     elsif ( exists $map{$old_content} ) {
         $elem->set_content( $map{$old_content} );
     }
-    else {
-        return;
+
+    # Remove whitespace from around '->'
+    #
+    if ( $elem->content eq '.' ) {
+        $elem->next_sibling->remove if
+            $elem->next_sibling->isa('PPI::Token::Whitespace');
+        $elem->previous_sibling->remove if
+            $elem->previous_sibling->isa('PPI::Token::Whitespace');
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );
@@ -147,7 +142,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::Operators::FormatBinaryOperators - Transform binary operators to Perl6 equivalents
+Perl::Mogrify::Transformer::Operators::FormatOperators - Transform '->', '!" &c to their Perl6 equivalents
 
 
 =head1 AFFILIATION
@@ -158,14 +153,11 @@ distribution.
 
 =head1 DESCRIPTION
 
-Several Perl5 operators such as '->' and '.' have changed names, hopefully without changing precedence. Most binary operators transform in straightforward fashion, '->' changes to '.' and '.' changes to '~', but some, like 'x' are more complex and depend upon their context:
+Several operators in Perl5 have been renamed or repurposed in Perl6.  For instance, the various negations such as '~', '^' and '!' have been unified under '^', and the previous numeric, logical and Boolean contexts are now represented in the first character, so '!' is now '?^' to repreent Boolean ('?') negation ('^'):
 
-  1 + 1     --> 1 + 1
-  1 % 7     --> 1 % 7
-  Foo->[0]  --> Foo.[0]
-  Foo->new  --> Foo.new
-  'a' x 7   --> 'a' x 7
-  ('a') x 7 --> 'a' xx 7
+  ~32 --> +^32
+  !$x --> ?^$x
+  1 ? 2 : 3 --> 1 ?? 2 !! 3
 
 Transforms operators outside of comments, heredocs, strings and POD.
 

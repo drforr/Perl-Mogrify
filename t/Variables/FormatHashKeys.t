@@ -16,6 +16,7 @@ transform_ok( 'Variables::FormatHashKeys', *DATA );
 __DATA__
 ## name: quote barewords - Doesn't alter sigils.
 $a { a }++;
+$a -> { a }++;
 $a { a }++ if 1;
 $a { a }++ and 1;
 1 if $a { a }++;
@@ -24,6 +25,7 @@ $a { 'a' }++;
 $a { "a" }++;
 ##-->
 $a { 'a' }++;
+$a -> { 'a' }++;
 $a { 'a' }++ if 1;
 $a { 'a' }++ and 1;
 1 if $a { 'a' }++;

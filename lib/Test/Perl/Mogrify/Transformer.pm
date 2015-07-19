@@ -165,12 +165,26 @@ sub _filter_unwanted_subtests {
 
 #-----------------------------------------------------------------------------
 
-sub __results_string {
-    my ($subtest) = @_;
+sub __markup_array {
+    my ($lines, $error_line) = @_;
+    my @out;
+    for my $i ( 0 .. $#{$lines} ) {
+        push @out, ( defined($error_line) and $i == $error_line )
+                   ?  ">$lines->[$i]<---"
+                   : ">$lines->[$i]<"
+    }
+    @out;
+}
 
-    join( "\n", ( map { ">$_<" } @{ $subtest->{original} } ), '====??====>',
-                ( map { ">$_<" } @{ $subtest->{sample} } ), '====!!====>',
-                ( map { ">$_<" } @{ $subtest->{transformed} } ) )
+sub __results_string {
+    my ($subtest, $error_line) = @_;
+
+    join( "\n", __markup_array( $subtest->{original} ),
+                '====??====>',
+                __markup_array( $subtest->{sample}, $error_line ),
+                '====!!====>',
+                __markup_array( $subtest->{transformed}, $error_line )
+    );
 }
 
 sub __is_deeply {
@@ -182,15 +196,15 @@ sub __is_deeply {
     my $first_different_line = 0;
     for my $idx ( 0 .. $last_line ) {
         next if $subtest->{sample}[$idx] eq $subtest->{transformed}[$idx];
-        $first_different_line = $idx + 1;
+        $first_different_line = $idx;
         last;
     }
     if ( $first_different_line ) {
         $TEST->diag(
             "Output begins to differ at line " .
-            ($first_different_line + 1) .
+            ( $first_different_line + 1 ) .
             ":\n" .
-            __results_string($subtest)
+            __results_string($subtest, $first_different_line)
         );
         $num_errors++;
     }

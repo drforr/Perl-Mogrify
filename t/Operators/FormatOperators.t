@@ -11,10 +11,46 @@ use Test::Perl::Mogrify::Transformer qw< transform_ok >;
 
 our $VERSION = '0.01';
 
-transform_ok( 'Operators::FormatTernaryOperators', *DATA );
+transform_ok( 'Operators::FormatOperators', *DATA );
 
 __DATA__
-## name: transform
+## name: Unary operators
+~32;
+~32 if 1;
+~32 and 1;
+1 if ~32;
+1 and ~32;
+!$x;
+##-->
++^32;
++^32 if 1;
++^32 and 1;
+1 if +^32;
+1 and +^32;
+?^$x;
+## name: Binary operators
+1 + 1;
+1 + 1 if 1;
+1 + 1 and 1;
+1 if 1 + 1;
+1 and 1 + 1;
+'1' . '1';
+Foo->new();
+Foo -> new();
+$rule->{'foo'};
+$rule -> {'foo'};
+##-->
+1 + 1;
+1 + 1 if 1;
+1 + 1 and 1;
+1 if 1 + 1;
+1 and 1 + 1;
+'1' ~ '1';
+Foo.new();
+Foo.new();
+$rule.{'foo'};
+$rule.{'foo'};
+## name: ternary
 $x = $y > 1 ? 0 : 1;
 $x = $y > 1 ? 0 : 1 if 1;
 $x = $y > 1 ? 0 : 1 and 1;
