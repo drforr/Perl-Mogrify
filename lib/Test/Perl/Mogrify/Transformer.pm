@@ -16,7 +16,9 @@ use Test::More;
 
 use Perl::Mogrify::Transformation;
 use Perl::Mogrify::TestUtils qw<
-    ptransform_with_transformations ftransform_with_transformations subtests_in_tree
+    ptransform_with_transformations
+    ftransform_with_transformations
+    subtests_in_tree
 >;
 
 #-----------------------------------------------------------------------------
@@ -53,9 +55,9 @@ sub transform_ok {
             $in_sample = undef;
             push @{ $subtests }, {
                 name => $1,
-                failures => 0,#$args->{failures},
-                lineno   => 1,#$args->{lineno},
-                parms    => {},#$args->{parms},
+                failures => 0,
+                lineno   => 1,
+                parms    => {},
                 original => [],
                 sample => [],
             }
@@ -123,8 +125,6 @@ sub all_transformers_ok {
 	    for my $subtest ( @{ $subtests_with_extras->{$policy}{subtests} } ) {
 		    my $todo = $subtest->{TODO};
 		    if ($todo) { $TEST->todo_start( $todo ); }
-
-#use YAML;print Dump $subtest;
 
 		    my ($error, @transformations) = _run_subtest($policy, $subtest);
 #		    my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@transformations);
