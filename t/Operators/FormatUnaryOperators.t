@@ -14,6 +14,10 @@ our $VERSION = '0.01';
 transform_ok( 'Operators::FormatUnaryOperators', *DATA );
 
 __DATA__
+## name: only unary operators should be affected.
+1 ~ 3;
+##-->
+1 ~ 3;
 ## name: transform
 ~32;
 ~32 if 1;

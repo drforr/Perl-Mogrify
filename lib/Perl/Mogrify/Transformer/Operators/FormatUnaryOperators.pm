@@ -38,7 +38,11 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_token_operator($_[1], %map)
+        is_ppi_token_operator($_[1], %map) and
+        not ( $_[1]->sprevious_sibling and
+              $_[1]->sprevious_sibling->isa('PPI::Token::Symbol') ) and
+        not ( $_[1]->sprevious_sibling and
+              $_[1]->sprevious_sibling->isa('PPI::Token::Number') )
     }
 }
 
