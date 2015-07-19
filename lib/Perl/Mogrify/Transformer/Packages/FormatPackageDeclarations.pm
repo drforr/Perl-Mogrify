@@ -34,6 +34,7 @@ sub applies_to           { 'PPI::Document' }
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
+return;
 
     my $ref = $doc->find('PPI::Statement::Package');
     if ( $ref and @{ $ref } ) {
