@@ -28,6 +28,7 @@ my %map = (
     # '^', '!' are changed.
     '^' => '+^',
     '!' => '?^',
+    '~' => '+^',
 );
 
 #-----------------------------------------------------------------------------
@@ -37,7 +38,7 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_token_operator($_[1], '?' => 1 )
+        is_ppi_token_operator($_[1], %map)
     }
 }
 
