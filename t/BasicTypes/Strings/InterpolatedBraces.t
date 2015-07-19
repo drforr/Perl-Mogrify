@@ -18,10 +18,16 @@ __DATA__
 "Hello (cruel?) world! $x <= $y[2] + 1"
 ##-->
 "Hello (cruel?) world! $x <= $y[2] + 1"
-## name: Unicode character names
+## name: Special cases
 "\N{LATIN CAPITAL LETTER X}";
+"a\N{LATIN CAPITAL LETTER X}b";
+"\x{12ab}";
+"a\x{12ab}b";
 ##-->
 "\c[LATIN CAPITAL LETTER X]";
+"a\c[LATIN CAPITAL LETTER X]b";
+"\x[12ab]";
+"a\x[12ab]b";
 ## name: interpolation of bracketed variables
 "${x}";
 qq{${x}};
@@ -38,7 +44,11 @@ print OUT "{\n";
 "${x";
 ##-->
 "\{x";
-print OUT "{\n";
+print OUT "\{\n";
 "x\}";
 "\{x\}";
 "$\{x";
+## name: escaped braces
+"$\{x\}"
+##-->
+"$\{x\}"

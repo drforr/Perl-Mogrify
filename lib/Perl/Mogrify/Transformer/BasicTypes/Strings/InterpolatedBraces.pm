@@ -4,7 +4,6 @@ use 5.006001;
 use strict;
 use warnings;
 use Readonly;
-use Text::Balanced qw{ extract_bracketed };
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
 use Perl::Mogrify::Utils::PPI qw{ set_string };
@@ -33,53 +32,86 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
-sub _concatenate_expression {
-    my ($new_content, $expression) = @_;
-    my $unbraced = substr($expression, 1, -1);
-
-    if ( $new_content =~ s< \\N $ ><\\c>x ) {
-        $new_content .= '[' . $unbraced . ']';
-    }
-    elsif ( $new_content =~ m< \\ \$ $ >x ) {
-        $new_content .=
-            '\\{' . $unbraced . '\\}';
-    }
-    elsif ( $new_content =~ s< \$ $ ><\{\$>x ) {
-        $new_content .= $unbraced . '}';
-    }
-    else {
-        $new_content .= '\\{' . $unbraced . '\\}';
-    }
-
-    $new_content;
-}
-
 sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $old_content = $elem->string;
     my $new_content;
 
-    while ( $old_content and
-            $old_content =~ s{ ^ ([^\{\}]+) }{}x ) {
-        $new_content .= $1;
+    my $depth = 0;
+    my @elem = split /(\\?[\{\}])/, $old_content;
+    for ( my $i = 0; $i < @elem; $i++ ) {
+        my $v = $elem[$i];
 
-        if ( $old_content =~ m< ^ \{ >x ) {
-            my ( $expression, $remainder ) =
-                extract_bracketed($old_content,'{}');
-            if ( $expression ) {
-                $new_content =
-                    _concatenate_expression($new_content, $expression);
-                $old_content = $remainder;
+        # Pass escaped braces through
+        #
+        if ( $v eq '\\{' or $v eq '\\}' ) {
+            $new_content .= $v;
+        }
+
+        # The opening braces we're interested in-------V
+        #   Begin a Unicode character name           "\N{SMILEY FACE}"
+        #   Begin a hex number                       "\x{12ab}"
+        #   Begin an noninterpolated scalar          "\${x}"
+        #   Begin an interpolated scalar              "${x}"
+        #   Begin an noninterpolated text block       "${\x}"
+        #     Which could be preceded by a variable "$x${\x}"
+        #   Begin an interpolating @{[..]} block      "@{[..]}" # Later :)
+        #
+        elsif ( $v eq '{' ) {
+
+            # For '\N{..}', mangle the 
+            if ( $new_content =~ / \\ N $/x and
+                 $elem[$i+1] and
+                 $elem[$i+1] =~ / ^ [A-Z ]+ $ /x and
+                 $elem[$i+2] and
+                 $elem[$i+2] eq '}' ) {
+                $new_content =~ s< \\ N $><\\c>x;
+                $new_content .= '[' . $elem[$i+1] . ']';
+                $i += 2;
+            }
+            elsif ( $new_content =~ / \\ [xX] $/x and
+                    $elem[$i+1] and
+                    $elem[$i+1] =~ / ^ [0-9a-fA-F ]+ $ /x and
+                    $elem[$i+2] and
+                    $elem[$i+2] eq '}' ) {
+                $new_content .= '[' . $elem[$i+1] . ']';
+                $i += 2;
+            }
+            elsif ( $new_content =~ / \\ \$ $/x and
+                    $elem[$i+1] and
+                    $elem[$i+2] and
+                    $elem[$i+2] eq '}' ) {
+                $new_content .= '\\{' . $elem[$i+1] . '\\}';
+                $i += 2;
+            }
+#            elsif ( $new_content =~ / \$ $/x and
+#                    $elem[$i+1] and
+#                    $elem[$i+1] =~ / ^ \\/x and
+#                    $elem[$i+2] eq '}' ) {
+#                $new_content =~ s< \$ $><{\$>x;
+#                $new_content .= $elem[$i+1] . '}';
+#                $i += 2;
+#            }
+            elsif ( $new_content =~ / \$ $/x and
+                    $elem[$i+1] and
+                    $elem[$i+2] and
+                    $elem[$i+2] eq '}' ) {
+                $new_content =~ s< \$ $><{\$>x;
+                $new_content .= $elem[$i+1] . '}';
+                $i += 2;
             }
             else {
-                $new_content .= $old_content;
-                $old_content = '';
+                $new_content .= '\\' . $v;
+                $depth--;
             }
         }
+        elsif ( $v eq '}' ) {
+            $new_content .= '\\' . $v;
+            $depth--;
+        }
         else {
-            $old_content =~ s< ^ ( \} [^\{\}]*?) ><>x;
-            $new_content .= '\\' . $1;
+            $new_content .= $v;
         }
     }
 
