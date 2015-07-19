@@ -16,7 +16,6 @@ transform_ok( 'Variables::FormatSpecialVariables', *DATA );
 #-----------------------------------------------------------------------------
 __DATA__
 ## name: transform
-## I'm not sure any special variables *didn't* get renamed...
 print STDOUT;
 print STDOUT if 1;
 print STDOUT and 1;
@@ -26,8 +25,8 @@ print $`;
 print $&;
 print @+;
 print $1;
+1 unless @ARGV == 1;
 ##-->
-## I'm not sure any special variables *didn't* get renamed...
 print $*OUT;
 print $*OUT if 1;
 print $*OUT and 1;
@@ -37,3 +36,4 @@ print $/.prematch;
 print ~$/;
 print (map {.from},$/[*]);
 print $0;
+1 unless @*ARGS == 1;

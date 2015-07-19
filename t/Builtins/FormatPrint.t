@@ -14,6 +14,10 @@ our $VERSION = '0.01';
 transform_ok( 'Builtins::FormatPrint', *DATA );
 
 __DATA__
+## name: unchanged
+print @_, "\n";
+##-->
+print @_, "\n";
 ## name: transform
 print FOO "hi";
 print OUT "{\n";
