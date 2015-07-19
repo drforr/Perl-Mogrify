@@ -296,20 +296,8 @@
          "file" : "lib/Perl/Mogrify/Transformer/Variables/FormatSpecialVariables.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::Operators::FormatUnaryOperators" : {
-         "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatUnaryOperators.pm",
-         "version" : "0.01"
-      },
-      "Perl::Mogrify::Transformer::Operators::FormatTernaryOperators" : {
-         "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatTernaryOperators.pm",
-         "version" : "0.01"
-      },
-      "Perl::Mogrify::Transformer::Operators::FormatBinaryOperators" : {
-	 "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatBinaryOperators.pm",
-         "version" : "0.01"
-      },
-      "Perl::Mogrify::Transformer::Operators::FormatCircumfixOperators" : {
-         "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatCircumfixOperators.pm",
+      "Perl::Mogrify::Transformer::Operators::FormatOperators" : {
+         "file" : "lib/Perl/Mogrify/Transformer/Operators/FormatOperators.pm",
          "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::Packages::FormatPackageDeclarations" : {

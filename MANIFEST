@@ -62,9 +62,7 @@ lib/Perl/Mogrify/Transformer/FormatSpecialLiterals.pm
 lib/Perl/Mogrify/Transformer/Variables/FormatHashKeys.pm
 lib/Perl/Mogrify/Transformer/Variables/FormatSigils.pm
 lib/Perl/Mogrify/Transformer/Variables/FormatSpecialVariables.pm
-lib/Perl/Mogrify/Transformer/Operators/FormatUnaryOperators.pm
-lib/Perl/Mogrify/Transformer/Operators/FormatTernaryOperators.pm
-lib/Perl/Mogrify/Transformer/Operators/FormatBinaryOperators.pm
+lib/Perl/Mogrify/Transformer/Operators/FormatOperators.pm
 lib/Perl/Mogrify/Transformer/Operators/FormatCircumfixOperators.pm
 lib/Perl/Mogrify/Transformer/Packages/FormatPackageDeclarations.pm
 lib/Perl/Mogrify/Transformer/Packages/FormatPackageUsages.pm
