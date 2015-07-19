@@ -7,6 +7,7 @@ use warnings;
 use English qw(-no_match_vars);
 
 use File::Spec::Unix qw();
+use List::Util qw(max);
 use List::MoreUtils qw(any);
 
 use Perl::Mogrify::Utils qw{
@@ -89,6 +90,194 @@ sub import {
     }
 
     return 1;
+}
+
+#-----------------------------------------------------------------------------
+# Shuffle policy order based on preferences, if any.
+
+# Transformers can request to run before or after a given list of other
+# transformers. This code rewrites the list as follows:
+#
+# If transformer A requests to be run *before* transformer B, then we instead
+# state that transformer B must be run *after* transformer A. It's the logical
+# dual, but having only one kind of dependency to deal with makes it easier.
+#
+sub _invert_dependencies {
+    my ($dependencies) = @_;
+
+    for my $name ( keys %{ $dependencies } ) {
+        next unless $dependencies->{$name}{before};
+        for my $_name ( keys %{ $dependencies->{$name}{before} } ) {
+            $dependencies->{$_name}{after}{$name} = 1;
+        }
+    }
+}
+
+# Collect the preferences for all the transformers we want to run.
+#
+sub _collect_preferences {
+    my (@policies) = @_;
+    my %preferences;
+
+    for my $policy ( @policies ) {
+        my $ref_name = ref($policy);
+        $ref_name =~ s/^Perl\::Mogrify\::Transformer\:://;
+        $preferences{$ref_name} = { };
+
+        # Get the list of transformers this module wants to run *after*.
+        #
+        if ( $policy->can('run_before') ) {
+die "Policy found with preference\n";
+            my @before = $policy->run_before();
+            $preferences{$ref_name}{before} = map {
+                s/^Perl\::Mogrify\::Transformer\:://;
+                $_ => 1
+            } $policy->run_before();
+        }
+
+        # Get the list of transformers this module wants to run *before*.
+        #
+        if ( $policy->can('run_after') ) {
+die "Policy found with preference\n";
+            $preferences{$ref_name}{after} = map {
+                s/^Perl\::Mogrify\::Transformer\:://;
+                $_ => 1
+            } $policy->run_after();
+        }
+    }
+
+    return %preferences;
+}
+
+sub _validate_preferences {
+    my ($preferences) = @_;
+
+    for my $k ( keys %{ $preferences } ) {
+        if ( $preferences->{$k}{after} ) {
+            for my $_k ( keys %{ $preferences->{$k}{after} } ) {
+                next if exists $preferences->{$_k};
+die "Module $k wanted to run after module $_k, which was not found!\n";
+            }
+        }
+        if ( $preferences->{$k}{before} ) {
+            for my $_k ( keys %{ $preferences->{$k}{before} } ) {
+                next if exists $preferences->{$_k};
+die "Module $k wanted to run before module $_k, which was not found!\n";
+            }
+        }
+    }
+}
+
+# Transformers can now request to be run before or after a given transformer.
+# Or transformers.
+#
+# We honor those requests here, by collecting the transformers, calling
+# ->run_before() and/or ->run_after(), to get what transformers they must
+# run after or before.
+#
+# Then we restate the 'before' requests in terms of 'after', dying for the
+# moment if we can't find a module that a given module wants to run 'after'.
+#
+# After restating 'before' as 'after', we sort the modules in order of
+# preference, then return the list in preference order.
+#
+sub topological_sort {
+    my @policies = @_;
+    my @ordered;
+
+    my %object;
+    for my $policy ( @policies ) {
+        my $ref_name = ref($policy);
+        $ref_name =~ s/^Perl\::Mogrify\::Transformer\:://;
+
+        $object{$ref_name} = $policy;
+    }
+
+    my %preferences = _collect_preferences(@policies);
+    _validate_preferences(\%preferences);
+
+    _invert_dependencies(\%preferences);
+
+    # This algorithm can potentially loop if it encounters a cycle in the
+    # dependencies.
+    #
+    # Specifically, the hash could look like this at the end:
+    # %foo = ( A => { after => { B => 1 } }, B => { after => { A => 1 } } );
+    # In which case this algorithm wouldn't terminate.
+    # So we count down from the number of keys in the original hash.
+    # This should give us plenty of time to detect cycles.
+    #
+    # The cycle could be arbitrarily long, and while there are fancy
+    # algorithms to detect those, I'm not going to bother.
+    #
+    # Keeping the module names in a stable order reduces the likelihood
+    # that a cycle will "trap" (I.E. come before) a module that's not
+    # involved in the cycle. It still could happen, but I'll worry about that
+    # later on.
+    #
+    my %final;
+    my $iterations = keys %preferences;
+
+    while( keys %preferences ) {
+        last if $iterations-- <= 0; # DO NOT REMOVE THIS.
+        for my $name ( sort keys %preferences ) {
+
+            # If a module needs to run after one or more modules, try to
+            # satisfy its request.
+            #
+            if ( $preferences{$name}{after} ) {
+
+                # Walk the list of modules it needs to run after.
+                #
+                my $max = 0;
+                for my $_name ( keys %{ $preferences{$name}{after} } ) {
+
+                    # If it needs to run after a module we haven't placed in
+                    # order, then abandon the loop.
+                    #
+                    if ( !exists $final{$_name} ) {
+                        $max = -1;
+                        last;
+                    }
+                    $max = max($final{$_name},$max);
+                }
+
+                # If we haven't abandoned the loop, then
+                # add the module *after* the last module in order
+                # and delete the module from the preferences list.
+                #
+                if ( $max >= 0 ) {
+                   $final{$name} = $max + 1;
+                   delete $preferences{$name};
+                }
+            }
+
+            # The module doesn't need to be run after any given module.
+            # So put it directly on the list, in group 0.
+            #
+            else {
+               $final{$name} = 0;
+               delete $preferences{$name};
+            }
+        }
+    }
+
+    # If there are any keys remaining in the preferences array, it's possible
+    # that the algorithm didn't sort dependencies correctly, but it is
+    # vastly more likely to be the case that we've encountered a cycle.
+    # Die, telling the user what happened.
+    #
+    if ( keys %preferences ) {
+        die "Found a preference loop among: " . join("\n", keys %preferences);
+    }
+
+    my %inverse;
+    push @{$inverse{$final{$_}}}, $_ for keys %final;
+    for ( sort keys %inverse ) {
+        push @ordered, map { $object{$_} } @{$inverse{$_}};
+    }
+
+    return @ordered;
 }
 
 #-----------------------------------------------------------------------------
@@ -223,7 +412,9 @@ sub create_all_transformers {
         $errors->rethrow();
     }
 
-    return @transformers;
+    my @sorted = topological_sort(@transformers);
+
+    return @sorted;
 }
 
 #-----------------------------------------------------------------------------
