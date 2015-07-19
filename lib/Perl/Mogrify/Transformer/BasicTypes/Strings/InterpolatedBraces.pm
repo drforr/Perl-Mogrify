@@ -32,6 +32,16 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+sub _is_quoted {
+    my ($string) = @_;
+    return 1 if $string =~ / ^ ['"] /x and $string =~ / ['"] $ /x;
+    return 1 if $string =~ / ^ qq [ ] (.) .* \1 $ /x;
+    return 1 if $string =~ / ^ qq (.) .* \1 $ /x;
+    return 1 if $string =~ / ^ q [ ] (.) .* \1 $ /x;
+    return 1 if $string =~ / ^ q (.) .* \1 $ /x;
+    return;
+}
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
@@ -49,7 +59,8 @@ sub transform {
             $new_content .= $v;
         }
 
-        # The opening braces we're interested in-------V
+        # The opening braces we're interested in--------V
+        #   Begin a hash key interpolation           "$x{a}"
         #   Begin a Unicode character name           "\N{SMILEY FACE}"
         #   Begin a hex number                       "\x{12ab}"
         #   Begin an noninterpolated scalar          "\${x}"
@@ -59,9 +70,28 @@ sub transform {
         #   Begin an interpolating @{[..]} block      "@{[..]}" # Later :)
         #
         elsif ( $v eq '{' ) {
-
-            # For '\N{..}', mangle the 
-            if ( $new_content =~ / \\ N $/x and
+            
+            if ( $new_content =~ m{ \$\w+ ([-]>)? $}x and
+                 $elem[$i+1] and
+                 $elem[$i+2] and
+                 $elem[$i+2] eq '}' ) {
+                if ( $1 and $1 eq '->' ) {
+                    $new_content =~ s{ (\$\w+) [-]> $}{$v$1.}x;
+                }
+                else {
+                    $new_content =~ s{ (\$\w+) $}{$v$1}x;
+                }
+                if ( _is_quoted($elem[$i+1]) ) {
+                    $new_content .= qq{{$elem[$i+1]}};
+                }
+                else {
+                    $elem[$i+1] =~ s{'}{\\'}g;
+                    $new_content .= qq{{'$elem[$i+1]'}};
+                }
+                $new_content .= $elem[$i+2];
+                $i += 2;
+            }
+            elsif ( $new_content =~ / \\ N $/x and
                  $elem[$i+1] and
                  $elem[$i+1] =~ / ^ [A-Z ]+ $ /x and
                  $elem[$i+2] and
