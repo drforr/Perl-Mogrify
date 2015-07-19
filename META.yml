@@ -135,9 +135,6 @@ provides:
   Perl::Mogrify::Transformer::Pragmas::FormatPragmas:
     file: lib/Perl/Mogrify/Transformer/Pragmas/FormatPragmas.pm
     version: '0.01'
-  Perl::Mogrify::Transformer::Files::FormatScript:
-    file: lib/Perl/Mogrify/Transformer/Files/FormatScript.pm
-    version: '0.01'
   Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals:
     file: lib/Perl/Mogrify/Transformer/CompoundStatements/FormatConditionals.pm
     version: '0.01'

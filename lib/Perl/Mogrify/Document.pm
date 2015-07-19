@@ -412,6 +412,7 @@ sub line_is_disabled_for_policy {
     return 0 if $policy_name eq
         'Perl::Mogrify::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic';
 
+    return 0 unless $line;
     return 1 if $self->{_disabled_line_map}->{$line}->{$policy_name};
     return 1 if $self->{_disabled_line_map}->{$line}->{ALL};
     return 0;

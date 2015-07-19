@@ -14,15 +14,12 @@ our $VERSION = '0.01';
 transform_ok( 'CompoundStatements::AddWhitespace', *DATA );
 
 __DATA__
-## name transform
-## parms {}
-## failures 0
-## cut
+## name: transform
 if( 1 ) { }
 if ( 1 ) { }
 if( 1 ) { } elsif( 1 ) { }
 if( 1 ) { } elsif ( 1 ) { }
-#-->
+##-->
 if ( 1 ) { }
 if ( 1 ) { }
 if ( 1 ) { } elsif ( 1 ) { }

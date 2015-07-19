@@ -14,10 +14,7 @@ our $VERSION = '0.01';
 transform_ok( 'Regexes::SwapModifiers', *DATA );
 
 __DATA__
-## name match transformed
-## parms {}
-## failures 0
-## cut
+## name: match transformed
 /foo/
 m/foo/
 m<foo>
@@ -28,7 +25,7 @@ m/foo/i and 1
 1 and m/foo/i
 m<foo>i
 m<foo>gi
-#-->
+##-->
 /foo/
 m/foo/
 m<foo>

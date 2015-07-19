@@ -46,11 +46,10 @@ sub transform_ok {
     my $subtests_with_extras =  subtests_in_tree( 't', 'include extras' );
 
     my $subtests = [];
-    my ( @original, @sample );
     my $in_sample;
     for my $line (<$fh>) {
         chomp $line;
-        if ( $line =~ /^## name: (.+)$/ ) {
+        if ( $line =~ /^## name: (.+)/ ) {
             $in_sample = undef;
             push @{ $subtests }, {
                 name => $1,
@@ -61,9 +60,15 @@ sub transform_ok {
                 sample => [],
             }
         }
-        elsif ( $in_sample ) { push @{ $subtests->[-1]{sample} }, $line }
         elsif ( $line eq '##-->' ) { $in_sample = 1 }
-        else { push @{ $subtests->[-1]{original} }, $line }
+        elsif ( $in_sample ) { push @{ $subtests->[-1]{sample} }, $line }
+        else {
+            unless ( $subtests and @{ $subtests } ) {
+                $TEST->ok( 0, 'Test formatted correctly' );
+                return;
+            }
+            push @{ $subtests->[-1]{original} }, $line;
+        }
     }
 
     $TEST->plan( tests => 1 );

@@ -52,7 +52,6 @@ lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatShellStrings.pm
 lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedBraces.pm
 lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedCase.pm
 lib/Perl/Mogrify/Transformer/Pragmas/FormatPragmas.pm
-lib/Perl/Mogrify/Transformer/Files/FormatScript.pm
 lib/Perl/Mogrify/Transformer/CompoundStatements/FormatConditionals.pm
 lib/Perl/Mogrify/Transformer/CompoundStatements/FormatUntils.pm
 lib/Perl/Mogrify/Transformer/CompoundStatements/FormatGivenWhens.pm

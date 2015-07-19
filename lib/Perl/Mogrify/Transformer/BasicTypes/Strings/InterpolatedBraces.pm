@@ -71,16 +71,26 @@ sub transform {
         #
         elsif ( $v eq '{' ) {
             
-            if ( $new_content =~ m{ \$\w+ ([-]>)? $}x and
+            if ( $new_content =~ m{ \$\w+ [-]> $}x and
                  $elem[$i+1] and
                  $elem[$i+2] and
                  $elem[$i+2] eq '}' ) {
-                if ( $1 and $1 eq '->' ) {
-                    $new_content =~ s{ (\$\w+) [-]> $}{$v$1.}x;
+                $new_content =~ s{ (\$\w+) [-]> $}{$1.}x;
+                if ( _is_quoted($elem[$i+1]) ) {
+                    $new_content .= qq{{$elem[$i+1]}};
                 }
                 else {
-                    $new_content =~ s{ (\$\w+) $}{$v$1}x;
+                    $elem[$i+1] =~ s{'}{\\'}g;
+                    $new_content .= qq{{'$elem[$i+1]'}};
                 }
+                $new_content .= $elem[$i+2];
+                $i += 2;
+            }
+            if ( $new_content =~ m{ \$\w+ $}x and
+                 $elem[$i+1] and
+                 $elem[$i+2] and
+                 $elem[$i+2] eq '}' ) {
+                $new_content =~ s{ (\$\w+) $}{$1}x;
                 if ( _is_quoted($elem[$i+1]) ) {
                     $new_content .= qq{{$elem[$i+1]}};
                 }
@@ -115,14 +125,6 @@ sub transform {
                 $new_content .= '\\{' . $elem[$i+1] . '\\}';
                 $i += 2;
             }
-#            elsif ( $new_content =~ / \$ $/x and
-#                    $elem[$i+1] and
-#                    $elem[$i+1] =~ / ^ \\/x and
-#                    $elem[$i+2] eq '}' ) {
-#                $new_content =~ s< \$ $><{\$>x;
-#                $new_content .= $elem[$i+1] . '}';
-#                $i += 2;
-#            }
             elsif ( $new_content =~ / \$ $/x and
                     $elem[$i+1] and
                     $elem[$i+2] and
