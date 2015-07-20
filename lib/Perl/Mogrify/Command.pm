@@ -250,15 +250,15 @@ sub _transform {
         or do {
             if ( my $exception = Perl::Mogrify::Exception::Parse->caught() ) {
                 $had_error_in_file = 1;
-                warn qq<Problem while critiquing "$file": $EVAL_ERROR\n>;
+                warn qq<Problem while mogrifying "$file": $EVAL_ERROR\n>;
             }
             elsif ($EVAL_ERROR) {
                 # P::C::Exception::Fatal includes the stack trace in its
                 # stringification.
-                die qq<Fatal error while critiquing "$file": $EVAL_ERROR\n>;
+                die qq<Fatal error while mogrifying "$file": $EVAL_ERROR\n>;
             }
             else {
-                die qq<Fatal error while critiquing "$file". Unfortunately, >,
+                die qq<Fatal error while mogrifying "$file". Unfortunately, >,
                     q<$@/$EVAL_ERROR >,
                     qq<is empty, so the reason can't be shown.\n>;
             }

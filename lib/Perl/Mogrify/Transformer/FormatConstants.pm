@@ -66,7 +66,8 @@ sub transform {
 
         $current->set_content('=');
     }
-    elsif ( $head->isa('PPI::Token::Word') and
+    elsif ( $head and
+            $head->isa('PPI::Token::Word') and
             $head->content eq 'use' and
             $head->snext_sibling->isa('PPI::Token::Word') and
             $head->snext_sibling->content eq 'constant' ) {

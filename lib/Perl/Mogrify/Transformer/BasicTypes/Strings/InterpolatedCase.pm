@@ -6,6 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::Mogrify::Utils::PPI qw{ set_string };
 
 use base 'Perl::Mogrify::Transformer';
 
@@ -157,12 +158,13 @@ sub transform {
             $depth--;
             $new_content .= '}' if $depth == 0;
         }
-        elsif ( $v =~ /./ and $depth == 0 ) {
+        elsif ( $v ne '' and $depth == 0 ) {
             $new_content .= $v;
         }
-        elsif ( $v =~ /./ ) {
-            $v =~ s{$start_escape}{\\$start_escape}g;
-            $v =~ s{$end_escape}{\\$end_escape}g;
+        elsif ( $v ne '' ) {
+            my $backslash = '\\';
+            $v =~ s{\Q$start_escape\E}{$backslash.$start_escape}eg;
+            $v =~ s{\Q$end_escape\E}{$backslash.$end_escape}eg;
             $new_content .= '~' if $depth > 0 and $new_content =~ /\)$/;
             $new_content .= qq{${start_delim}$v${end_delim}};
         }
@@ -170,7 +172,7 @@ sub transform {
 
     $new_content .= ')}' while $depth-- > 0;
 
-    $elem->set_content(  $start_delim . $new_content . $end_delim );
+    set_string($elem, $new_content);
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

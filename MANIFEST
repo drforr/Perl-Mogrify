@@ -59,6 +59,7 @@ lib/Perl/Mogrify/Transformer/CompoundStatements/FormatMapGreps.pm
 lib/Perl/Mogrify/Transformer/Arrays/FormatArrayQws.pm
 lib/Perl/Mogrify/Transformer/FormatSpecialLiterals.pm
 lib/Perl/Mogrify/Transformer/Variables/FormatHashKeys.pm
+lib/Perl/Mogrify/Transformer/Variables/FormatMatchVariables.pm
 lib/Perl/Mogrify/Transformer/Variables/FormatSigils.pm
 lib/Perl/Mogrify/Transformer/Variables/FormatSpecialVariables.pm
 lib/Perl/Mogrify/Transformer/Operators/FormatOperators.pm

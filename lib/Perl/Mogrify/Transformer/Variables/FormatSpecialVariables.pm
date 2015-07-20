@@ -18,16 +18,6 @@ Readonly::Scalar my $EXPL => q{Perl6 changes many special variables};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           {
-    return 'PPI::Token::Symbol',
-           'PPI::Token::Word',
-}
-
-#-----------------------------------------------------------------------------
-
 my %map = (
     'STDIN'            => '$*IN',
     'STDOUT'           => '$*OUT',
@@ -36,10 +26,6 @@ my %map = (
     #$_[1],$_[2].. => $^a,$^b # Say whaa?
     #'$a' => -, # XXX Needs some work
     #- => '$/',
-#    '$1'     => '$0', # And so on,  make sure they don't get modified twice
-#    '$2'     => '$1',
-#    '$3'     => '$2',
-#    '$4'     => '$1',
     '$`'               => '$/.prematch',
     '$PREMATCH'        => '$/.prematch',
     '${^PREMATCH}'     => '$/.prematch',
@@ -112,6 +98,22 @@ my %map = (
     '$SIG{__DIE__}'    => '$*ON_DIE', # XXX Note it's not the actual %SIG
 );
 
+#-----------------------------------------------------------------------------
+
+sub supported_parameters { return () }
+sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_themes       { return qw(core bugs)     }
+sub applies_to           {
+    return sub {
+        ( $_[1]->isa('PPI::Token::Symbol') or
+          $_[1]->isa('PPI::Token::Word') or
+          $_[1]->isa('PPI::Token::Magic') ) and
+        $map{$_[1]->content}
+    }
+}
+
+#-----------------------------------------------------------------------------
+
 # Keep track of these because they might be useful notes.
 my %all_new = (
     '$!' => 1, # current exception
@@ -150,20 +152,11 @@ sub transform {
     my ($self, $elem, $doc) = @_;
     my $old_content = $elem->content;
 
-    if ( exists $map{$old_content} ) {
-        my $new_content = $map{$old_content};
+    my $new_content = $map{$old_content};
 
-        $elem->set_content( $new_content );
-        return $self->transformation( $DESC, $EXPL, $elem );
-    }
-    elsif ( $old_content =~ /^\$(\d+)$/ ) {
-        my $new_content = '$' . ($1 - 1);
-   
-        $elem->set_content( $new_content );
-        return $self->transformation( $DESC, $EXPL, $elem );
-    }
+    $elem->set_content( $new_content );
 
-    return;
+    return $self->transformation( $DESC, $EXPL, $elem );
 }
 
 1;

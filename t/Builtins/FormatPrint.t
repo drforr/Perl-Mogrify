@@ -27,6 +27,7 @@ print FOO "hi" and 1;
 1 and print FOO "hi";
 print $FOO "hi";
 print $FOO "hi", "there";
+print $local_file $code->(@what);
 ##-->
 FOO.print("hi");
 OUT.print("{\n");
@@ -36,3 +37,4 @@ FOO.print("hi") and 1;
 1 and FOO.print("hi");
 $FOO.print("hi");
 $FOO.print("hi", "there");
+$local_file.print($code->(@what));

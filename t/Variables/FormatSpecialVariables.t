@@ -24,7 +24,6 @@ print STDOUT and 1;
 print $`;
 print $&;
 print @+;
-print $1;
 1 unless @ARGV == 1;
 ##-->
 print $*OUT;
@@ -35,5 +34,4 @@ print $*OUT and 1;
 print $/.prematch;
 print ~$/;
 print (map {.from},$/[*]);
-print $0;
 1 unless @*ARGS == 1;
