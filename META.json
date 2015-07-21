@@ -232,12 +232,8 @@
          "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/FormatShellString.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces" : {
-         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedBraces.pm",
-         "version" : "0.01"
-      },
-      "Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedCase" : {
-         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/InterpolatedCase.pm",
+      "Perl::Mogrify::Transformer::BasicTypes::Strings::Interpolation" : {
+         "file" : "lib/Perl/Mogrify/Transformer/BasicTypes/Strings/Interpolation.pm",
          "version" : "0.01"
       },
       "Perl::Mogrify::Transformer::FormatBuiltins" : {

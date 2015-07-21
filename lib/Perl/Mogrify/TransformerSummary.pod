@@ -66,11 +66,7 @@ Use C<<:8<1234567>>> instead of C<01234567>.
 
 [Mandatory]
 
-=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces>
-
-[Mandatory]
-
-=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedCase>
+=head2 L<Perl::Mogrify::Transformer::BasicTypes::Strings::Interpolation>
 
 [Mandatory]
 

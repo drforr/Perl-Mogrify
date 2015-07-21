@@ -42,7 +42,6 @@ sub _is_quoted {
 sub _reintegrate_string {
     my ( $elem, $start_delimiter, $end_delimiter ) = @_;
     my $final = '';
-    my $depth = 0;
 
     my %state = (
         brace => 0
@@ -298,12 +297,10 @@ sub transform {
 #            }
 #            else {
 #                $new_content .= '\\' . $v;
-#                $depth--;
 #            }
 #        }
 #        elsif ( $v eq '}' ) {
 #            $new_content .= '\\' . $v;
-#            $depth--;
 #        }
 #        else {
 #            $new_content .= $v;
