@@ -82,10 +82,6 @@ Use C<<:8<1234567>>> instead of C<01234567>.
 
 [Mandatory]
 
-=head2 L<Perl::Mogrify::Transformer::Files::FormatScript>
-
-[Mandatory]
-
 =head2 L<Perl::Mogrify::Transformer::CompoundStatements::FormatConditionals>
 
 [Mandatory]

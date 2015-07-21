@@ -184,7 +184,7 @@ sub __markup_array {
 sub __results_string {
     my ($subtest, $error_line) = @_;
 
-    join( "\n", __markup_array( $subtest->{original} ),
+    join( "\n", __markup_array( $subtest->{original}, $error_line ),
                 '====??====>',
                 __markup_array( $subtest->{sample}, $error_line ),
                 '====!!====>',
@@ -200,11 +200,9 @@ sub __is_deeply {
                          $#{ $subtest->{transformed} } );
     my $first_different_line = 0;
     for my $idx ( 0 .. $last_line ) {
-        next if $subtest->{sample}[$idx] eq $subtest->{transformed}[$idx];
+        next if $subtest->{sample}[$idx] eq
+                $subtest->{transformed}[$idx];
         $first_different_line = $idx;
-        last;
-    }
-    if ( $first_different_line ) {
         $TEST->diag(
             "Output begins to differ at line " .
             ( $first_different_line + 1 ) .
@@ -212,8 +210,10 @@ sub __is_deeply {
             __results_string($subtest, $first_different_line)
         );
         $num_errors++;
+        last;
     }
-    elsif ( $#{ $subtest->{sample} } > $#{ $subtest->{transformed} } ) {
+
+    if ( $#{ $subtest->{sample} } > $#{ $subtest->{transformed} } ) {
         warn "Error was [$@]\n" if $@;
         $TEST->diag(
             "Transformed file missing lines from original:\n".

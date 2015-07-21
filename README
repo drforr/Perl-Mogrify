@@ -1,5 +1,5 @@
 NAME
-    Perl::Mogrify - Critique Perl source code for best-practices.
+    Perl::Mogrify - Convert Perl5 source to compile under Perl6.
 
 SYNOPSIS
         perlmogrify source.pl
@@ -34,6 +34,7 @@ WHAT DOES IT DO
             Floating-point trailing decimal
             Here-docs
             Interpolated values ("${x}", "$x-foo" etc.)
+            Interpolated case shifting ("\lfoo", "\LFOO\E" etc.)
         Builtins
             'print $fh "text", $x'
         Q types

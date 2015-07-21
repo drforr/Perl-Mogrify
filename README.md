@@ -37,6 +37,7 @@ As of the initial release, it contains transformers for:
         Floating-point trailing decimal
         Here-docs
         Interpolated values ("${x}", "$x-foo" etc.)
+        Interpolated case modifiers ("\lFoo", "\Ufoo\E" etc.)
     Builtins
         'print $fh "text hee"'
     Q types

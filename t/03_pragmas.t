@@ -25,7 +25,6 @@ my $profile = {
     '-BasicTypes::Strings::FormatRegexp' => {},
     '-Builtins::FormatPrint'             => {},
     '-CompoundStatements::AddWhitespace' => {},
-    '-Files::FormatScript'               => {},
     '-Operators::FormatUnaryOperators'   => {},
     '-Variables::ReplaceUndef'           => {},
 };

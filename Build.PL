@@ -23,8 +23,8 @@ emit_tar_warning_if_necessary();
 
 my $builder = Perl::Mogrify::Module::Build->new(
     module_name         => 'Perl::Mogrify',
-    dist_author         => 'Jeffrey Thalhammer <jeff@imaginative-software.com>',
-    dist_abstract       => 'Critique Perl source code for best-practices.',
+    dist_author         => 'Jeffrey Goff <drforr@pobox.com>',
+    dist_abstract       => 'Convert Perl5 source to compile under Perl6.',
     license             => 'perl',
     dynamic_config      => 1,
     create_readme       => 1,
@@ -46,11 +46,9 @@ my $builder = Perl::Mogrify::Module::Build->new(
 
     meta_merge          => {
         resources => {
-            bugtracker  => 'https://github.com/Perl-Mogrify/Perl-Mogrify/issues',
-            homepage    => 'http://perlmogrify.com',
+            bugtracker  => 'https://github.com/drforr/Perl-Mogrify/issues',
             license     => [ 'http://dev.perl.org/licenses' ],
-            MailingList => 'http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users',
-            repository  => 'git://github.com/Perl-Mogrify/Perl-Mogrify.git',
+            repository  => 'git://github.com/drforr/Perl-Mogrify.git',
         },
         no_index        => {
             file        => [

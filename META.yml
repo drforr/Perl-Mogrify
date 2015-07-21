@@ -1,7 +1,7 @@
 ---
-abstract: 'Critique Perl source code for best-practices.'
+abstract: 'Convert Perl5 source to compile under Perl6.'
 author:
-  - 'Jeffrey Thalhammer <jeff@imaginative-software.com>'
+  - 'Jeffrey Goff <drforr@pobox.com>'
 build_requires:
   Test::Deep: '0'
   Test::More: '0'
@@ -311,8 +311,7 @@ requires:
 resources:
   MailingList: http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users
   bugtracker: https://github.com/Perl-Mogrify/Perl-Mogrify/issues
-  homepage: http://perlmogrify.com
   license: http://dev.perl.org/licenses/
-  repository: git://github.com/Perl-Mogrify/Perl-Mogrify.git
+  repository: git://github.com/drforr/Perl-Mogrify.git
 version: '0.01'
 x_authority: cpan:JGOFF

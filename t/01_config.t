@@ -51,7 +51,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
                 )
                 ->all_transformers_enabled_or_not();
 
-    plan tests => 93 + $all_policy_count - (129-88); # XXX Look into this later
+    plan tests => 93 + $all_policy_count - (129-87); # XXX Look into this later
 diag("XXX Fix the policy count later");
 }
 

@@ -154,7 +154,7 @@ severity = 2
 [CompoundStatements::FormatConditionals]
 severity = 1
 
-[Files::FormatScript]
+[BasicTypes::Strings::InterpolatedBraces]
 severity = 5
 
 #-----------------------------------------------------------------------------

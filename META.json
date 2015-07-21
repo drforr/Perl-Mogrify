@@ -1,7 +1,7 @@
 {
-   "abstract" : "Critique Perl source code for best-practices.",
+   "abstract" : "Convert Perl5 source to compile under Perl6.",
    "author" : [
-      "Jeffrey Thalhammer <jeff@imaginative-software.com>"
+      "Jeffrey Goff <drforr@pobox.com>"
    ],
    "dynamic_config" : 1,
    "generated_by" : "Module::Build version 0.421",
@@ -340,7 +340,6 @@
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/Integer.pm",
          "version" : "0.01"
       },
-      "Perl::Mogrify::TransformerParameter::Behavior::String" : {
          "file" : "lib/Perl/Mogrify/TransformerParameter/Behavior/String.pm",
          "version" : "0.01"
       },
@@ -416,16 +415,14 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/Perl-Mogrify/Perl-Mogrify/issues"
+         "web" : "https://github.com/drforr/Perl-Mogrify/issues"
       },
-      "homepage" : "http://perlmogrify.com",
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
-         "url" : "git://github.com/Perl-Mogrify/Perl-Mogrify.git"
+         "url" : "git://github.com/drforr/Perl-Mogrify.git"
       },
-      "x_MailingList" : "http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users"
    },
    "version" : "0.01",
    "x_authority" : "cpan:JGOFF"
