@@ -16,7 +16,7 @@ allow_leading_tabs = 0
 
 [-CompoundStatements::FormatMapGreps]
 
-[BasicTypes::Strings::InterpolatedBraces]
+[BasicTypes::Strings::Interpolation]
 flowcontrol = warn die carp croak cluck confess goto exit plan skip
 
 # None of our tests contain real POD, but POD::Spell gets confused by the code

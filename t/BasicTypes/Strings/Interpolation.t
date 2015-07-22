@@ -88,18 +88,24 @@ __DATA__
 ## name: vertical tab
 qq q\vq
 ##-->
-qq qq
+qq qvq
 ## name: Control character
 "\ca|\c{|\c}|\c"
 ##-->
 "\c[0x61]|\c[0x7b]|\c[0x7d]|\c"
 ## name: case-shift single character
-"\la|\llama|\l"
-"\ua|\udon|\u"
+"\la|\llama|\l{|\l"
+"\ua|\udon|\u{|\u"
 ##-->
-"{lcfirst("a")}|{lcfirst("l")}ama|"
-"{ucfirst("a")}|{ucfirst("d")}on|"
-## name: Unicode character description
+"{lcfirst("a")}|{lcfirst("l")}ama|{|"
+"{ucfirst("a")}|{ucfirst("d")}on|{|"
+## name: single Unicode character
 "\N{U+1234}|\N{ U  + 1234  }|\N{LATIN CAPITAL LETTER X}|"
 ##-->
 "\x[1234]|\x[1234]|\c[LATIN CAPITAL LETTER X]|"
+## name: single octal character
+"\o|\o1|\o{}|\o{12}|\o{18}"
+"\0|\017|\018|\08"
+##-->
+"\o|\o1|\o{}|\o[12]|\o{18}"
+"\o[0]|\o[17]|\o[1]8|\o[0]8"

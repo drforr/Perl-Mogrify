@@ -52,9 +52,19 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
     # Need this style of for() loop as we're going to modify $i.
     #
     for ( my $i = 0; $i < @{ $elem }; $i++ ) {
-        my $v = $elem->[$i];
-        my $la = $elem->[$i+1];
-        my $la2 = $elem->[$i+2];
+        my ( $v, $la, $la2, $la3, $la4 ) =
+            @{ $elem }[ $i, $i+1, $i+2, $i+3, $i+4 ];
+
+        # Remember: $v,   $la, $la2, $la3,  $la4
+        #           '\x', '',  '{',  '...', '}'
+        #       
+        my $braced_term;
+        $braced_term = $la3 if $la2 and $la2 eq '{' and
+                               $la4 and $la4 eq '}';
+
+        my $bracketed_term;
+        $bracketed_term = $la3 if $la2 and $la2 eq '[' and
+                                  $la4 and $la4 eq ']';
 
         # Identifier start
         #
@@ -100,8 +110,10 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
                 my $c = substr( $elem->[$i+1], 0, 1, '' );
                 $final .= qq{{lcfirst($start_delimiter$c$end_delimiter)}};
             }
-            else {
-                # Do nothing, "...\l" is pointless.
+            elsif ( $la2 ) {
+                my $c = substr( $elem->[$i+2], 0, 1, '' );
+                $final .= $c;
+                $i+=2;
             }
         }
 
@@ -110,16 +122,57 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
         elsif ( $v eq '\\L' ) {
         }
 
-        # Unicode character name
+        # Unicode character
+        #
+        # \N{U+1234} --> \x[1234]
+        # \N{LATIN CAPITAL LETTER X} --> \c[LATIN CAPITAL LETTER X]
         #
         elsif ( $v eq '\\N' ) {
+            if ( $braced_term ) {
+                if ( $braced_term =~ m{ U \s* \+ \s* ( [0-9a-fA-F]{4} ) }x ) {
+                    $final .= qq{\\x[$1]};
+                }
+                else {
+                    $final .= qq{\\c[$braced_term]};
+                }
+                $i+=3;
+            }
+            else {
+                $final .= $v;
+            }
         }
 
         # Octal character
         #
-        # '\O' (upper-case 'o') isn't special
+        # \o{17} --> \x[f]
         #
         elsif ( $v eq '\\o' ) {
+            if ( defined $braced_term and
+                 $braced_term =~ m{ ^ ([0-7]+) $ }x ) {
+                $final .= sprintf qq{\\o[$braced_term]};
+                $i+=3;
+            }
+            elsif ( defined $braced_term ) {
+                $final .= $v . $la . $la2 . $la3 . $la4;
+                $i+=3;
+            }
+            else {
+                $final .= $v;
+            }
+        }
+
+        # Octal character
+        #
+        # '\0' (0 as in 1-1) is an octal escape without braces
+        #
+        elsif ( $v eq '\\0' ) {
+            if ( $la and $la =~ m{ ^ ([0-7]+) }x ) {
+                $elem->[$i+1] =~ s{ ^ ([0-7]+) }{}x;
+                $final .= qq{\\o[$1]};
+            }
+            else {
+                $final .= qq{\\o[0]};
+            }
         }
 
         # Quotemeta range start
@@ -134,8 +187,10 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
                 my $c = substr( $elem->[$i+1], 0, 1, '' );
                 $final .= qq{{ucfirst($start_delimiter$c$end_delimiter)}};
             }
-            else {
-                # Do nothing, "...\l" is pointless.
+            elsif ( $la2 ) {
+                my $c = substr( $elem->[$i+2], 0, 1, '' );
+                $final .= $c;
+                $i+=2;
             }
         }
 
@@ -144,10 +199,10 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
         elsif ( $v eq '\\U' ) {
         }
 
-        # Vertical tab - Illegal now in Perl6
+        # Vertical tab - Just 'v' in Perl6
         #
         elsif ( $v eq '\\v' ) {
-            # Do nothing.
+            $final .= 'v';
         }
 
         # The start of a hex character
@@ -322,7 +377,7 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::BasicTypes::Strings::InterpolatedBraces - Format C<${x}> correctly
+Perl::Mogrify::Transformer::BasicTypes::Strings::Interpolation - Format C<${x}> correctly
 
 
 =head1 AFFILIATION
