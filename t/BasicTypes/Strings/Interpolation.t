@@ -14,15 +14,6 @@ our $VERSION = '0.01';
 transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
 
 ### ## name: Special cases
-### "\N{LATIN CAPITAL LETTER X}";
-### "a\N{LATIN CAPITAL LETTER X}b";
-### "\x{12ab}";
-### "a\x{12ab}b";
-### ##-->
-### "\c[LATIN CAPITAL LETTER X]";
-### "a\c[LATIN CAPITAL LETTER X]b";
-### "\x[12ab]";
-### "a\x[12ab]b"; ### ## name: interpolation of bracketed variables
 ### "${x}";
 ### qq{${x}};
 ### "\${x}";
@@ -65,25 +56,6 @@ transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
 ### "$x[1]"
 ### "$x[1]{'a'}"
 
-### ## name: No braces, no alteration.
-### "Hello (cruel?) world! $x <= $y[2] + 1"
-### ##-->
-### "Hello (cruel?) world! $x <= $y[2] + 1"
-### ## name: Unicode-related stuff
-### "\x{263a}";
-### "\o{2637}";
-### "Hello world \x{263a}!";
-### "Hello world \o{2637}!";
-### "\N{LATIN CAPITAL LETTER X}"
-### "Hello world \N{LATIN CAPITAL LETTER X}!"
-### ##-->
-### "\x[263a]";
-### "\o[2637]";
-### "Hello world \x[263a]!";
-### "Hello world \o[2637]!";
-### "\c[LATIN CAPITAL LETTER X]"
-### "Hello world \c[LATIN CAPITAL LETTER X]!"
-
 __DATA__
 ## name: vertical tab
 qq q\vq
@@ -92,7 +64,7 @@ qq qvq
 ## name: Control character
 "\ca|\c{|\c}|\c"
 ##-->
-"\c[0x61]|\c[0x7b]|\c[0x7d]|\c"
+"\c[0x61]|\c[0x7b]|\c[0x7d]|\c[0x0]"
 ## name: case-shift single character
 "\la|\llama|\l{|\l"
 "\ua|\udon|\u{|\u"
@@ -115,3 +87,7 @@ qq qvq
 ##-->
 "x|\x1|xg|\x1f|x{"
 "\x[0]|\x[0]|\x[1ffff]"
+## name: lower-case character range
+"\L\E|\L\x{1234}\E|\Lfoo\E|\Lfoo"
+##-->
+"{lc("")}|{lc("\x[1234]")}|{lc("foo")}|{lc("foo")}"

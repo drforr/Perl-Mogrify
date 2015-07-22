@@ -39,17 +39,144 @@ sub _is_quoted {
     return;
 }
 
+# Retokenize input, with special attention paid to:
+#
+# '\$foo'
+# '\$foo[XXX]{"yyy"}[32]' and so on, as these are literals.
+#
+sub _tokenize_string {
+    my $elem = shift;
+    my @out;
+
+    for ( my $i = 0; $i < @{ $elem }; $i++ ) {
+        my ( $v, $la, $la2, $la3, $la4 ) =
+            @{ $elem }[ $i, $i+1, $i+2, $i+3, $i+4 ];
+
+        # Remember: $v,   $la, $la2, $la3,  $la4
+        #           '\x', '',  '{',  '...', '}'
+        #       
+        my $braced_term;
+        $braced_term = $la3 if $la2 and $la2 eq '{' and
+                               $la4 and $la4 eq '}';
+
+        my $bracketed_term;
+        $bracketed_term = $la3 if $la2 and $la2 eq '[' and
+                                  $la4 and $la4 eq ']';
+
+        # Note that \E,\F,\L,\U,\Q,\l,\u escapes are passed straight through.
+        #
+        if ( $v =~ / ^ \\ /x ) {
+
+            # Once a '\$' is seen in the string, anything whatsoever up until:
+            #
+            #   Another escaped character (any character)
+            #   A '$' or '@'
+            #   The end of the string
+            #   Brackets can be unbalanced, whatever. Doesn't matter.
+            #
+            # should be considered part of the literal. Braces, brackets, '',
+            # anything.
+            #
+            # Of course, this still has to be postprocessed into Perl6 but
+            # this is the hard bit.
+            #
+            if ( $v eq '\\$' ) {
+                my $ctr = $i+1;
+                while ( $elem->[$ctr] =~ s{ ^ ([^\$\@\\]+) }{}x ) {
+                    $v .= $1;
+                    $ctr++;
+                }
+                $i = $ctr;
+                push @out, $v;
+            }
+            elsif ( $v eq '\\0' ) {
+                if ( $la and $la =~ m{ ^ ([0-7]+) }x ) {
+                    $elem->[$i+1] =~ s{ ^ ([0-7]+) }{}x;
+                    push @out, qq{\\o[$1]};
+                }
+                else {
+                    push @out, qq{\\o[0]};
+                }
+            }
+
+            # Control character
+            #
+            # '\c{' is an edge case, as the split() will render this into
+            # '\c', '', '{'
+            #
+            elsif ( $v eq '\\c' ) {
+                my $c = '';
+                if ( $la ) {
+                    $c = substr( $elem->[$i+1], 0, 1, '' );
+                }
+                elsif ( $la2 ) {
+                    $c = substr( $elem->[$i+2], 0, 1, '' );
+                }
+                push @out, sprintf qq{\\c[0x%x]}, ord($c);
+            }
+        }
+
+        # Here's the fun bit.
+        # Really not *that* bad, but it's a miniparser, in essence.
+        #
+        # Eat the identifier if it's there, and just for sanity's sake,
+        # just keep track of [ ] { }, and when they balance then shove
+        # the contents onto the string we're accumulating.
+        #
+        # It could be anything like "$x{2+$a{q'hi]]}}' admittedly, but...
+        #
+        elsif ( $v eq '$' ) {
+push @out, $v;
+        }
+        elsif ( $v eq '@' ) {
+push @out, $v;
+        }
+        elsif ( $v eq '%' ) {
+push @out, $v;
+        }
+        elsif ( $v eq '{' ) { push @out, $v; }
+        elsif ( $v eq '[' ) { push @out, $v; }
+        elsif ( $v eq ']' ) { push @out, $v; }
+        elsif ( $v eq '}' ) { push @out, $v; }
+        else {
+            push @out, $v;
+        }
+    }
+
+    @out;
+}
+
+# When reintegrating, this expects that:
+#
+#   '\0...'
+#   '\c...'
+#   '\o...'
+#   '\x...'
+#   '\N...'
+#
+# are all proper perl6 tokens. If they're *not*, then it expects that the {}[]
+# are unaltered.
+#
+#   '$_foo_bar_',
+#   '${_foo_bar_}',
+#   '$foo[1]{'a'}{qw{a}}[$x+1]', in fact pretty much anything that balances
+#   there is a single token.
+#
 sub _reintegrate_string {
     my ( $elem, $start_delimiter, $end_delimiter ) = @_;
     my $final = '';
 
-    my %state = (
-        brace => 0
-    );
+    my $state = {
+        case => [],
+    };
 
 warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
 
     # Need this style of for() loop as we're going to modify $i.
+    #
+    # I guess we could go the iterator route and do
+    # $state->{peeK}->() && $state->{next}->(),
+    # but that seems needlessly complex.
     #
     for ( my $i = 0; $i < @{ $elem }; $i++ ) {
         my ( $v, $la, $la2, $la3, $la4 ) =
@@ -73,41 +200,48 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
 
         # Control character
         #
-        # '\c{' is an edge case, as the split() will render this into
-        # '\c', '', '{'
+        # This now does double duty, actually, as \cG and \N{FOO BAR} are
+        # now prefixed by \c.
         #
-        elsif ( $v eq '\\c' ) {
-            if ( $la ) {
-                my $c = substr( $elem->[$i+1], 0, 1, '' );
-                my $_v = sprintf "%x", ord( $c );
-                $final .= qq{\\c[0x$_v]};
-            }
-            elsif ( $la2 ) {
-                my $c = substr( $elem->[$i+2], 0, 1, '' );
-                my $_v = sprintf "%x", ord( $c );
-                $final .= qq{\\c[0x$_v]};
-                $i += 2;
-            }
-            else {
-                $final .= $v;
-            }
+        elsif ( $v =~ / ^ \\c / ) {
+            $final .= $v;
         }
 
         # End of case or quotation range
         #
+        # If we're out of modifiers, then add the closing brace.
+        # We also perform the same check after exiting the loop, so that
+        # we don't accidentally leave an unbalanced string.
+        #
         elsif ( $v eq '\\E' ) {
+            if ( $state->{case} and @{ $state->{case} } == 1 ) {
+                $final .= '}';
+            }
+            pop @{ $state->{case} };
         }
 
         # Foldcase operator
         #
         elsif ( $v eq '\\F' ) {
+            unless ( $state->{case} and @{ $state->{case} } ) {
+                $final .= '{';
+            }
+            push @{ $state->{case} }, 'F';
         }
 
         # lowercase character
         #
+        # \l "steals" the first character from \F,\L,\U,\Q
+        #
         elsif ( $v eq '\\l' ) {
             if ( $la ) {
                 my $c = substr( $elem->[$i+1], 0, 1, '' );
+                $final .= qq{{lcfirst($start_delimiter$c$end_delimiter)}};
+            }
+            elsif ( !$la and
+                     $la2 and ( $la2 eq '\\L' or
+                                $la2 eq '\\U' ) and $la3 ) {
+                my $c = substr( $elem->[$i+3], 0, 1, '' );
                 $final .= qq{{lcfirst($start_delimiter$c$end_delimiter)}};
             }
             elsif ( $la2 ) {
@@ -115,69 +249,41 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
                 $final .= $c;
                 $i+=2;
             }
+            else {
+                # Do nothing.
+            }
         }
 
-        # lowercase range (balanced)
+        # lowercase range
+        #
+        # They may be terminated by a \E, if present.
+        # They can also nest, so \Lfoo\Lbar\Ebaz\E will look a bit odd.
+        #
+        # Also, not to be outdone, if \l or \u is in front, those steal a
+        # glyph from the string.
         #
         elsif ( $v eq '\\L' ) {
-        }
-
-        # Unicode character
-        #
-        # \N{U+1234} --> \x[1234]
-        # \N{LATIN CAPITAL LETTER X} --> \c[LATIN CAPITAL LETTER X]
-        #
-        elsif ( $v eq '\\N' ) {
-            if ( $braced_term ) {
-                if ( $braced_term =~ m{ U \s* \+ \s* ( [0-9a-fA-F]{4} ) }x ) {
-                    $final .= qq{\\x[$1]};
-                }
-                else {
-                    $final .= qq{\\c[$braced_term]};
-                }
-                $i+=3;
+            unless ( $state->{case} and @{ $state->{case} } ) {
+                $final .= '{';
             }
-            else {
-                $final .= $v;
-            }
-        }
-
-        # Octal character
-        #
-        # \o{17} --> \x[f]
-        #
-        elsif ( $v eq '\\o' ) {
-            if ( defined $braced_term and
-                 $braced_term =~ m{ ^ ([0-7]+) $ }x ) {
-                $final .= sprintf qq{\\o[$braced_term]};
-                $i+=3;
-            }
-            elsif ( defined $braced_term ) {
-                $final .= $v . $la . $la2 . $la3 . $la4;
-                $i+=3;
-            }
-            else {
-                $final .= $v;
-            }
+            push @{ $state->{case} }, 'L';
         }
 
         # Octal character
         #
         # '\0' (0 as in 1-1) is an octal escape without braces
         #
-        elsif ( $v eq '\\0' ) {
-            if ( $la and $la =~ m{ ^ ([0-7]+) }x ) {
-                $elem->[$i+1] =~ s{ ^ ([0-7]+) }{}x;
-                $final .= qq{\\o[$1]};
-            }
-            else {
-                $final .= qq{\\o[0]};
-            }
+        elsif ( $v =~ / ^ \\0 /x ) {
+            $final .= $v;
         }
 
         # Quotemeta range start
         #
         elsif ( $v eq '\\Q' ) {
+            unless ( $state->{case} and @{ $state->{case} } ) {
+                $final .= '{';
+            }
+            push @{ $state->{case} }, 'Q';
         }
 
         # Uppercase character
@@ -205,67 +311,80 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
             $final .= 'v';
         }
 
-        # The start of a hex character
-        #
-        # '\X' isn't special.
-        #
-        elsif ( $v eq '\\x' ) {
-            if ( $la2 and $la2 eq '{' and !$la3 and $la4 and $la4 eq '}' ) {
-                $final .= qq{\\x[0]};
-                $i+=3;
-            }
-            elsif ( defined $braced_term and
-                 $braced_term =~ m{ ^ ([0-9a-fA-F]+) $ }x ) {
-                $final .= sprintf qq{\\x[$braced_term]};
-                $i+=3;
-            }
-            elsif ( defined $braced_term ) {
-                $final .= $v . $la . $la2 . $la3 . $la4;
-                $i+=3;
-            }
-            elsif ( $la2 and $la2 eq '{' and !$la3 and $la4 and $la4 eq '}' ) {
-                $final .= qq{\\x[0]};
-            }
-            elsif ( $la and $la =~ m{ ^ ([0-9a-fA-F]+) }x ) {
-                $elem->[$i+1] =~ s{ ^ ([0-9a-fA-F]+) }{}x;
-                $final .= qq{\\x$1};
-            }
-            elsif ( !$la and
-                     defined $la2 ) {
-                $final .= qq{x$la2};
-                $i+=2;
-            }
-            else {
-                $final .= 'x';
-            }
-        }
-
         # Opening brace
         #
         elsif ( $v eq '{' ) {
+            if ( $state->{case} and @{ $state->{case} } > 0 ) { # XXX fix later
+                $final .= '\\{';
+            }
+            else {
+                $final .= '\\{';
+            }
         }
 
         # Closing brace
         #
         elsif ( $v eq '}' ) {
+            if ( $state->{case} and @{ $state->{case} } > 0 ) { # XXX fix later
+                $final .= '\\}';
+            }
+            else {
+                $final .= '\\}';
+            }
         }
 
         # Opening bracket
         #
         elsif ( $v eq '[' ) {
+            if ( $state->{case} and @{ $state->{case} } > 0 ) { # XXX fix later
+                $final .= '\\[';
+            }
+            else {
+                $final .= '\\[';
+            }
         }
 
         # Closing bracket
         #
         elsif ( $v eq ']' ) {
+            if ( $state->{case} and @{ $state->{case} } > 0 ) { # XXX fix later
+                $final .= '\\]';
+            }
+            else {
+                $final .= '\\]';
+            }
         }
 
         # Everything else.
         #
+        # If we're inside a casefold (that is, if the case stack is nonempty)
+        # then casefold the current item.
+        #
+        # This needs to be done to almost every term actually.
+        #
         else {
-            $final .= $v;
+            if ( $state->{case} and @{ $state->{case} } ) {
+                if ( $state->{case}[0] eq 'L' ) {
+                    $final .= qq{lc($start_delimiter$v$end_delimiter)};
+                }
+                elsif ( $state->{case}[0] eq 'U' ) {
+                    $final .= qq{uc($start_delimiter$v$end_delimiter)};
+                }
+                elsif ( $state->{case}[0] eq 'Q' ) {
+                    $final .= qq{quotemeta($start_delimiter$v$end_delimiter)};
+                }
+            }
+            else {
+                $final .= $v;
+            }
         }
     }
+
+    if ( $state->{case} and @{ $state->{case} } ) {
+        pop @{ $state->{case} };
+        $final .= '}';
+    }
+
     $final;
 }
 
@@ -293,102 +412,95 @@ sub transform {
     # \l\u\u\l you encounter in a row, it will only ever be the first
     # modifier that gets used.
     #
+    # But they do sneak inside \L,\U,\F,\Q to alter the first character.
+    #
     # \L\U modifiers probably would stack if they were legal, but they aren't.
+    # In any case, remove extras.
     #
     $old_string =~ s{ (\\[lu]) (\\[lu])+ }{$1}gx;
+    $old_string =~ s{ (\\[LU]) (\\[LU])+ }{$1}gx;
+
+    # Transform all of the perl5 special characters into Perl6 forms:
+
+    # \t is unaltered.
+    # \n is unaltered.
+    # \r is unaltered.
+    # \f is unaltered.
+    # \b is unaltered.
+    # \a is unaltered.
+    # \e is unaltered.
+
+    # \x{263a} now looks like \x[263a].
+    $old_string =~ s{ \\x \{ ([0-9a-fA-F]+) \) }{\x[$1]}mgx;
+
+    # \x12 is unaltered.
+
+    # \xX is now illegal, and in perl5 it generated nothing.
+    $old_string =~ s{ \\x \{ ([^0-9a-fA-F]) \) }{$1}mgx;
+
+    # \x at the end of the string is still illegal.
+    $old_string =~ s{ \\x $ }{}mx;
+
+    # \N{U+1234} is now \x[1234].
+    # ( whitespace is significant. )
+    $old_string =~ s{ \\N \{ U \+ ([^0-9a-fA-F]) \) }{\x[$1]}mgx;
+
+    # \N{LATIN CAPITAL LETTER X} is now \c[LATIN CAPITAL LETTER X]
+    $old_string =~ s{ \\N \{([^\})+\} }{\x[$1]}mgx;
+
+    # \o{2637} now looks like \o[2637].
+    $old_string =~ s{ \\o \{ ([0-7]+) \) }{\o[$1]}mgx;
+
+    # \o12 is unaltered.
+
+    # \oX is now illegal, and in perl5 it generated nothing.
+    $old_string =~ s{ \\o \{ ([^0-9]) \) }{$1}mgx;
+
+    # \o at the end of the string is still illegal.
+    $old_string =~ s{ \\o $ }{}mx;
+
+    # \0123 is now \o[123].
+    $old_string =~ s{ \\0 \{ ([0-7]) \) }{\o[$1]}mgx;
+
+    # \0X is now illegal, and in perl5 it generated nothing.
+    $old_string =~ s{ \\0 \{ ([^0-7]) \) }{$1}mgx;
+
+    # \o at the end of the string is still illegal.
+    $old_string =~ s{ \\0 $ }{}mx;
+
+    # \cX is now illegal, and in perl5 it generated nothing.
+    $old_string =~ s{ \\c (.) }{'\c[0x' . (sprintf "%x", ord( $1 )) . ']'}mgex;
+
+    # \c at the end of the string is still illegal.
+    $old_string =~ s{ \\c $ }{}mx;
+
+    # Even though they only alter one character, \l and \u require special
+    # treatment.
+    #
+    # And oo, what if someone was sneaky and wrote "\l\x{1234}"...
+    #
+    # Which ordinarily wouldn't be a problem, *but* we might be inside
+    # a \L..\E range, which is *also* Perl6 code.
+    #
+    # So, we do a primitive tokenization pass on the strings, looking just for
+    # \l, \u, \L, \U, \F, \Q, \E
+    #
+    # (Yes, Virginia, quotemeta interpolates in strings.)
+    #
 
     # Split the string on '\\.', '$', '{', '[', ']', '}'
     #
     # These are all the important Perl5 characters to interpolated values.
+    # I hope.
     #
-    my @elem = split /( \\. | \$ | \{ | \[ | \] | \} )/x, $old_string;
-    $new_string = _reintegrate_string(\@elem, $start_delimiter, $end_delimiter);
-
-#        # The opening braces we're interested in--------V
-#        #   Begin a hash key interpolation           "$x{a}"
-#        #   Begin a Unicode character name           "\N{SMILEY FACE}"
-#        #   Begin a hex number                       "\x{12ab}"
-#        #   Begin an noninterpolated scalar          "\${x}"
-#        #   Begin an interpolated scalar              "${x}"
-#        #   Begin an noninterpolated text block       "${\x}"
-#        #     Which could be preceded by a variable "$x${\x}"
-#        #   Begin an interpolating @{[..]} block      "@{[..]}" # Later :)
-#        #
-#        elsif ( $v eq '{' ) {
-#            
-#            if ( $new_content =~ m{ \$\w+ [-]> $}x and
-#                 $elem[$i+1] and
-#                 $elem[$i+2] and
-#                 $elem[$i+2] eq '}' ) {
-#                $new_content =~ s{ (\$\w+) [-]> $}{$1.}x;
-#                if ( _is_quoted($elem[$i+1]) ) {
-#                    $new_content .= qq{{$elem[$i+1]}};
-#                }
-#                else {
-#                    $elem[$i+1] =~ s{'}{\\'}g;
-#                    $new_content .= qq{{'$elem[$i+1]'}};
-#                }
-#                $new_content .= $elem[$i+2];
-#                $i += 2;
-#            }
-#            if ( $new_content =~ m{ \$\w+ $}x and
-#                 $elem[$i+1] and
-#                 $elem[$i+2] and
-#                 $elem[$i+2] eq '}' ) {
-#                $new_content =~ s{ (\$\w+) $}{$1}x;
-#                if ( _is_quoted($elem[$i+1]) ) {
-#                    $new_content .= qq{{$elem[$i+1]}};
-#                }
-#                else {
-#                    $elem[$i+1] =~ s{'}{\\'}g;
-#                    $new_content .= qq{{'$elem[$i+1]'}};
-#                }
-#                $new_content .= $elem[$i+2];
-#                $i += 2;
-#            }
-#            elsif ( $new_content =~ / \\ N $/x and
-#                 $elem[$i+1] and
-#                 $elem[$i+1] =~ / ^ [A-Z ]+ $ /x and
-#                 $elem[$i+2] and
-#                 $elem[$i+2] eq '}' ) {
-#                $new_content =~ s< \\ N $><\\c>x;
-#                $new_content .= '[' . $elem[$i+1] . ']';
-#                $i += 2;
-#            }
-#            elsif ( $new_content =~ / \\ [xX] $/x and
-#                    $elem[$i+1] and
-#                    $elem[$i+1] =~ / ^ [0-9a-fA-F ]+ $ /x and
-#                    $elem[$i+2] and
-#                    $elem[$i+2] eq '}' ) {
-#                $new_content .= '[' . $elem[$i+1] . ']';
-#                $i += 2;
-#            }
-#            elsif ( $new_content =~ / \\ \$ $/x and
-#                    $elem[$i+1] and
-#                    $elem[$i+2] and
-#                    $elem[$i+2] eq '}' ) {
-#                $new_content .= '\\{' . $elem[$i+1] . '\\}';
-#                $i += 2;
-#            }
-#            elsif ( $new_content =~ / \$ $/x and
-#                    $elem[$i+1] and
-#                    $elem[$i+2] and
-#                    $elem[$i+2] eq '}' ) {
-#                $new_content =~ s< \$ $><{\$>x;
-#                $new_content .= $elem[$i+1] . '}';
-#                $i += 2;
-#            }
-#            else {
-#                $new_content .= '\\' . $v;
-#            }
-#        }
-#        elsif ( $v eq '}' ) {
-#            $new_content .= '\\' . $v;
-#        }
-#        else {
-#            $new_content .= $v;
-#        }
-#    }
+    # Unlike perl6, this is a two-pass algorithm.
+    # It could be done in one pass, but that makes
+    # $x{a}[1][$foo] needlessly complex.
+    #
+    my @elem =
+        split /( \\. | \$ | \% | \@ | \{ | \[ | \] | \} )/x, $old_string;
+    my @token = _tokenize_string(\@elem);
+    $new_string = _reintegrate_string(\@token, $start_delimiter, $end_delimiter);
 
     set_string($elem,$new_string);
 
