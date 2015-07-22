@@ -104,8 +104,14 @@ qq qvq
 ##-->
 "\x[1234]|\x[1234]|\c[LATIN CAPITAL LETTER X]|"
 ## name: single octal character
-"\o|\o1|\o{}|\o{12}|\o{18}"
+"\o|\o1|\o8|\o{}|\o{12}|\o{18}"
 "\0|\017|\018|\08"
 ##-->
-"\o|\o1|\o{}|\o[12]|\o{18}"
+"\o|\o1|\o8|\o{}|\o[12]|\o{18}"
 "\o[0]|\o[17]|\o[1]8|\o[0]8"
+## name: single hex character
+"\x|\x1|\xg|\x1f|\x{"
+"\x{}|\x{0}|\x{1ffff}"
+##-->
+"x|\x1|xg|\x1f|x{"
+"\x[0]|\x[0]|\x[1ffff]"

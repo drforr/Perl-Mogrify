@@ -210,6 +210,34 @@ warn ">>" . join( '', map { ">$_<" } @{ $elem } ) . "<<\n";
         # '\X' isn't special.
         #
         elsif ( $v eq '\\x' ) {
+            if ( $la2 and $la2 eq '{' and !$la3 and $la4 and $la4 eq '}' ) {
+                $final .= qq{\\x[0]};
+                $i+=3;
+            }
+            elsif ( defined $braced_term and
+                 $braced_term =~ m{ ^ ([0-9a-fA-F]+) $ }x ) {
+                $final .= sprintf qq{\\x[$braced_term]};
+                $i+=3;
+            }
+            elsif ( defined $braced_term ) {
+                $final .= $v . $la . $la2 . $la3 . $la4;
+                $i+=3;
+            }
+            elsif ( $la2 and $la2 eq '{' and !$la3 and $la4 and $la4 eq '}' ) {
+                $final .= qq{\\x[0]};
+            }
+            elsif ( $la and $la =~ m{ ^ ([0-9a-fA-F]+) }x ) {
+                $elem->[$i+1] =~ s{ ^ ([0-9a-fA-F]+) }{}x;
+                $final .= qq{\\x$1};
+            }
+            elsif ( !$la and
+                     defined $la2 ) {
+                $final .= qq{x$la2};
+                $i+=2;
+            }
+            else {
+                $final .= 'x';
+            }
         }
 
         # Opening brace
