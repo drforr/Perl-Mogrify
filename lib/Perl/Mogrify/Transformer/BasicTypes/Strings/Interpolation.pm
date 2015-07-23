@@ -4,6 +4,7 @@ use 5.006001;
 use strict;
 use warnings;
 use Readonly;
+use List::Util qw( min );
 use Text::Balanced qw( extract_variable );
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
@@ -29,37 +30,74 @@ sub applies_to           {
 }
 
 #-----------------------------------------------------------------------------
+#
+# Check whether a string has variables that interpolate.
+#
+sub _nearest_variable {
+    my ($self, $string) = @_;
+
+    my @var = grep { $_ != -1 } (
+        index( $string, '@' ),
+        index( $string, '\\@' ),
+        index( $string, '$' ),
+        index( $string, '\\$' ),
+    );
+    return -1 unless @var;
+
+    return min(@var);
+}
 
 sub tokenize_variables {
     my ($self, $old_string) = @_;
 
-    my $dollar = '$';
     my @out;
-    if ( $old_string and
-         $old_string =~ s{ ^ (.+?(?=\\\$|\$)) }{}x ) {
-        push @out, $1;
-    }
-    while ( $old_string and
-            $old_string =~ s{ ^ (.+?(?=\\\$|\$)) }{}x ) {
-        push @out, $1;
+    while ( $old_string ) {
+        my $index = $self->_nearest_variable($old_string);
 
-        # If the string starts with '\$', then everything up until the next
-        # '$' (or end of the string) is uninterpolated text.
+        # No can haz cheezburger.
         #
-        if ( $old_string =~ s{ ^ \\\$(.+?(?=\$)) }{}x ) {
-            push @out, $1;
+        if ( $index == -1 ) {
+            push @out, $old_string;
+            last;
         }
 
-        # Otherwie, it's a variable name. Let extract_variable() do its work
-        # and give us the rest of the string after the variable.
+        # Can haz variable, we iz on start.
         #
-        else {
-            my ( $var_name, $remainder, $prefix ) =
-                 extract_variable( $old_string );
-            if ( $var_name ) {
+        elsif ( $index == 0 ) {
+            if ( $old_string =~ s{ ^ (\\\$ | \\\@) }{}x ) {
+                my $v = $1;
+                my $_next_variable = $self->_nearest_variable($old_string);
+
+                # We've eaten the '\\$' or '\\@' at the start, look forward
+                # to find the next variable.
+                #
+                # If there isn't one, reform what we had and bail
+                # 
+                # Otherwise, push everything up until the next variable.
+                #
+                if ( $_next_variable > -1 ) {
+                    $v .= substr( $old_string, 0, $_next_variable, '' );
+                    push @out, $v;
+                }
+                else {
+                    push @out, $v . $old_string;
+                }
+            }
+            else {
+                my ( $var_name, $remainder, $prefix ) =
+                     extract_variable( $old_string );
                 push @out, $var_name;
                 $old_string = $remainder;
+                next;
             }
+        }
+
+        # Variable starts later in the string.
+        #
+        else {
+            push @out, substr( $old_string, 0, $index, '' );
+            # we accidentally the string.
+            next;
         }
     }
     if ( $old_string ) {
@@ -151,38 +189,86 @@ sub transform {
 
     # \c. is unchanged. Or at least I'll treat it as such.
 
-    # If there's an open-brace, there might be block-worthy constructs in there.
+    # At this point, you'll notice that practically every '{' and '}'
+    # character is out of our target string, with trivial exceptions like
+    # 'c{', which is illegal anyway.
     #
+    # This is important for two main reasons. The first is that anything inside
+    # {} in Perl6 is considered valid Perl6 code, which is also why a trick
+    # we use later works.
+    #
+    # So, unless {} are part of a variable that can be interpolated, we have
+    # to escape it. And we can't do that if there are constructs like \x{123}
+    # hanging around in the string, because those would get messed up.
+    #
+
+    # Keep track of the \L..\E nesting depth.
+    # We have to weave the \L..\E, \U..\E in at the same time as we're
+    # interpolating.
+    #
+    my $depth = 0;
     if ( $old_string =~ / \{ /x ) {
         my @tokens = $self->tokenize_variables($old_string);
+        my $collected;
 
-warn "]" . join(' ', @tokens) . "[\n";
+        for my $token ( @tokens ) {
 
-        $old_string = join '', @tokens;
+            # Tokens that start with $ or @ don't get their {} escaped.
+            # There is one other thing that *might* happen to them, though.
+            # It *could* be that $foo, $x[1]{'a'} &c is *preceded* by a \l or \u
+            #
+            # In this case, some fun happens.
+            # We reach back into the collected string, and
+            # remove the offending \l or \u, and save it for later.
+            #
+            # Then we check if we're already inside a \L..\E construct, and
+            # if we are, then just wrap the variable in lcfirst(...) or uc
+            # as appropriate.
+            #
+            # Thankfully, $x{\LA\E} and $x{\lA} get parsed oddly so they'll
+            # probably never be used in real code. And I just jinxed myself
+            # because someone will find a way to.
+            #
+            if ( $token =~ m{ ^ ( \$ | \@ ) }x ) {
+
+                # If there's a \l or \u operator immediately before the 
+                # variable, wrap it in Perl6 code to lcfirst/ucfirst as
+                # appropriate.
+                #
+                if ( $collected and
+                     $collected =~ s{ \\([lu]) $ }{}x ) {
+                    if ( $depth == 0 ) {
+                        $collected .= qq{{${1}cfirst($token)}};
+                    }
+                    else {
+                        $collected .= qq{${1}cfirst($token)};
+                    }
+                }
+                else {
+                    $collected .= $token;
+                }
+            }
+
+            # We don't have to worry about this being a Perl5 code block,
+            # so just blindly escape it.
+            #
+            # However, it could contain \F..E blocks.
+            # It's also important to remember that \l\U..\E is possible
+            # as well so we'll look behind for those tokens while splitting.
+            #
+            else {
+                $token =~ s{ (\{|\}) }{\\$1}gx;
+
+                if ( $depth > 0 ) {
+                    $collected .= qq{$start_delimiter$token$end_delimiter~};
+                }
+                else {
+                    $collected .= $token;
+                }
+            }
+        }
+        $old_string = $collected;
     }
-
-#    # Even though they only alter one character, \l and \u require special
-#    # treatment.
-#    #
-#    # And oo, what if someone was sneaky and wrote "\l\x{1234}"...
-#    #
-#    # Which ordinarily wouldn't be a problem, *but* we might be inside
-#    # a \L..\E range, which is *also* Perl6 code.
-#    #
-#    # So, we do a primitive tokenization pass on the strings, looking just for
-#    # \l, \u, \L, \U, \F, \Q, \E
-#    #
-#    # (Yes, Virginia, quotemeta interpolates in strings.)
-#    #
-#
-#    # Split the string on '\\.', '$', '{', '[', ']', '}'
-#    #
-#    # These are all the important Perl5 characters to interpolated values.
-#    # I hope.
-#    #
-#    # Unlike perl6, this is a two-pass algorithm.
-#    # It could be done in one pass, but that makes
-#    # $x{a}[1][$foo] needlessly complex.
 
     set_string($elem,$old_string);
 
