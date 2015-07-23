@@ -56,38 +56,53 @@ transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
 ### "$x[1]"
 ### "$x[1]{'a'}"
 
+
 __DATA__
-## name: vertical tab
-qq q\vq
+## name: No variables, case-folding, escapes or braces
+qq{Hello, "world"! This (kinda complex) ['no, really?'] should->not be altered.}
+qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./<>?}
 ##-->
-qq qvq
-## name: Control character
-"\ca|\c{|\c}|\c"
+qq{Hello, "world"! This (kinda complex) ['no, really?'] should->not be altered.}
+qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./<>?}
+## name: \v is no longer a metacharacter
+qq{\v}
+qq{\v|\value}
 ##-->
-"\c[0x61]|\c[0x7b]|\c[0x7d]|\c[0x0]"
-## name: case-shift single character
-"\la|\llama|\l{|\l"
-"\ua|\udon|\u{|\u"
+qq{v}
+qq{v|value}
+## name: \x{263a} is now \x[263a]
+qq{\x{2}}
+qq{\x{263a}|\x{10ffff}}
 ##-->
-"{lcfirst("a")}|{lcfirst("l")}ama|{|"
-"{ucfirst("a")}|{ucfirst("d")}on|{|"
-## name: single Unicode character
-"\N{U+1234}|\N{ U  + 1234  }|\N{LATIN CAPITAL LETTER X}|"
+qq{\x[2]}
+qq{\x[263a]|\x[10ffff]}
+## name: \x1f is unchanged
+qq{\x1f}
+qq{\x1f|\x1g|\x}
 ##-->
-"\x[1234]|\x[1234]|\c[LATIN CAPITAL LETTER X]|"
+qq{\x1f}
+qq{\x1f|\x1g|}
+## name: \N{U+1234} is now \x[1234]
+qq{\N{U+1234}}
+qq{\N{U+1234}|foo\N{U+1234}bar}
+##-->
+qq{\x[1234]}
+qq{\x[1234]|foo\x[1234]bar}
+## name: \N{LATIN CAPITAL LETTER X} is now \x[LATIN CAPITAL LETTER X1234]
+qq{\N{LATIN CAPITAL LETTER X}}
+qq{\N{LATIN CAPITAL LETTER X}|foo\N{LATIN CAPITAL LETTER X}bar}
+##-->
+qq{\c[LATIN CAPITAL LETTER X]}
+qq{\c[LATIN CAPITAL LETTER X]|foo\c[LATIN CAPITAL LETTER X]bar}
 ## name: single octal character
-"\o|\o1|\o8|\o{}|\o{12}|\o{18}"
-"\0|\017|\018|\08"
+qq{\o17}
+qq{\o|\o1|\o8|\o{}|\o{12}|\o{18}}
+qq{\0|\017|\018|\08}
 ##-->
-"\o|\o1|\o8|\o{}|\o[12]|\o{18}"
-"\o[0]|\o[17]|\o[1]8|\o[0]8"
-## name: single hex character
-"\x|\x1|\xg|\x1f|\x{"
-"\x{}|\x{0}|\x{1ffff}"
+qq{\o17}
+qq{\o|\o1|\o8|\o[]|\o[12]|\o[18]}
+qq{\0|\017|\018|\08}
+## name: simple variables
+qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
 ##-->
-"x|\x1|xg|\x1f|x{"
-"\x[0]|\x[0]|\x[1ffff]"
-## name: lower-case character range
-"\L\E|\L\x{1234}\E|\Lfoo\E|\Lfoo"
-##-->
-"{lc("")}|{lc("\x[1234]")}|{lc("foo")}|{lc("foo")}"
+qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
