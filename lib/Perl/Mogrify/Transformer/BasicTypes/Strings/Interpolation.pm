@@ -4,7 +4,7 @@ use 5.006001;
 use strict;
 use warnings;
 use Readonly;
-use List::Util qw( min );
+use List::Util qw( max );
 use Text::Balanced qw( extract_variable );
 
 use Perl::Mogrify::Utils qw{ :characters :severities };
@@ -30,81 +30,43 @@ sub applies_to           {
 }
 
 #-----------------------------------------------------------------------------
+# Split the string on unescaped '$' and '@'
 #
-# Check whether a string has variables that interpolate.
+#     Furthermore, split the (uninterpolated portion) on \l,\u... etc.
 #
-sub _nearest_variable {
+sub tokenize_variables {
     my ($self, $string) = @_;
 
-    my @var = grep { $_ != -1 } (
-        index( $string, '@' ),
-        index( $string, '\\@' ),
-        index( $string, '$' ),
-        index( $string, '\\$' ),
-    );
-    return -1 unless @var;
-
-    return min(@var);
-}
-
-sub tokenize_variables {
-    my ($self, $old_string) = @_;
-
-    my @out;
-    while ( $old_string ) {
-        my $index = $self->_nearest_variable($old_string);
-
-        # No can haz cheezburger.
+    my @tokens;
+    while ( $string ) {
+        # Kick this case down the road.
+        # It plays merry hob with extract_variable(), for one.
         #
-        if ( $index == -1 ) {
-            push @out, $old_string;
-            last;
+        if ( $string =~ s{ ^ ( (?: \$ | \@ ) \\ . ) }{}x ) {
+            if ( @tokens ) { $tokens[-1] .= $1 }
+            else { @tokens = ( $1 ) }
         }
-
-        # Can haz variable, we iz on start.
-        #
-        elsif ( $index == 0 ) {
-            if ( $old_string =~ s{ ^ (\\\$ | \\\@) }{}x ) {
-                my $v = $1;
-                my $_next_variable = $self->_nearest_variable($old_string);
-
-                # We've eaten the '\\$' or '\\@' at the start, look forward
-                # to find the next variable.
-                #
-                # If there isn't one, reform what we had and bail
-                # 
-                # Otherwise, push everything up until the next variable.
-                #
-                if ( $_next_variable > -1 ) {
-                    $v .= substr( $old_string, 0, $_next_variable, '' );
-                    push @out, $v;
-                }
-                else {
-                    push @out, $v . $old_string;
-                }
+        elsif ( $string =~ / ^ (?: \$ | \@ ) [^\\] /x ) {
+            my ( $var_name, $remainder, $prefix ) =
+                 extract_variable( $string );
+            $string = $remainder;
+            push @tokens, $var_name;
+        }
+        elsif ( $string =~ / \$ /x ) {
+            my $esc = index( $string, '\\$' );
+            my $unesc = index( $string, '$' );
+            if ( $esc == -1 or $esc > $unesc ) {
+                push @tokens, substr( $string, 0, $unesc, '' );
             }
             else {
-                my ( $var_name, $remainder, $prefix ) =
-                     extract_variable( $old_string );
-                push @out, $var_name;
-                $old_string = $remainder;
-                next;
+                push @tokens, substr( $string, 0, length($string), '' );
             }
         }
-
-        # Variable starts later in the string.
-        #
         else {
-            push @out, substr( $old_string, 0, $index, '' );
-            # we accidentally the string.
-            next;
+            push @tokens, substr( $string, 0, length($string), '' );
         }
     }
-    if ( $old_string ) {
-        push @out, $old_string;
-    }
-
-    return @out;
+    return @tokens;
 }
 
 sub transform {
@@ -202,70 +164,15 @@ sub transform {
     # hanging around in the string, because those would get messed up.
     #
 
-    # Keep track of the \L..\E nesting depth.
-    # We have to weave the \L..\E, \U..\E in at the same time as we're
-    # interpolating.
-    #
-    my $depth = 0;
     if ( $old_string =~ / \{ /x ) {
-        my @tokens = $self->tokenize_variables($old_string);
+        my $depth = 0;
+        my @tokens;
+
+        my @_tokens = $self->tokenize_variables($old_string);
+warn ">>@_tokens<<\n";
+
         my $collected;
-
         for my $token ( @tokens ) {
-
-            # Tokens that start with $ or @ don't get their {} escaped.
-            # There is one other thing that *might* happen to them, though.
-            # It *could* be that $foo, $x[1]{'a'} &c is *preceded* by a \l or \u
-            #
-            # In this case, some fun happens.
-            # We reach back into the collected string, and
-            # remove the offending \l or \u, and save it for later.
-            #
-            # Then we check if we're already inside a \L..\E construct, and
-            # if we are, then just wrap the variable in lcfirst(...) or uc
-            # as appropriate.
-            #
-            # Thankfully, $x{\LA\E} and $x{\lA} get parsed oddly so they'll
-            # probably never be used in real code. And I just jinxed myself
-            # because someone will find a way to.
-            #
-            if ( $token =~ m{ ^ ( \$ | \@ ) }x ) {
-
-                # If there's a \l or \u operator immediately before the 
-                # variable, wrap it in Perl6 code to lcfirst/ucfirst as
-                # appropriate.
-                #
-                if ( $collected and
-                     $collected =~ s{ \\([lu]) $ }{}x ) {
-                    if ( $depth == 0 ) {
-                        $collected .= qq{{${1}cfirst($token)}};
-                    }
-                    else {
-                        $collected .= qq{${1}cfirst($token)};
-                    }
-                }
-                else {
-                    $collected .= $token;
-                }
-            }
-
-            # We don't have to worry about this being a Perl5 code block,
-            # so just blindly escape it.
-            #
-            # However, it could contain \F..E blocks.
-            # It's also important to remember that \l\U..\E is possible
-            # as well so we'll look behind for those tokens while splitting.
-            #
-            else {
-                $token =~ s{ (\{|\}) }{\\$1}gx;
-
-                if ( $depth > 0 ) {
-                    $collected .= qq{$start_delimiter$token$end_delimiter~};
-                }
-                else {
-                    $collected .= $token;
-                }
-            }
         }
         $old_string = $collected;
     }

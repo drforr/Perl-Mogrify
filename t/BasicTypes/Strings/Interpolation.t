@@ -104,5 +104,11 @@ qq{\o|\o1|\o8|\o[]|\o[12]|\o[18]}
 qq{\0|\017|\018|\08}
 ## name: simple variables
 qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
+qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
 ##-->
 qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
+qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
+## name: Check that \l,\u and friends aren't escaped inside variables.
+qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
+##-->
+qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
