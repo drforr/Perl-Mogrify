@@ -1,6 +1,6 @@
 # NAME
 
-Perl::Mogrify - Transmogrify Perl5 code into Perl6
+Perl::ToPerl6 - Transmogrify Perl5 code into Perl6
 
 # SYNOPSIS
 
@@ -8,13 +8,13 @@ Perl::Mogrify - Transmogrify Perl5 code into Perl6
 
 # DESCRIPTION
 
-Perl::Mogrify is an extensible framework for transforming Perl5 code into Perl6.
+Perl::ToPerl6 is an extensible framework for transforming Perl5 code into Perl6.
 The framework owes a great deal to Jeffrey Thalmer and Perl::Critic,
 inasmuch as the source was almost completely cribbed from there. Any remaining
 bugs are my fault, however.
 
 This is meant to be extenible so that others can create their own Perl5 to Perl6
-custom transformation modules and add the to the Perl::Mogrify::Transformer
+custom transformation modules and add the to the Perl::ToPerl6::Transformer
 namespace.
 
 The existing modules are the result of taking existing perl5 code and
@@ -25,7 +25,7 @@ to configure the tool.
 
 The documentation is still basically a s/// of the original Perl::Critic
 documentation, with the exception of this README. If you're brave or foolish,
-feel free to use Test::Perl::Mogrify to translate your code as part of your
+feel free to use Test::Perl::ToPerl6 to translate your code as part of your
 test suite or source code control platform, but caveat emptor.
 
 # WHAT DOES IT DO
@@ -66,13 +66,13 @@ aren't really appropriate for this.
 
 # THE TRANSFORMERS
 
-Please see the Perl::Mogrify::Transformer:: namespace for a full listing of
-the core modules that come with Perl::Mogrify. The core modules are all
+Please see the Perl::ToPerl6::Transformer:: namespace for a full listing of
+the core modules that come with Perl::ToPerl6. The core modules are all
 documented, albeit in a minimal sense. 'perlmogrify -doc PATTERN' might still
 work and should bring up documentation for the appropriate module.
 
 If other people do write transformer modules, I might be tempted to add
-support for a L<Perl::Mogrify::TransformerX> namespace, but we'll discuss
+support for a L<Perl::ToPerl6::TransformerX> namespace, but we'll discuss
 that issue if it ever comes up.
 
 # TRANSFORMER THEMES
@@ -87,7 +87,7 @@ a specific module or some tricky bit of syntax that fails to convert, but
 the '## no mogrify' line marker may work for your needs, as it's a holdover
 from this module's genesis as Perl::Critic.
 
-# THE [Perl::Mogrify](https://metacpan.org/pod/Perl::Mogrify) PHILOSOPHY
+# THE [Perl::ToPerl6](https://metacpan.org/pod/Perl::ToPerl6) PHILOSOPHY
 
 For the moment, there is no facility for defining the order that transformers
 are run i, so each individual module cannot rely on other transformations
@@ -96,7 +96,7 @@ make allowances at certain points, for instance there are two separate
 transformation modules for the C<for> loop, and the last one to run assumes
 that nothing has been run.
 
-There is a Perl::Mogrify::Utils namespace where utilities for transformers
+There is a Perl::ToPerl6::Utils namespace where utilities for transformers
 will reside, such as determining the style of a 'for' loop. This was a pain
 and probably already exists on CPAN but I'm already pulling in quite a few
 dependencies for this module as it is.
@@ -136,7 +136,7 @@ and want it integrated.
 
 # PREREQUISITES
 
-Perl::Mogrify requires the following modules:
+Perl::ToPerl6 requires the following modules:
 
 [B::Keywords](https://metacpan.org/pod/B::Keywords)
 
@@ -216,7 +216,7 @@ be active.
 
 Jeffrey Thalhammer - For creating the framework I'm shamelessly ripping off, so I don't have to create an entire plugin architecture.
 
-Adam Kennedy - For creating [PPI](https://metacpan.org/pod/PPI), the heart and soul of [Perl::Mogrify](https://metacpan.org/pod/Perl::Mogrify).
+Adam Kennedy - For creating [PPI](https://metacpan.org/pod/PPI), the heart and soul of [Perl::ToPerl6](https://metacpan.org/pod/Perl::ToPerl6).
 
 Damian Conway - For writing **Perl Best Practices**, finally :)
 

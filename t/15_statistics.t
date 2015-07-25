@@ -6,9 +6,9 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::Statistics;
-use Perl::Mogrify::TestUtils;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::Statistics;
+use Perl::ToPerl6::TestUtils;
 
 use Test::More tests => 18;
 
@@ -18,11 +18,11 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
-my $package = 'Perl::Mogrify::Statistics';
+my $package = 'Perl::ToPerl6::Statistics';
 
 my @methods = qw(
     average_sub_mccabe
@@ -59,7 +59,7 @@ END_PERL
 # Just don't get involved with Perl::Tidy.
 my $profile = { '-Arrays::FormatArrayQws' => {} };
 my $mogrify =
-    Perl::Mogrify->new(
+    Perl::ToPerl6->new(
         -severity => 1,
         -profile => $profile,
         -theme => 'core',

@@ -13,9 +13,9 @@ use File::Temp qw< >;
 use PPI::Document qw< >;
 use PPI::Document::File qw< >;
 
-use Perl::Mogrify::TransformerFactory;
-use Perl::Mogrify::TestUtils qw(bundled_policy_names);
-use Perl::Mogrify::Utils;
+use Perl::ToPerl6::TransformerFactory;
+use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::Utils;
 
 use Test::More tests => 153;
 
@@ -69,7 +69,7 @@ sub test_export {
 
     is($SPACE, q< >, 'character constants');
     is($SEVERITY_LOWEST, 1, 'severity constants');
-    is($POLICY_NAMESPACE, 'Perl::Mogrify::Transformer', 'Transformer namespace');
+    is($POLICY_NAMESPACE, 'Perl::ToPerl6::Transformer', 'Transformer namespace');
 
     return;
 }
@@ -80,7 +80,7 @@ sub count_matches { my $val = shift; return defined $val ? scalar @{$val} : 0; }
 sub make_doc {
     my $code = shift;
     return
-        Perl::Mogrify::Document->new('-source' => ref $code ? $code : \$code);
+        Perl::ToPerl6::Document->new('-source' => ref $code ? $code : \$code);
 }
 
 sub test_find_keywords {
@@ -307,11 +307,11 @@ sub test_interpolate {
 
 sub test_is_perl_and_shebang_line {
     for ( qw(foo.t foo.pm foo.pl foo.PL) ) {
-        ok( Perl::Mogrify::Utils::_is_perl($_), qq{Is perl: '$_'} );
+        ok( Perl::ToPerl6::Utils::_is_perl($_), qq{Is perl: '$_'} );
     }
 
     for ( qw(foo.doc foo.txt foo.conf foo) ) {
-        ok( ! Perl::Mogrify::Utils::_is_perl($_), qq{Is not perl: '$_'} );
+        ok( ! Perl::ToPerl6::Utils::_is_perl($_), qq{Is not perl: '$_'} );
     }
 
     my @perl_shebangs = (
@@ -325,17 +325,17 @@ sub test_is_perl_and_shebang_line {
 
     for my $shebang (@perl_shebangs) {
         my $temp_file =
-            File::Temp->new( TEMPLATE => 'Perl-Mogrify.05_utils.t.XXXXX' );
+            File::Temp->new( TEMPLATE => 'Perl-ToPerl6.05_utils.t.XXXXX' );
         my $filename = $temp_file->filename();
         print {$temp_file} "$shebang\n";
         # Must close to flush buffer
         close $temp_file or confess "Couldn't close $temp_file: $OS_ERROR";
 
-        ok( Perl::Mogrify::Utils::_is_perl($filename), qq{Is perl: '$shebang'} );
+        ok( Perl::ToPerl6::Utils::_is_perl($filename), qq{Is perl: '$shebang'} );
 
         my $document = PPI::Document->new(\$shebang);
         is(
-            Perl::Mogrify::Utils::shebang_line($document),
+            Perl::ToPerl6::Utils::shebang_line($document),
             $shebang,
             qq<shebang_line($shebang)>,
         );
@@ -349,17 +349,17 @@ sub test_is_perl_and_shebang_line {
 
     for my $shebang (@not_perl_shebangs) {
         my $temp_file =
-            File::Temp->new( TEMPLATE => 'Perl-Mogrify.05_utils.t.XXXXX' );
+            File::Temp->new( TEMPLATE => 'Perl-ToPerl6.05_utils.t.XXXXX' );
         my $filename = $temp_file->filename();
         print {$temp_file} "$shebang\n";
         # Must close to flush buffer
         close $temp_file or confess "Couldn't close $temp_file: $OS_ERROR";
 
-        ok( ! Perl::Mogrify::Utils::_is_perl($filename), qq{Is not perl: '$shebang'} );
+        ok( ! Perl::ToPerl6::Utils::_is_perl($filename), qq{Is not perl: '$shebang'} );
 
         my $document = PPI::Document->new(\$shebang);
         is(
-            Perl::Mogrify::Utils::shebang_line($document),
+            Perl::ToPerl6::Utils::shebang_line($document),
             ($shebang eq 'shazbot' ? undef : $shebang),
             qq<shebang_line($shebang)>,
         );
@@ -372,11 +372,11 @@ sub test_is_perl_and_shebang_line {
 
 sub test_is_backup {
     for ( qw( foo.swp foo.bak foo~ ), '#foo#' ) {
-        ok( Perl::Mogrify::Utils::_is_backup($_), qq{Is backup: '$_'} );
+        ok( Perl::ToPerl6::Utils::_is_backup($_), qq{Is backup: '$_'} );
     }
 
     for ( qw( swp.pm Bak ~foo ) ) {
-        ok( ! Perl::Mogrify::Utils::_is_backup($_), qq{Is not backup: '$_'} );
+        ok( ! Perl::ToPerl6::Utils::_is_backup($_), qq{Is not backup: '$_'} );
     }
 
     return;
@@ -451,10 +451,10 @@ sub test_is_function_call {
 #-----------------------------------------------------------------------------
 
 sub test_find_bundled_transformers {
-    Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+    Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     my @native_transformers = bundled_policy_names();
-    my $policy_dir = File::Spec->catfile( qw(lib Perl Mogrify Transformer) );
+    my $policy_dir = File::Spec->catfile( qw(lib Perl ToPerl6 Transformer) );
     my @found_transformers  = all_perl_files( $policy_dir );
 SKIP: {
     skip "XXX Must fix this later", 1;

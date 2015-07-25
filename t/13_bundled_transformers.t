@@ -4,9 +4,9 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::UserProfile;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
 
 use Test::More tests => 1;
 
@@ -16,12 +16,12 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
-my $profile = Perl::Mogrify::UserProfile->new();
-my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
+my $profile = Perl::ToPerl6::UserProfile->new();
+my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
 my @found_transformers = sort map { ref } $factory->create_all_transformers();
 my $test_label = 'successfully loaded transformers matches MANIFEST';
 SKIP: {

@@ -9,15 +9,15 @@ use English qw< -no_match_vars >;
 use File::Spec;
 use List::MoreUtils qw(all any);
 
-use Perl::Mogrify::Exception::AggregateConfiguration;
-use Perl::Mogrify::Config qw<>;
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::TestUtils qw<
+use Perl::ToPerl6::Exception::AggregateConfiguration;
+use Perl::ToPerl6::Config qw<>;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::TestUtils qw<
     bundled_policy_names
     names_of_transformers_willing_to_work
 >;
-use Perl::Mogrify::Utils qw< :booleans :characters :severities >;
-use Perl::Mogrify::Utils::Constants qw< :color_severity >;
+use Perl::ToPerl6::Utils qw< :booleans :characters :severities >;
+use Perl::ToPerl6::Utils::Constants qw< :color_severity >;
 
 use Test::More;
 
@@ -27,7 +27,7 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 {
     my $all_policy_count =
         scalar
-            Perl::Mogrify::Config
+            Perl::ToPerl6::Config
                 ->new(
                     -severity   => $SEVERITY_LOWEST,
                     -theme      => 'core',
@@ -65,7 +65,7 @@ SKIP: {
     my $last_policy_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my $configuration =
-            Perl::Mogrify::Config->new(
+            Perl::ToPerl6::Config->new(
                 -severity   => $severity,
                 -theme      => 'core',
             );
@@ -90,7 +90,7 @@ SKIP: {
             -severity   => $severity,
             -theme      => 'core',
         );
-        my $mogrify = Perl::Mogrify::Config->new( %pc_args );
+        my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
         my $policy_count = scalar $mogrify->transformers();
         my $test_name = "Count all transformers, severity: $severity";
         cmp_ok($policy_count, '<', $last_policy_count, $test_name);
@@ -103,7 +103,7 @@ SKIP: {
 SKIP: {
     skip "XXX For now all transformers are the same 'severity'", 1;
     my $configuration =
-        Perl::Mogrify::Config->new(
+        Perl::ToPerl6::Config->new(
             -severity   => $SEVERITY_LOWEST,
             -theme      => 'core',
         );
@@ -157,7 +157,7 @@ SKIP: {
             -severity   => $severity,
             -theme      => 'core',
         );
-        my $mogrify = Perl::Mogrify::Config->new( %pc_args );
+        my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
         my $policy_count = scalar $mogrify->transformers();
         my $expected_count = ($SEVERITY_HIGHEST - $severity + 1) * 10;
         my $test_name = "user-defined severity level: $severity";
@@ -166,7 +166,7 @@ SKIP: {
 
     # All remaining transformers should be at the lowest severity
     my %pc_args = (-profile => \%profile, -severity => $SEVERITY_LOWEST);
-    my $mogrify = Perl::Mogrify::Config->new( %pc_args );
+    my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
     my $policy_count = scalar $mogrify->transformers();
     my $expected_count = $SEVERITY_HIGHEST * 10;
     my $test_name = 'user-defined severity, all remaining transformers';
@@ -179,7 +179,7 @@ SKIP: {
 {
     my $examples_dir = 'examples';
     my $profile = File::Spec->catfile( $examples_dir, 'perlmogrifyrc' );
-    my $c = Perl::Mogrify::Config->new( -profile => $profile );
+    my $c = Perl::ToPerl6::Config->new( -profile => $profile );
 
     is_deeply([$c->exclude()], [ qw(Array Variables) ],
               'user default exclude from file' );
@@ -235,7 +235,7 @@ SKIP: {
         -include    => \@include,
         -theme      => 'core',
     );
-    my @transformers = Perl::Mogrify::Config->new( %pc_args )->transformers();
+    my @transformers = Perl::ToPerl6::Config->new( %pc_args )->transformers();
     is(scalar @transformers, $total_transformers, 'include pattern matching');
 }
 
@@ -251,7 +251,7 @@ SKIP: {
         -severity   => 1,
         -exclude    => \@exclude,
     );
-    my @transformers = Perl::Mogrify::Config->new( %pc_args )->transformers();
+    my @transformers = Perl::ToPerl6::Config->new( %pc_args )->transformers();
     my $matches = grep { my $pol = ref; grep { $pol !~ /$_/ixms} @exclude } @transformers;
     is(scalar @transformers, $matches, 'exclude pattern matching');
 }
@@ -270,7 +270,7 @@ SKIP: {
         -include    => \@include,
         -exclude    => \@exclude,
     );
-    my @transformers = Perl::Mogrify::Config->new( %pc_args )->transformers();
+    my @transformers = Perl::ToPerl6::Config->new( %pc_args )->transformers();
     my @pol_names = map {ref} @transformers;
     is_deeply(
         [grep {/block/ixms} @pol_names],
@@ -310,8 +310,8 @@ SKIP: {
     my $color = -t *STDOUT ? $TRUE : $FALSE;
 
     my %undef_args = map { $_ => undef } @switches;
-    my $c = Perl::Mogrify::Config->new( %undef_args );
-    $c = Perl::Mogrify::Config->new( %undef_args );
+    my $c = Perl::ToPerl6::Config->new( %undef_args );
+    $c = Perl::ToPerl6::Config->new( %undef_args );
     is( $c->force(),            0,      'Undefined -force');
     is( $c->only(),             0,      'Undefined -only');
     is( $c->severity(),         5,      'Undefined -severity');
@@ -346,7 +346,7 @@ SKIP: {
     my %zero_args = map { $_ => 0 }
         # Zero is an invalid Term::ANSIColor value.
         grep { ! / \A-color-severity- /smx } @switches;
-    $c = Perl::Mogrify::Config->new( %zero_args );
+    $c = Perl::ToPerl6::Config->new( %zero_args );
     is( $c->force(),     0,       'zero -force');
     is( $c->only(),      0,       'zero -only');
     is( $c->severity(),  1,       'zero -severity');
@@ -359,7 +359,7 @@ SKIP: {
     is( $c->mogrification_fatal(), 0, 'zero -mogrification-fatal');
 
     my %empty_args = map { $_ => q{} } @switches;
-    $c = Perl::Mogrify::Config->new( %empty_args );
+    $c = Perl::ToPerl6::Config->new( %empty_args );
     is( $c->force(),     0,       'empty -force');
     is( $c->only(),      0,       'empty -only');
     is( $c->severity(),  1,       'empty -severity');
@@ -387,7 +387,7 @@ SKIP: {
     );
 
     my %pc_config = (-severity => 1, -only => 1, -profile => \%profile);
-    my @transformers = Perl::Mogrify::Config->new( %pc_config )->transformers();
+    my @transformers = Perl::ToPerl6::Config->new( %pc_config )->transformers();
     is(scalar @transformers, 2, '-only switch');
 }
 
@@ -396,7 +396,7 @@ SKIP: {
 
 {
     my %pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
-    my @transformers = Perl::Mogrify::Config->new( %pc_config )->transformers();
+    my @transformers = Perl::ToPerl6::Config->new( %pc_config )->transformers();
     is(scalar @transformers, 1, '-single-policy switch');
 }
 
@@ -416,7 +416,7 @@ SKIP: {
         '-allow-unsafe' => 0,
         -profile        => \%profile,
     );
-    my $config = Perl::Mogrify::Config->new( %pc_config );
+    my $config = Perl::ToPerl6::Config->new( %pc_config );
     is( $config->force, 0, '-force: default is true, arg is false');
     is( $config->only,  0, '-only: default is true, arg is false');
     is( $config->top,   0, '-top: default is true, arg is false');
@@ -429,7 +429,7 @@ SKIP: {
 {
     my %severity_levels = (gentle=>5, stern=>4, harsh=>3, cruel=>2, brutal=>1);
     while (my ($name, $number) = each %severity_levels) {
-        my $config = Perl::Mogrify::Config->new( -severity => $name );
+        my $config = Perl::ToPerl6::Config->new( -severity => $name );
         is( $config->severity(), $number, qq{Severity "$name" is "$number"});
     }
 }
@@ -439,7 +439,7 @@ SKIP: {
 # Test exception handling
 
 {
-    my $config = Perl::Mogrify::Config->new( -profile => 'NONE' );
+    my $config = Perl::ToPerl6::Config->new( -profile => 'NONE' );
 
     # Try adding a bogus policy
     eval{ $config->apply_transform( -policy => 'Bogus::Transformer') };
@@ -458,7 +458,7 @@ SKIP: {
     );
 
     # Try using bogus named severity level
-    eval{ Perl::Mogrify::Config->new( -severity => 'bogus' ) };
+    eval{ Perl::ToPerl6::Config->new( -severity => 'bogus' ) };
     like(
         $EVAL_ERROR,
         qr/The value for the global "-severity" option [(]"bogus"[)] is not one of the valid severity names/ms,
@@ -466,7 +466,7 @@ SKIP: {
     );
 
     # Try using vague -single-policy option
-    eval{ Perl::Mogrify::Config->new( '-single-policy' => q<.*> ) };
+    eval{ Perl::ToPerl6::Config->new( '-single-policy' => q<.*> ) };
     like(
         $EVAL_ERROR,
         qr/matched [ ] multiple [ ] transformers/xms,
@@ -474,7 +474,7 @@ SKIP: {
     );
 
     # Try using invalid -single-policy option
-    eval{ Perl::Mogrify::Config->new( '-single-policy' => 'bogus' ) };
+    eval{ Perl::ToPerl6::Config->new( '-single-policy' => 'bogus' ) };
     like(
         $EVAL_ERROR,
         qr/did [ ] not [ ] match [ ] any [ ] transformers/xms,
@@ -492,18 +492,18 @@ SKIP: {
 
     # Pretend that ProhibitQuotedWordLists is actually unsafe
     no warnings qw(redefine once);
-    local *Perl::Mogrify::Transformer::BasicTypes::Strings::FormatShellStrings::is_safe = sub {return 0};
+    local *Perl::ToPerl6::Transformer::BasicTypes::Strings::FormatShellStrings::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);
-    my @p = Perl::Mogrify::Config->new( %safe_pc_config )->transformers();
+    my @p = Perl::ToPerl6::Config->new( %safe_pc_config )->transformers();
     is(scalar @p, 1, 'Only loaded safe transformers without -unsafe switch');
 
     my %unsafe_pc_config = (%safe_pc_config, '-allow-unsafe' => 1);
-    @p = Perl::Mogrify::Config->new( %unsafe_pc_config )->transformers();
+    @p = Perl::ToPerl6::Config->new( %unsafe_pc_config )->transformers();
     is(scalar @p, 2, 'Also loaded unsafe transformers with -allow-unsafe switch');
 
     my %singular_pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
-    @p = Perl::Mogrify::Config->new( %singular_pc_config )->transformers();
+    @p = Perl::ToPerl6::Config->new( %singular_pc_config )->transformers();
     is(scalar @p, 1, '-single-policy always loads Transformer, even if unsafe');
 }
 

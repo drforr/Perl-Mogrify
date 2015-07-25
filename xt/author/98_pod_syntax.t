@@ -4,7 +4,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Perl::Mogrify::TestUtils qw{ starting_points_including_examples };
+use Perl::ToPerl6::TestUtils qw{ starting_points_including_examples };
 
 use Test::More;# 1.41;  # Need 1.41 or newer for correct support of L<text|scheme:...> links.
 

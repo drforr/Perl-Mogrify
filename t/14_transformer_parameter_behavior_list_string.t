@@ -6,8 +6,8 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::Transformer;
-use Perl::Mogrify::TransformerParameter;
+use Perl::ToPerl6::Transformer;
+use Perl::ToPerl6::TransformerParameter;
 
 use Test::More tests => 28;
 
@@ -31,20 +31,20 @@ $specification =
     };
 
 
-$parameter = Perl::Mogrify::TransformerParameter->new($specification);
-$policy = Perl::Mogrify::Transformer->new();
+$parameter = Perl::ToPerl6::TransformerParameter->new($specification);
+$policy = Perl::ToPerl6::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
 is( scalar( keys %{$values} ), 0, q{no value, no default} );
 
-$policy = Perl::Mogrify::Transformer->new();
+$policy = Perl::ToPerl6::Transformer->new();
 $config{test} = 'koyaanisqatsi';
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
 is( scalar( keys %{$values} ), 1, q{'koyaanisqatsi', no default} );
 ok( $values->{koyaanisqatsi}, q{'koyaanisqatsi', no default} );
 
-$policy = Perl::Mogrify::Transformer->new();
+$policy = Perl::ToPerl6::Transformer->new();
 $config{test} = 'powaqqatsi naqoyqatsi';
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
@@ -56,22 +56,22 @@ ok( $values->{naqoyqatsi}, q{'powaqqatsi naqoyqatsi', no default} );
 $specification->{default_string} = 'baraka chronos';
 delete $config{test};
 
-$parameter = Perl::Mogrify::TransformerParameter->new($specification);
-$policy = Perl::Mogrify::Transformer->new();
+$parameter = Perl::ToPerl6::TransformerParameter->new($specification);
+$policy = Perl::ToPerl6::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
 is( scalar( keys %{$values} ), 2, q{no value, default 'baraka chronos'} );
 ok( $values->{baraka}, q{no value, default 'baraka chronos'} );
 ok( $values->{chronos}, q{no value, default 'baraka chronos'} );
 
-$policy = Perl::Mogrify::Transformer->new();
+$policy = Perl::ToPerl6::Transformer->new();
 $config{test} = 'akira';
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
 is( scalar( keys %{$values} ), 1, q{'akira', default 'baraka chronos'} );
 ok( $values->{akira}, q{'akira', default 'baraka chronos'} );
 
-$policy = Perl::Mogrify::Transformer->new();
+$policy = Perl::ToPerl6::Transformer->new();
 $config{test} = 'downfall murderball';
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
@@ -85,8 +85,8 @@ $specification->{list_always_present_values} =
     [ 'leaether strip', 'front line assembly' ];
 delete $config{test};
 
-$parameter = Perl::Mogrify::TransformerParameter->new($specification);
-$policy = Perl::Mogrify::Transformer->new();
+$parameter = Perl::ToPerl6::TransformerParameter->new($specification);
+$policy = Perl::ToPerl6::Transformer->new();
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
 is(
@@ -111,7 +111,7 @@ ok(
     q{no value, default 'chainsuck snog', always 'leaether strip' & 'front line assembly'}
 );
 
-$policy = Perl::Mogrify::Transformer->new();
+$policy = Perl::ToPerl6::Transformer->new();
 $config{test} = 'pig';
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};
@@ -133,7 +133,7 @@ ok(
     q{'pig', default 'chainsuck snog', always 'leaether strip' & 'front line assembly'}
 );
 
-$policy = Perl::Mogrify::Transformer->new();
+$policy = Perl::ToPerl6::Transformer->new();
 $config{test} = 'microdisney foetus';
 $parameter->parse_and_validate_config_value($policy, \%config);
 $values = $policy->{_test};

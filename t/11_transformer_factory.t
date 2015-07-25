@@ -6,9 +6,9 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::TestUtils qw();
+use Perl::ToPerl6::UserProfile;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::TestUtils qw();
 
 use Test::More tests => 10;
 
@@ -18,16 +18,16 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
 
 {
-    my $policy_name = 'Perl::Mogrify::Transformer::Packages::FormatPackageUsages';
+    my $policy_name = 'Perl::ToPerl6::Transformer::Packages::FormatPackageUsages';
     my $params = {severity => 2, set_themes => 'betty', add_themes => 'wilma'};
 
-    my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
+    my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
+    my $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
 
 
     # Now test...
@@ -47,13 +47,13 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     my $policy_name = 'Variables::ReplaceUndef';
     my $params = {set_themes => 'betty', add_themes => 'wilma'};
 
-    my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
+    my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
+    my $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
 
 
     # Now test...
     my $policy = $pf->create_policy( -name => $policy_name, -params => $params );
-    my $policy_name_long = 'Perl::Mogrify::Transformer::' . $policy_name;
+    my $policy_name_long = 'Perl::ToPerl6::Transformer::' . $policy_name;
     is( ref $policy, $policy_name_long, 'Created correct type of policy');
 
     my @themes = $policy->get_themes();
@@ -64,8 +64,8 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
 # Test exception handling
 
 {
-    my $userprof = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
+    my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
+    my $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
 
     # Try missing arguments
     eval{ $pf->create_policy() };
@@ -76,7 +76,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     # Try creating bogus policy
-    eval{ $pf->create_policy( -name => 'Perl::Mogrify::Foo' ) };
+    eval{ $pf->create_policy( -name => 'Perl::ToPerl6::Foo' ) };
     like(
         $EVAL_ERROR,
         qr/Can't [ ] locate [ ] object [ ] method/xms,
@@ -101,9 +101,9 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     my $last_warning = q{}; #Trap warning messages here
     local $SIG{__WARN__} = sub { $last_warning = shift };
 
-    my $profile = { 'Perl::Mogrify::Bogus' => {} };
-    my $userprof = Perl::Mogrify::UserProfile->new( -profile => $profile );
-    my $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
+    my $profile = { 'Perl::ToPerl6::Bogus' => {} };
+    my $userprof = Perl::ToPerl6::UserProfile->new( -profile => $profile );
+    my $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
     like(
         $last_warning,
         qr/^Transformer [ ] ".*Bogus" [ ] is [ ] not [ ] installed/xms,
@@ -111,9 +111,9 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
     $last_warning = q{};
 
-    $profile = { '-Perl::Mogrify::Shizzle' => {} };
-    $userprof = Perl::Mogrify::UserProfile->new( -profile => $profile );
-    $pf = Perl::Mogrify::TransformerFactory->new( -profile  => $userprof );
+    $profile = { '-Perl::ToPerl6::Shizzle' => {} };
+    $userprof = Perl::ToPerl6::UserProfile->new( -profile => $profile );
+    $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
     like(
         $last_warning,
         qr/^Transformer [ ] ".*Shizzle" [ ] is [ ] not [ ] installed/xms,

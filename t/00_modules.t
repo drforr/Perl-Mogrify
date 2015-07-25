@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 
 use PPI::Document;
 
-use Perl::Mogrify::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
 
 use Test::More;
 
@@ -18,7 +18,7 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 my @bundled_policy_names = bundled_policy_names();
 
@@ -46,222 +46,222 @@ plan tests =>
 my $version_string = __PACKAGE__->VERSION;
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify module interface
+# Test Perl::ToPerl6 module interface
 
-use_ok('Perl::Mogrify') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify', 'new');
-can_ok('Perl::Mogrify', 'apply_transform');
-can_ok('Perl::Mogrify', 'config');
-can_ok('Perl::Mogrify', 'transform');
-can_ok('Perl::Mogrify', 'transformers');
-
-#Set -profile to avoid messing with .perlmogrifyrc
-my $mogrify = Perl::Mogrify->new( -profile => 'NONE' );
-isa_ok($mogrify, 'Perl::Mogrify');
-is($mogrify->VERSION(), $version_string, 'Perl::Mogrify version');
-
-#-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Config module interface
-
-use_ok('Perl::Mogrify::Config') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Config', 'new');
-can_ok('Perl::Mogrify::Config', 'apply_transform');
-can_ok('Perl::Mogrify::Config', 'transformers');
-can_ok('Perl::Mogrify::Config', 'exclude');
-can_ok('Perl::Mogrify::Config', 'force');
-can_ok('Perl::Mogrify::Config', 'include');
-can_ok('Perl::Mogrify::Config', 'only');
-can_ok('Perl::Mogrify::Config', 'profile_strictness');
-can_ok('Perl::Mogrify::Config', 'severity');
-can_ok('Perl::Mogrify::Config', 'single_policy');
-can_ok('Perl::Mogrify::Config', 'theme');
-can_ok('Perl::Mogrify::Config', 'top');
-can_ok('Perl::Mogrify::Config', 'verbose');
-can_ok('Perl::Mogrify::Config', 'color');
-can_ok('Perl::Mogrify::Config', 'unsafe_allowed');
-can_ok('Perl::Mogrify::Config', 'mogrification_fatal');
-can_ok('Perl::Mogrify::Config', 'site_policy_names');
-can_ok('Perl::Mogrify::Config', 'color_severity_highest');
-can_ok('Perl::Mogrify::Config', 'color_severity_high');
-can_ok('Perl::Mogrify::Config', 'color_severity_medium');
-can_ok('Perl::Mogrify::Config', 'color_severity_low');
-can_ok('Perl::Mogrify::Config', 'color_severity_lowest');
-can_ok('Perl::Mogrify::Config', 'program_extensions');
-can_ok('Perl::Mogrify::Config', 'program_extensions_as_regexes');
+use_ok('Perl::ToPerl6') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6', 'new');
+can_ok('Perl::ToPerl6', 'apply_transform');
+can_ok('Perl::ToPerl6', 'config');
+can_ok('Perl::ToPerl6', 'transform');
+can_ok('Perl::ToPerl6', 'transformers');
 
 #Set -profile to avoid messing with .perlmogrifyrc
-my $config = Perl::Mogrify::Config->new( -profile => 'NONE');
-isa_ok($config, 'Perl::Mogrify::Config');
-is($config->VERSION(), $version_string, 'Perl::Mogrify::Config version');
+my $mogrify = Perl::ToPerl6->new( -profile => 'NONE' );
+isa_ok($mogrify, 'Perl::ToPerl6');
+is($mogrify->VERSION(), $version_string, 'Perl::ToPerl6 version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Config::OptionsProcessor module interface
+# Test Perl::ToPerl6::Config module interface
 
-use_ok('Perl::Mogrify::OptionsProcessor') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::OptionsProcessor', 'new');
-can_ok('Perl::Mogrify::OptionsProcessor', 'exclude');
-can_ok('Perl::Mogrify::OptionsProcessor', 'include');
-can_ok('Perl::Mogrify::OptionsProcessor', 'force');
-can_ok('Perl::Mogrify::OptionsProcessor', 'only');
-can_ok('Perl::Mogrify::OptionsProcessor', 'profile_strictness');
-can_ok('Perl::Mogrify::OptionsProcessor', 'single_policy');
-can_ok('Perl::Mogrify::OptionsProcessor', 'severity');
-can_ok('Perl::Mogrify::OptionsProcessor', 'theme');
-can_ok('Perl::Mogrify::OptionsProcessor', 'top');
-can_ok('Perl::Mogrify::OptionsProcessor', 'verbose');
-can_ok('Perl::Mogrify::OptionsProcessor', 'color');
-can_ok('Perl::Mogrify::OptionsProcessor', 'allow_unsafe');
-can_ok('Perl::Mogrify::OptionsProcessor', 'mogrification_fatal');
-can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_highest');
-can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_high');
-can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_medium');
-can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_low');
-can_ok('Perl::Mogrify::OptionsProcessor', 'color_severity_lowest');
-can_ok('Perl::Mogrify::OptionsProcessor', 'program_extensions');
+use_ok('Perl::ToPerl6::Config') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::Config', 'new');
+can_ok('Perl::ToPerl6::Config', 'apply_transform');
+can_ok('Perl::ToPerl6::Config', 'transformers');
+can_ok('Perl::ToPerl6::Config', 'exclude');
+can_ok('Perl::ToPerl6::Config', 'force');
+can_ok('Perl::ToPerl6::Config', 'include');
+can_ok('Perl::ToPerl6::Config', 'only');
+can_ok('Perl::ToPerl6::Config', 'profile_strictness');
+can_ok('Perl::ToPerl6::Config', 'severity');
+can_ok('Perl::ToPerl6::Config', 'single_policy');
+can_ok('Perl::ToPerl6::Config', 'theme');
+can_ok('Perl::ToPerl6::Config', 'top');
+can_ok('Perl::ToPerl6::Config', 'verbose');
+can_ok('Perl::ToPerl6::Config', 'color');
+can_ok('Perl::ToPerl6::Config', 'unsafe_allowed');
+can_ok('Perl::ToPerl6::Config', 'mogrification_fatal');
+can_ok('Perl::ToPerl6::Config', 'site_policy_names');
+can_ok('Perl::ToPerl6::Config', 'color_severity_highest');
+can_ok('Perl::ToPerl6::Config', 'color_severity_high');
+can_ok('Perl::ToPerl6::Config', 'color_severity_medium');
+can_ok('Perl::ToPerl6::Config', 'color_severity_low');
+can_ok('Perl::ToPerl6::Config', 'color_severity_lowest');
+can_ok('Perl::ToPerl6::Config', 'program_extensions');
+can_ok('Perl::ToPerl6::Config', 'program_extensions_as_regexes');
 
-my $processor = Perl::Mogrify::OptionsProcessor->new();
-isa_ok($processor, 'Perl::Mogrify::OptionsProcessor');
-is($processor->VERSION(), $version_string, 'Perl::Mogrify::OptionsProcessor version');
+#Set -profile to avoid messing with .perlmogrifyrc
+my $config = Perl::ToPerl6::Config->new( -profile => 'NONE');
+isa_ok($config, 'Perl::ToPerl6::Config');
+is($config->VERSION(), $version_string, 'Perl::ToPerl6::Config version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Transformer module interface
+# Test Perl::ToPerl6::Config::OptionsProcessor module interface
 
-use_ok('Perl::Mogrify::Transformer') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Transformer', 'add_themes');
-can_ok('Perl::Mogrify::Transformer', 'applies_to');
-can_ok('Perl::Mogrify::Transformer', 'default_maximum_transformations_per_document');
-can_ok('Perl::Mogrify::Transformer', 'default_severity');
-can_ok('Perl::Mogrify::Transformer', 'default_themes');
-can_ok('Perl::Mogrify::Transformer', 'get_abstract');
-can_ok('Perl::Mogrify::Transformer', 'get_format');
-can_ok('Perl::Mogrify::Transformer', 'get_long_name');
-can_ok('Perl::Mogrify::Transformer', 'get_maximum_transformations_per_document');
-can_ok('Perl::Mogrify::Transformer', 'get_parameters');
-can_ok('Perl::Mogrify::Transformer', 'get_raw_abstract');
-can_ok('Perl::Mogrify::Transformer', 'get_severity');
-can_ok('Perl::Mogrify::Transformer', 'get_short_name');
-can_ok('Perl::Mogrify::Transformer', 'get_themes');
-can_ok('Perl::Mogrify::Transformer', 'initialize_if_enabled');
-can_ok('Perl::Mogrify::Transformer', 'is_enabled');
-can_ok('Perl::Mogrify::Transformer', 'is_safe');
-can_ok('Perl::Mogrify::Transformer', 'new');
-can_ok('Perl::Mogrify::Transformer', 'new_parameter_value_exception');
-can_ok('Perl::Mogrify::Transformer', 'parameter_metadata_available');
-can_ok('Perl::Mogrify::Transformer', 'prepare_to_scan_document');
-can_ok('Perl::Mogrify::Transformer', 'set_format');
-can_ok('Perl::Mogrify::Transformer', 'set_maximum_transformations_per_document');
-can_ok('Perl::Mogrify::Transformer', 'set_severity');
-can_ok('Perl::Mogrify::Transformer', 'set_themes');
-can_ok('Perl::Mogrify::Transformer', 'throw_parameter_value_exception');
-can_ok('Perl::Mogrify::Transformer', 'to_string');
-can_ok('Perl::Mogrify::Transformer', 'transform');
-can_ok('Perl::Mogrify::Transformer', 'transformation');
-can_ok('Perl::Mogrify::Transformer', 'is_safe');
+use_ok('Perl::ToPerl6::OptionsProcessor') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::OptionsProcessor', 'new');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'exclude');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'include');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'force');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'only');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'profile_strictness');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'single_policy');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'severity');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'theme');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'top');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'verbose');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'color');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'allow_unsafe');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'mogrification_fatal');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'color_severity_highest');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'color_severity_high');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'color_severity_medium');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'color_severity_low');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'color_severity_lowest');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'program_extensions');
+
+my $processor = Perl::ToPerl6::OptionsProcessor->new();
+isa_ok($processor, 'Perl::ToPerl6::OptionsProcessor');
+is($processor->VERSION(), $version_string, 'Perl::ToPerl6::OptionsProcessor version');
+
+#-----------------------------------------------------------------------------
+# Test Perl::ToPerl6::Transformer module interface
+
+use_ok('Perl::ToPerl6::Transformer') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::Transformer', 'add_themes');
+can_ok('Perl::ToPerl6::Transformer', 'applies_to');
+can_ok('Perl::ToPerl6::Transformer', 'default_maximum_transformations_per_document');
+can_ok('Perl::ToPerl6::Transformer', 'default_severity');
+can_ok('Perl::ToPerl6::Transformer', 'default_themes');
+can_ok('Perl::ToPerl6::Transformer', 'get_abstract');
+can_ok('Perl::ToPerl6::Transformer', 'get_format');
+can_ok('Perl::ToPerl6::Transformer', 'get_long_name');
+can_ok('Perl::ToPerl6::Transformer', 'get_maximum_transformations_per_document');
+can_ok('Perl::ToPerl6::Transformer', 'get_parameters');
+can_ok('Perl::ToPerl6::Transformer', 'get_raw_abstract');
+can_ok('Perl::ToPerl6::Transformer', 'get_severity');
+can_ok('Perl::ToPerl6::Transformer', 'get_short_name');
+can_ok('Perl::ToPerl6::Transformer', 'get_themes');
+can_ok('Perl::ToPerl6::Transformer', 'initialize_if_enabled');
+can_ok('Perl::ToPerl6::Transformer', 'is_enabled');
+can_ok('Perl::ToPerl6::Transformer', 'is_safe');
+can_ok('Perl::ToPerl6::Transformer', 'new');
+can_ok('Perl::ToPerl6::Transformer', 'new_parameter_value_exception');
+can_ok('Perl::ToPerl6::Transformer', 'parameter_metadata_available');
+can_ok('Perl::ToPerl6::Transformer', 'prepare_to_scan_document');
+can_ok('Perl::ToPerl6::Transformer', 'set_format');
+can_ok('Perl::ToPerl6::Transformer', 'set_maximum_transformations_per_document');
+can_ok('Perl::ToPerl6::Transformer', 'set_severity');
+can_ok('Perl::ToPerl6::Transformer', 'set_themes');
+can_ok('Perl::ToPerl6::Transformer', 'throw_parameter_value_exception');
+can_ok('Perl::ToPerl6::Transformer', 'to_string');
+can_ok('Perl::ToPerl6::Transformer', 'transform');
+can_ok('Perl::ToPerl6::Transformer', 'transformation');
+can_ok('Perl::ToPerl6::Transformer', 'is_safe');
 
 {
-    my $policy = Perl::Mogrify::Transformer->new();
-    isa_ok($policy, 'Perl::Mogrify::Transformer');
-    is($policy->VERSION(), $version_string, 'Perl::Mogrify::Transformer version');
+    my $policy = Perl::ToPerl6::Transformer->new();
+    isa_ok($policy, 'Perl::ToPerl6::Transformer');
+    is($policy->VERSION(), $version_string, 'Perl::ToPerl6::Transformer version');
 }
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Transformation module interface
+# Test Perl::ToPerl6::Transformation module interface
 
-use_ok('Perl::Mogrify::Transformation') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Transformation', 'description');
-can_ok('Perl::Mogrify::Transformation', 'diagnostics');
-can_ok('Perl::Mogrify::Transformation', 'explanation');
-can_ok('Perl::Mogrify::Transformation', 'get_format');
-can_ok('Perl::Mogrify::Transformation', 'location');
-can_ok('Perl::Mogrify::Transformation', 'new');
-can_ok('Perl::Mogrify::Transformation', 'policy');
-can_ok('Perl::Mogrify::Transformation', 'set_format');
-can_ok('Perl::Mogrify::Transformation', 'severity');
-can_ok('Perl::Mogrify::Transformation', 'sort_by_location');
-can_ok('Perl::Mogrify::Transformation', 'sort_by_severity');
-can_ok('Perl::Mogrify::Transformation', 'source');
-can_ok('Perl::Mogrify::Transformation', 'to_string');
+use_ok('Perl::ToPerl6::Transformation') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::Transformation', 'description');
+can_ok('Perl::ToPerl6::Transformation', 'diagnostics');
+can_ok('Perl::ToPerl6::Transformation', 'explanation');
+can_ok('Perl::ToPerl6::Transformation', 'get_format');
+can_ok('Perl::ToPerl6::Transformation', 'location');
+can_ok('Perl::ToPerl6::Transformation', 'new');
+can_ok('Perl::ToPerl6::Transformation', 'policy');
+can_ok('Perl::ToPerl6::Transformation', 'set_format');
+can_ok('Perl::ToPerl6::Transformation', 'severity');
+can_ok('Perl::ToPerl6::Transformation', 'sort_by_location');
+can_ok('Perl::ToPerl6::Transformation', 'sort_by_severity');
+can_ok('Perl::ToPerl6::Transformation', 'source');
+can_ok('Perl::ToPerl6::Transformation', 'to_string');
 
 my $code = q{print 'Hello World';};
 my $doc = PPI::Document->new(\$code);
-my $viol = Perl::Mogrify::Transformation->new(undef, undef, $doc, undef);
-isa_ok($viol, 'Perl::Mogrify::Transformation');
-is($viol->VERSION(), $version_string, 'Perl::Mogrify::Transformation version');
+my $viol = Perl::ToPerl6::Transformation->new(undef, undef, $doc, undef);
+isa_ok($viol, 'Perl::ToPerl6::Transformation');
+is($viol->VERSION(), $version_string, 'Perl::ToPerl6::Transformation version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::UserProfile module interface
+# Test Perl::ToPerl6::UserProfile module interface
 
-use_ok('Perl::Mogrify::UserProfile') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::UserProfile', 'options_processor');
-can_ok('Perl::Mogrify::UserProfile', 'new');
-can_ok('Perl::Mogrify::UserProfile', 'policy_is_disabled');
-can_ok('Perl::Mogrify::UserProfile', 'policy_is_enabled');
+use_ok('Perl::ToPerl6::UserProfile') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::UserProfile', 'options_processor');
+can_ok('Perl::ToPerl6::UserProfile', 'new');
+can_ok('Perl::ToPerl6::UserProfile', 'policy_is_disabled');
+can_ok('Perl::ToPerl6::UserProfile', 'policy_is_enabled');
 
-my $up = Perl::Mogrify::UserProfile->new();
-isa_ok($up, 'Perl::Mogrify::UserProfile');
-is($up->VERSION(), $version_string, 'Perl::Mogrify::UserProfile version');
-
-#-----------------------------------------------------------------------------
-# Test Perl::Mogrify::TransformerFactory module interface
-
-use_ok('Perl::Mogrify::TransformerFactory') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::TransformerFactory', 'create_policy');
-can_ok('Perl::Mogrify::TransformerFactory', 'new');
-can_ok('Perl::Mogrify::TransformerFactory', 'site_policy_names');
-
-
-my $profile = Perl::Mogrify::UserProfile->new();
-my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
-isa_ok($factory, 'Perl::Mogrify::TransformerFactory');
-is($factory->VERSION(), $version_string, 'Perl::Mogrify::TransformerFactory version');
+my $up = Perl::ToPerl6::UserProfile->new();
+isa_ok($up, 'Perl::ToPerl6::UserProfile');
+is($up->VERSION(), $version_string, 'Perl::ToPerl6::UserProfile version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Theme module interface
+# Test Perl::ToPerl6::TransformerFactory module interface
 
-use_ok('Perl::Mogrify::Theme') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Theme', 'new');
-can_ok('Perl::Mogrify::Theme', 'rule');
-can_ok('Perl::Mogrify::Theme', 'policy_is_thematic');
+use_ok('Perl::ToPerl6::TransformerFactory') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::TransformerFactory', 'create_policy');
+can_ok('Perl::ToPerl6::TransformerFactory', 'new');
+can_ok('Perl::ToPerl6::TransformerFactory', 'site_policy_names');
 
 
-my $theme = Perl::Mogrify::Theme->new( -rule => 'foo' );
-isa_ok($theme, 'Perl::Mogrify::Theme');
-is($theme->VERSION(), $version_string, 'Perl::Mogrify::Theme version');
-
-#-----------------------------------------------------------------------------
-# Test Perl::Mogrify::TransformerListing module interface
-
-use_ok('Perl::Mogrify::TransformerListing') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::TransformerListing', 'new');
-can_ok('Perl::Mogrify::TransformerListing', 'to_string');
-
-my $listing = Perl::Mogrify::TransformerListing->new();
-isa_ok($listing, 'Perl::Mogrify::TransformerListing');
-is($listing->VERSION(), $version_string, 'Perl::Mogrify::TransformerListing version');
+my $profile = Perl::ToPerl6::UserProfile->new();
+my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
+isa_ok($factory, 'Perl::ToPerl6::TransformerFactory');
+is($factory->VERSION(), $version_string, 'Perl::ToPerl6::TransformerFactory version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::ProfilePrototype module interface
+# Test Perl::ToPerl6::Theme module interface
 
-use_ok('Perl::Mogrify::ProfilePrototype') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::ProfilePrototype', 'new');
-can_ok('Perl::Mogrify::ProfilePrototype', 'to_string');
+use_ok('Perl::ToPerl6::Theme') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::Theme', 'new');
+can_ok('Perl::ToPerl6::Theme', 'rule');
+can_ok('Perl::ToPerl6::Theme', 'policy_is_thematic');
 
-my $prototype = Perl::Mogrify::ProfilePrototype->new();
-isa_ok($prototype, 'Perl::Mogrify::ProfilePrototype');
-is($prototype->VERSION(), $version_string, 'Perl::Mogrify::ProfilePrototype version');
+
+my $theme = Perl::ToPerl6::Theme->new( -rule => 'foo' );
+isa_ok($theme, 'Perl::ToPerl6::Theme');
+is($theme->VERSION(), $version_string, 'Perl::ToPerl6::Theme version');
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Command module interface
+# Test Perl::ToPerl6::TransformerListing module interface
 
-use_ok('Perl::Mogrify::Command') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::Mogrify::Command', 'run');
+use_ok('Perl::ToPerl6::TransformerListing') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::TransformerListing', 'new');
+can_ok('Perl::ToPerl6::TransformerListing', 'to_string');
+
+my $listing = Perl::ToPerl6::TransformerListing->new();
+isa_ok($listing, 'Perl::ToPerl6::TransformerListing');
+is($listing->VERSION(), $version_string, 'Perl::ToPerl6::TransformerListing version');
+
+#-----------------------------------------------------------------------------
+# Test Perl::ToPerl6::ProfilePrototype module interface
+
+use_ok('Perl::ToPerl6::ProfilePrototype') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::ProfilePrototype', 'new');
+can_ok('Perl::ToPerl6::ProfilePrototype', 'to_string');
+
+my $prototype = Perl::ToPerl6::ProfilePrototype->new();
+isa_ok($prototype, 'Perl::ToPerl6::ProfilePrototype');
+is($prototype->VERSION(), $version_string, 'Perl::ToPerl6::ProfilePrototype version');
+
+#-----------------------------------------------------------------------------
+# Test Perl::ToPerl6::Command module interface
+
+use_ok('Perl::ToPerl6::Command') or BAIL_OUT(q<Can't continue.>);
+can_ok('Perl::ToPerl6::Command', 'run');
 
 #-----------------------------------------------------------------------------
 # Test module interface for exceptions
 
 {
     foreach my $class (
-        map { "Perl::Mogrify::Exception::$_" } @concrete_exceptions
+        map { "Perl::ToPerl6::Exception::$_" } @concrete_exceptions
     ) {
         use_ok($class) or BAIL_OUT(q<Can't continue.>);
         can_ok($class, 'new');
@@ -299,16 +299,16 @@ can_ok('Perl::Mogrify::Command', 'run');
         can_ok($mod, 'is_safe');
 
         my $policy = $mod->new();
-        isa_ok($policy, 'Perl::Mogrify::Transformer');
+        isa_ok($policy, 'Perl::ToPerl6::Transformer');
         is($policy->VERSION(), $version_string, "Version of $mod");
         ok($policy->is_safe(), "CORE policy $mod is marked safe");
     }
 }
 
 #-----------------------------------------------------------------------------
-# Test functional interface to Perl::Mogrify
+# Test functional interface to Perl::ToPerl6
 
-Perl::Mogrify->import( qw(transform) );
+Perl::ToPerl6->import( qw(transform) );
 can_ok('main', 'transform');  #Export test
 
 # TODO: These tests are weak. They just verify that it doesn't

@@ -6,11 +6,11 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::UserProfile qw();
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::TransformerParameter qw{ $NO_DESCRIPTION_AVAILABLE };
-use Perl::Mogrify::Utils qw( policy_short_name );
-use Perl::Mogrify::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::UserProfile qw();
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::TransformerParameter qw{ $NO_DESCRIPTION_AVAILABLE };
+use Perl::ToPerl6::Utils qw( policy_short_name );
+use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
 
 #-----------------------------------------------------------------------------
 
@@ -20,14 +20,14 @@ our $VERSION = '0.01';
 
 use Test::More; #plan set below!
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
-# This program proves that each policy that ships with Perl::Mogrify overrides
+# This program proves that each policy that ships with Perl::ToPerl6 overrides
 # the supported_parameters() method and, assuming that the policy is
 # configurable, that each parameter can parse its own default_string.
 #
-# This program also verifies that Perl::Mogrify::TransformerFactory throws an
+# This program also verifies that Perl::ToPerl6::TransformerFactory throws an
 # exception when we try to create a policy with bogus parameters.  However, it
 # is your responsibility to verify that valid parameters actually work as
 # expected.  You can do this by using the #parms directive in the *.run files.
@@ -52,11 +52,11 @@ for my $policy ( @all_transformers ) {
 sub test_supported_parameters {
     my $policy_name = shift;
     my @supported_params = $policy_name->supported_parameters();
-    my $config = Perl::Mogrify::Config->new( -profile => 'NONE' );
+    my $config = Perl::ToPerl6::Config->new( -profile => 'NONE' );
 
     for my $param_specification ( @supported_params ) {
         my $parameter =
-            Perl::Mogrify::TransformerParameter->new($param_specification);
+            Perl::ToPerl6::TransformerParameter->new($param_specification);
         my $param_name = $parameter->get_name();
         my $description = $parameter->get_description();
 
@@ -87,8 +87,8 @@ sub test_supported_parameters {
 sub test_invalid_parameters {
     my $policy = shift;
     my $bogus_params  = { bogus => 'shizzle' };
-    my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-    my $factory = Perl::Mogrify::TransformerFactory->new(
+    my $profile = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
+    my $factory = Perl::ToPerl6::TransformerFactory->new(
         -profile => $profile, '-profile-strictness' => 'fatal' );
 
     my $policy_name = policy_short_name($policy);

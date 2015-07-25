@@ -15,14 +15,14 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-# Perl::Mogrify::Transformer is an abstract class, so it can't be instantiated
+# Perl::ToPerl6::Transformer is an abstract class, so it can't be instantiated
 # directly.  So we test it by declaring test classes that inherit from it.
 
 package TransformerTest;
-use base 'Perl::Mogrify::Transformer';
+use base 'Perl::ToPerl6::Transformer';
 
 package TransformerTestOverriddenDefaultMaximumTransformations;
-use base 'Perl::Mogrify::Transformer';
+use base 'Perl::ToPerl6::Transformer';
 
 sub default_maximum_transformations_per_document { return 31; }
 
@@ -159,11 +159,11 @@ is_deeply(
 
 
 # Test format getter/setters
-is( Perl::Mogrify::Transformer::get_format, "%p\n", 'Default policy format');
+is( Perl::ToPerl6::Transformer::get_format, "%p\n", 'Default policy format');
 
 my $new_format = '%p %s [%t]';
-Perl::Mogrify::Transformer::set_format( $new_format ); # Set format
-is( Perl::Mogrify::Transformer::get_format, $new_format, 'Changed policy format');
+Perl::ToPerl6::Transformer::set_format( $new_format ); # Set format
+is( Perl::ToPerl6::Transformer::get_format, $new_format, 'Changed policy format');
 
 my $expected_string = 'TransformerTest 3 [a b c d e f]';
 is( $p->to_string(), $expected_string, 'Stringification by to_string()');

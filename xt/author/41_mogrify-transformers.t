@@ -11,7 +11,7 @@ use English qw< -no_match_vars >;
 
 use File::Spec qw<>;
 
-use Perl::Mogrify::TransformerFactory ( '-test' => 1 );
+use Perl::ToPerl6::TransformerFactory ( '-test' => 1 );
 
 use Test::More;
 
@@ -40,12 +40,12 @@ if ( $ENV{PERL_MOGRIFY_CACHE} ) {
 # Run mogrify against all of our own files
 
 my $rcfile = File::Spec->catfile( qw< xt author 41_perlmogrifyrc-transformers > );
-Test::Perl::Mogrify->import( -profile => $rcfile );
+Test::Perl::ToPerl6->import( -profile => $rcfile );
 
 my $path =
     File::Spec->catfile(
         -e 'blib' ? 'blib/lib' : 'lib',
-        qw< Perl Mogrify Transformer >,
+        qw< Perl ToPerl6 Transformer >,
     );
 all_mogrify_ok( $path );
 

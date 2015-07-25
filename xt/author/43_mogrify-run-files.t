@@ -36,12 +36,12 @@ if ( $ENV{PERL_MOGRIFY_CACHE} ) {
 # Run mogrify against all of our own files
 
 my $rcfile = File::Spec->catfile( qw< xt author 43_perlmogrifyrc-run-files > );
-Test::Perl::Mogrify->import( -profile => $rcfile );
+Test::Perl::ToPerl6->import( -profile => $rcfile );
 
 {
     # About to commit evil, but it's against ourselves.
     no warnings qw< redefine >;
-    local *Perl::Mogrify::Utils::_is_perl = sub { 1 };
+    local *Perl::ToPerl6::Utils::_is_perl = sub { 1 };
 
     all_mogrify_ok( glob 't/*/*.run' );
 }

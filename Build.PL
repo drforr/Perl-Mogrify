@@ -9,20 +9,20 @@ use Module::Build 0.4200;
 
 use lib 'inc';
 
-use Perl::Mogrify::BuildUtilities qw<
+use Perl::ToPerl6::BuildUtilities qw<
     required_module_versions
     build_required_module_versions
     emit_tar_warning_if_necessary
     get_PL_files
 >;
-use Perl::Mogrify::Module::Build;
+use Perl::ToPerl6::Module::Build;
 
 
 emit_tar_warning_if_necessary();
 
 
-my $builder = Perl::Mogrify::Module::Build->new(
-    module_name         => 'Perl::Mogrify',
+my $builder = Perl::ToPerl6::Module::Build->new(
+    module_name         => 'Perl::ToPerl6',
     dist_author         => 'Jeffrey Goff <drforr@pobox.com>',
     dist_abstract       => 'Convert Perl5 source to compile under Perl6.',
     license             => 'perl',
@@ -46,9 +46,9 @@ my $builder = Perl::Mogrify::Module::Build->new(
 
     meta_merge          => {
         resources => {
-            bugtracker  => 'https://github.com/drforr/Perl-Mogrify/issues',
+            bugtracker  => 'https://github.com/drforr/Perl-ToPerl6/issues',
             license     => [ 'http://dev.perl.org/licenses' ],
-            repository  => 'git://github.com/drforr/Perl-Mogrify.git',
+            repository  => 'git://github.com/drforr/Perl-ToPerl6.git',
         },
         no_index        => {
             file        => [

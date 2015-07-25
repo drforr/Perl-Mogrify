@@ -9,10 +9,10 @@ use Carp qw< confess >;
 
 use PPI::Document;
 
-use Perl::Mogrify::TransformerFactory -test => 1;
-use Perl::Mogrify::Document;
-use Perl::Mogrify;
-use Perl::Mogrify::TestUtils qw();
+use Perl::ToPerl6::TransformerFactory -test => 1;
+use Perl::ToPerl6::Document;
+use Perl::ToPerl6;
+use Perl::ToPerl6::TestUtils qw();
 
 use Test::More; #plan set below
 
@@ -22,7 +22,7 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 eval 'use Test::Memory::Cycle; 1'
     or plan skip_all => 'Test::Memory::Cycle requried to test memory leaks';
@@ -30,8 +30,8 @@ eval 'use Test::Memory::Cycle; 1'
 #-----------------------------------------------------------------------------
 {
 
-    # We have to create and test Perl::Mogrify::Document for memory leaks
-    # separately because it is not a persistent attribute of the Perl::Mogrify
+    # We have to create and test Perl::ToPerl6::Document for memory leaks
+    # separately because it is not a persistent attribute of the Perl::ToPerl6
     # object.  The current API requires us to create the P::C::Document from
     # an instance of an existing PPI::Document.  In the future, I hope to make
     # that interface a little more opaque.  But this works for now.
@@ -44,12 +44,12 @@ eval 'use Test::Memory::Cycle; 1'
 
     my $code    = q<print foo(); split /this/, $that;>; ## no mogrify (RequireInterpolationOfMetachars)
     my $ppi_doc = PPI::Document->new( \$code );
-    my $pc_doc  = Perl::Mogrify::Document->new( '-source' => $ppi_doc );
-    my $mogrify  = Perl::Mogrify->new( -severity => 1 );
+    my $pc_doc  = Perl::ToPerl6::Document->new( '-source' => $ppi_doc );
+    my $mogrify  = Perl::ToPerl6->new( -severity => 1 );
     my @transformations = $mogrify->transform( $pc_doc );
     confess 'No transformations were created' if not @transformations;
 
-    # One test for each transformation, plus one each for Mogrify and Document.
+    # One test for each transformation, plus one each for ToPerl6 and Document.
     plan( tests => scalar @transformations + 2 );
 
     memory_cycle_ok( $pc_doc );

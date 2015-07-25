@@ -5,10 +5,10 @@ use strict;
 use warnings;
 
 use Test::More (tests => 32);
-use Perl::Mogrify::TransformerFactory (-test => 1);
+use Perl::ToPerl6::TransformerFactory (-test => 1);
 
 # common P::C testing tools
-use Perl::Mogrify::TestUtils qw(transform);
+use Perl::ToPerl6::TestUtils qw(transform);
 
 #-----------------------------------------------------------------------------
 
@@ -16,9 +16,9 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
-# Configure Mogrify not to load certain transformers.  This
+# Configure ToPerl6 not to load certain transformers.  This
 # just makes it a little easier to create test cases
 my $profile = {
     '-Arrays::FormatArrayQws'            => {},
@@ -708,7 +708,7 @@ use strict;
 use warnings;
 our $VERSION = 1.0;
 
-## no mogrify (Mogrify::Transformer)
+## no mogrify (ToPerl6::Transformer)
 my $noisy = '!';
 my $empty = '';
 eval $string;

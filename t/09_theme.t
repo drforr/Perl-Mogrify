@@ -8,10 +8,10 @@ use English qw(-no_match_vars);
 
 use List::MoreUtils qw(any all none);
 
-use Perl::Mogrify::TestUtils;
-use Perl::Mogrify::TransformerFactory;
-use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::Theme;
+use Perl::ToPerl6::TestUtils;
+use Perl::ToPerl6::TransformerFactory;
+use Perl::ToPerl6::UserProfile;
+use Perl::ToPerl6::Theme;
 
 use Test::More tests => 66;
 
@@ -35,7 +35,7 @@ ILLEGAL_RULES: {
     );
 
     for my $invalid ( @invalid_rules ) {
-        eval { Perl::Mogrify::Theme::->new( -rule => $invalid ) };
+        eval { Perl::ToPerl6::Theme::->new( -rule => $invalid ) };
         like(
             $EVAL_ERROR,
             qr/invalid [ ] character/xms,
@@ -70,7 +70,7 @@ VALID_RULES: {
     );
 
     for my $valid ( @valid_rules ) {
-        my $theme = Perl::Mogrify::Theme->new( -rule => $valid );
+        my $theme = Perl::ToPerl6::Theme->new( -rule => $valid );
         ok( $theme, qq{Valid expression: "$valid"} );
     }
 }
@@ -99,7 +99,7 @@ TRANSLATIONS: {
     );
 
     while ( my ($raw, $expected) = each %expressions ) {
-        my $cooked = Perl::Mogrify::Theme::cook_rule( $raw );
+        my $cooked = Perl::ToPerl6::Theme::cook_rule( $raw );
         is( $cooked, $expected, qq{Theme cooking: '$raw' -> '$cooked'});
     }
 }
@@ -107,18 +107,18 @@ TRANSLATIONS: {
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 {
-    my $profile = Perl::Mogrify::UserProfile->new( -profile => q{} );
-    my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
-    my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
+    my $profile = Perl::ToPerl6::UserProfile->new( -profile => q{} );
+    my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
+    my @policy_names = Perl::ToPerl6::TransformerFactory::site_policy_names();
     my @pols = map { $factory->create_policy( -name => $_ ) } @policy_names;
 
     #--------------
 
     my $rule = 'cosmetic';
-    my $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    my $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     my @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
     ok(
         ( all { has_theme( $_, 'cosmetic' ) } @members ),
@@ -128,7 +128,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     #--------------
 
     $rule = 'cosmetic - pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
     ok(
         ( all  { has_theme( $_, 'cosmetic' ) } @members ),
@@ -140,7 +140,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'cosmetic and not pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
     ok(
         ( all  { has_theme( $_, 'cosmetic' ) } @members ),
@@ -152,7 +152,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'cosmetic && ! pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
     ok(
         ( all  { has_theme( $_, 'cosmetic' ) } @members ),
@@ -166,7 +166,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     #--------------
 
     $rule = 'cosmetic + pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'cosmetic') || has_theme($_, 'pbp') } @members ),
@@ -174,7 +174,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'cosmetic || pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'cosmetic') || has_theme($_, 'pbp') } @members ),
@@ -182,7 +182,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'cosmetic or pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'cosmetic') || has_theme($_, 'pbp') } @members),
@@ -192,7 +192,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     #--------------
 
     $rule = 'bugs * pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'bugs')  } @members ),
@@ -204,7 +204,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'bugs and pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'bugs')  } @members ),
@@ -216,7 +216,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'bugs && pbp';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'bugs')  } @members ),
@@ -230,7 +230,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     #-------------
 
     $rule = 'pbp - (danger * security)';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'pbp') } @members ),
@@ -242,7 +242,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'pbp and ! (danger and security)';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'pbp') } @members ),
@@ -254,7 +254,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     );
 
     $rule = 'pbp && not (danger && security)';
-    $theme = Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'pbp') } @members ),
@@ -268,22 +268,22 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     #--------------
 
     $rule = 'bogus';
-    $theme =  Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     is( scalar @members, 0, 'bogus theme' );
 
     $rule = 'bogus - pbp';
-    $theme =  Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     is( scalar @members, 0, 'bogus theme' );
 
     $rule = q{};
-    $theme =  Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     is( scalar @members, scalar @pols, 'empty theme' );
 
     $rule = q{};
-    $theme =  Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
     @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
     is( scalar @members, scalar @pols, 'undef theme' );
 
@@ -291,7 +291,7 @@ Perl::Mogrify::TestUtils::block_perlmogrifyrc();
     # Exceptions
 
     $rule = 'cosmetic *(';
-    $theme =  Perl::Mogrify::Theme->new( -rule => $rule );
+    $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
     eval{ $theme->policy_is_thematic( -policy => $pols[0] ) };
     like(
         $EVAL_ERROR,

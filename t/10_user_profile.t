@@ -6,7 +6,7 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::UserProfile;
+use Perl::ToPerl6::UserProfile;
 
 use Test::More tests => 41;
 
@@ -23,7 +23,7 @@ our $VERSION = '0.01';
     my %profile_hash = ( '-BasicTypes::Strings::FormatShellStrings' => {},
         '-Variables::FormatHashKeys' => \%policy_params );
 
-    my $up = Perl::Mogrify::UserProfile->new( -profile => \%profile_hash );
+    my $up = Perl::ToPerl6::UserProfile->new( -profile => \%profile_hash );
 
     # Using short policy names
 SKIP: {
@@ -52,35 +52,35 @@ SKIP: {
   skip "XXX Need to restore these eventually", 2;
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
+        'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
 }
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
@@ -97,7 +97,7 @@ SKIP: {
     );
 
 
-    my $up = Perl::Mogrify::UserProfile->new( -profile => \@profile_array );
+    my $up = Perl::ToPerl6::UserProfile->new( -profile => \@profile_array );
 
     # Now using long policy names
     is(
@@ -118,34 +118,34 @@ SKIP: {
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
+        'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
@@ -162,7 +162,7 @@ SKIP: {
 min_elements = 4
 END_PROFILE
 
-    my $up = Perl::Mogrify::UserProfile->new( -profile => \$profile_string );
+    my $up = Perl::ToPerl6::UserProfile->new( -profile => \$profile_string );
 
     # Now using long policy names
     is(
@@ -183,34 +183,34 @@ END_PROFILE
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
+        'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
@@ -222,12 +222,12 @@ END_PROFILE
 {
     my %policy_params = (min_elements => 4);
     my $long_profile_string = <<'END_PROFILE';
-[-Perl::Mogrify::Transformer::NamingConventions::Capitalization]
-[Perl::Mogrify::Transformer::Variables::FormatHashKeys]
+[-Perl::ToPerl6::Transformer::NamingConventions::Capitalization]
+[Perl::ToPerl6::Transformer::Variables::FormatHashKeys]
 min_elements = 4
 END_PROFILE
 
-    my $up = Perl::Mogrify::UserProfile->new( -profile => \$long_profile_string );
+    my $up = Perl::ToPerl6::UserProfile->new( -profile => \$long_profile_string );
 
     # Now using long policy names
     is(
@@ -248,34 +248,34 @@ END_PROFILE
 
     # Now using long policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::NamingConventions::Capitalization'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
-        'Perl::Mogrify::Transformer::NamingConventions::Capitalization is disabled.',
+        'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Variables::FormatHashKeys'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         \%policy_params,
-        'Perl::Mogrify::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
     # Using bogus policy names
     is(
-        $up->policy_is_enabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::Mogrify::Transformer::Bogus'),
+        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::Mogrify::Transformer::Bogus'),
+        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
@@ -286,14 +286,14 @@ END_PROFILE
 
 {
     my $code_ref = sub { return };
-    eval { Perl::Mogrify::UserProfile->new( -profile => $code_ref ) };
+    eval { Perl::ToPerl6::UserProfile->new( -profile => $code_ref ) };
     like(
         $EVAL_ERROR,
         qr/Can't [ ] load [ ] UserProfile/xms,
         'Invalid profile type',
     );
 
-    eval { Perl::Mogrify::UserProfile->new( -profile => 'bogus' ) };
+    eval { Perl::ToPerl6::UserProfile->new( -profile => 'bogus' ) };
     like(
         $EVAL_ERROR,
         qr/Could [ ] not [ ] parse [ ] profile [ ] "bogus"/xms,
@@ -301,7 +301,7 @@ END_PROFILE
     );
 
     my $invalid_syntax = '[Foo::Bar'; # Missing "]"
-    eval { Perl::Mogrify::UserProfile->new( -profile => \$invalid_syntax ) };
+    eval { Perl::ToPerl6::UserProfile->new( -profile => \$invalid_syntax ) };
     like(
         $EVAL_ERROR,
         qr/Syntax [ ] error [ ] at [ ] line/xms,
@@ -309,7 +309,7 @@ END_PROFILE
     );
 
     $invalid_syntax = 'severity 2'; # Missing "="
-    eval { Perl::Mogrify::UserProfile->new( -profile => \$invalid_syntax ) };
+    eval { Perl::ToPerl6::UserProfile->new( -profile => \$invalid_syntax ) };
     like(
         $EVAL_ERROR,
         qr/Syntax [ ] error [ ] at [ ] line/xms,
@@ -323,7 +323,7 @@ END_PROFILE
 
 {
     my $expected = local $ENV{PERLMOGRIFY} = 'foo';
-    my $got = Perl::Mogrify::UserProfile::_find_profile_path();
+    my $got = Perl::ToPerl6::UserProfile::_find_profile_path();
     is( $got, $expected, 'PERLMOGRIFY environment variable');
 }
 

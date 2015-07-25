@@ -6,7 +6,7 @@ use warnings;
 
 use PPI::Token::Operator;
 use PPI::Token::Word;
-use Perl::Mogrify::Utils::PPI qw< is_ppi_token_word >;
+use Perl::ToPerl6::Utils::PPI qw< is_ppi_token_word >;
 
 use Test::More tests => 5;
 

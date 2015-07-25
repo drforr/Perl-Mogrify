@@ -9,12 +9,12 @@ use English qw( -no_match_vars );
 
 use File::Spec qw();
 
-use Perl::Mogrify::Utils qw{ :characters };
-use Perl::Mogrify::TestUtils qw{ starting_points_including_examples };
+use Perl::ToPerl6::Utils qw{ :characters };
+use Perl::ToPerl6::TestUtils qw{ starting_points_including_examples };
 
 # Note: "use TransformerFactory" *must* appear after "use TestUtils" for the
 # -extra-test-transformers option to work.
-use Perl::Mogrify::TransformerFactory (
+use Perl::ToPerl6::TransformerFactory (
     '-test' => 1,
     '-extra-test-transformers' => [ qw{ ErrorHandling::RequireUseOfExceptions } ],
 );
@@ -28,7 +28,7 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 # Fall over if P::C::More isn't installed.
-use Perl::Mogrify::Transformer::ErrorHandling::RequireUseOfExceptions;
+use Perl::ToPerl6::Transformer::ErrorHandling::RequireUseOfExceptions;
 
 #-----------------------------------------------------------------------------
 # Set up PPI caching for speed (used primarily during development)
@@ -51,14 +51,14 @@ if ( $ENV{PERL_MOGRIFY_CACHE} ) {
 
 use Devel::EnforceEncapsulation;
 foreach my $pkg ( $EMPTY, qw< ::Config ::Transformer ::Transformation> ) {
-    Devel::EnforceEncapsulation->apply_to('Perl::Mogrify'.$pkg);
+    Devel::EnforceEncapsulation->apply_to('Perl::ToPerl6'.$pkg);
 }
 
 #-----------------------------------------------------------------------------
 # Run mogrify against all of our own files
 
 my $rcfile = File::Spec->catfile( 'xt', 'author', '40_perlmogrifyrc-code' );
-Test::Perl::Mogrify->import( -profile => $rcfile );
+Test::Perl::ToPerl6->import( -profile => $rcfile );
 
 all_mogrify_ok( starting_points_including_examples() );
 

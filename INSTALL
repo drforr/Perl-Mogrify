@@ -1,10 +1,10 @@
 INSTALLATION
 
-    To install Perl::Mogrify give the following commands 
+    To install Perl::ToPerl6 give the following commands 
     to your favorite shell:
 
-        tar -zxf Perl-Mogrify-0.001.tar.gz
-        cd Perl-Mogrify-0.001
+        tar -zxf Perl-ToPerl6-0.001.tar.gz
+        cd Perl-ToPerl6-0.001
         perl Build.pl
         ./Build
         ./Build test

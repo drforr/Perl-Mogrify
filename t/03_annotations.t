@@ -8,8 +8,8 @@ use English qw(-no_match_vars);
 
 use PPI::Document;
 
-use Perl::Mogrify::Annotation;
-use Perl::Mogrify::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::Annotation;
+use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
 
 use Test::More;
 
@@ -19,23 +19,23 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-Perl::Mogrify::TestUtils::block_perlmogrifyrc();
+Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 my @bundled_policy_names = bundled_policy_names();
 
 plan( tests => 85 );
 
 #-----------------------------------------------------------------------------
-# Test Perl::Mogrify::Annotation module interface
+# Test Perl::ToPerl6::Annotation module interface
 
-can_ok('Perl::Mogrify::Annotation', 'new');
-can_ok('Perl::Mogrify::Annotation', 'create_annotations');
-can_ok('Perl::Mogrify::Annotation', 'element');
-can_ok('Perl::Mogrify::Annotation', 'effective_range');
-can_ok('Perl::Mogrify::Annotation', 'disabled_transformers');
-can_ok('Perl::Mogrify::Annotation', 'disables_policy');
-can_ok('Perl::Mogrify::Annotation', 'disables_all_transformers');
-can_ok('Perl::Mogrify::Annotation', 'disables_line');
+can_ok('Perl::ToPerl6::Annotation', 'new');
+can_ok('Perl::ToPerl6::Annotation', 'create_annotations');
+can_ok('Perl::ToPerl6::Annotation', 'element');
+can_ok('Perl::ToPerl6::Annotation', 'effective_range');
+can_ok('Perl::ToPerl6::Annotation', 'disabled_transformers');
+can_ok('Perl::ToPerl6::Annotation', 'disables_policy');
+can_ok('Perl::ToPerl6::Annotation', 'disables_all_transformers');
+can_ok('Perl::ToPerl6::Annotation', 'disables_line');
 
 annotate( <<"EOD", 0, 'Null case. Un-annotated document' );
 #!/usr/local/bin/perl
@@ -222,11 +222,11 @@ SKIP: {
             @_ = ( "Can not make PPI::Document for $title" );
             goto &fail;
         };
-        $doc = Perl::Mogrify::Document->new( -source => $doc ) or do {
-            @_ = ( "Can not make Perl::Mogrify::Document for $title" );
+        $doc = Perl::ToPerl6::Document->new( -source => $doc ) or do {
+            @_ = ( "Can not make Perl::ToPerl6::Document for $title" );
             goto &fail;
         };
-        @annotations = Perl::Mogrify::Annotation->create_annotations( $doc );
+        @annotations = Perl::ToPerl6::Annotation->create_annotations( $doc );
         @_ = ( scalar @annotations, $count, $title );
         goto &is;
     }

@@ -9,7 +9,7 @@ use Readonly;
 use Carp qw< confess >;
 
 
-use Perl::Mogrify::Utils::POD qw< :all >;
+use Perl::ToPerl6::Utils::POD qw< :all >;
 
 
 use Test::More tests => 61;
@@ -655,7 +655,7 @@ sub _test_exception_from_get_module_abstract_from_string {
     my ($source, $name, $result, $message_like_name) = @_;
 
     my $eval_error = $EVAL_ERROR;
-    my $exception = Perl::Mogrify::Exception::Fatal::Generic->caught();
+    my $exception = Perl::ToPerl6::Exception::Fatal::Generic->caught();
 
     if (
         ok(

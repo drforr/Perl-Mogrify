@@ -6,7 +6,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Perl::Mogrify::Command qw< run >;
+use Perl::ToPerl6::Command qw< run >;
 
 #-----------------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
 =head1 DESCRIPTION
 
 C<perlmogrify> is a Perl source code analyzer.  It is the executable front-end
-to the L<Perl::Mogrify> engine, which attempts to identify awkward, hard to
+to the L<Perl::ToPerl6> engine, which attempts to identify awkward, hard to
 read, error-prone, or unconventional constructs in your code. Most of the
 rules are based on Damian Conway's book B<Perl Best Practices>. However,
 C<perlmogrify> is B<not> limited to enforcing PBP, and it will even support
@@ -77,7 +77,7 @@ to your liking.
 
 This documentation only covers how to drive this command.  For all other
 information, such as API reference and alternative interfaces, please see the
-documentation for L<Perl::Mogrify> itself.
+documentation for L<Perl::ToPerl6> itself.
 
 
 =head1 USAGE EXAMPLES
@@ -139,7 +139,7 @@ space or '=' (as with L<Getopt::Long>). Option names are also case-sensitive.
 
 Directs C<perlmogrify> to use a profile named by FILE rather than looking for
 the default F<.perlmogrifyrc> file in the current directory or your home
-directory.  See L<Perl::Mogrify/"CONFIGURATION"> for more information.
+directory.  See L<Perl::ToPerl6/"CONFIGURATION"> for more information.
 
 =item C<--noprofile>
 
@@ -199,7 +199,7 @@ C<RULE>.  For example, the following would apply only Policies that have a
 Unless the C<--severity> option is explicitly given, setting C<--theme>
 silently causes the C<--severity> to be set to 1.  You can set the default
 value for this option in your F<.perlmogrifyrc> file. See
-L<Perl::Mogrify/"POLICY THEMES"> for more information about themes.
+L<Perl::ToPerl6/"POLICY THEMES"> for more information about themes.
 
 =item C<--include PATTERN>
 
@@ -323,7 +323,7 @@ of the formatting capabilities.  Valid escape characters are:
     %l        Line number where the transformation occurred
     %m        Brief description of the transformation
     %P        Full name of the Transformer module that created the transformation
-    %p        Name of the Transformer without the Perl::Mogrify::Transformer:: prefix
+    %p        Name of the Transformer without the Perl::ToPerl6::Transformer:: prefix
     %r        The string of source code that caused the transformation
     %C        The class of the PPI::Element that caused the transformation
     %s        The severity level of the transformation
@@ -334,14 +334,14 @@ L<"EDITOR INTEGRATION"> for more information about that.
 
 =item C<--list>
 
-Displays a condensed listing of all the L<Perl::Mogrify::Transformer> modules that
+Displays a condensed listing of all the L<Perl::ToPerl6::Transformer> modules that
 are found on this machine.  This option lists I<all> Policies, regardless of
 your F<.perlmogrifyrc> or command line options.  For each Transformer, the name,
 default severity and default themes are shown.
 
 =item C<--list-enabled>
 
-Displays a condensed listing of all the L<Perl::Mogrify::Transformer> modules that
+Displays a condensed listing of all the L<Perl::ToPerl6::Transformer> modules that
 I<would> be enforced, if you were actually going to transform a file with this
 command. This is useful when you've constructed a complicated command or
 modified your F<.perlmogrifyrc> file and you want to see exactly which Policies
@@ -350,12 +350,12 @@ Transformer, the name, default severity and default themes are shown.
 
 =item C<--list-themes>
 
-Displays a list of all the themes of the L<Perl::Mogrify::Transformer> modules that
+Displays a list of all the themes of the L<Perl::ToPerl6::Transformer> modules that
 are found on this machine.
 
 =item C<--profile-proto>
 
-Displays an expanded listing of all the L<Perl::Mogrify::Transformer> modules that
+Displays an expanded listing of all the L<Perl::ToPerl6::Transformer> modules that
 are found on this machine.  For each Transformer, the name, default severity and
 default themes are shown, as well as the name of any additional parameters
 that the Transformer supports.  The format is suitable as a prototype for your
@@ -471,10 +471,10 @@ Files whose name ends in '.PL' will always be considered programs.
 
 =item C<--doc PATTERN>
 
-Displays the perldoc for all L<Perl::Mogrify::Transformer> modules that match
+Displays the perldoc for all L<Perl::ToPerl6::Transformer> modules that match
 C<m/PATTERN/ixms>.  Since Transformer modules tend to have rather long names, this
 just provides a more convenient way to say something like: C<"perldoc
-Perl::Mogrify::Transformer::ValuesAndExpressions::RequireUpperCaseH
+Perl::ToPerl6::Transformer::ValuesAndExpressions::RequireUpperCaseH
 eredocTerminator"> at the command prompt.
 
 =item C<--allow-unsafe>
@@ -482,8 +482,8 @@ eredocTerminator"> at the command prompt.
 This option directs C<perlmogrify> to allow the use of Policies that have been
 marked as "unsafe".  Unsafe Policies may result in risky operations by
 compiling and executing the code they analyze.  All the Policies that ship in
-the core L<Perl::Mogrify> distribution are safe.  However, third- party
-Policies, such as those in the L<Perl::Mogrify::Dynamic> distribution are not
+the core L<Perl::ToPerl6> distribution are safe.  However, third- party
+Policies, such as those in the L<Perl::ToPerl6::Dynamic> distribution are not
 safe. Note that "safety" is honorary -- if a Transformer author marks a Transformer as
 safe, it is not a guarantee that it won't do nasty things.  B<If you don't
 trust your Policies and the code you are analyzing, then do not use this
@@ -520,7 +520,7 @@ Displays the version number of C<perlmogrify> and exits.
 
 =head1 CONFIGURATION
 
-Most of the settings for Perl::Mogrify and each of the Transformer modules can be
+Most of the settings for Perl::ToPerl6 and each of the Transformer modules can be
 controlled by a configuration file.  The default configuration file is called
 F<.perlmogrifyrc>.  C<perlmogrify> will look for this file in the current
 directory first, and then in your home directory. Alternatively, you can set
@@ -549,18 +549,18 @@ command-line argument.
 
 The remainder of the configuration file is a series of blocks like this:
 
-    [Perl::Mogrify::Transformer::Category::TransformerName]
+    [Perl::ToPerl6::Transformer::Category::TransformerName]
     severity = 1
     set_themes = foo bar
     add_themes = baz
     arg1 = value1
     arg2 = value2
 
-C<Perl::Mogrify::Transformer::Category::TransformerName> is the full name of a module
-that implements the policy.  The Transformer modules distributed with Perl::Mogrify
+C<Perl::ToPerl6::Transformer::Category::TransformerName> is the full name of a module
+that implements the policy.  The Transformer modules distributed with Perl::ToPerl6
 have been grouped into categories according to the table of contents in Damian
 Conway's book B<Perl Best Practices>. For brevity, you can omit the
-C<'Perl::Mogrify::Transformer'> part of the module name.
+C<'Perl::ToPerl6::Transformer'> part of the module name.
 
 C<severity> is the level of importance you wish to assign to the Transformer.  All
 Transformer modules are defined with a default severity value ranging from 1 (least
@@ -637,7 +637,7 @@ A simple configuration might look like this:
     # For all other Policies, I accept the default severity,
     # so no additional configuration is required for them.
 
-Note that all transformers included with the Perl::Mogrify distribution that have
+Note that all transformers included with the Perl::ToPerl6 distribution that have
 integer parameters accept underscores ("_") in their values, as with Perl
 numeric literals.  For example,
 
@@ -647,21 +647,21 @@ numeric literals.  For example,
 For additional configuration examples, see the F<perlmogrifyrc> file that is
 included in this F<examples> directory of this distribution.
 
-Damian Conway's own Perl::Mogrify configuration is also included in this
+Damian Conway's own Perl::ToPerl6 configuration is also included in this
 distribution as F<examples/perlmogrifyrc-conway>.
 
 
 =head1 THE POLICIES
 
-A large number of Transformer modules are distributed with Perl::Mogrify. They are
-described briefly in the companion document L<Perl::Mogrify::TransformerSummary> and
+A large number of Transformer modules are distributed with Perl::ToPerl6. They are
+described briefly in the companion document L<Perl::ToPerl6::TransformerSummary> and
 in more detail in the individual modules themselves.  Say C<"perlmogrify --doc
 PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
 There are a number of distributions of additional transformers on CPAN. If
-L<Perl::Mogrify> doesn't contain a policy that you want, some one may have
-already written it.  See L<Perl::Mogrify/"SEE ALSO"> for a list of some of
+L<Perl::ToPerl6> doesn't contain a policy that you want, some one may have
+already written it.  See L<Perl::ToPerl6/"SEE ALSO"> for a list of some of
 these distributions.
 
 
@@ -674,13 +674,13 @@ example, you may wish disable a certain set of Policies when analyzing test
 programs.  Conversely, you may wish to enable only a specific subset of
 Policies when analyzing modules.
 
-The Policies that ship with Perl::Mogrify are have been divided into the
+The Policies that ship with Perl::ToPerl6 are have been divided into the
 following themes.  This is just our attempt to provide some basic logical
 groupings.  You are free to invent new themes that suit your needs.
 
     THEME             DESCRIPTION
     ------------------------------------------------------------------------
-    core              All transformers that ship with Perl::Mogrify
+    core              All transformers that ship with Perl::ToPerl6
     pbp               Policies that come directly from "Perl Best Practices"
     bugs              Policies that that prevent or reveal bugs
     certrec           Policies that CERT recommends
@@ -713,13 +713,13 @@ string, then it evaluates as true all Policies.
 
 =head1 BENDING THE RULES
 
-Perl::Mogrify takes a hard-line approach to your code: either you comply or you
+Perl::ToPerl6 takes a hard-line approach to your code: either you comply or you
 don't.  In the real world, it is not always practical (or even possible) to
 fully comply with coding standards.  In such cases, it is wise to show that
 you are knowingly violating the standards and that you have a Damn Good Reason
 (DGR) for doing so.
 
-To help with those situations, you can direct Perl::Mogrify to ignore certain
+To help with those situations, you can direct Perl::ToPerl6 to ignore certain
 lines or blocks of code by using annotations:
 
   require 'LegacyLibaray1.pl';  ## no mogrify
@@ -739,7 +739,7 @@ lines or blocks of code by using annotations:
       do_something($_);
   }
 
-The C<"## no mogrify"> annotations direct Perl::Mogrify to ignore the remaining
+The C<"## no mogrify"> annotations direct Perl::ToPerl6 to ignore the remaining
 lines of code until a C<"## use mogrify"> annotation is found. If the C<"## no
 mogrify"> annotation is on the same line as a code statement, then only that
 line of code is overlooked.  To direct perlmogrify to ignore the C<"## no
@@ -799,7 +799,7 @@ will affect the analysis of B<all> files.
 Use this feature wisely.  C<"## no mogrify"> should be used in the smallest
 possible scope, or only on individual lines of code. And you should always be
 as specific as possible about which transformers you want to disable (i.e. never
-use a bare C<"## no mogrify">).  If Perl::Mogrify complains about your code, try
+use a bare C<"## no mogrify">).  If Perl::ToPerl6 complains about your code, try
 and find a compliant solution before resorting to this feature.
 
 
@@ -812,9 +812,9 @@ C<emacs> and C<vim>.  In these modes, you can run an arbitrary command and the
 editor will parse the output into an interactive buffer that you can click on
 and jump to the relevant line of code.
 
-The Perl::Mogrify team thanks everyone who has helped integrate Perl-Mogrify
+The Perl::ToPerl6 team thanks everyone who has helped integrate Perl-ToPerl6
 with their favorite editor.  Your contributions in particular have made Perl-
-Mogrify a convenient and user-friendly tool for Perl developers of all stripes.
+ToPerl6 a convenient and user-friendly tool for Perl developers of all stripes.
 We sincerely appreciate your hard work.
 
 
@@ -849,12 +849,12 @@ include syntax highlighting, on-the-fly syntax check, content assist, code
 completion, perldoc support, source formatting with L<Perl::Tidy|Perl::Tidy>,
 code templates, a regular expression editing tool, and integration with the
 Perl debugger.  Recent versions of EPIC also have built-in support for
-Perl::Mogrify.  At least one Perl::Mogrify contributor swears by EPIC.  Go to
+Perl::ToPerl6.  At least one Perl::ToPerl6 contributor swears by EPIC.  Go to
 L<http://e-p-i-c.sourceforge.net> for more information about EPIC.
 
 =head2 BBEdit
 
-Josh Clark has produced an excellent Perl-Mogrify plugin for BBEdit. See
+Josh Clark has produced an excellent Perl-ToPerl6 plugin for BBEdit. See
 L<http://globalmoxie.com/projects/bbedit-perl-mogrify/index.shtml> for
 download, installation, and usage instructions.  Apple users rejoice!
 
@@ -867,42 +867,42 @@ exits with status == 2.  If there were no errors and no transformations were fou
 exits with status == 0.
 
 
-=head1 THE L<Perl::Mogrify> PHILOSOPHY
+=head1 THE L<Perl::ToPerl6> PHILOSOPHY
 
 =over
 
 Coding standards are deeply personal and highly subjective.  The goal of
-Perl::Mogrify is to help you write code that conforms with a set of best
+Perl::ToPerl6 is to help you write code that conforms with a set of best
 practices.  Our primary goal is not to dictate what those practices are, but
 rather, to implement the practices discovered by others.  Ultimately, you make
-the rules -- Perl::Mogrify is merely a tool for encouraging consistency.  If
+the rules -- Perl::ToPerl6 is merely a tool for encouraging consistency.  If
 there is a policy that you think is important or that we have overlooked, we
 would be very grateful for contributions, or you can simply load your own
-private set of transformers into Perl::Mogrify.
+private set of transformers into Perl::ToPerl6.
 
 =back
 
 
 =head1 EXTENDING THE MOGRIFIER
 
-The modular design of Perl::Mogrify is intended to facilitate the addition of
+The modular design of Perl::ToPerl6 is intended to facilitate the addition of
 new Policies.  You'll need to have some understanding of L<PPI>, but most
 Transformer modules are pretty straightforward and only require about 20 lines of
-code.  Please see the L<Perl::Mogrify::DEVELOPER> file included in this
+code.  Please see the L<Perl::ToPerl6::DEVELOPER> file included in this
 distribution for a step-by-step demonstration of how to create new Transformer
 modules.
 
 If you develop any new Transformer modules, feel free to send them to C<<
 <team@perlmogrify.com> >> and I'll be happy to consider adding them into the
-Perl::Mogrify distribution.  Or if you would like to work on the Perl::Mogrify
+Perl::ToPerl6 distribution.  Or if you would like to work on the Perl::ToPerl6
 project directly, you can fork our repository at L<http://github.com/Perl-
-Mogrify/Perl- Mogrify.git>.
+ToPerl6/Perl- ToPerl6.git>.
 
-The Perl::Mogrify team is also available for hire.  If your organization has
+The Perl::ToPerl6 team is also available for hire.  If your organization has
 its own coding standards, we can create custom Policies to enforce your local
 guidelines.  Or if your code base is prone to a particular defect pattern, we
 can design Policies that will help you catch those costly defects B<before>
-they go into production. To discuss your needs with the Perl::Mogrify team,
+they go into production. To discuss your needs with the Perl::ToPerl6 team,
 just contact C<< <team@perlmogrify.com> >>.
 
 
@@ -914,7 +914,7 @@ required to register for a user account with Tigris.org before being allowed
 to post messages to the mailing list. See also the mailing list archives at
 L<http://perlmogrify.tigris.org/servlets/SummarizeList?listName=users>. At
 least one member of the development team is usually hanging around in
-L<irc://irc.perl.org/#perlmogrify> and you can follow Perl::Mogrify on Twitter,
+L<irc://irc.perl.org/#perlmogrify> and you can follow Perl::ToPerl6 on Twitter,
 at L<https://twitter.com/perlmogrify>.
 
 
@@ -923,40 +923,40 @@ at L<https://twitter.com/perlmogrify>.
 There are a number of distributions of additional Policies available. A few
 are listed here:
 
-L<Perl::Mogrify::More>
+L<Perl::ToPerl6::More>
 
-L<Perl::Mogrify::Bangs>
+L<Perl::ToPerl6::Bangs>
 
-L<Perl::Mogrify::Lax>
+L<Perl::ToPerl6::Lax>
 
-L<Perl::Mogrify::StricterSubs>
+L<Perl::ToPerl6::StricterSubs>
 
-L<Perl::Mogrify::Swift>
+L<Perl::ToPerl6::Swift>
 
-L<Perl::Mogrify::Tics>
+L<Perl::ToPerl6::Tics>
 
-These distributions enable you to use Perl::Mogrify in your unit tests:
+These distributions enable you to use Perl::ToPerl6 in your unit tests:
 
-L<Test::Perl::Mogrify>
+L<Test::Perl::ToPerl6>
 
-L<Test::Perl::Mogrify::Progressive>
+L<Test::Perl::ToPerl6::Progressive>
 
-There is also a distribution that will install all the Perl::Mogrify related
+There is also a distribution that will install all the Perl::ToPerl6 related
 modules known to the development team:
 
-L<Task::Perl::Mogrify>
+L<Task::Perl::ToPerl6>
 
 
 =head1 BUGS
 
 Scrutinizing Perl code is hard for humans, let alone machines.  If you find
 any bugs, particularly false-positives or false-negatives from a
-Perl::Mogrify::Transformer, please submit them at L<https://github.com/Perl-Mogrify
-/Perl-Mogrify/issues>.  Thanks.
+Perl::ToPerl6::Transformer, please submit them at L<https://github.com/Perl-ToPerl6
+/Perl-ToPerl6/issues>.  Thanks.
 
 =head1 CREDITS
 
-Adam Kennedy - For creating L<PPI>, the heart and soul of L<Perl::Mogrify>.
+Adam Kennedy - For creating L<PPI>, the heart and soul of L<Perl::ToPerl6>.
 
 Damian Conway - For writing B<Perl Best Practices>, finally :)
 

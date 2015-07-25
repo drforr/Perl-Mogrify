@@ -6,7 +6,7 @@ use warnings;
 
 use Carp qw< confess >;
 
-use Perl::Mogrify::TransformerConfig;
+use Perl::ToPerl6::TransformerConfig;
 
 use Test::More tests => 28;
 
@@ -19,7 +19,7 @@ our $VERSION = '0.01';
 
 {
     my $config =
-        Perl::Mogrify::TransformerConfig->new('Some::Transformer');
+        Perl::ToPerl6::TransformerConfig->new('Some::Transformer');
 
     is(
         $config->get_policy_short_name(),
@@ -63,7 +63,7 @@ our $VERSION = '0.01';
 
 {
     my $config =
-        Perl::Mogrify::TransformerConfig->new(
+        Perl::ToPerl6::TransformerConfig->new(
             'Some::Other::Transformer',
             {
                 custom_parameter   => 'blargh',

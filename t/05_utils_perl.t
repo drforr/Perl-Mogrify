@@ -7,7 +7,7 @@ use warnings;
 use Readonly;
 
 
-use Perl::Mogrify::Utils::Perl qw< :all >;
+use Perl::ToPerl6::Utils::Perl qw< :all >;
 
 
 use Test::More tests => 7;

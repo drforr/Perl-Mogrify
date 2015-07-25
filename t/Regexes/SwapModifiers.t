@@ -5,7 +5,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< transform_ok >;
+use Test::Perl::ToPerl6::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
@@ -26,16 +26,16 @@ m/foo/i and 1
 m<foo>i
 m<foo>gi
 ##-->
-/foo/
-m/foo/
-m<foo>
-m:i/foo/
-m:i/foo/ if 1
-m:i/foo/ and 1
-1 if m:i/foo/
-1 and m:i/foo/
-m:i<foo>
-m:gi<foo>
+m:P5/foo/
+m:P5/foo/
+m:P5<foo>
+m:i:P5/foo/
+m:i:P5/foo/ if 1
+m:i:P5/foo/ and 1
+1 if m:i:P5/foo/
+1 and m:i:P5/foo/
+m:i:P5<foo>
+m:gi:P5<foo>
 ## name: substitute
 s/foo/bar/
 s{foo}<bar>
@@ -44,9 +44,9 @@ s/foo/bar/i
 s{foo}<bar>i
 s(foo)(bar)i
 ##-->
-s/foo/bar/
-s{foo}<bar>
-s(foo)(bar)
-s:i/foo/bar/
-s:i{foo}<bar>
-s:i(foo)(bar)
+s:P5/foo/bar/
+s:P5{foo}<bar>
+s:P5(foo)(bar)
+s:i:P5/foo/bar/
+s:i:P5{foo}<bar>
+s:i:P5(foo)(bar)

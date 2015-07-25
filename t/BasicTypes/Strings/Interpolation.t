@@ -5,7 +5,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Test::Perl::Mogrify::Transformer qw< transform_ok >;
+use Test::Perl::ToPerl6::Transformer qw< transform_ok >;
 ### name: Check single layer of casefolding
 #qq<\FLOWER\E\U$upper\E\Q***\E>
 #qq<xx\FLOWER\Exx>

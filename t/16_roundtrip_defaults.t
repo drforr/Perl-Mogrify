@@ -6,10 +6,10 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::Config;
-use Perl::Mogrify::ProfilePrototype;
-use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::Config;
+use Perl::ToPerl6::ProfilePrototype;
+use Perl::ToPerl6::Utils qw{ :characters :severities };
 
 use Test::Deep;
 use Test::More;
@@ -21,7 +21,7 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 my $default_configuration =
-    Perl::Mogrify::Config->new(
+    Perl::ToPerl6::Config->new(
         -profile => $EMPTY,
         -severity => 1,
         -theme => 'core',
@@ -34,7 +34,7 @@ $policy_test_count = 4 * @default_transformers;
 foreach my $policy (@default_transformers) {
     if (
             $policy->parameter_metadata_available()
-        and not $policy->isa('Perl::Mogrify::Transformer::Arrays::FormatArrayQws')
+        and not $policy->isa('Perl::ToPerl6::Transformer::Arrays::FormatArrayQws')
     ) {
         $policy_test_count += scalar @{$policy->get_parameters()};
     }
@@ -45,7 +45,7 @@ plan tests => $test_count;
 #-----------------------------------------------------------------------------
 
 my $profile_generator =
-    Perl::Mogrify::ProfilePrototype->new(
+    Perl::ToPerl6::ProfilePrototype->new(
         -transformers                   => \@default_transformers,
         '-comment-out-parameters'   => 0,
         -config                     => $default_configuration,
@@ -53,7 +53,7 @@ my $profile_generator =
 my $profile = $profile_generator->to_string();
 
 my $derived_configuration =
-    Perl::Mogrify::Config->new( -profile => \$profile );
+    Perl::ToPerl6::Config->new( -profile => \$profile );
 
 #-----------------------------------------------------------------------------
 
@@ -247,7 +247,7 @@ SKIP: {
 
         if (
                 $default_policy->parameter_metadata_available()
-            and not $default_policy->isa('Perl::Mogrify::Transformer::Arrays::FOrmatArrayQws')
+            and not $default_policy->isa('Perl::ToPerl6::Transformer::Arrays::FOrmatArrayQws')
         ) {
             # Encapsulation transformation alert!
             foreach my $parameter ( @{$default_policy->get_parameters()} ) {

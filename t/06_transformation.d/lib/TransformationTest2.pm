@@ -5,15 +5,15 @@ use strict;
 use warnings;
 
 use PPI::Document;
-use Perl::Mogrify::Transformation;
+use Perl::ToPerl6::Transformation;
 
-# This file exists solely to test Perl::Mogrify::Transformation::import()
+# This file exists solely to test Perl::ToPerl6::Transformation::import()
 
 sub get_violation {
 
     my $code = 'Hello World;';
     my $doc = PPI::Document->new(\$code);
-    return Perl::Mogrify::Transformation->new('', '', [0,0], 0);
+    return Perl::ToPerl6::Transformation->new('', '', [0,0], 0);
 }
 
 1;

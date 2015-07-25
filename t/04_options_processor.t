@@ -6,9 +6,9 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::Mogrify::OptionsProcessor;
-use Perl::Mogrify::Utils qw< :booleans >;
-use Perl::Mogrify::Utils::Constants qw< :color_severity >;
+use Perl::ToPerl6::OptionsProcessor;
+use Perl::ToPerl6::Utils qw< :booleans >;
+use Perl::ToPerl6::Utils::Constants qw< :color_severity >;
 
 use Test::More tests => 54;
 
@@ -22,7 +22,7 @@ our $VERSION = '0.01';
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
     my $color = -t *STDOUT ? $TRUE : $FALSE;
 
-    my $processor = Perl::Mogrify::OptionsProcessor->new();
+    my $processor = Perl::ToPerl6::OptionsProcessor->new();
     is($processor->force(),    0,           'native default force');
     is($processor->only(),     0,           'native default only');
     is($processor->severity(), 5,           'native default severity');
@@ -76,7 +76,7 @@ our $VERSION = '0.01';
          'program-extensions'  => '.PL .pl .t',
     );
 
-    my $processor = Perl::Mogrify::OptionsProcessor->new( %user_defaults );
+    my $processor = Perl::ToPerl6::OptionsProcessor->new( %user_defaults );
     is($processor->force(),    1,           'user default force');
     is($processor->only(),     1,           'user default only');
     is($processor->severity(), 4,           'user default severity');
@@ -105,13 +105,13 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 {
-    my $processor = Perl::Mogrify::OptionsProcessor->new( 'colour' => 1 );
+    my $processor = Perl::ToPerl6::OptionsProcessor->new( 'colour' => 1 );
     is($processor->color(), $TRUE, 'user default colour true');
 
-    $processor = Perl::Mogrify::OptionsProcessor->new( 'colour' => 0 );
+    $processor = Perl::ToPerl6::OptionsProcessor->new( 'colour' => 0 );
     is($processor->color(), $FALSE, 'user default colour false');
 
-    $processor = Perl::Mogrify::OptionsProcessor->new(
+    $processor = Perl::ToPerl6::OptionsProcessor->new(
          'colour-severity-highest'   => 'chartreuse',
          'colour-severity-high'      => 'fuschia',
          'colour-severity-medium'    => 'blue',
@@ -129,7 +129,7 @@ our $VERSION = '0.01';
     is( $processor->color_severity_lowest(),
         'scots tartan',     'user default colour-severity-lowest' );
 
-    $processor = Perl::Mogrify::OptionsProcessor->new(
+    $processor = Perl::ToPerl6::OptionsProcessor->new(
          'color-severity-5'    => 'chartreuse',
          'color-severity-4'    => 'fuschia',
          'color-severity-3'    => 'blue',
@@ -147,7 +147,7 @@ our $VERSION = '0.01';
     is( $processor->color_severity_lowest(),
         'scots tartan',     'user default color-severity-1' );
 
-    $processor = Perl::Mogrify::OptionsProcessor->new(
+    $processor = Perl::ToPerl6::OptionsProcessor->new(
          'colour-severity-5'    => 'chartreuse',
          'colour-severity-4'    => 'fuschia',
          'colour-severity-3'    => 'blue',
@@ -169,7 +169,7 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 {
-    my $processor = Perl::Mogrify::OptionsProcessor->new( pager => 'foo' );
+    my $processor = Perl::ToPerl6::OptionsProcessor->new( pager => 'foo' );
     is($processor->color(), $FALSE, 'pager set turns off color');
 }
 
@@ -182,7 +182,7 @@ our $VERSION = '0.01';
         bar => 2,
     );
 
-    eval { Perl::Mogrify::OptionsProcessor->new( %invalid_defaults ) };
+    eval { Perl::ToPerl6::OptionsProcessor->new( %invalid_defaults ) };
     like(
         $EVAL_ERROR,
         qr/"foo" [ ] is [ ] not [ ] a [ ] supported [ ] option/xms,

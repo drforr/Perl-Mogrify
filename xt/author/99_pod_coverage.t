@@ -17,7 +17,7 @@ our $VERSION = '0.01';
 use Test::Pod::Coverage 1.04;
 
 {
-    # HACK: Perl::Mogrify::Transformation uses Pod::Parser to extract the
+    # HACK: Perl::ToPerl6::Transformation uses Pod::Parser to extract the
     # DIAGNOSTIC section of the POD in each Transformer module.  This
     # happens when the Transformer first C<uses> the Transformation module.
     # Meanwhile, Pod::Coverage also uses Pod::Parser to extract the
@@ -33,8 +33,8 @@ use Test::Pod::Coverage 1.04;
     # when / if I have better understanding of the problem.
 
     no warnings qw<redefine once>;
-    require Perl::Mogrify::Transformation;
-    *Perl::Mogrify::Transformation::import = sub { 1 };
+    require Perl::ToPerl6::Transformation;
+    *Perl::ToPerl6::Transformation::import = sub { 1 };
 }
 
 my @trusted_methods  = get_trusted_methods();

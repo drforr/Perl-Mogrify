@@ -12,9 +12,9 @@ use Readonly;
 
 use Test::More;
 
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify;
-use Perl::Mogrify::Utils::Constants qw< $_MODULE_VERSION_TERM_ANSICOLOR >;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6;
+use Perl::ToPerl6::Utils::Constants qw< $_MODULE_VERSION_TERM_ANSICOLOR >;
 
 #-----------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ Readonly::Scalar my $REQUIRE_POD_SECTIONS_SOURCE_MESSAGE_PREFIX =>
     q<The value for the Variables::FormatHashKeys "source" option ("Zen_and_the_Art_of_Motorcycle_Maintenance") is not one of the allowed values: >;
 
 eval {
-    Perl::Mogrify->new( '-profile' => $PROFILE );
+    Perl::ToPerl6->new( '-profile' => $PROFILE );
 };
 
 my $test_passed;
@@ -69,7 +69,7 @@ die "No point in continuing.\n" if not $test_passed;
 $test_passed =
     isa_ok(
         $eval_result,
-        'Perl::Mogrify::Exception::AggregateConfiguration',
+        'Perl::ToPerl6::Exception::AggregateConfiguration',
         '$EVAL_ERROR',  ## no mogrify (RequireInterpolationOfMetachars)
     );
 

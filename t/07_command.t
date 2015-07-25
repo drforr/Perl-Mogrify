@@ -9,8 +9,8 @@ use Carp qw< confess >;
 
 use File::Spec;
 
-use Perl::Mogrify::Command qw< run >;
-use Perl::Mogrify::Utils qw< :characters >;
+use Perl::ToPerl6::Command qw< run >;
+use Perl::ToPerl6::Utils qw< :characters >;
 
 use Test::More tests => 57;
 
@@ -28,82 +28,82 @@ my %options = ();
 
 local @ARGV = qw(-1 -2 -3 -4 -5);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 
 local @ARGV = qw(-5 -3 -4 -1 -2);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 
 local @ARGV = qw();
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, undef, 'no arguments');
 
 local @ARGV = qw(-2 -3 -severity 4);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 4, $message);
 
 local @ARGV = qw(-severity 2 -3 -4);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 2, $message);
 
 local @ARGV = qw(--severity=2 -3 -4);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 2, $message);
 
 local @ARGV = qw(-cruel);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 'cruel', $message);
 
 local @ARGV = qw(-cruel --severity=1 );
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 
 local @ARGV = qw(-stern --severity=1 -2);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 
 local @ARGV = qw(-stern -severity 1 -2);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-top);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 is( $options{-top}, 20, $message);
 
 local @ARGV = qw(-top 10);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 1, $message);
 is( $options{-top}, 10, $message);
 
 local @ARGV = qw(-severity 4 -top);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 4, $message);
 is( $options{-top}, 20, $message);
 
 local @ARGV = qw(-severity 4 -top 10);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 4, $message);
 is( $options{-top}, 10, $message);
 
 local @ARGV = qw(-severity 5 -2 -top 5);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-severity}, 5, $message);
 is( $options{-top}, 5, $message);
 
@@ -111,51 +111,51 @@ is( $options{-top}, 5, $message);
 
 local @ARGV = qw(-noprofile);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-profile}, q{}, $message);
 
 local @ARGV = qw(-profile foo);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-profile}, 'foo', $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-single-policy nowarnings);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{'-single-policy'}, 'nowarnings', $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-verbose 2);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-verbose}, 2, $message);
 
 local @ARGV = qw(-verbose %l:%c:%m);
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-verbose}, '%l:%c:%m', $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-statistics);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-statistics}, 1, $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-statistics-only);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{'-statistics-only'}, 1, $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-quiet);
 $message = "@ARGV";
-%options = Perl::Mogrify::Command::_get_options();
+%options = Perl::ToPerl6::Command::_get_options();
 is( $options{-quiet}, 1, $message);
 
 
@@ -163,7 +163,7 @@ is( $options{-quiet}, 1, $message);
 
 local @ARGV = qw(-pager foo);
 $message = "@ARGV";
-%options = eval { Perl::Mogrify::Command::_get_options() };
+%options = eval { Perl::ToPerl6::Command::_get_options() };
 is( $options{-pager}, 'foo', $message );
 
 
@@ -204,7 +204,7 @@ foreach my $severity ([qw{
     foreach my $opt (@{ $severity }) {
         local @ARGV = ($opt => 'cyan');
         $message = "@ARGV";
-        %options = eval { Perl::Mogrify::Command::_get_options() };
+        %options = eval { Perl::ToPerl6::Command::_get_options() };
         is( $options{$canonical}, 'cyan', $message );
     }
 }
@@ -215,23 +215,23 @@ foreach my $severity ([qw{
 
 {
     no warnings qw(redefine once);
-    local *Perl::Mogrify::Command::pod2usage =
+    local *Perl::ToPerl6::Command::pod2usage =
         sub { my %args = @_; confess $args{-message} || q{} };
 
     local @ARGV = qw( -help );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     ok( $EVAL_ERROR, '-help option' );
 
     local @ARGV = qw( -options );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     ok( $EVAL_ERROR, '-options option' );
 
     local @ARGV = qw( -man );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     ok( $EVAL_ERROR, '-man option' );
 
     local @ARGV = qw( -noprofile -profile foo );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/-noprofile [ ] with [ ] -profile/xms,
@@ -239,7 +239,7 @@ foreach my $severity ([qw{
     );
 
     local @ARGV = qw( -verbose bogus );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/looks [ ] odd/xms,
@@ -247,7 +247,7 @@ foreach my $severity ([qw{
     );
 
     local @ARGV = qw( -top -9 );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/is [ ] negative/xms,
@@ -255,7 +255,7 @@ foreach my $severity ([qw{
     );
 
     local @ARGV = qw( -severity 0 );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/out [ ] of [ ] range/xms,
@@ -263,7 +263,7 @@ foreach my $severity ([qw{
     );
 
     local @ARGV = qw( -severity 6 );
-    eval { Perl::Mogrify::Command::_get_options() };
+    eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/out [ ] of [ ] range/xms,

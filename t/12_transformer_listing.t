@@ -6,9 +6,9 @@ use warnings;
 
 use English qw<-no_match_vars>;
 
-use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::TransformerListing;
+use Perl::ToPerl6::UserProfile;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::TransformerListing;
 
 use Test::More;
 
@@ -18,11 +18,11 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
-my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
+my $profile = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
+my @policy_names = Perl::ToPerl6::TransformerFactory::site_policy_names();
+my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
 my @transformers = map { $factory->create_policy( -name => $_ ) } @policy_names;
-my $listing = Perl::Mogrify::TransformerListing->new( -transformers => \@transformers );
+my $listing = Perl::ToPerl6::TransformerListing->new( -transformers => \@transformers );
 my $policy_count = scalar @transformers;
 
 plan( tests => $policy_count + 1);

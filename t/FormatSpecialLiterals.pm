@@ -1,13 +1,13 @@
-package Perl::Mogrify::Transformer::FormatSpecialLiterals;
+package Perl::ToPerl6::Transformer::FormatSpecialLiterals;
 
 use 5.006001;
 use strict;
 use warnings;
 use Readonly;
 
-use Perl::Mogrify::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :characters :severities };
 
-use base 'Perl::Mogrify::Transformer';
+use base 'Perl::ToPerl6::Transformer';
 
 our $VERSION = '0.01';
 
@@ -61,11 +61,11 @@ __END__
 
 =head1 NAME
 
-Perl::Mogrify::Transformer::FormatSpecialLiterals - Format __END__, __LINE__ &c
+Perl::ToPerl6::Transformer::FormatSpecialLiterals - Format __END__, __LINE__ &c
 
 =head1 AFFILIATION
 
-This Transformer is part of the core L<Perl::Mogrify|Perl::Mogrify>
+This Transformer is part of the core L<Perl::ToPerl6|Perl::ToPerl6>
 distribution.
 
 

@@ -9,9 +9,9 @@ use Carp qw< carp >;
 use version;
 
 
-use Perl::Mogrify::Document qw< >;
-use Perl::Mogrify::Utils qw< $EMPTY >;
-use Perl::Mogrify::Utils::DataConversion qw< dor >;
+use Perl::ToPerl6::Document qw< >;
+use Perl::ToPerl6::Utils qw< $EMPTY >;
+use Perl::ToPerl6::Utils::DataConversion qw< dor >;
 
 
 use Test::Deep;
@@ -23,24 +23,24 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-can_ok('Perl::Mogrify::Document', 'new');
-can_ok('Perl::Mogrify::Document', 'filename');
-can_ok('Perl::Mogrify::Document', 'find');
-can_ok('Perl::Mogrify::Document', 'find_first');
-can_ok('Perl::Mogrify::Document', 'find_any');
-can_ok('Perl::Mogrify::Document', 'namespaces');
-can_ok('Perl::Mogrify::Document', 'subdocuments_for_namespace');
-can_ok('Perl::Mogrify::Document', 'highest_explicit_perl_version');
-can_ok('Perl::Mogrify::Document', 'uses_module');
-can_ok('Perl::Mogrify::Document', 'ppi_document');
-can_ok('Perl::Mogrify::Document', 'is_program');
-can_ok('Perl::Mogrify::Document', 'is_module');
+can_ok('Perl::ToPerl6::Document', 'new');
+can_ok('Perl::ToPerl6::Document', 'filename');
+can_ok('Perl::ToPerl6::Document', 'find');
+can_ok('Perl::ToPerl6::Document', 'find_first');
+can_ok('Perl::ToPerl6::Document', 'find_any');
+can_ok('Perl::ToPerl6::Document', 'namespaces');
+can_ok('Perl::ToPerl6::Document', 'subdocuments_for_namespace');
+can_ok('Perl::ToPerl6::Document', 'highest_explicit_perl_version');
+can_ok('Perl::ToPerl6::Document', 'uses_module');
+can_ok('Perl::ToPerl6::Document', 'ppi_document');
+can_ok('Perl::ToPerl6::Document', 'is_program');
+can_ok('Perl::ToPerl6::Document', 'is_module');
 
 {
     my $code = q{'print 'Hello World';};  #Has 6 PPI::Element
     my $ppi_doc = PPI::Document->new( \$code );
-    my $pc_doc  = Perl::Mogrify::Document->new( '-source' => $ppi_doc );
-    isa_ok($pc_doc, 'Perl::Mogrify::Document');
+    my $pc_doc  = Perl::ToPerl6::Document->new( '-source' => $ppi_doc );
+    isa_ok($pc_doc, 'Perl::ToPerl6::Document');
     isa_ok($pc_doc, 'PPI::Document');
     isa_ok($pc_doc, 'PPI::Node');
     isa_ok($pc_doc, 'PPI::Element');
@@ -113,7 +113,7 @@ can_ok('Perl::Mogrify::Document', 'is_module');
 {
     my $ppi_document = PPI::Document->new(\'foo(); package Foo; package Bar');
     my $mogrify_document =
-        Perl::Mogrify::Document->new(-source => $ppi_document);
+        Perl::ToPerl6::Document->new(-source => $ppi_document);
 
     cmp_deeply(
         [ $mogrify_document->namespaces() ],
@@ -127,14 +127,14 @@ can_ok('Perl::Mogrify::Document', 'is_module');
 {
     my $ppi_document = PPI::Document->new(\'use Moose');
     my $mogrify_document =
-        Perl::Mogrify::Document->new(-source => $ppi_document);
+        Perl::ToPerl6::Document->new(-source => $ppi_document);
 
     ok(!! $mogrify_document->uses_module('Moose'),       'Moose is used.');
     ok( ! $mogrify_document->uses_module('Moose::Role'), 'Moose::Role is not used.');
 
     $ppi_document = PPI::Document->new( \q{ } );
     $mogrify_document =
-        Perl::Mogrify::Document->new(-source => $ppi_document);
+        Perl::ToPerl6::Document->new(-source => $ppi_document);
 
     ok(
         ! $mogrify_document->uses_module('Blah'),
@@ -163,7 +163,7 @@ sub test_version {
     my $description_version = dor( $expected_version, '<undef>' );
 
     my $document =
-        Perl::Mogrify::Document->new(
+        Perl::ToPerl6::Document->new(
             '-source' => PPI::Document->new( \$code )
         );
 
@@ -179,7 +179,7 @@ sub test_version {
 #-----------------------------------------------------------------------------
 
 my $nameless_code = 'use strict';
-my $nameless_doc = Perl::Mogrify::Document->new(
+my $nameless_doc = Perl::ToPerl6::Document->new(
     '-source'               => \$nameless_code,
     '-filename-override'    => 'Build.PL'
 );

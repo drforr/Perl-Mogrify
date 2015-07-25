@@ -6,9 +6,9 @@ use warnings;
 
 use English qw<-no_match_vars>;
 
-use Perl::Mogrify::UserProfile;
-use Perl::Mogrify::TransformerFactory (-test => 1);
-use Perl::Mogrify::ThemeListing;
+use Perl::ToPerl6::UserProfile;
+use Perl::ToPerl6::TransformerFactory (-test => 1);
+use Perl::ToPerl6::ThemeListing;
 
 use Test::More tests => 1;
 
@@ -18,11 +18,11 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-my $profile = Perl::Mogrify::UserProfile->new( -profile => 'NONE' );
-my @policy_names = Perl::Mogrify::TransformerFactory::site_policy_names();
-my $factory = Perl::Mogrify::TransformerFactory->new( -profile => $profile );
+my $profile = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
+my @policy_names = Perl::ToPerl6::TransformerFactory::site_policy_names();
+my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
 my @transformers = map { $factory->create_policy( -name => $_ ) } @policy_names;
-my $listing = Perl::Mogrify::ThemeListing->new( -transformers => \@transformers );
+my $listing = Perl::ToPerl6::ThemeListing->new( -transformers => \@transformers );
 
 my $expected = <<'END_EXPECTED';
 bugs
