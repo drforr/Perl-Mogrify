@@ -30,43 +30,42 @@ sub applies_to           {
 }
 
 #-----------------------------------------------------------------------------
-# Split the string on unescaped '$' and '@'
-#
-#     Furthermore, split the (uninterpolated portion) on \l,\u... etc.
-#
 sub tokenize_variables {
     my ($self, $string) = @_;
 
     my @tokens;
+my $iter = 100;
     while ( $string ) {
-        # Kick this case down the road.
-        # It plays merry hob with extract_variable(), for one.
-        #
-        if ( $string =~ s{ ^ ( (?: \$ | \@ ) \\ . ) }{}x ) {
-            if ( @tokens ) { $tokens[-1] .= $1 }
-            else { @tokens = ( $1 ) }
+unless ( --$iter  ) {
+    die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you wer using to the author.";
+}
+        my $residue;
+        if ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
+            $residue = $1;
+
+            while ( $residue and $residue =~ / \\ $ /x ) {
+                $string =~ s{ (.) }{}x;
+                $residue .= $1;
+                if ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
+                    $residue .= $1;
+                }
+                else {
+                    last;
+                }
+            }
+            push @tokens, split /( \\[luEFLQU] )/x, $residue;
         }
-        elsif ( $string =~ / ^ (?: \$ | \@ ) [^\\] /x ) {
+        elsif ( $string =~ m{ ^ [\$\@] }x ) {
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );
-            $string = $remainder;
             push @tokens, $var_name;
-        }
-        elsif ( $string =~ / \$ /x ) {
-            my $esc = index( $string, '\\$' );
-            my $unesc = index( $string, '$' );
-            if ( $esc == -1 or $esc > $unesc ) {
-                push @tokens, substr( $string, 0, $unesc, '' );
-            }
-            else {
-                push @tokens, substr( $string, 0, length($string), '' );
-            }
+            $string = $remainder;
         }
         else {
-            push @tokens, substr( $string, 0, length($string), '' );
         }
     }
-    return @tokens;
+
+    return grep { $_ ne '' } @tokens;
 }
 
 sub transform {
@@ -164,18 +163,15 @@ sub transform {
     # hanging around in the string, because those would get messed up.
     #
 
-    if ( $old_string =~ / \{ /x ) {
-        my $depth = 0;
-        my @tokens;
+warn "String: [$old_string]\n";
+    my @tokens = $self->tokenize_variables($old_string);
+warn "Tokens: [@tokens]\n";
 
-        my @_tokens = $self->tokenize_variables($old_string);
-warn ">>@_tokens<<\n";
-
-        my $collected;
-        for my $token ( @tokens ) {
-        }
-        $old_string = $collected;
+    my $collected;
+    for my $token ( @tokens ) {
+        $collected .= $token;
     }
+    $old_string = $collected;
 
     set_string($elem,$old_string);
 

@@ -171,12 +171,13 @@ sub _filter_unwanted_subtests {
 #-----------------------------------------------------------------------------
 
 sub __markup_array {
-    my ($lines, $error_line) = @_;
+    my ($lines, $error_line, $offset) = @_;
     my @out;
     for my $i ( 0 .. $#{$lines} ) {
-        push @out, ( defined($error_line) and $i == $error_line )
-                   ?  ">$lines->[$i]<---"
-                   : ">$lines->[$i]<"
+        push @out, ">$lines->[$i]<";
+        if ( $i == $error_line ) {
+            push @out, ( '-' x $offset ) . '^';
+        }
     }
     @out;
 }
@@ -184,11 +185,21 @@ sub __markup_array {
 sub __results_string {
     my ($subtest, $error_line) = @_;
 
-    join( "\n", __markup_array( $subtest->{original}, $error_line ),
+    # Sigh, for the moment just walk the strings. ^ should work...
+    #
+    my $offset;
+    for ( 0 .. length($subtest->{sample}[$error_line]) ) {
+        next if substr($subtest->{sample}[$error_line], $_, 1 ) eq
+                substr($subtest->{transformed}[$error_line], $_, 1 );
+        $offset = $_ + 1;
+        last;
+    }
+
+    join( "\n", __markup_array( $subtest->{original}, $error_line, $offset ),
                 '====??====>',
-                __markup_array( $subtest->{sample}, $error_line ),
+                __markup_array( $subtest->{sample}, $error_line, $offset ),
                 '====!!====>',
-                __markup_array( $subtest->{transformed}, $error_line )
+                __markup_array( $subtest->{transformed}, $error_line, $offset )
     );
 }
 

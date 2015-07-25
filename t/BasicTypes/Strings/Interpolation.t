@@ -108,6 +108,12 @@ qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
 ##-->
 qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
 qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
+## name: mix backslash and regular
+qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}}
+qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}}
+##-->
+qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}}
+qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}}
 ## name: Check that \l,\u and friends aren't escaped inside variables.
 qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
 ##-->
