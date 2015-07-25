@@ -182,8 +182,6 @@ PREREQUISITES
 
     Config::Tiny
 
-    Email::Address
-
     Exception::Class
 
     File::HomeDir
@@ -201,10 +199,6 @@ PREREQUISITES
     List::Util
 
     Module::Pluggable
-
-    Perl::Tidy
-
-    Pod::Spell
 
     PPI
 

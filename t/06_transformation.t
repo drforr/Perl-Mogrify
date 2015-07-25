@@ -14,7 +14,7 @@ use PPI::Document::File q< >;
 use Perl::ToPerl6::Utils qw< :characters >;
 use Perl::ToPerl6::Transformation q< >;
 
-use Test::More tests => 69;
+use Test::More tests => 67;
 
 #-----------------------------------------------------------------------------
 
@@ -26,7 +26,6 @@ use lib catdir( qw< t 06_transformation.d lib > );
 
 use TransformationTest;   # this is solely to test the import() method; has diagnostics
 use TransformationTest2;  # this is solely to test the import() method; no diagnostics
-use Perl::ToPerl6::Transformer::Test;    # this is to test transformation formatting
 
 #-----------------------------------------------------------------------------
 #  method tests
@@ -187,12 +186,12 @@ END_PERL
     my $code = "print;\n";
     my $document = PPI::Document->new(\$code);
     $document->index_locations();
-    my $p = Perl::ToPerl6::Transformer::Test->new();
+#    my $p = Perl::ToPerl6::Transformer::Test->new();
     my @t = $document->tokens();
-    my $v = $p->transform($t[0]);
-    ok($v, 'got a transformation');
+#    my $v = $p->transform($t[0]);
+#    ok($v, 'got a transformation');
 
-    is($v->to_string(), $expected, 'to_string()');
+#    is($v->to_string(), $expected, 'to_string()');
 }
 
 #-----------------------------------------------------------------------------

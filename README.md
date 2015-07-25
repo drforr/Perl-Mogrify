@@ -142,8 +142,6 @@ Perl::ToPerl6 requires the following modules:
 
 [Config::Tiny](https://metacpan.org/pod/Config::Tiny)
 
-[Email::Address](https://metacpan.org/pod/Email::Address)
-
 [Exception::Class](https://metacpan.org/pod/Exception::Class)
 
 [File::HomeDir](https://metacpan.org/pod/File::HomeDir)
@@ -161,10 +159,6 @@ Perl::ToPerl6 requires the following modules:
 [List::Util](https://metacpan.org/pod/List::Util)
 
 [Module::Pluggable](https://metacpan.org/pod/Module::Pluggable)
-
-[Perl::Tidy](https://metacpan.org/pod/Perl::Tidy)
-
-[Pod::Spell](https://metacpan.org/pod/Pod::Spell)
 
 [PPI](https://metacpan.org/pod/PPI)
 

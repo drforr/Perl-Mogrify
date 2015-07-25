@@ -42,7 +42,6 @@
             "B::Keywords" : "1.05",
             "Carp" : "0",
             "Config::Tiny" : "2",
-            "Email::Address" : "1.889",
             "English" : "0",
             "Exception::Class" : "1.23",
             "Exporter" : "5.63",
@@ -69,11 +68,9 @@
             "PPIx::Regexp" : "0.027",
             "PPIx::Utilities::Node" : "1.001",
             "PPIx::Utilities::Statement" : "1.001",
-            "Perl::Tidy" : "0",
             "Pod::Parser" : "0",
             "Pod::PlainText" : "0",
             "Pod::Select" : "0",
-            "Pod::Spell" : "1",
             "Pod::Usage" : "0",
             "Readonly" : "2",
             "Scalar::Util" : "0",
@@ -385,10 +382,6 @@
       },
       "Perl::ToPerl6::Utils::POD" : {
          "file" : "lib/Perl/ToPerl6/Utils/POD.pm",
-         "version" : "0.01"
-      },
-      "Perl::ToPerl6::Utils::POD::ParseInteriorSequence" : {
-         "file" : "lib/Perl/ToPerl6/Utils/POD/ParseInteriorSequence.pm",
          "version" : "0.01"
       },
       "Perl::ToPerl6::Utils::PPI" : {

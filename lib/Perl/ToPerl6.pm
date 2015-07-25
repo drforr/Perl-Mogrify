@@ -844,8 +844,6 @@ L<B::Keywords>
 
 L<Config::Tiny>
 
-L<Email::Address>
-
 L<Exception::Class>
 
 L<File::HomeDir>
@@ -863,10 +861,6 @@ L<List::MoreUtils>
 L<List::Util>
 
 L<Module::Pluggable>
-
-L<Perl::Tidy>
-
-L<Pod::Spell>
 
 L<PPI|PPI>
 

@@ -56,7 +56,6 @@ END_PERL
 
 #-----------------------------------------------------------------------------
 
-# Just don't get involved with Perl::Tidy.
 my $profile = { '-Arrays::FormatArrayQws' => {} };
 my $mogrify =
     Perl::ToPerl6->new(

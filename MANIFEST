@@ -89,7 +89,6 @@ lib/Perl/ToPerl6/Utils/DataConversion.pm
 lib/Perl/ToPerl6/Utils/McCabe.pm
 lib/Perl/ToPerl6/Utils/Perl.pm
 lib/Perl/ToPerl6/Utils/POD.pm
-lib/Perl/ToPerl6/Utils/POD/ParseInteriorSequence.pm
 lib/Perl/ToPerl6/Utils/PPI.pm
 lib/Perl/ToPerl6/Transformation.pm
 lib/Test/Perl/ToPerl6/Transformer.pm
