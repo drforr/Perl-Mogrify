@@ -75,7 +75,6 @@ sub authortest_dependencies {
     $self->depends_on('manifest');
     $self->depends_on('distmeta');
 
-    $self->test_files( qw< t xt/author > );
     $self->recursive_test_files(1);
 
     return;
@@ -145,9 +144,8 @@ In addition to the above actions:
 
 =head2 C<authortest_dependencies()>
 
-Sets up dependencies upon the C<build>, C<manifest>, and C<distmeta> actions,
-adds F<xt/author> to the set of test directories, and turns on the recursive
-search for tests.
+Sets up dependencies upon the C<build>, C<manifest>, and C<distmeta> actions
+and turns on the recursive search for tests.
 
 
 =head1 AUTHOR
