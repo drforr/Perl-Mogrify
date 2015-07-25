@@ -53,7 +53,28 @@ unless ( --$iter  ) {
                     last;
                 }
             }
-            push @tokens, split /( \\[luEFLQU] )/x, $residue;
+            my @split = grep { $_ ne '' } split /( \\[luEFLQU] )/x, $residue;
+
+            # Some more cases get folded away here (hee.)
+            # \U foo \L\E bar \E - 'bar' will get altered here.
+            # \U foo \L$x\E bar \E - 'bar' will *not* get altered here,
+            #                        even if $x is empty.
+            # \U foo \Lxxx\E bar \E - 'bar' will *not* get altered here,
+            #
+            # So, \L..\E affects the rest of the string only if the contents
+            # are empty. So it's effectively as if it never was there.
+            # Get rid of it.
+            #
+            for ( my $i = 0; $i < @split; $i++ ) {
+                my ($v, $la1) = @split[$i,$i+1];
+                if ( $v =~ / ^ \\[FLU] $ /x and
+                     $la1 and $la1 eq '\\E' ) {
+                    $i+=2;
+                }
+                else {
+                    push @tokens, $v;
+                }
+            }
         }
         elsif ( $string =~ m{ ^ [\$\@] }x ) {
             my ( $var_name, $remainder, $prefix ) =
@@ -165,69 +186,81 @@ sub transform {
 
     my @tokens = $self->tokenize_variables($old_string);
 
+    # Now on to rewriting \l, \u, \E, \F, \L, \Q, \U in Perl6.
+    #
+    # \F, \L, \Q and \U are "sort of" nested.
+    #
+    # You can see this by running C<print "Start \L lOWER \U Upper Me \E mE \E">
+    # > Start  lower  UPPER ME  mE
+    # 
+    # Note how 'lOWER' is case-flattend, but after the \U..E, 'mE' isn't? 
+    #
+    # So, rather than having to retain case settings, we can simply stop the
+    # lc(..) block after the first...
+    #
     my $collected;
-    my @manip;
+#    my @manip;
     for ( my $i = 0; $i < @tokens; $i++ ) {
         my ( $v, $la1 ) = @tokens[$i,$i+1];
 
-        if ( $v !~ / ^ [\$\@] /x ) {
-            $tokens[$i] =~ s< { ><\\{>gx;
-            $tokens[$i] =~ s< } ><\\}>gx;
+        if ( index( $v, '$' ) != 0 and index( $v, '@' ) != 0 ) {
+            $v =~ s< { ><\\{>gx;
+            $v =~ s< } ><\\}>gx;
         }
-        if ( $v eq '\\F' or $v eq '\\L' ) {
-            unless ( @manip ) {
-                $collected .= qq<{>;
-            }
-            $collected .= qq<lc($start_delimiter>;
-            push @manip, $v;
-        }
-        elsif ( $v eq '\\Q' ) {
-            unless ( @manip ) {
-                $collected .= qq<{>;
-            }
-            $collected .= qq<quotemeta($start_delimiter>;
-            push @manip, $v;
-        }
-        elsif ( $v eq '\\U' ) {
-            if ( @manip ) {
-                $collected .= qq<$end_delimiter~>;
-            }
-            else {
-                $collected .= qq<{>;
-            }
-            $collected .= qq<uc($start_delimiter>;
-            push @manip, $v;
-        }
-        elsif ( $v eq '\\E' ) {
-            pop @manip;
-            $collected .= qq<$end_delimiter)>;
-            if ( @manip ) {
-                my $last = $manip[-1];
-                if ( $last eq '\\F' or $last eq '\\L' ) {
-                    $collected .= qq<~lc($start_delimiter>;
-                }
-                elsif ( $last eq '\\Q' ) {
-                    $collected .= qq<~quotemeta($start_delimiter>;
-                }
-                elsif ( $last eq '\\U' ) {
-                    $collected .= qq<~uc($start_delimiter>;
-                }
-            }
-            else {
-                $collected .= qq<}>;
-            }
-        }
-        else {
+#        if ( $v eq '\\l' ) {
+#        }
+#        elsif ( $v eq '\\u' ) {
+#        }
+#
+#        elsif ( $v eq '\\F' or $v eq '\\L' ) {
+#            $collected .= '{' if @manip == 0;
+#            if ( @manip == 0 ) {
+#                $collected .= 'lc(' . $start_delimiter;
+#            }
+#            else {
+#                $collected .= $end_delimiter . ')~lc(' . $start_delimiter;
+#            }
+#            push @manip, $v;
+#        }
+#        elsif ( $v eq '\\Q' ) {
+#            $collected .= '{' if @manip == 0;
+#            if ( @manip == 0 ) {
+#                $collected .= 'quotemeta(' . $start_delimiter;
+#            }
+#            else {
+#                $collected .= $end_delimiter . ')~quotemeta(' . $start_delimiter;
+#            }
+#            push @manip, $v;
+#        }
+#        elsif ( $v eq '\\U' ) {
+#            $collected .= '{' if @manip == 0;
+#            if ( @manip == 0 ) {
+#                $collected .= 'tc(' . $start_delimiter;
+#            }
+#            else {
+#                $collected .= $end_delimiter . ')~tc(' . $start_delimiter;
+#            }
+#            push @manip, $v;
+#        }
+#        elsif ( $v eq '\\E' ) {
+#            pop @manip;
+#            if ( @manip == 0 ) {
+#                $collected .= $end_delimiter . ')}';
+#            }
+#            else {
+#                $collected .= $end_delimiter . ')';
+#            }
+#        }
+#        elsif ( $v =~ / ^ ( \$ | \@ ) /x ) {
+#            $collected .= $v;
+#        }
+#        else {
             $collected .= $v;
-        }
+#        }
     }
-    if ( @manip ) {
-        $collected .= $end_delimiter;
-        for ( @manip ) {
-            $collected .= qq<)>;
-        }
-        $collected .= qq<}>;
-    }
+#    if ( @manip == 1 ) {
+#        $collected .= $end_delimiter . ')}';
+#    }
     $old_string = $collected;
 
     set_string($elem,$old_string);

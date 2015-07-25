@@ -175,7 +175,7 @@ sub __markup_array {
     my @out;
     for my $i ( 0 .. $#{$lines} ) {
         push @out, ">$lines->[$i]<";
-        if ( $i == $error_line ) {
+        if ( $offset and $i == $error_line ) {
             push @out, ( '-' x $offset ) . '^';
         }
     }
@@ -195,7 +195,7 @@ sub __results_string {
         last;
     }
 
-    join( "\n", __markup_array( $subtest->{original}, $error_line, $offset ),
+    join( "\n", __markup_array( $subtest->{original}, $error_line ),
                 '====??====>',
                 __markup_array( $subtest->{sample}, $error_line, $offset ),
                 '====!!====>',

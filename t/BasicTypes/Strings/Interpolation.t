@@ -6,56 +6,32 @@ use strict;
 use warnings;
 
 use Test::Perl::Mogrify::Transformer qw< transform_ok >;
+### name: Check single layer of casefolding
+#qq<\FLOWER\E\U$upper\E\Q***\E>
+#qq<xx\FLOWER\Exx>
+#qq<\LLOWER>
+###-->
+#qq<{lc(qq<LOWER>)}{tc(qq<$upper>)}{quotemeta(qq<***>)}>
+#qq<xx{lc(qq<LOWER>)}xx>
+#qq<{lc(qq<LOWER>)}>
+### name: Multiple tokens casefolded
+#qq<\Flower$xxx\E>
+###-->
+#qq<{lc(qq<lower$xxx>)}>
+### name: Nested casefold tokens
+#qq<\LLOWER\Uupper\ELOWER\E>
+###-->
+#qq<{lc(qq<LOWER>)~tc(qq<upper>)~qq<LOWER>}>
+### name: Nested casefold tokens
+#qq{\LLOWER\Uupper\ELOWER\E}
+###-->
+#qq{{lc(qq{LOWER})~tc(qq{upper})~qq{LOWER}}}
 
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.01';
 
 transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
-
-### ## name: Special cases
-### "${x}";
-### qq{${x}};
-### "\${x}";
-### ##-->
-### "{$x}";
-### qq{{$x}};
-### "\$\{x\}";
-### ## name: uninterpolated braces
-### "{x";
-### print OUT "{\n";
-### "x}";
-### "{x}";
-### "${x";
-### ##-->
-### "\{x";
-### print OUT "\{\n";
-### "x\}";
-### "\{x\}";
-### "$\{x";
-### ## name: escaped braces
-### "$\{x\}"
-### ##-->
-### "$\{x\}"
-### ## name: hash key
-### "$x{a}"
-### "$x{a}{b}"
-### "$x{a}[1]"
-### "$x{'a'}"
-### "$x->{'a'}"
-### ##-->
-### "$x{'a'}"
-### "$x{'a'}{'b'}"
-### "$x{'a'}[1]"
-### "$x{'a'}"
-### "$x.{'a'}"
-### ## name: array index
-### "$x[1]"
-### "$x[1]{a}"
-### ##-->
-### "$x[1]"
-### "$x[1]{'a'}"
-
 
 __DATA__
 ## name: No variables, case-folding, escapes or braces
@@ -118,19 +94,3 @@ qq{\$a]|[\$\{a\}]|[$a{a}]|[\$a\{'a'\}]|[\$a\{"a"\}}
 qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
 ##-->
 qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
-## name: Check single layer of casefolding
-qq{\FLOWER\E\U$upper\E\Q***\E}
-qq{xx\FLOWER\Exx}
-qq{\LLOWER}
-##-->
-qq{{lc(qq{LOWER})}{uc(qq{$upper})}{quotemeta(qq{***})}}
-qq{xx{lc(qq{LOWER})}xx}
-qq{{lc(qq{LOWER})}}
-## name: Multiple tokens casefolded
-qq{\Flower$xxx\E}
-##-->
-qq{{lc(qq{lower$xxx})}}
-## name: Nested casefold tokens
-qq{\LLOWER\Uupper\ELOWER\E}
-##-->
-qq{{lc(qq{LOWER}~uc(qq{upper})~lc(qq{LOWER})}}
