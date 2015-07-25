@@ -84,9 +84,8 @@ sub build_required_module_versions {
 
 
 my @TARGET_FILES = qw<
-    t/ControlStructures/ProhibitNegativeExpressionsInUnlessAndUntilConditions.run
-    t/NamingConventions/Capitalization.run
-    t/Variables/RequireLocalizedPunctuationVars.run
+    t/CompoundStatemnts/AddWhitespace.t
+    t/Variables/ReplaceUndef.t
 >;
 
 sub get_PL_files {
