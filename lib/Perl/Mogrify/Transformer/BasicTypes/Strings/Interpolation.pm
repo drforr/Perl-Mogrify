@@ -163,13 +163,70 @@ sub transform {
     # hanging around in the string, because those would get messed up.
     #
 
-warn "String: [$old_string]\n";
     my @tokens = $self->tokenize_variables($old_string);
-warn "Tokens: [@tokens]\n";
 
     my $collected;
-    for my $token ( @tokens ) {
-        $collected .= $token;
+    my @manip;
+    for ( my $i = 0; $i < @tokens; $i++ ) {
+        my ( $v, $la1 ) = @tokens[$i,$i+1];
+
+        if ( $v !~ / ^ [\$\@] /x ) {
+            $tokens[$i] =~ s< { ><\\{>gx;
+            $tokens[$i] =~ s< } ><\\}>gx;
+        }
+        if ( $v eq '\\F' or $v eq '\\L' ) {
+            unless ( @manip ) {
+                $collected .= qq<{>;
+            }
+            $collected .= qq<lc($start_delimiter>;
+            push @manip, $v;
+        }
+        elsif ( $v eq '\\Q' ) {
+            unless ( @manip ) {
+                $collected .= qq<{>;
+            }
+            $collected .= qq<quotemeta($start_delimiter>;
+            push @manip, $v;
+        }
+        elsif ( $v eq '\\U' ) {
+            if ( @manip ) {
+                $collected .= qq<$end_delimiter~>;
+            }
+            else {
+                $collected .= qq<{>;
+            }
+            $collected .= qq<uc($start_delimiter>;
+            push @manip, $v;
+        }
+        elsif ( $v eq '\\E' ) {
+            pop @manip;
+            $collected .= qq<$end_delimiter)>;
+            if ( @manip ) {
+                my $last = $manip[-1];
+                if ( $last eq '\\F' or $last eq '\\L' ) {
+                    $collected .= qq<~lc($start_delimiter>;
+                }
+                elsif ( $last eq '\\Q' ) {
+                    $collected .= qq<~quotemeta($start_delimiter>;
+                }
+                elsif ( $last eq '\\U' ) {
+                    $collected .= qq<~uc($start_delimiter>;
+                }
+            }
+            else {
+                $collected .= qq<}>;
+            }
+        }
+        else {
+            $collected .= $v;
+        }
+    }
+    if ( @manip ) {
+        $collected .= $end_delimiter;
+        for ( @manip ) {
+            $collected .= qq<)>;
+        }
+        $collected .= qq<}>;
     }
     $old_string = $collected;
 

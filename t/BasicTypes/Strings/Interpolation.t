@@ -112,9 +112,25 @@ qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
 qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}}
 qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}}
 ##-->
-qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}}
-qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}}
+qq{\$a|\$\{a\}|$a{a}|\$a\{'a'\}|\$a\{"a"\}}
+qq{\$a]|[\$\{a\}]|[$a{a}]|[\$a\{'a'\}]|[\$a\{"a"\}}
 ## name: Check that \l,\u and friends aren't escaped inside variables.
 qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
 ##-->
 qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
+## name: Check single layer of casefolding
+qq{\FLOWER\E\U$upper\E\Q***\E}
+qq{xx\FLOWER\Exx}
+qq{\LLOWER}
+##-->
+qq{{lc(qq{LOWER})}{uc(qq{$upper})}{quotemeta(qq{***})}}
+qq{xx{lc(qq{LOWER})}xx}
+qq{{lc(qq{LOWER})}}
+## name: Multiple tokens casefolded
+qq{\Flower$xxx\E}
+##-->
+qq{{lc(qq{lower$xxx})}}
+## name: Nested casefold tokens
+qq{\LLOWER\Uupper\ELOWER\E}
+##-->
+qq{{lc(qq{LOWER}~uc(qq{upper})~lc(qq{LOWER})}}
