@@ -58,7 +58,6 @@ my $builder = Perl::ToPerl6::Module::Build->new(
                     doc
                     inc
                     tools
-                    xt
                 >
             ],
         },
