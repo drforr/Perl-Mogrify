@@ -83,17 +83,6 @@ sub build_required_module_versions {
 }
 
 
-my @TARGET_FILES = qw<
-    t/CompoundStatemnts/AddWhitespace.t
-    t/Variables/ReplaceUndef.t
->;
-
-sub get_PL_files {
-    my %PL_files = map { ( "$_.PL" => $_ ) } @TARGET_FILES;
-
-    return \%PL_files;
-}
-
 sub emit_tar_warning_if_necessary {
     if ( os_is( qw<Solaris> ) ) {
         print <<'END_OF_TAR_WARNING';
@@ -128,15 +117,6 @@ Various utilities used in assembling Perl::ToPerl6, primary for use by
 =head1 IMPORTABLE SUBROUTINES
 
 =over
-
-=item C<get_PL_files()>
-
-Returns a reference to a hash with a mapping from the name of a .PL
-program to an array of the parameters to be passed to it, suited for
-use by L<Module::Build::API/"PL_files"> or
-L<ExtUtils::MakeMaker/"PL_FILES">.  May print to C<STDOUT> messages
-about what it is doing.
-
 
 =item C<dump_unlisted_or_optional_module_versions()>
 
