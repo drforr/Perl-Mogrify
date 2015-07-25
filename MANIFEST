@@ -16,7 +16,6 @@ examples/perlmogrifyrc
 inc/Devel/AssertOS.pm
 inc/Devel/AssertOS/Solaris.pm
 inc/Devel/CheckOS.pm
-inc/Perl/ToPerl6/.BuildUtilities.pm.swp
 inc/Perl/ToPerl6/BuildUtilities.pm
 inc/Perl/ToPerl6/Module/Build.pm
 inc/Perl/ToPerl6/Module/Build/Standard.pm
@@ -156,7 +155,6 @@ t/BasicTypes/Strings/FormatRegexp.t
 t/BasicTypes/Strings/FormatShellStrings.t
 t/BasicTypes/Strings/Interpolation.t
 t/Builtins/FormatPrint.t
-t/CompoundStatements/.swp
 t/CompoundStatements/AddWhitespace.t
 t/CompoundStatements/FormatConditionals.t
 t/CompoundStatements/FormatGivenWhens.t
