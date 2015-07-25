@@ -34,38 +34,37 @@ sub applies_to           { 'PPI::Document' }
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
-return;
 
     my $ref = $doc->find('PPI::Statement::Package');
     if ( $ref and @{ $ref } ) {
         my @package = @{ $ref };
         for my $package ( @package ) {
-            $package->schild(0)->set_content('class');
+            $package->schild(0)->set_content('unit class');
 
-            if ( $package->schild(2) and
-                 $package->schild(2)->isa('PPI::Token::Structure') and
-                 $package->schild(2)->content eq ';' ) {
-
-                my $new_block = make_ppi_structure_block;
-                my $new_statement = PPI::Statement->new;
-                $new_block->add_element($new_statement);
-         
-                my $token = $package->next_sibling;
-                while ( $token and $token->next_sibling ) {
-                    last if is_package_boundary($token);
-                    $new_statement->add_element($token->clone);
-                    $token = $token->next_sibling;
-                }
-         
-                my $point = $package->next_sibling;
-                while ( $point and
-                        not is_package_boundary($point) ) {
-                    my $temp = $point->next_sibling;
-                    $point->remove;
-                    $point = $temp;
-                }
-                $package->last_element->insert_before($new_block);
-            }
+#            if ( $package->schild(2) and
+#                 $package->schild(2)->isa('PPI::Token::Structure') and
+#                 $package->schild(2)->content eq ';' ) {
+#
+#                my $new_block = make_ppi_structure_block;
+#                my $new_statement = PPI::Statement->new;
+#                $new_block->add_element($new_statement);
+#         
+#                my $token = $package->next_sibling;
+#                while ( $token and $token->next_sibling ) {
+#                    last if is_package_boundary($token);
+#                    $new_statement->add_element($token->clone);
+#                    $token = $token->next_sibling;
+#                }
+#         
+#                my $point = $package->next_sibling;
+#                while ( $point and
+#                        not is_package_boundary($point) ) {
+#                    my $temp = $point->next_sibling;
+#                    $point->remove;
+#                    $point = $temp;
+#                }
+#                $package->last_element->insert_before($new_block);
+#            }
         }
         return $self->transformation( $DESC, $EXPL, $elem );
     }

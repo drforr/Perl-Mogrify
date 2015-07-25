@@ -6,6 +6,18 @@ use strict;
 use warnings;
 
 use Test::Perl::Mogrify::Transformer qw< transform_ok >;
+#-----------------------------------------------------------------------------
+
+### name: Single package with no content
+#package Foo;
+#$a = "foo";
+#package Bar;
+#package Baz;
+###-->
+#class Foo{
+#$a = "foo";
+#};class Bar{
+#};class Baz{};
 
 #-----------------------------------------------------------------------------
 
@@ -14,13 +26,7 @@ our $VERSION = '0.01';
 transform_ok( 'Packages::FormatPackageDeclarations', *DATA );
 
 __DATA__
-## name: Single package with no content
+## name: Single package declaration
 package Foo;
-$a = "foo";
-package Bar;
-package Baz;
 ##-->
-class Foo{
-$a = "foo";
-};class Bar{
-};class Baz{};
+unit class Foo;
