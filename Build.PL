@@ -13,7 +13,6 @@ use Perl::ToPerl6::BuildUtilities qw<
     required_module_versions
     build_required_module_versions
     emit_tar_warning_if_necessary
-    get_PL_files
 >;
 use Perl::ToPerl6::Module::Build;
 
@@ -39,8 +38,6 @@ my $builder = Perl::ToPerl6::Module::Build->new(
     configure_requires  => {
         'Module::Build' => '0.4024',
     },
-
-    PL_files            => get_PL_files(),
 
     script_files        => ['bin/perlmogrify'],
 
@@ -79,7 +76,6 @@ my $builder = Perl::ToPerl6::Module::Build->new(
             pm_to_blib
             README
         >,
-        values %{ get_PL_files() },
     ],
 );
 
