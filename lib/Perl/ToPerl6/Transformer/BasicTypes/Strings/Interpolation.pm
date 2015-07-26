@@ -30,6 +30,35 @@ sub applies_to           {
 }
 
 #-----------------------------------------------------------------------------
+#
+# Some more cases get folded away here (hee.)
+# \U foo \L\E bar \E - 'bar' will get altered here.
+# \U foo \L$x\E bar \E - 'bar' will *not* get altered here,
+#                        even if $x is empty.
+# \U foo \Lxxx\E bar \E - 'bar' will *not* get altered here,
+#
+# So, \L..\E affects the rest of the string only if the contents
+# are empty. So it's effectively as if it never was there.
+# Get rid of it.
+#
+sub casefold {
+    my ($self, $residue) = @_;
+
+    my @tokens;
+    my @split = grep { $_ ne '' } split /( \\[luEFLQU] )/x, $residue;
+    for ( my $i = 0; $i < @split; $i++ ) {
+        my ($v, $la1) = @split[$i,$i+1];
+        if ( $v =~ m< ^ \\[FLU] $ >x and
+             $la1 and $la1 eq '\\E' ) {
+            $i+=2;
+        }
+        else {
+            push @tokens, $v;
+        }
+    }
+    return @tokens;
+}
+
 sub tokenize_variables {
     my ($self, $string) = @_;
     my $full_string = $string;
@@ -38,21 +67,21 @@ sub tokenize_variables {
 my $iter = 100;
     while ( $string ) {
 unless ( --$iter  ) {
-warn ">>$string<<\n";
     die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you were using to the author: <<$full_string>>";
 }
         my $residue;
 
-        if ( $string =~ m{ ^ ([\$\@]) \{ (\w+) \} }x ) {
+        if ( $string =~ m< ^ ( [\$\@] ) \{ ([^}]+) \} >x ) {
             my ( $sigil, $variable ) = ( $1, $2 );
-            $string =~ s{ ^ ([\$\@]) \{ (\w+) \} }{$1$2}x;
+            $string =~ s< ^ ([\$\@]) \{ ([^}]+) \} ><$1$2>x;
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );
-            $var_name =~ s{ ^ [\$\@] $variable }{$sigil.qq{{$variable}}}ex;
+            $var_name =~ s< ^ [\$\@] \Q$variable\E ><$sigil.qq{{$variable}}>ex;
             push @tokens, $var_name;
             $string = $remainder;
         }
-        elsif ( $string =~ s{ ^ ( \\ c . ) }{}x ) {
+        elsif ( $string =~ s< ^ ( \\ c . ) ><>x or
+                $string =~ s< ^ ( [\$\@] (?: \\ | \s ) ) ><>x ) {
             if ( @tokens ) {
                 $tokens[-1] .= $1;
             }
@@ -60,61 +89,29 @@ warn ">>$string<<\n";
                 push @tokens, $1;
             }
         }
-        elsif ( $string =~ s{ ^ ([\$\@] (?: \\ | \s )) }{}x ) {
-            if ( @tokens ) {
-                $tokens[-1] .= $1;
-            }
-            else {
-                push @tokens, $1;
-            }
-        }
-        elsif ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
+        elsif ( $string =~ s< ^ ( [^\$\@]+ ) ><>x ) {
             $residue .= $1;
 
-            while ( $residue and $residue =~ / \\ $ /x ) {
-                if ( $string =~ s{ ^ ( \$\@ ) }{}x ) {
+            while ( $residue and $residue =~ m< \\ $ >x ) {
+                if ( $string =~ s< ^ ( \$\@ ) ><>x ) {
                     $residue .= $1;
                 }
-                $string =~ s{ (.) }{}x;
+                $string =~ s< (.) ><>x;
                 $residue .= $1;
-                if ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
+                if ( $string =~ s< ^ ( [^\$\@]+ ) ><>x ) {
                     $residue .= $1;
                 }
                 else {
                     last;
                 }
             }
-            my @split = grep { $_ ne '' } split /( \\[luEFLQU] )/x, $residue;
-
-            # Some more cases get folded away here (hee.)
-            # \U foo \L\E bar \E - 'bar' will get altered here.
-            # \U foo \L$x\E bar \E - 'bar' will *not* get altered here,
-            #                        even if $x is empty.
-            # \U foo \Lxxx\E bar \E - 'bar' will *not* get altered here,
-            #
-            # So, \L..\E affects the rest of the string only if the contents
-            # are empty. So it's effectively as if it never was there.
-            # Get rid of it.
-            #
-            for ( my $i = 0; $i < @split; $i++ ) {
-                my ($v, $la1) = @split[$i,$i+1];
-                if ( $v =~ / ^ \\[FLU] $ /x and
-                     $la1 and $la1 eq '\\E' ) {
-                    $i+=2;
-                }
-                else {
-                    push @tokens, $v;
-                }
-            }
+            push @tokens, $self->casefold($residue);
         }
-        elsif ( $string =~ m{ ^ [\$\@] }x ) {
+        elsif ( $string =~ m< ^ [\$\@] >x ) {
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );
             push @tokens, $var_name;
             $string = $remainder;
-        }
-        else {
-warn "))$string((\n";
         }
     }
 
@@ -235,15 +232,21 @@ warn "Interpolating perl code.";
     # So, rather than having to retain case settings, we can simply stop the
     # lc(..) block after the first...
     #
-    my $collected;
-#    my @manip;
+
+    my $new_content;
+warn ")".join(" ", map { "[$_]" } @tokens)."(\n";
     for ( my $i = 0; $i < @tokens; $i++ ) {
         my ( $v, $la1 ) = @tokens[$i,$i+1];
 
-        if ( index( $v, '$' ) != 0 and index( $v, '@' ) != 0 ) {
+        if ( index( $v, '$' ) != 0 and
+             index( $v, '@' ) != 0 ) {
             $v =~ s< { ><\\{>gx;
             $v =~ s< } ><\\}>gx;
         }
+        $new_content .= $v;
+    }
+#warn "))$new_content((\n";
+
 #        if ( $v eq '\\l' ) {
 #        }
 #        elsif ( $v eq '\\u' ) {
@@ -291,16 +294,8 @@ warn "Interpolating perl code.";
 #        elsif ( $v =~ / ^ ( \$ | \@ ) /x ) {
 #            $collected .= $v;
 #        }
-#        else {
-            $collected .= $v;
-#        }
-    }
-#    if ( @manip == 1 ) {
-#        $collected .= $end_delimiter . ')}';
-#    }
-    $old_string = $collected;
 
-    set_string($elem,$old_string);
+    set_string($elem,$new_content);
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
