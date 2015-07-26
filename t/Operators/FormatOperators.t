@@ -62,3 +62,7 @@ $x = $y > 1 ?? 0 !! 1 if 1;
 $x = $y > 1 ?? 0 !! 1 and 1;
 1 if $x = $y > 1 ?? 0 !! 1;
 1 and $x = $y > 1 ?? 0 !! 1;
+## name: regression
+eval { @yaml = $code->($local_file); };
+##-->
+eval { @yaml = $code.($local_file); };

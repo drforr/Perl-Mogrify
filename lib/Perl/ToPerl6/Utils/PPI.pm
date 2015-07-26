@@ -161,6 +161,7 @@ sub is_pragma {
 
 sub set_string {
     my ($elem, $string) = @_;
+    $string = '' unless $string;
 
     my $content = $elem->content;
     if ($content =~ m/ ^ ['"] /x ) {

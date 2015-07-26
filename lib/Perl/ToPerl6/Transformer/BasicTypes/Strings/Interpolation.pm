@@ -32,18 +32,49 @@ sub applies_to           {
 #-----------------------------------------------------------------------------
 sub tokenize_variables {
     my ($self, $string) = @_;
+    my $full_string = $string;
 
     my @tokens;
 my $iter = 100;
     while ( $string ) {
 unless ( --$iter  ) {
-    die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you wer using to the author.";
+warn ">>$string<<\n";
+    die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you were using to the author: <<$full_string>>";
 }
         my $residue;
-        if ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
-            $residue = $1;
+
+        if ( $string =~ m{ ^ ([\$\@]) \{ (\w+) \} }x ) {
+            my ( $sigil, $variable ) = ( $1, $2 );
+            $string =~ s{ ^ ([\$\@]) \{ (\w+) \} }{$1$2}x;
+            my ( $var_name, $remainder, $prefix ) =
+                 extract_variable( $string );
+            $var_name =~ s{ ^ [\$\@] $variable }{$sigil.qq{{$variable}}}ex;
+            push @tokens, $var_name;
+            $string = $remainder;
+        }
+        elsif ( $string =~ s{ ^ ( \\ c . ) }{}x ) {
+            if ( @tokens ) {
+                $tokens[-1] .= $1;
+            }
+            else {
+                push @tokens, $1;
+            }
+        }
+        elsif ( $string =~ s{ ^ ([\$\@] (?: \\ | \s )) }{}x ) {
+            if ( @tokens ) {
+                $tokens[-1] .= $1;
+            }
+            else {
+                push @tokens, $1;
+            }
+        }
+        elsif ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
+            $residue .= $1;
 
             while ( $residue and $residue =~ / \\ $ /x ) {
+                if ( $string =~ s{ ^ ( \$\@ ) }{}x ) {
+                    $residue .= $1;
+                }
                 $string =~ s{ (.) }{}x;
                 $residue .= $1;
                 if ( $string =~ s{ ^ ( [^\$\@]+ ) }{}x ) {
@@ -83,6 +114,7 @@ unless ( --$iter  ) {
             $string = $remainder;
         }
         else {
+warn "))$string((\n";
         }
     }
 
@@ -94,6 +126,11 @@ sub transform {
 
     my $old_string = $elem->string;
     my $new_string;
+
+    if ( index( $old_string, '@{[' ) >= 0 ) {
+warn "Interpolating perl code.";
+        return;
+    }
 
     # Save the delimiters for later. Since they surrounded the original Perl5
     # string, we can be certain that if we use these for the Perl6 equivalent
