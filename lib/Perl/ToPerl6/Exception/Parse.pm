@@ -10,7 +10,7 @@ use Readonly;
 
 use Perl::ToPerl6::Utils qw< :characters >;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------
 

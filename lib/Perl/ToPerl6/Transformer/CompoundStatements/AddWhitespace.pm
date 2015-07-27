@@ -13,7 +13,7 @@ use Perl::ToPerl6::Utils::PPI qw{
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------
 

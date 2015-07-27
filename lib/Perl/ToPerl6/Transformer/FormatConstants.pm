@@ -9,7 +9,7 @@ use Perl::ToPerl6::Utils qw{ :characters :severities };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------
 
@@ -80,11 +80,15 @@ sub transform {
 
         $current = $current->snext_sibling;
 
-        $current->set_content( '$' . $current->content );
-
-        $current->snext_sibling->set_content('=');
-
-        $current = $current->snext_sibling;
+        if ( $current->isa('PPI::Structure::Constructor') ) {
+        }
+        else {
+            $current->set_content( '$' . $current->content );
+        
+            $current->snext_sibling->set_content('=');
+        
+            $current = $current->snext_sibling;
+        }
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

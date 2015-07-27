@@ -13,15 +13,17 @@ The framework owes a great deal to Jeffrey Thalmer and Perl::Critic,
 inasmuch as the source was almost completely cribbed from there. Any remaining
 bugs are my fault, however.
 
-This is meant to be extenible so that others can create their own Perl5 to Perl6
-custom transformation modules and add the to the Perl::ToPerl6::Transformer
-namespace.
+This is meant to be extensible so that others can create their own Perl5 to
+Perl6 custom transformation modules. Feel free to add them to the appropriate
+Perl::ToPerl6::Transformerx namespace.
 
-The existing modules are the result of taking existing perl5 code and
-hand-munging it to Perl6 status. The original Perl::Critic system remains
-in place, so you can create your own transformation profiles with custom
-.perlmogrifyrc files, and basically any other way Perl::Critic allows you
-to configure the tool.
+As the original Perl::Critic module still remains under the hood, you should
+still be able to use the original configuration and .rc system.
+
+The core transformations were simmply chosen by taking an existing perl5 file
+and editing it until it compiled cleanly under Perl6. The author does not
+guarantee that the code semantically matches the old Perl5 source, merely that
+it is now compilable Perl6 code.
 
 The documentation is still basically a s/// of the original Perl::Critic
 documentation, with the exception of this README. If you're brave or foolish,

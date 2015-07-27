@@ -12,7 +12,7 @@ use Perl::ToPerl6::Utils::PPI qw{ set_string };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------
 
@@ -71,14 +71,10 @@ unless ( --$iter  ) {
 }
         my $residue;
 
-        if ( $string =~ m< ^ ( [\$\@] ) \{ ([^}]+) \} >x ) {
-            my ( $sigil, $variable ) = ( $1, $2 );
-            $string =~ s< ^ ([\$\@]) \{ ([^}]+) \} ><$1$2>x;
-            my ( $var_name, $remainder, $prefix ) =
-                 extract_variable( $string );
-            $var_name =~ s< ^ [\$\@] \Q$variable\E ><$sigil.qq{{$variable}}>ex;
-            push @tokens, $var_name;
-            $string = $remainder;
+        # '${foo}', '@{foo}' is an interpolated value.
+        #
+        if ( $string =~ s< ^ ( [\$\@] \{ [^}]+ \} ) ><>x ) {
+            push @tokens, $1;
         }
         elsif ( $string =~ s< ^ ( \\ c . ) ><>x or
                 $string =~ s< ^ ( [\$\@] (?: \\ | \s ) ) ><>x ) {
@@ -97,7 +93,7 @@ unless ( --$iter  ) {
                     $residue .= $1;
                 }
                 $string =~ s< (.) ><>x;
-                $residue .= $1;
+                $residue .= $1 if $1;
                 if ( $string =~ s< ^ ( [^\$\@]+ ) ><>x ) {
                     $residue .= $1;
                 }
@@ -112,6 +108,9 @@ unless ( --$iter  ) {
                  extract_variable( $string );
             push @tokens, $var_name;
             $string = $remainder;
+        }
+        else {
+warn "XXX failed\n";
         }
     }
 
@@ -234,7 +233,6 @@ warn "Interpolating perl code.";
     #
 
     my $new_content;
-warn ")".join(" ", map { "[$_]" } @tokens)."(\n";
     for ( my $i = 0; $i < @tokens; $i++ ) {
         my ( $v, $la1 ) = @tokens[$i,$i+1];
 
@@ -245,7 +243,6 @@ warn ")".join(" ", map { "[$_]" } @tokens)."(\n";
         }
         $new_content .= $v;
     }
-#warn "))$new_content((\n";
 
 #        if ( $v eq '\\l' ) {
 #        }

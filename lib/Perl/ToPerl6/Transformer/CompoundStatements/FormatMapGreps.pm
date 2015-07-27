@@ -10,7 +10,7 @@ use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word make_ppi_structure_block };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------
 
@@ -32,7 +32,8 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_token_word($_[1], %map)
+        is_ppi_token_word($_[1], %map) and
+        $_[1]->snext_sibling
     }
 }
 

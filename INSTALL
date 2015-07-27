@@ -3,8 +3,8 @@ INSTALLATION
     To install Perl::ToPerl6 give the following commands 
     to your favorite shell:
 
-        tar -zxf Perl-ToPerl6-0.001.tar.gz
-        cd Perl-ToPerl6-0.001
+        tar -zxf Perl-ToPerl6-0.002.tar.gz
+        cd Perl-ToPerl6-0.002
         perl Build.pl
         ./Build
         ./Build test

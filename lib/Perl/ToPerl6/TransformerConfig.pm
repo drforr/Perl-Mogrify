@@ -6,7 +6,7 @@ use warnings;
 
 use Readonly;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Perl::ToPerl6::Exception::AggregateConfiguration;
 use Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue;

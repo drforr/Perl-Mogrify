@@ -22,7 +22,7 @@ use Perl::ToPerl6::Utils qw< :characters hashify shebang_line >;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 Readonly::Array our @EXPORT_OK => qw(transform);
 
