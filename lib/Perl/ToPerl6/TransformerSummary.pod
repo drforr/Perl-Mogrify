@@ -1,0 +1,186 @@
+
+=head1 NAME
+
+Perl::ToPerl6::TransformerSummary - Descriptions of the Transformer modules included with L<Perl::ToPerl6|Perl::ToPerl6> itself.
+
+
+=head1 DESCRIPTION
+
+The following Transformer modules are distributed with Perl::ToPerl6. (There are
+additional Policies that can be found in add-on distributions.)  The Transformer
+modules have been categorized according to the table of contents in Damian
+Conway's book B<Perl Best Practices>. Since most coding standards take the
+form "do this..." or "don't do that...", I have adopted the convention of
+naming each module C<RequireSomething> or C<ProhibitSomething>.  Each Transformer
+is listed here with its default severity.  If you don't agree with the default
+severity, you can change it in your F<.perlmogrifyrc> file (try C<perlmogrify
+--profile-proto> for a starting version).  See the documentation of each
+module for its specific details.
+
+
+=head1 POLICIES
+
+=head2 L<Subroutines::RemovePrototypes|Perl::ToPerl6::Transformer::Subroutines::RemovePrototypes>
+
+Remove ($)-style prototypes on subroutines. [Default severity 5]
+
+=head2 L<Arrays::FormatArrayQws|Perl::ToPerl6::Transformer::Arrays::FormatArrayQws>
+
+Format qw() to qw () [Default severity 5]
+
+=head2 L<Builtins::FormatPrint|Perl::ToPerl6::Transformer::Builtins::FormatPrint>
+
+Format 'print $fh "expr"' [Default severity 5]
+
+=head2 L<Packages::FormatPackageUsages|Perl::ToPerl6::Transformer::Packages::FormatPackageUsages>
+
+Format 'use Foo;' to 'use Foo:from<Perl5>;' [Default severity 5]
+
+=head2 L<CompoundStatements::FormatUntils|Perl::ToPerl6::Transformer::CompoundStatements::FormatUntils>
+
+Format until() [Default severity 5]
+
+=head2 L<Pragmas::FormatPragmas|Perl::ToPerl6::Transformer::Pragmas::FormatPragmas>
+
+Remove unnecessary pragmas [Default severity 5]
+
+=head2 L<CompoundStatements::RenameForeach|Perl::ToPerl6::Transformer::CompoundStatements::RenameForeach>
+
+Rename 'foreach' to 'for' [Default severity 5]
+
+=head2 L<Regexes::SwapModifiers|Perl::ToPerl6::Transformer::Regexes::SwapModifiers>
+
+ [Default severity 5]
+
+=head2 L<BasicTypes::Strings::FormatShellStrings|Perl::ToPerl6::Transformer::BasicTypes::Strings::FormatShellStrings>
+
+Format qx{} [Default severity 5]
+
+=head2 L<CompoundStatements::FormatLoops|Perl::ToPerl6::Transformer::CompoundStatements::FormatLoops>
+
+Format for(;;) loops [Default severity 5]
+
+=head2 L<Variables::ReplaceUndef|Perl::ToPerl6::Transformer::Variables::ReplaceUndef>
+
+Give variables their proper sigils. [Default severity 5]
+
+=head2 L<Operators::AddWhitespace|Perl::ToPerl6::Transformer::Operators::AddWhitespace>
+
+Add whitespace between conditionals 'if', 'unless' &c and () [Default severity 5]
+
+=head2 L<CompoundStatements::FormatMapGreps|Perl::ToPerl6::Transformer::CompoundStatements::FormatMapGreps>
+
+Format map{}, grep{} [Default severity 5]
+
+=head2 L<Packages::FormatPackageDeclarations|Perl::ToPerl6::Transformer::Packages::FormatPackageDeclarations>
+
+Format 'package Foo;' declarations [Default severity 5]
+
+=head2 L<BasicTypes::Rationals::FormatRationals|Perl::ToPerl6::Transformer::BasicTypes::Rationals::FormatRationals>
+
+Format 1.0, .1, 1. correctly [Default severity 5]
+
+=head2 L<BasicTypes::Integers::FormatOctalLiterals|Perl::ToPerl6::Transformer::BasicTypes::Integers::FormatOctalLiterals>
+
+Format 0o0123 properly [Default severity 5]
+
+=head2 L<FormatConstants|Perl::ToPerl6::Transformer::FormatConstants>
+
+Transform Readonly and constant [Default severity 5]
+
+=head2 L<Operators::FormatOperators|Perl::ToPerl6::Transformer::Operators::FormatOperators>
+
+Transform '->', '!" &c to their Perl6 equivalents [Default severity 5]
+
+=head2 L<Variables::FormatSigils|Perl::ToPerl6::Transformer::Variables::FormatSigils>
+
+Give variables their proper sigils. [Default severity 5]
+
+=head2 L<BasicTypes::Strings::FormatRegexp|Perl::ToPerl6::Transformer::BasicTypes::Strings::FormatRegexp>
+
+Format regexps correctly [Default severity 5]
+
+=head2 L<CompoundStatements::SwapForArguments|Perl::ToPerl6::Transformer::CompoundStatements::SwapForArguments>
+
+Swap C<for my $x ( @x ) { }> --> C<<for ( @x ) -> $x { }>> [Default severity 5]
+
+=head2 L<BasicTypes::Integers::FormatBinaryLiterals|Perl::ToPerl6::Transformer::BasicTypes::Integers::FormatBinaryLiterals>
+
+Format 0b0101 properly [Default severity 5]
+
+=head2 L<FormatSpecialLiterals|Perl::ToPerl6::Transformer::FormatSpecialLiterals>
+
+Format __END__, __LINE__ &c [Default severity 5]
+
+=head2 L<References::FormatDereferences|Perl::ToPerl6::Transformer::References::FormatDereferences>
+
+Transform %{$foo} to %($foo) [Default severity 5]
+
+=head2 L<PostfixExpressions::AddWhitespace|Perl::ToPerl6::Transformer::PostfixExpressions::AddWhitespace>
+
+Add whitespace between conditionals 'if', 'unless' &c and () [Default severity 5]
+
+=head2 L<Variables::FormatSpecialVariables|Perl::ToPerl6::Transformer::Variables::FormatSpecialVariables>
+
+Format special variables such as @ARGV [Default severity 5]
+
+=head2 L<Variables::FormatHashKeys|Perl::ToPerl6::Transformer::Variables::FormatHashKeys>
+
+Transform bareword hash keys into quoted hash keys [Default severity 5]
+
+=head2 L<Regexes::StandardizeDelimiters|Perl::ToPerl6::Transformer::Regexes::StandardizeDelimiters>
+
+Regexen can no longer have alphanumeric delimiters [Default severity 5]
+
+=head2 L<BasicTypes::Strings::FormatHereDocs|Perl::ToPerl6::Transformer::BasicTypes::Strings::FormatHereDocs>
+
+Format <<EOF constructs correctly [Default severity 5]
+
+=head2 L<Operators::FormatCircumfixOperators|Perl::ToPerl6::Transformer::Operators::FormatCircumfixOperators>
+
+Format the {}, [], () operators [Default severity 5]
+
+=head2 L<Variables::FormatMatchVariables|Perl::ToPerl6::Transformer::Variables::FormatMatchVariables>
+
+Format special variables such as @ARGV [Default severity 5]
+
+=head2 L<CompoundStatements::AddWhitespace|Perl::ToPerl6::Transformer::CompoundStatements::AddWhitespace>
+
+Add whitespace between conditionals 'if', 'unless' &c and '(...)' [Default severity 5]
+
+=head2 L<BasicTypes::Integers::FormatHexLiterals|Perl::ToPerl6::Transformer::BasicTypes::Integers::FormatHexLiterals>
+
+Format 0x1234 properly [Default severity 5]
+
+=head2 L<BasicTypes::Strings::Interpolation|Perl::ToPerl6::Transformer::BasicTypes::Strings::Interpolation>
+
+Format C<${x}> correctly [Default severity 5]
+
+=head2 L<CompoundStatements::FormatConditionals|Perl::ToPerl6::Transformer::CompoundStatements::FormatConditionals>
+
+Format if(), elsif(), unless() [Default severity 5]
+
+=head2 L<CompoundStatements::FormatGivenWhens|Perl::ToPerl6::Transformer::CompoundStatements::FormatGivenWhens>
+
+Format given(), when() [Default severity 5]
+
+
+=head1 VERSION
+
+This is part of L<Perl::ToPerl6|Perl::ToPerl6> version 1.116.
+
+
+=head1 AUTHOR
+
+Jeffrey Ryan Thalhammer <jeff@imaginative-software.com>
+
+
+=head1 COPYRIGHT
+
+Copyright (c) 2005-2011 Imaginative Software Systems.  All rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.  The full text of this license
+can be found in the LICENSE file included with this module.
+
+=cut

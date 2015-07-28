@@ -60,14 +60,15 @@ sub casefold {
 }
 
 sub tokenize_variables {
-    my ($self, $string) = @_;
+    my ($self, $elem, $string) = @_;
     my $full_string = $string;
 
     my @tokens;
 my $iter = 100;
     while ( $string ) {
 unless ( --$iter  ) {
-    die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you were using to the author: <<$full_string>>";
+    my $line_number = $elem->line_number;
+    die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you were using to the author: <<$full_string>> on line $line_number\n";
 }
         my $residue;
 
@@ -103,15 +104,25 @@ unless ( --$iter  ) {
             }
             push @tokens, $self->casefold($residue);
         }
-        elsif ( $string =~ m< ^ [\$\@] $ >x ) {
-            $tokens[-1] .= $string;
-            $string = '';
-        }
         elsif ( $string =~ m< ^ [\$\@] >x ) {
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );
-            push @tokens, $var_name;
-            $string = $remainder;
+            if ( $var_name ) {
+                 push @tokens, $var_name;
+                 $string = $remainder;
+            }
+#
+# XXX I"m betting that extract_variable() doesn't quite catch $] etc.
+#
+            else {
+                $string =~ s< ^ ( [\$\@] [^\$\@]* ) ><>x;
+                if ( @tokens ) {
+                    $tokens[-1] .= $1;
+                }
+                else {
+                    push @tokens, $1;
+                }
+            }
         }
         else {
 warn "XXX failed\n";
@@ -221,7 +232,7 @@ warn "Interpolating perl code.";
     # hanging around in the string, because those would get messed up.
     #
 
-    my @tokens = $self->tokenize_variables($old_string);
+    my @tokens = $self->tokenize_variables($elem,$old_string);
 
     # Now on to rewriting \l, \u, \E, \F, \L, \Q, \U in Perl6.
     #
