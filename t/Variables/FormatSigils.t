@@ -70,3 +70,11 @@ $a { qw( a b ) } = ( 'a', 'b' );
 @a [ 0, 1 ] = ( 'a', 'b' );
 %a { 'a', 'b' } = ( 'a', 'b' );
 %a { qw( a b ) } = ( 'a', 'b' );
+## name: last index
+$#x = 1;
+if( $icom > $#Commands ){ }
+$Defined{$#Commands} = " #$expr";
+##-->
+@x.end = 1;
+if( $icom > @Commands.end ){ }
+$Defined{@Commands.end} = " #$expr";

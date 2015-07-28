@@ -103,6 +103,10 @@ unless ( --$iter  ) {
             }
             push @tokens, $self->casefold($residue);
         }
+        elsif ( $string =~ m< ^ [\$\@] $ >x ) {
+            $tokens[-1] .= $string;
+            $string = '';
+        }
         elsif ( $string =~ m< ^ [\$\@] >x ) {
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );

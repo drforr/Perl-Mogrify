@@ -101,6 +101,7 @@ is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' );
 "my \$E; { local \$@; }"
 is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"');
 sub stringify { "${$_[0]}" }
+"sections=s@"
 ##-->
 return "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}";
 $s .= sprintf(" @ %$f/s (n=$n)",$n/($elapsed)) if $n && $elapsed;
@@ -108,3 +109,4 @@ is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' );
 "my \$E; \{ local \$@; \}"
 is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"');
 sub stringify { "${$_[0]}" }
+"sections=s@"

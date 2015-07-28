@@ -1,6 +1,5 @@
 .travis.yml
 bin/perlmogrify
-bin/perlmogrify.pl6
 Build.PL
 Changes
 examples/perlmogrifyrc
@@ -103,9 +102,6 @@ lib/Perl/ToPerl6/Utils/PPI.pm
 lib/Test/Perl/ToPerl6/Transformer.pm
 LICENSE
 MANIFEST			This list of files
-META.json
-META.yml
-README
 README.md
 t/00_modules.t
 t/01_bad_perlmogrifyrc
@@ -177,5 +173,7 @@ t/Variables/FormatHashKeys.t
 t/Variables/FormatMatchVariables.t
 t/Variables/FormatSigils.t
 t/Variables/FormatSpecialVariables.t
-t/Variables/ReplaceUndef.t
 tools/ppidump
+README
+META.yml
+META.json

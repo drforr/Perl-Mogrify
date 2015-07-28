@@ -42,12 +42,24 @@ sub transform {
 
         $content =~ s{\$#}{};
 
-        my $array = PPI::Token::Symbol->new('@' . $content);
-        $elem->insert_before($array);
-        my $dot = PPI::Token::Symbol->new('.');
-        $elem->insert_before($dot);
-        my $end = PPI::Token::Word->new('end');
-        $elem->insert_before($end);
+#
+# There's a bug that causes $elem->parent to go away here.
+# Not sure if it's PPI or not...
+#
+unless ( $elem->parent ) {
+    warn "XXX PPI bug triggered\n";
+    return;
+}
+
+        $elem->insert_before(
+            PPI::Token::Symbol->new('@' . $content)
+        );
+        $elem->insert_before(
+            PPI::Token::Symbol->new('.')
+        );
+        $elem->insert_before(
+            PPI::Token::Word->new('end')
+        );
         $elem->delete;
     }
     else {
