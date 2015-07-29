@@ -77,4 +77,4 @@ $Defined{$#Commands} = " #$expr";
 ##-->
 @x.end = 1;
 if( $icom > @Commands.end ){ }
-$Defined{@Commands.end} = " #$expr";
+%Defined{@Commands.end} = " #$expr";
