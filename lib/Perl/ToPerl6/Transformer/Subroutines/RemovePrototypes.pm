@@ -30,6 +30,7 @@ sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Token::Prototype') and
+        $_[1]->sprevious_sibling and
         ( exists $map{$_[1]->sprevious_sibling->content} or
           exists $map{$_[1]->sprevious_sibling->sprevious_sibling->content} )
     }

@@ -618,13 +618,13 @@ interface will go through a deprecation cycle.
     'o' -
     'p' -
     'q' -
-    'r' - Specify a PPI::Token::Regexp node
+    'r' - Specify a regular expression.
           Note that this will match C</foo/>, C<s/foo/bar/>, C<y/a-m/n-z/>.
           If you want to match a specific regex type, then preface 'r' with:
           'mr' - Matching regular expression
           'sr' - Substitution regular expression
           'tr' - Transliterating regular expression
-    's' - Specify a PPI::Token::Quote node
+    's' - Specify a quoted string.
           This will match both C<'foo'> and C<qq qfooq> by default.
           If you want to match a specific string type, then preface 's' with:
           'ds' - Double-quoted string
