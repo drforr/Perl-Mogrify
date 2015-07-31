@@ -24,7 +24,6 @@ m/foo/i and 1
 1 if m/foo/i
 1 and m/foo/i
 m<foo>i
-m<foo>gi
 ##-->
 m:P5/foo/
 m:P5/foo/
@@ -35,7 +34,10 @@ m:i:P5/foo/ and 1
 1 if m:i:P5/foo/
 1 and m:i:P5/foo/
 m:i:P5<foo>
-m:gi:P5<foo>
+## name: drop unused modifiers
+m/foo/gs
+##-->
+m:P5/foo/
 ## name: substitute
 s/foo/bar/
 s{foo}<bar>

@@ -103,6 +103,8 @@ is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"');
 sub stringify { "${$_[0]}" }
 "sections=s@"
 print $out "@[\n";
+return "_alternation_${impcount}_of_production_${prodcount}_of_rule_$self->{name}";
+Parse::RecDescent::_error("Incomplete <$next->{type}op:...>.", $line);
 ##-->
 return "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}";
 $s .= sprintf(" @ %$f/s (n=$n)",$n/($elapsed)) if $n && $elapsed;
@@ -112,3 +114,5 @@ is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"');
 sub stringify { "${$_[0]}" }
 "sections=s@"
 print $out "@[\n";
+return "_alternation_{$impcount}_of_production_{$prodcount}_of_rule_$self.{'name'}";
+Parse::RecDescent::_error("Incomplete \<$next->{type}op:...\>.", $line);

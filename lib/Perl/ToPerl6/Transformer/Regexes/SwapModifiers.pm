@@ -37,10 +37,11 @@ sub transform {
     my $num_modifiers = keys %{ $elem->get_modifiers };
     my $modifiers =
         substr( $elem->content, -$num_modifiers, $num_modifiers, '' );
+    my $old_modifiers = $modifiers;
 
-    # 's' modifier is no longer allowed.
+    # 's' and 'g' modifiers are no longer allowed.
     #
-    $modifiers =~ s{ s }{}x;
+    $modifiers =~ y{sg}{}d;
 
     for ( @{ $elem->{sections} } ) {
         $_->{position} += length($modifiers) + 3;
@@ -61,7 +62,7 @@ sub transform {
         $new_content =~ s{^(m|s|y|tr)}{$1:P5};
     }
     $elem->{operator} = $1;
-    $new_content =~ s{$modifiers$}{};
+    $new_content =~ s{$old_modifiers$}{};
 
     $elem->set_content($new_content);
 
