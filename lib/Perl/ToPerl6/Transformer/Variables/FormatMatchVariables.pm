@@ -66,7 +66,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Transformer::Variables::FormatSpecialVariables - Format special variables such as @ARGV
+Perl::ToPerl6::Transformer::Variables::FormatMatchVariables - Renumber match variables
 
 
 =head1 AFFILIATION
@@ -77,14 +77,14 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 renames many special variables, this changes most of the common variable names, including replacing some of the more obscure variables with new Perl6 equivalent code:
+Perl6 renumbers match variables so that they start at C<$0>. If you're wondering
+what happened to C<$0>, it's now C<$*PROGRAM-NAME>:
 
-  @ARGV --> @*ARGS
-  @+    --> (map {.from},$/[*])
+  $1  --> $0
+  $2  --> $1
+  $99 --> $98
 
-Other variables are no longer used in Perl6, but will not be removed as likely they have expressions attached to them. These cases will probably be dealt with by adding comments to the expression.
-
-Transforms special variables outside of comments, heredocs, strings and POD.
+Transforms match values outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

@@ -15,6 +15,8 @@ our $VERSION = '0.02';
 #-----------------------------------------------------------------------------
 
 our @EXPORT_OK = qw(
+    dscanf
+
     is_ppi_expression_or_generic_statement
     is_ppi_generic_statement
     is_ppi_statement_subclass
@@ -43,6 +45,152 @@ our @EXPORT_OK = qw(
 our %EXPORT_TAGS = (
     all => \@EXPORT_OK,
 );
+
+#-----------------------------------------------------------------------------
+#
+# List the conversion possibilities separately, for now.
+# I don't think there's much call for fancy modifiers, but I'll keep it in mind.
+
+my @conversions = sort { length($b) <=> length($a) } (
+    'd', 'bd',  'od',  'xd',     # Decimals
+    'f', 'ef',  'ff',            # Floating-point numbers
+    'o',                         # Operator
+    'r', 'mr', 'sr', 'tr',       # Regular expressions
+    's', 'ds', 'ls', 'ss', 'is', # Strings
+    'v', 'av', 'gv', 'hv', 'sv', # Variables
+    'P',                         # Generic PPI token
+);
+my $conversions_re = join '|', @conversions;
+my %conversion_type = (
+    d  => 'PPI::Token::Number',
+    bd => 'PPI::Token::Number::Binary',
+    od => 'PPI::Token::Number::Octal',
+    xd => 'PPI::Token::Number::Hex',
+    f  => 'PPI::Token::Number::Float',
+    ef => 'PPI::Token::Number::Exp',
+    o  => 'PPI::Token::Operator',
+    r  => 'PPI::Token::Regexp',
+    mr => 'PPI::Token::Regexp::Match',
+    sr => 'PPI::Token::Regexp::Substitute',
+    tr => 'PPI::Token::Regexp::Transliterate',
+    s  => 'PPI::Token::Quote::Single',
+    ds => 'PPI::Token::Quote::Double',
+    is => 'PPI::Token::Quote::Interpolate',
+    ls => 'PPI::Token::Quote::Literal',
+    ss => 'PPI::Token::Quote::Single',
+    v =>  'PPI::Token::Symbol',
+    av => 'PPI::Token::Symbol', # Must be smarter later.
+    gv => 'PPI::Token::Symbol',
+    hv => 'PPI::Token::Symbol',
+    sv => 'PPI::Token::Symbol',
+);
+
+sub _retokenize {
+    my (@token) = @_;
+
+    # Regroup the '%%', '%v' and modified conversions.
+    #
+    my @final_token;
+    for ( my $i = 0; $i < @token; $i++ ) {
+        my $v = $token[$i];
+
+        # If the token is a '%', then look ahead.
+        #    If '%' is next, just tack it on to the existing '%' leaving '%%'.
+        #    Otherwise, add whatever modifiers we can find from the next, and
+        #        move on.
+        #    Failing that, report that we've found a missing modifier.
+        #
+        if ( $v eq '%' ) {
+            if ( $token[$i+1] eq '%' ) {
+                push @final_token, $v . $token[$i+1];
+                $i++;
+            }
+            elsif ( $token[$i+1] =~ s< ^ ($conversions_re) ><>x ) {
+                my $conversion = $1;
+                if ( $conversion eq 'P' ) {
+                    $token[$i+1] =~ s< ^ \{ ([^\}]+) \} ><>x;
+                    my $name = $1;
+                    $name = 'PPI::' . $name unless $name =~ m< ^ PPI\:: >x;
+                    $conversion .= $name;
+                }
+                push @final_token, $v . $conversion;
+                $i++ if $token[$i+1] eq '';
+            }
+            else {
+                die "Unknown conversion '" . $token[$i+1] . "'";
+            }
+        }
+        else {
+            push @final_token, $v;
+        }
+    }
+    return @final_token;
+}
+
+sub dscanf {
+    my ($format, $options) = @_;
+    my @token = grep { $_ ne '' } split / ( \s+ | \% ) /x, $format;
+    @token = _retokenize( @token );
+
+    my @to_find;
+    for my $token ( @token ) {
+        next if $token =~ m< ^ \s+ $ >x;
+
+        if ( $token eq '%%' ) {
+            push @to_find, {
+                type => 'PPI::Token::Operator',
+                content => '%'
+            };
+        }
+        elsif ( $token =~ s< ^ \% ><>x ) {
+            if ( exists $conversion_type{$token} ) {
+                push @to_find, {
+                    type => $conversion_type{$token}
+                };
+            }
+            elsif ( $token =~ s< ^ P (.+) $ ><>x ) {
+                push @to_find, {
+                    type => $1
+                };
+            }
+            else {
+die "Shouldn't happen, but a token type '$token' got here that we don't recognize, bailing.";
+            }
+        }
+        else {
+            if ( looks_like_number( $token ) ) {
+                push @to_find, {
+                    type => 'PPI::Token::Number',
+                    content => $token
+                };
+            }
+            elsif ( $token =~ / [^\w] /x ) {
+                push @to_find, {
+                    type => 'PPI::Token::Operator',
+                    content => $token
+                };
+            }
+            else {
+                push @to_find, {
+                    type => 'PPI::Token::Word',
+                    content => $token
+                };
+            }
+        }
+    }
+
+    return sub {
+        my $elem = $_[1];
+
+        for my $match ( @to_find ) {
+            return 0 unless $elem->isa( $match->{type} );
+            return 0 if $match->{content} and
+                        $elem->content ne $match->{content};
+            $elem = $elem->snext_sibling;
+        }
+        return 1;
+    };
+}
 
 #-----------------------------------------------------------------------------
 
@@ -443,6 +591,86 @@ interface will go through a deprecation cycle.
 =head1 IMPORTABLE SUBS
 
 =over
+
+=item C<dscanf( $format_string, {options=>1} )>
+
+    'a' -
+    'b' -
+    'c' -
+    'd' - Specify an integer in an arbitrary base.
+          If you want integers in a base other than decimal, add a modifier:
+          'bd' - Binary integer
+          'od' - Octal integer
+          'xd' - Hexadecimal integer
+    'e' -
+    'f' - Specify a floating-point number.
+          If you want floating-point numbers in exponential notation, add
+          a modifier:
+          'ef' - Exponential number
+    'g' -
+    'h' -
+    'i' -
+    'j' -
+    'k' -
+    'l' -
+    'm' -
+    'n' -
+    'o' -
+    'p' -
+    'q' -
+    'r' - Specify a PPI::Token::Regexp node
+          Note that this will match C</foo/>, C<s/foo/bar/>, C<y/a-m/n-z/>.
+          If you want to match a specific regex type, then preface 'r' with:
+          'mr' - Matching regular expression
+          'sr' - Substitution regular expression
+          'tr' - Transliterating regular expression
+    's' - Specify a PPI::Token::Quote node
+          This will match both C<'foo'> and C<qq qfooq> by default.
+          If you want to match a specific string type, then preface 's' with:
+          'ds' - Double-quoted string
+          'ls' - Literal string type
+          'ss' - Single-quoted string
+          'is' - Interpolated string
+    't' -
+    'u' -
+    'v' - Specify a Perl variable.
+          If you want a specific type of variable, add one of these modifiers:
+          'av' - Array variable
+          'gv' - GLOB variable
+          'hv' - Hash variable
+          'sv' - Scalar variable
+    'w' -
+    'x' -
+    'y' -
+    'z' -
+
+    'A' -
+    'B' -
+    'C' -
+    'D' -
+    'E' -
+    'F' -
+    'G' -
+    'H' -
+    'I' -
+    'J' -
+    'K' -
+    'L' -
+    'M' -
+    'N' -
+    'O' -
+    'P' - An explicit L<PPI> node type, C<'%P{Token::Word}'> for instance.
+          You can prefix this with C<'PPI::'> but it's considered redundant.
+    'Q' -
+    'R' -
+    'S' -
+    'T' -
+    'U' -
+    'V' -
+    'W' -
+    'X' -
+    'Y' -
+    'Z' -
 
 =item C<is_ppi_expression_or_generic_statement( $element )>
 
