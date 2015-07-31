@@ -117,49 +117,50 @@ sub _invert_dependencies {
 #
 sub _collect_preferences {
     my (@policies) = @_;
-    my %preferences;
+    my $preferences;
 
     for my $policy ( @policies ) {
         my $ref_name = ref($policy);
-        $ref_name =~ s/^Perl\::ToPerl6\::Transformer\:://;
-        $preferences{$ref_name} = { };
+        $ref_name =~ s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
+        $preferences->{$ref_name} = { };
 
         # Get the list of transformers this module wants to run *after*.
         #
         if ( $policy->can('run_before') ) {
-die "Policy found with preference\n";
             my @before = $policy->run_before();
-            $preferences{$ref_name}{before} = map {
-                s/^Perl\::ToPerl6\::Transformer\:://;
+            $preferences->{$ref_name}{before} = { map {
+                s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
                 $_ => 1
-            } $policy->run_before();
+            } @before };
         }
 
         # Get the list of transformers this module wants to run *before*.
         #
         if ( $policy->can('run_after') ) {
-die "Policy found with preference\n";
-            $preferences{$ref_name}{after} = map {
-                s/^Perl\::ToPerl6\::Transformer\:://;
+            my @after = $policy->run_after();
+            $preferences->{$ref_name}{after} = { map {
+                s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
                 $_ => 1
-            } $policy->run_after();
+            } @after };
         }
     }
 
-    return %preferences;
+    return $preferences;
 }
 
 sub _validate_preferences {
     my ($preferences) = @_;
 
     for my $k ( keys %{ $preferences } ) {
-        if ( $preferences->{$k}{after} ) {
+        if ( $preferences->{$k} and
+             $preferences->{$k}{after} ) {
             for my $_k ( keys %{ $preferences->{$k}{after} } ) {
                 next if exists $preferences->{$_k};
 die "Module $k wanted to run after module $_k, which was not found!\n";
             }
         }
-        if ( $preferences->{$k}{before} ) {
+        if ( $preferences->{$k} and
+             $preferences->{$k}{before} ) {
             for my $_k ( keys %{ $preferences->{$k}{before} } ) {
                 next if exists $preferences->{$_k};
 die "Module $k wanted to run before module $_k, which was not found!\n";
@@ -182,21 +183,21 @@ die "Module $k wanted to run before module $_k, which was not found!\n";
 # preference, then return the list in preference order.
 #
 sub topological_sort {
-    my @policies = @_;
+    my @transformers = @_;
     my @ordered;
 
     my %object;
-    for my $policy ( @policies ) {
-        my $ref_name = ref($policy);
-        $ref_name =~ s/^Perl\::ToPerl6\::Transformer\:://;
+    for my $transformer ( @transformers ) {
+        my $ref_name = ref $transformer;
+        $ref_name =~ s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
 
-        $object{$ref_name} = $policy;
+        $object{$ref_name} = $transformer;
     }
 
-    my %preferences = _collect_preferences(@policies);
-    _validate_preferences(\%preferences);
+    my $preferences = _collect_preferences(@transformers);
+    _validate_preferences($preferences);
 
-    _invert_dependencies(\%preferences);
+    _invert_dependencies($preferences);
 
     # This algorithm can potentially loop if it encounters a cycle in the
     # dependencies.
@@ -216,21 +217,21 @@ sub topological_sort {
     # later on.
     #
     my %final;
-    my $iterations = keys %preferences;
+    my $iterations = keys %{ $preferences };
 
-    while( keys %preferences ) {
+    while( keys %{ $preferences } ) {
         last if $iterations-- <= 0; # DO NOT REMOVE THIS.
-        for my $name ( sort keys %preferences ) {
+        for my $name ( sort keys %{ $preferences } ) {
 
             # If a module needs to run after one or more modules, try to
             # satisfy its request.
             #
-            if ( $preferences{$name}{after} ) {
+            if ( $preferences->{$name}{after} ) {
 
                 # Walk the list of modules it needs to run after.
                 #
                 my $max = 0;
-                for my $_name ( keys %{ $preferences{$name}{after} } ) {
+                for my $_name ( keys %{ $preferences->{$name}{after} } ) {
 
                     # If it needs to run after a module we haven't placed in
                     # order, then abandon the loop.
@@ -248,7 +249,7 @@ sub topological_sort {
                 #
                 if ( $max >= 0 ) {
                    $final{$name} = $max + 1;
-                   delete $preferences{$name};
+                   delete $preferences->{$name};
                 }
             }
 
@@ -257,7 +258,7 @@ sub topological_sort {
             #
             else {
                $final{$name} = 0;
-               delete $preferences{$name};
+               delete $preferences->{$name};
             }
         }
     }
@@ -267,8 +268,8 @@ sub topological_sort {
     # vastly more likely to be the case that we've encountered a cycle.
     # Die, telling the user what happened.
     #
-    if ( keys %preferences ) {
-        die "Found a preference loop among: " . join("\n", keys %preferences);
+    if ( keys %{ $preferences } ) {
+        die "Found a preference loop among: " . join("\n", keys %{ $preferences });
     }
 
     my %inverse;

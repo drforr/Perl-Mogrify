@@ -24,14 +24,19 @@ Readonly::Scalar my $EXPL => q{Transform $1..$n to $0..$n-1};
 #    '$4'     => '$1',
 
 #-----------------------------------------------------------------------------
+#
+# Make sure this is run *after* Variables::FormatSpecialVariables.
+#
 
+sub run_after            { 'Variables::FormatSpecialVariables' }
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Token::Magic') and
-        $_[1]->content =~ / ^ \$ \d+ $ /x
+        $_[1]->content =~ / ^ \$ \d+ $ /x and
+        $_[1]->content > 0
     }
 }
 

@@ -38,8 +38,12 @@ sub transform {
     my $modifiers =
         substr( $elem->content, -$num_modifiers, $num_modifiers, '' );
 
+    # 's' modifier is no longer allowed.
+    #
+    $modifiers =~ s{ s }{}x;
+
     for ( @{ $elem->{sections} } ) {
-        $_->{position} += $num_modifiers + 3;
+        $_->{position} += length($modifiers) + 3;
     }
 
     my $new_content = $elem->content;
