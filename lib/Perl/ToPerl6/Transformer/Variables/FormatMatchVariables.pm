@@ -35,8 +35,7 @@ sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Token::Magic') and
-        $_[1]->content =~ / ^ \$ \d+ $ /x and
-        $_[1]->content > 0
+        $_[1]->content =~ / ^ \$ \d+ $ /x
     }
 }
 
@@ -47,6 +46,8 @@ sub transform {
     my $old_content = $elem->content;
 
     $old_content =~ m/ ^ \$ (\d+) $ /x;
+
+    return if $1 <= 0;
 
     my $new_content = q{$} . ($1 - 1);
 

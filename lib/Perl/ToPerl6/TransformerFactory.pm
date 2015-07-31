@@ -605,6 +605,19 @@ internally, but may be useful to you in some way.
 
 =over
 
+=item C<topological_sort( @transformers )>
+
+Given a list of Transformer objects, reorder them into the order they need to
+be run. Variables::FormatSpecialVariables needs to reformat $0 before
+Variables::FormatMatchVariables transforms $1 into $0, for example. If you need
+to specify that a Transformer must be run before or after a given transformer
+or list of transformers, then in your Transformer create a C<sub run_before()>
+and/or C<sub run_after()> which returns a list of transformers that it must
+run before and/or after.
+
+If a transformer you specified doesn't exist, your transformer code should
+still run, but with a warning.
+
 =item C<site_policy_names()>
 
 Returns a list of all the Transformer modules that are currently installed
@@ -618,12 +631,17 @@ have been installed.
 
 =head1 AUTHOR
 
+Jeffrey Goff <drforr@pobox.com>
+
+
+=head1 AUTHOR EMERITUS
+
 Jeffrey Ryan Thalhammer <jeff@imaginative-software.com>
 
 
 =head1 COPYRIGHT
 
-Copyright (c) 2005-2011 Imaginative Software Systems.  All rights reserved.
+Copyright (c) 2015 Jeffrey Goff. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.  The full text of this license
