@@ -34,12 +34,12 @@ our $VERSION = '0.01';
 transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
 
 __DATA__
-## name: No variables, case-folding, escapes or braces
-qq{Hello, "world"! This (kinda complex) ['no, really?'] should->not be altered.}
-qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./<>?}
+## name: No variables, case-folding, escapes, pointy blocks or braces
+qq{Hello, "world"! This (kinda complex) ['no, really?'] should-not be altered.}
+qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./?}
 ##-->
-qq{Hello, "world"! This (kinda complex) ['no, really?'] should->not be altered.}
-qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./<>?}
+qq{Hello, "world"! This (kinda complex) ['no, really?'] should-not be altered.}
+qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./?}
 ## name: \v is no longer a metacharacter
 qq{\v}
 qq{\v|\value}
@@ -79,21 +79,17 @@ qq{\o17}
 qq{\o|\o1|\o8|\o[]|\o[12]|\o[18]}
 qq{\0|\017|\018|\08}
 ## name: simple variables
-qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
-qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
+qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}|$a->{a}|$a->{'a'}|$a->{"a"}}
+qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}]|[$a->{a}]|[$a->{'a'}]|[$a->{"a"}}
 ##-->
-qq{$a|${a}|$a{a}|$a{'a'}|$a{"a"}}
-qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}}
+qq{$a|{$a}|$a{qq{a}}|$a{'a'}|$a{"a"}|$a.{qq{a}}|$a.{'a'}|$a.{"a"}}
+qq{$a]|[{$a}]|[$a{qq{a}}]|[$a{'a'}]|[$a{"a"}]|[$a.{qq{a}}]|[$a.{'a'}]|[$a.{"a"}}
 ## name: mix backslash and regular
-qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}}
-qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}}
+qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}|$a->{a}}
+qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}]|[$a->{'a'}}
 ##-->
-qq{\$a|\$\{a\}|$a{a}|\$a\{'a'\}|\$a\{"a"\}}
-qq{\$a]|[\$\{a\}]|[$a{a}]|[\$a\{'a'\}]|[\$a\{"a"\}}
-## name: Check that \l,\u and friends aren't escaped inside variables.
-qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
-##-->
-qq{$a\l|\l${\ua}\l|\l$a{\La\E}\l|\l$a{\Q'a'\E}\l|\l$a{"a"}}
+qq{\$a|\$\{a\}|$a{qq{a}}|\$a\{'a'\}|\$a\{"a"\}|$a.{qq{a}}}
+qq{\$a]|[\$\{a\}]|[$a{qq{a}}]|[\$a\{'a'\}]|[\$a\{"a"\}]|[$a.{'a'}}
 ## name: regressions
 return "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}";
 $s .= sprintf(" @ %$f/s (n=$n)",$n/($elapsed)) if $n && $elapsed;
@@ -102,17 +98,17 @@ is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' );
 is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"');
 sub stringify { "${$_[0]}" }
 "sections=s@"
-print $out "@[\n";
-return "_alternation_${impcount}_of_production_${prodcount}_of_rule_$self->{name}";
-Parse::RecDescent::_error("Incomplete <$next->{type}op:...>.", $line);
+print $out "@[\n"
+"_alternation_${impcount}_of_production_${prodcount}_of_rule_$self->{name}"
+"Incomplete <$next->{type}op:...>."
 ##-->
 return "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}";
 $s .= sprintf(" @ %$f/s (n=$n)",$n/($elapsed)) if $n && $elapsed;
 is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' );
 "my \$E; \{ local \$@; \}"
 is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"');
-sub stringify { "${$_[0]}" }
+sub stringify { "{$$_[0]}" }
 "sections=s@"
-print $out "@[\n";
-return "_alternation_{$impcount}_of_production_{$prodcount}_of_rule_$self.{'name'}";
-Parse::RecDescent::_error("Incomplete \<$next->{type}op:...\>.", $line);
+print $out "@[\n"
+"_alternation_{$impcount}_of_production_{$prodcount}_of_rule_$self.{"name"}"
+"Incomplete \<$next.{"type"}op:...\>."

@@ -39,8 +39,7 @@ sub transform {
     my ($self, $elem, $doc) = @_;
     my $head = $elem;
 
-    while ( $head->snext_sibling ) {
-        $head = $head->snext_sibling;
+    while ( $head = $head->snext_sibling ) {
         next unless $head->isa('PPI::Structure::Subscript') and
                     $head->start eq '[';
         if ( $head->schild(0)->isa('PPI::Statement::Expression') ) {
