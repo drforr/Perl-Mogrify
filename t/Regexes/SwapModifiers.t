@@ -54,3 +54,7 @@ s:P5(foo)(bar)
 s:i:P5/foo/bar/
 s:i:P5{foo}<bar>
 s:i:P5(foo)(bar)
+## name: regression
+s/Parse::RecDescent/$runtime_package/gs;
+##-->
+s:P5/Parse::RecDescent/$runtime_package/;

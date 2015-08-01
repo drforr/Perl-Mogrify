@@ -26,3 +26,7 @@ $a[1]
 $a[*-2]
 $a{x}[*-2]
 $a[$x-2]
+## name: regression
+unless $self->{items}[-1]->describe =~ /<score/;
+##-->
+unless $self->{items}[*-1]->describe =~ /<score/;

@@ -19,6 +19,7 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
+sub run_after            { return 'Operators::FormatOperators' }
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }

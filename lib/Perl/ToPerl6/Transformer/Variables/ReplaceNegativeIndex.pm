@@ -29,7 +29,9 @@ sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Token::Symbol') and
         $_[1]->snext_sibling and
-        $_[1]->snext_sibling->isa('PPI::Structure::Subscript')
+        ( $_[1]->snext_sibling->isa('PPI::Structure::Subscript') or
+          $_[1]->snext_sibling->isa('PPI::Token::Operator') )
+          
     }
 }
 
