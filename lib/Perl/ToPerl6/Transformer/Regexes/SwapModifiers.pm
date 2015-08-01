@@ -41,7 +41,7 @@ sub transform {
 
     # 's' and 'g' modifiers are no longer allowed.
     #
-    $modifiers =~ y{sg}{}d;
+    $modifiers =~ s{[sg]}{}g;
 
     for ( @{ $elem->{sections} } ) {
         $_->{position} += length($modifiers) + 3;

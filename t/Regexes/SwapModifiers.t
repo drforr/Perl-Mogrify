@@ -36,8 +36,10 @@ m:i:P5/foo/ and 1
 m:i:P5<foo>
 ## name: drop unused modifiers
 m/foo/gs
+s/foo/bar/gs
 ##-->
 m:P5/foo/
+s:P5/foo/bar/
 ## name: substitute
 s/foo/bar/
 s{foo}<bar>
