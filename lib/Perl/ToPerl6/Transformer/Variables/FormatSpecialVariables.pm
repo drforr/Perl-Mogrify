@@ -96,6 +96,7 @@ my %map = (
     '@INC'             => '@*INC', # XXX remember $INC[...]
     '$SIG{__WARN__}'   => '$*ON_WARN', # XXX Note it's not the actual %SIG
     '$SIG{__DIE__}'    => '$*ON_DIE', # XXX Note it's not the actual %SIG
+    '$@'               => '$!', # XXX May not be as appropriate.
 );
 
 #-----------------------------------------------------------------------------

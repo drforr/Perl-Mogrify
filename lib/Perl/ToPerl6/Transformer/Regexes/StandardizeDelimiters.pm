@@ -32,6 +32,7 @@ sub applies_to           {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
+die "HEY\n";
 
     my @content;
     for ( @{ $elem->{sections} } ) {

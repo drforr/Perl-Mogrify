@@ -17,6 +17,7 @@ __DATA__
 ## name: match transformed
 /foo/
 m/foo/
+m#foo#
 m gfoog
 m gfoog if 1
 m gfoog and 1
@@ -26,6 +27,7 @@ m f\foof
 m f\f/oof
 ##-->
 /foo/
+m/foo/
 m/foo/
 m/foo/
 m/foo/ if 1
