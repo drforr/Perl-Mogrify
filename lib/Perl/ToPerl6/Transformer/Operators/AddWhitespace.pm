@@ -20,7 +20,7 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-my %map = (
+my %after = (
     and  => 1,
     or   => 1,
     xor  => 1,
@@ -31,7 +31,16 @@ my %map = (
     le   => 1,
     ge   => 1,
     eq   => 1,
-    ne   => 1
+    ne   => 1,
+);
+
+my %before = (
+    '<'  => 1
+);
+
+my %map = (
+    %after,
+    %before
 );
 
 #-----------------------------------------------------------------------------
@@ -41,8 +50,7 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_token_operator($_[1],%map) and
-        not $_[1]->next_sibling->isa('PPI::Token::Whitespace')
+        is_ppi_token_operator($_[1],%map)
     }
 }
 
@@ -51,9 +59,20 @@ sub applies_to           {
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    $elem->insert_after(
-        PPI::Token::Whitespace->new(' ')
-    );
+    if ( $before{$elem->content} and
+         $elem->previous_sibling and
+         not( $elem->previous_sibling->isa('PPI::Token::Whitespace') ) ) {
+        $elem->insert_before(
+            PPI::Token::Whitespace->new(' ')
+        );
+    }
+    elsif ( $after{$elem->content} and
+         $elem->next_sibling and
+         not( $elem->next_sibling->isa('PPI::Token::Whitespace') ) ) {
+        $elem->insert_after(
+            PPI::Token::Whitespace->new(' ')
+        );
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

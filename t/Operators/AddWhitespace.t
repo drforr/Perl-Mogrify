@@ -18,7 +18,9 @@ __DATA__
 1 and 1
 1 and( 1 )
 1 and ( 1 )
+$x{'a'}<1
 ##-->
 1 and 1
 1 and ( 1 )
 1 and ( 1 )
+$x{'a'} <1
