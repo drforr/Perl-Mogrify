@@ -293,6 +293,10 @@
          "file" : "lib/Perl/ToPerl6/Transformer/FormatSpecialLiterals.pm",
          "version" : "0.02"
       },
+      "Perl::ToPerl6::Transformer::Instances::Creation" : {
+         "file" : "lib/Perl/ToPerl6/Transformer/Instances/Creation.pm",
+         "version" : "0.02"
+      },
       "Perl::ToPerl6::Transformer::Operators::AddWhitespace" : {
          "file" : "lib/Perl/ToPerl6/Transformer/Operators/AddWhitespace.pm",
          "version" : "0.02"

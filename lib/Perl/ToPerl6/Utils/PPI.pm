@@ -58,7 +58,9 @@ my @conversions = sort { length($b) <=> length($a) } (
     'r', 'mr', 'sr', 'tr',       # Regular expressions
     's', 'ds', 'ls', 'ss', 'is', # Strings
     'v', 'av', 'gv', 'hv', 'sv', # Variables
+    'L',                         # List
     'P',                         # Generic PPI token
+    'W',                         # Word
 );
 my $conversions_re = join '|', @conversions;
 my %conversion_type = (
@@ -78,11 +80,13 @@ my %conversion_type = (
     is => 'PPI::Token::Quote::Interpolate',
     ls => 'PPI::Token::Quote::Literal',
     ss => 'PPI::Token::Quote::Single',
-    v =>  'PPI::Token::Symbol',
+    v  => 'PPI::Token::Symbol',
     av => 'PPI::Token::Symbol', # Must be smarter later.
     gv => 'PPI::Token::Symbol',
     hv => 'PPI::Token::Symbol',
     sv => 'PPI::Token::Symbol',
+    L  => 'PPI::Structure::List',
+    W  => 'PPI::Token::Word',
 );
 
 sub _retokenize {
@@ -655,7 +659,7 @@ interface will go through a deprecation cycle.
     'I' -
     'J' -
     'K' -
-    'L' -
+    'L' - A list.
     'M' -
     'N' -
     'O' -
