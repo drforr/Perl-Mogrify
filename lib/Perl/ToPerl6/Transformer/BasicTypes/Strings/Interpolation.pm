@@ -252,23 +252,23 @@ warn "Interpolating perl code.";
         my ( $v, $la1 ) = @tokens[$i,$i+1];
 
         if ( $v =~ m< ^ ( \$ | \@ ) >x ) {
-            if ( $v =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>x ) {
+            if ( $v =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>sx ) {
             }
             else {
                 $v =~ s< [-][\>] ><.>gx;
-                $v =~ s< \{ (\w+) \} >< '{' .
+                $v =~ s< \{ (\w+) (\s*) \} >< '{' .
                                         $start_delimiter . $1 .
-                                        $end_delimiter .
-                                        '}'>egx;
+                                        $end_delimiter . $2 .
+                                        '}'>segx;
             }
         }
         else {
             # < > is now a pointy block, { } is now a code block.
             # We have to escape both of those types.
-            $v =~ s< { ><\\{>gx;
-            $v =~ s{ < }{\\<}gx;
-            $v =~ s{ > }{\\>}gx;
-            $v =~ s< } ><\\}>gx;
+            $v =~ s< { ><\\{>sgx;
+            $v =~ s{ < }{\\<}sgx;
+            $v =~ s{ > }{\\>}sgx;
+            $v =~ s< } ><\\}>sgx;
         }
         $new_content .= $v;
     }

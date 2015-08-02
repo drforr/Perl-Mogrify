@@ -84,6 +84,20 @@ qq{$a]|[${a}]|[$a{a}]|[$a{'a'}]|[$a{"a"}]|[$a->{a}]|[$a->{'a'}]|[$a->{"a"}}
 ##-->
 qq{$a|{$a}|$a{qq{a}}|$a{'a'}|$a{"a"}|$a.{qq{a}}|$a.{'a'}|$a.{"a"}}
 qq{$a]|[{$a}]|[$a{qq{a}}]|[$a{'a'}]|[$a{"a"}]|[$a.{qq{a}}]|[$a.{'a'}]|[$a.{"a"}}
+## name: variable, interrupted
+qq{${a
+}}
+qq{$a{a
+}}
+qq{$a{'a'
+}}
+##-->
+qq{{$a
+}}
+qq{$a{qq{a}
+}}
+qq{$a{'a'
+}}
 ## name: mix backslash and regular
 qq{\$a|\${a}|$a{a}|\$a{'a'}|\$a{"a"}|$a->{a}}
 qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}]|[$a->{'a'}}
