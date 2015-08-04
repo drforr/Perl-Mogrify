@@ -20,7 +20,27 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-my %map = (
+my %after = (
+    and  => 1,
+    or   => 1,
+    xor  => 1,
+    not  => 1,
+    cmp  => 1,
+    lt   => 1,
+    gt   => 1,
+    le   => 1,
+    ge   => 1,
+    eq   => 1,
+    ne   => 1,
+);
+
+my %before = (
+    '<'   => 1,
+    '<='  => 1,
+    '<=>' => 1,
+);
+
+my %mutate = (
     # From the unary operators:
     #
     # '++', '--' are unchanged.
@@ -72,7 +92,7 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_token_operator($_[1], %map)
+        is_ppi_token_operator($_[1], %mutate, %before, %after)
     }
 }
 
@@ -100,7 +120,8 @@ sub transform {
 
     my $old_content = $elem->content;
 
-    $elem->set_content( $map{$old_content} );
+    $elem->set_content( $mutate{$old_content} ) if
+        exists $mutate{$old_content};;
 
     if ( $old_content eq '=>' ) { # XXX This is a special case.
     }
@@ -116,9 +137,6 @@ $elem->set_content('ff XXX');
         # Scalar version is now 'fff'
 $elem->set_content('fff XXX');
     }
-    elsif ( exists $map{$old_content} ) {
-        $elem->set_content( $map{$old_content} );
-    }
 
     if ( $elem->content eq '.' ) {
         $elem->next_sibling->remove if
@@ -127,6 +145,21 @@ $elem->set_content('fff XXX');
         $elem->previous_sibling->remove if
             $elem->previous_sibling and
             $elem->previous_sibling->isa('PPI::Token::Whitespace');
+    }
+
+    if ( $before{$elem->content} and
+         $elem->previous_sibling and
+         not( $elem->previous_sibling->isa('PPI::Token::Whitespace') ) ) {
+        $elem->insert_before(
+            PPI::Token::Whitespace->new(' ')
+        );
+    }
+    elsif ( $after{$elem->content} and
+         $elem->next_sibling and
+         not( $elem->next_sibling->isa('PPI::Token::Whitespace') ) ) {
+        $elem->insert_after(
+            PPI::Token::Whitespace->new(' ')
+        );
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

@@ -40,7 +40,6 @@ sub applies_to           {
         $_[1]->snext_sibling and
         ( $_[1]->snext_sibling->isa('PPI::Structure::Subscript') or
           $_[1]->snext_sibling->isa('PPI::Token::Operator') )
-          
     }
 }
 
@@ -55,7 +54,7 @@ sub transform {
                     $head->start eq '[';
         if ( $head->schild(0)->isa('PPI::Statement::Expression') ) {
             if ( $head->schild(0)->schild(0)->isa('PPI::Token::Number') and
-                 $head->schild(0)->schild(0)->content < 0 ) {
+                 $head->schild(0)->schild(0)->content =~ /^ [-] /x ) {
                 #
                 # Don't use the operator '*' lest it get confused. This way
                 # the code is still syntactically correct.
@@ -94,6 +93,7 @@ distribution.
 Perl6 uses the new open-ended range notation C<[*-1]> to access the last element of an array:
 
   $x[-1] --> $x[*-1]
+  $x->[-1] --> $x->[*-1]
 
 Transforms variables outside of comments, heredocs, strings and POD.
 

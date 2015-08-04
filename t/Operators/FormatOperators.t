@@ -14,6 +14,14 @@ our $VERSION = '0.01';
 transform_ok( 'Operators::FormatOperators', *DATA );
 
 __DATA__
+## name: whitespace addition
+say 1<1;
+say 1<=1;
+say 1<=>1;
+##-->
+say 1 <1;
+say 1 <=1;
+say 1 <=>1;
 ## name: Unary operators
 ~32;
 ~32 if 1;
