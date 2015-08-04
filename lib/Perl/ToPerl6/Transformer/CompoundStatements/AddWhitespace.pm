@@ -40,7 +40,7 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_statement_compound($_[1],%map)
+        is_ppi_statement_compound($_[1], %map)
     }
 }
 
@@ -73,8 +73,9 @@ sub transform {
     my ($self, $elem, $doc) = @_;
 
     for my $child ( $elem->schildren ) {
-        next unless is_ppi_token_word($child, %map) and
-                    not $child->next_sibling->isa('PPI::Token::Whitespace');
+        next unless is_ppi_token_word($child, %map);
+        next if $child->next_sibling and
+                $child->next_sibling->isa('PPI::Token::Whitespace');
         $child->insert_after(
             PPI::Token::Whitespace->new(' ')
         );

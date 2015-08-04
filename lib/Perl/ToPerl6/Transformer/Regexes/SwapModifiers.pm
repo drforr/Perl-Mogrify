@@ -39,9 +39,9 @@ sub transform {
         substr( $elem->content, -$num_modifiers, $num_modifiers, '' );
     my $old_modifiers = $modifiers;
 
-    # 's' and 'g' modifiers are no longer allowed.
+    # 'g' gets replaced with 'c', 'c' is removed? As is 'o'?
     #
-    $modifiers =~ s{[sg]}{}g;
+    $modifiers =~ s{[sgo]}{}g; # XXX
 
     for ( @{ $elem->{sections} } ) {
         $_->{position} += length($modifiers) + 3;

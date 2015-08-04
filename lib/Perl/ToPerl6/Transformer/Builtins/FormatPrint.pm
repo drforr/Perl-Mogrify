@@ -93,6 +93,8 @@ sub _is_almost_end_of_print_expression {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
+    return unless $elem->snext_sibling and
+                  $elem->snext_sibling->snext_sibling;
 
     my $token = $elem->snext_sibling->snext_sibling;
 

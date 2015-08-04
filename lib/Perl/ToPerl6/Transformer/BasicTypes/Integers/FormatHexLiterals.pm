@@ -25,11 +25,9 @@ sub applies_to           { return 'PPI::Token::Number::Hex' }
 
 #-----------------------------------------------------------------------------
 
-#
-# 0x1_2eF -> :16<1_2ef>
-#
 sub transform {
     my ($self, $elem, $doc) = @_;
+    return unless $elem and $elem->content; # XXX Shouldn't be required, but it is.
 
     my $old_content = $elem->content;
 
