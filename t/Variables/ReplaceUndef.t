@@ -21,4 +21,4 @@ $x = Any;
 ## name: regression
 undef $a{'a'};
 ##-->
-$a{'a'} = Any;
+$a{'a'}:delete;

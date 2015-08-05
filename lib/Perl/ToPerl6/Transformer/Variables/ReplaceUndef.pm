@@ -46,7 +46,21 @@ sub applies_to           {
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    $elem->set_content('Any');
+    if ( $elem->snext_sibling and
+         $elem->snext_sibling->isa('PPI::Token::Symbol') and
+         $elem->snext_sibling->snext_sibling and
+         $elem->snext_sibling->snext_sibling->isa('PPI::Structure::Subscript') ) {
+        $elem->snext_sibling->snext_sibling->insert_after(
+            PPI::Token::Word->new(':delete')
+        );
+        $elem->next_sibling->delete if
+            $elem->next_sibling and
+            $elem->next_sibling->isa('PPI::Token::Whitespace');
+        $elem->remove;
+    }
+    else {
+        $elem->set_content('Any');
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }
