@@ -30,6 +30,65 @@ sub applies_to           {
 }
 
 #-----------------------------------------------------------------------------
+
+# Tokenizer II: Electric Boogaloo.
+#
+# Since it'll eventually be needed...
+
+sub tokenize {
+    my ( $str ) = @_;
+    my @c = split //, $str;
+    my @token;
+
+    for ( my $i = 0; $i < @c; $i++ ) {
+        my ( $v, $la1 ) = @c[ $i, $i + 1 ];
+
+        if ( $v eq '\\' ) {
+            if ( $la1 eq 'c' ) {
+            }
+            elsif ( $la1 eq 'l' ) {
+            }
+            elsif ( $la1 eq 'u' ) {
+            }
+            elsif ( $la1 eq 'E' ) {
+            }
+            elsif ( $la1 eq 'F' ) {
+            }
+            elsif ( $la1 eq 'L' ) {
+            }
+            elsif ( $la1 eq 'Q' ) {
+            }
+            elsif ( $la1 eq 'U' ) {
+            }
+            else {
+            }
+        }
+        elsif ( $v eq '$' ) {
+        }
+        elsif ( $v eq '@' ) {
+        }
+        elsif ( $v eq '%' ) {
+        }
+        elsif ( $v eq '{' ) {
+        }
+        elsif ( $v eq '}' ) {
+        }
+        elsif ( $v eq '(' ) {
+        }
+        elsif ( $v eq ')' ) {
+        }
+        elsif ( $v eq '<' ) {
+        }
+        elsif ( $v eq '>' ) {
+        }
+        else {
+        }
+    }
+
+    return @token;
+}
+
+#-----------------------------------------------------------------------------
 #
 # Some more cases get folded away here (hee.)
 # \U foo \L\E bar \E - 'bar' will get altered here.
@@ -77,6 +136,10 @@ unless ( --$iter  ) {
         if ( $string =~ s< ^ ( [\$\@] \{ [^}]+ \} ) ><>x ) {
             push @tokens, $1;
         }
+
+        # '\c' is a token on its own.
+        # '$\', '@\', '$ ', '@ ' is also its own token. Feels buggy though.
+        #
         elsif ( $string =~ s< ^ ( \\ c . ) ><>x or
                 $string =~ s< ^ ( [\$\@] (?: \\ | \s ) ) ><>x ) {
             if ( @tokens ) {
@@ -86,6 +149,10 @@ unless ( --$iter  ) {
                 push @tokens, $1;
             }
         }
+
+        # Anything that does *not* start with '$' or '@' is its own token,
+        # at least up until the next '$' or '@' encountered.
+        #
         elsif ( $string =~ s< ^ ( [^\$\@]+ ) ><>x ) {
             $residue .= $1;
 
@@ -104,6 +171,9 @@ unless ( --$iter  ) {
             }
             push @tokens, $self->casefold($residue);
         }
+
+        # Anything else starting with a '$' or '@' is fair game.
+        #
         elsif ( $string =~ m< ^ [\$\@] >x ) {
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );
@@ -246,13 +316,14 @@ warn "Interpolating perl code.";
     # So, rather than having to retain case settings, we can simply stop the
     # lc(..) block after the first...
     #
-
     my $new_content;
     for ( my $i = 0; $i < @tokens; $i++ ) {
         my ( $v, $la1 ) = @tokens[$i,$i+1];
 
         if ( $v =~ m< ^ ( \$ | \@ ) >x ) {
-            if ( $v =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>sx ) {
+            if ( $v =~ s< ^ \$ \@ ><\\\$\@>x ) {
+            }
+            elsif ( $v =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>sx ) {
             }
             else {
                 $v =~ s< [-][\>] ><.>gx;
@@ -261,14 +332,16 @@ warn "Interpolating perl code.";
                                         $end_delimiter . $2 .
                                         '}'>segx;
             }
+
+            $v =~ s< ^ ( [(<>)] ) ><\\$1>sgx;
+            $v =~ s< ( [^\\] ) ( [(<>)] ) ><$1\\$2>sgx;
         }
         else {
-            # < > is now a pointy block, { } is now a code block.
-            # We have to escape both of those types.
-            $v =~ s< { ><\\{>sgx;
-            $v =~ s{ < }{\\<}sgx;
-            $v =~ s{ > }{\\>}sgx;
-            $v =~ s< } ><\\}>sgx;
+            # < > is now a pointy block, { } is now a code block, ( ) is also
+            # used.
+            #
+            $v =~ s< ^ ( [{(<>)}] ) ><\\$1>sgx;
+            $v =~ s< ( [^\\] ) ( [{(<>)}] ) ><$1\\$2>sgx;
         }
         $new_content .= $v;
     }

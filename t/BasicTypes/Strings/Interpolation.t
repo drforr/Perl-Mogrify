@@ -35,11 +35,9 @@ transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
 
 __DATA__
 ## name: No variables, case-folding, escapes, pointy blocks or braces
-qq{Hello, "world"! This (kinda complex) ['no, really?'] should-not be altered.}
-qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./?}
+qq{Hello, "world"! This (kinda complex) ['no, really?'] should-be altered.}
 ##-->
-qq{Hello, "world"! This (kinda complex) ['no, really?'] should-not be altered.}
-qq{`1234567890-=~!#%^&*()_+a-zA-Z[]|;':",./?}
+qq{Hello, "world"! This \(kinda complex\) ['no, really?'] should-be altered.}
 ## name: \v is no longer a metacharacter
 qq{\v}
 qq{\v|\value}
@@ -105,24 +103,32 @@ qq{\$a]|[\${a}]|[$a{a}]|[\$a{'a'}]|[\$a{"a"}]|[$a->{'a'}}
 qq{\$a|\$\{a\}|$a{qq{a}}|\$a\{'a'\}|\$a\{"a"\}|$a.{qq{a}}}
 qq{\$a]|[\$\{a\}]|[$a{qq{a}}]|[\$a\{'a'\}]|[\$a\{"a"\}]|[$a.{'a'}}
 ## name: regressions
-return "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}";
-$s .= sprintf(" @ %$f/s (n=$n)",$n/($elapsed)) if $n && $elapsed;
-is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' );
+"$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}"
+" @ %$f/s (n=$n)"
+is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' )
 "my \$E; { local \$@; }"
-is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"');
-sub stringify { "${$_[0]}" }
+is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"')
+"${$_[0]}"
 "sections=s@"
-print $out "@[\n"
+"@[\n"
 "_alternation_${impcount}_of_production_${prodcount}_of_rule_$self->{name}"
 "Incomplete <$next->{type}op:...>."
+"Incorrect token specification: \"$@\""
+"\<leftop='$name(s?)': $name $2 $name\>(s?) "
+"$code$argcode($1..)"
+"\<leftop='$name(..$1)': $name $2 $name\>(..$1) "
 ##-->
-return "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}";
-$s .= sprintf(" @ %$f/s (n=$n)",$n/($elapsed)) if $n && $elapsed;
-is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' );
+"$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}"
+" @ %$f/s \(n=$n\)"
+is( "\$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' )
 "my \$E; \{ local \$@; \}"
-is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"');
-sub stringify { "{$$_[0]}" }
+is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"')
+"{$$_[0]}"
 "sections=s@"
-print $out "@[\n"
+"@[\n"
 "_alternation_{$impcount}_of_production_{$prodcount}_of_rule_$self.{"name"}"
 "Incomplete \<$next.{"type"}op:...\>."
+"Incorrect token specification: \"\$@\""
+"\<leftop='$name\(s?\)': $name $2 $name\>\(s?\) "
+"$code$argcode\($1..\)"
+"\<leftop='$name\(..$1\)': $name $2 $name\>\(..$1\) "
