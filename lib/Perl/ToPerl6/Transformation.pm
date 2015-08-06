@@ -22,7 +22,7 @@ use Perl::ToPerl6::Utils::POD qw<
 >;
 use Perl::ToPerl6::Exception::Fatal::Internal qw< throw_internal >;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 Readonly::Scalar my $LOCATION_LINE_NUMBER               => 0;

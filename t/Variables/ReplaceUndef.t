@@ -20,5 +20,7 @@ $x = undef;
 $x = Any;
 ## name: regression
 undef $a{'a'};
+undef $a->{'a'};
 ##-->
 $a{'a'}:delete;
+$a.{'a'}:delete;

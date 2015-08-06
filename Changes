@@ -1,5 +1,9 @@
 Revision history for Perl module Perl::ToPerl6
 
+0.03 2015-06-08
+
+    * Many bug fixes, a few new translators as the need is discovered
+
 0.02 2014-07-27
 
     * Fix interpolation issues, add regression tests

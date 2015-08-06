@@ -20,7 +20,7 @@ use Perl::ToPerl6::Utils::PPI qw< is_ppi_expression_or_generic_statement >;
 
 use Exporter 'import';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 # Exportable symbols here.

@@ -10,7 +10,7 @@ use Perl::ToPerl6::Utils qw{ :characters &words_from_string &hashify };
 
 use base qw{ Perl::ToPerl6::TransformerParameter::Behavior };
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 

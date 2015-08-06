@@ -40,7 +40,7 @@ use Perl::ToPerl6::Transformation qw<>;
 
 use Exception::Class;   # this must come after "use P::C::Exception::*"
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 

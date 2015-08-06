@@ -10,7 +10,7 @@ use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 

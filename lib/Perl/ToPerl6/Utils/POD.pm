@@ -17,7 +17,7 @@ use Perl::ToPerl6::Utils qw< :characters >;
 
 use Exporter 'import';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 

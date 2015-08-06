@@ -32,3 +32,9 @@ Foo::Bar->new();
 Foo->new ();
 Foo->new('bar');
 $item = Parse::RecDescent::InterpLit->new($0,$lookahead,$line);
+## name: regression
+$self->{_AUTOACTION}
+    = new Parse::RecDescent::Action($sourcecode,0,-1)
+##-->
+$self->{_AUTOACTION}
+    = Parse::RecDescent::Action->new($sourcecode,0,-1)

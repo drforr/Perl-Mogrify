@@ -2,6 +2,9 @@
 bin/perlmogrify
 Build.PL
 Changes
+Compile-Me.pm
+Compile-Me.pm.pl6
+dist.ini
 examples/perlmogrifyrc
 inc/Devel/AssertOS.pm
 inc/Devel/AssertOS/Solaris.pm
@@ -49,6 +52,7 @@ lib/Perl/ToPerl6/Transformer/BasicTypes/Integers/FormatBinaryLiterals.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Integers/FormatHexLiterals.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Integers/FormatOctalLiterals.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Rationals/FormatRationals.pm
+lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/AddWhitespace.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/FormatHereDocs.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/FormatRegexp.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/FormatShellStrings.pm
@@ -62,9 +66,9 @@ lib/Perl/ToPerl6/Transformer/CompoundStatements/FormatMapGreps.pm
 lib/Perl/ToPerl6/Transformer/CompoundStatements/FormatUntils.pm
 lib/Perl/ToPerl6/Transformer/CompoundStatements/RenameForeach.pm
 lib/Perl/ToPerl6/Transformer/CompoundStatements/SwapForArguments.pm
-lib/Perl/ToPerl6/Transformer/FormatConstants.pm
 lib/Perl/ToPerl6/Transformer/FormatSpecialLiterals.pm
 lib/Perl/ToPerl6/Transformer/Instances/Creation.pm
+lib/Perl/ToPerl6/Transformer/Operators/AddWhitespace.pm
 lib/Perl/ToPerl6/Transformer/Operators/FormatOperators.pm
 lib/Perl/ToPerl6/Transformer/Packages/FormatPackageDeclarations.pm
 lib/Perl/ToPerl6/Transformer/Packages/FormatPackageUsages.pm
@@ -79,6 +83,7 @@ lib/Perl/ToPerl6/Transformer/Variables/FormatHashKeys.pm
 lib/Perl/ToPerl6/Transformer/Variables/FormatMatchVariables.pm
 lib/Perl/ToPerl6/Transformer/Variables/FormatSigils.pm
 lib/Perl/ToPerl6/Transformer/Variables/FormatSpecialVariables.pm
+lib/Perl/ToPerl6/Transformer/Variables/ReplaceNegativeIndex.pm
 lib/Perl/ToPerl6/Transformer/Variables/ReplaceUndef.pm
 lib/Perl/ToPerl6/TransformerConfig.pm
 lib/Perl/ToPerl6/TransformerFactory.pm
@@ -109,6 +114,7 @@ t/01_config.t
 t/01_config_bad_perlmogrifyrc.t
 t/01_transformer_config.t
 t/02_transformer.t
+t/02_transformer_ordering.t
 t/03_annotations.t
 t/03_pragmas.t
 t/04_options_processor.t
@@ -144,6 +150,7 @@ t/BasicTypes/Integers/FormatBinaryLiterals.t
 t/BasicTypes/Integers/FormatHexLiterals.t
 t/BasicTypes/Integers/FormatOctalLiterals.t
 t/BasicTypes/Rationals/FormatRationals.t
+t/BasicTypes/Strings/AddWhitespace.t
 t/BasicTypes/Strings/FormatHereDocs.t
 t/BasicTypes/Strings/FormatRegexp.t
 t/BasicTypes/Strings/FormatShellStrings.t
@@ -157,13 +164,14 @@ t/CompoundStatements/FormatMapGreps.t
 t/CompoundStatements/FormatUntils.t
 t/CompoundStatements/RenameForeach.t
 t/CompoundStatements/SwapForArguments.t
-t/FormatConstants.pm
 t/FormatSpecialLiterals.pm
+t/Instances/Creation.t
 t/Operators/AddWhitespace.t
 t/Operators/FormatOperators.t
 t/Packages/FormatPackageDeclarations.t
 t/Packages/FormatPackageUsages.t
 t/PostfixExpressions/AddWhitespace.t
+t/Pragmas/FormatConstants.t
 t/Pragmas/FormatPragmas.t
 t/References/FormatDereferences.t
 t/Regexes/StandardizeDelimiters.t
@@ -173,6 +181,8 @@ t/Variables/FormatHashKeys.t
 t/Variables/FormatMatchVariables.t
 t/Variables/FormatSigils.t
 t/Variables/FormatSpecialVariables.t
+t/Variables/ReplaceNegativeIndex.t
+t/Variables/ReplaceUndef.t
 tools/ppidump
 README
 META.yml

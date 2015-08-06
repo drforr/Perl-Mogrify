@@ -10,7 +10,7 @@ use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
@@ -27,17 +27,13 @@ my %map = (
 
 #-----------------------------------------------------------------------------
 
+sub run_after            { return 'Operators::FormatOperators' }
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST  }
 sub default_themes       { return qw(core bugs)      }
 sub applies_to           {
     return sub {
-        is_ppi_token_word($_[1], %map) and
-        ( not ( $_[1]->snext_sibling and
-                $_[1]->snext_sibling->isa('PPI::Structure::List') ) ) and
-        ( not ( $_[1]->snext_sibling and
-                $_[1]->snext_sibling->isa('PPI::Token::Operator') and
-                $_[1]->snext_sibling->content eq '=' ) )
+        is_ppi_token_word($_[1], %map)
     }
 }
 
@@ -47,6 +43,20 @@ sub transform {
     my ($self, $elem, $doc) = @_;
 
     if ( $elem->snext_sibling and
+         $elem->snext_sibling->isa('PPI::Token::Symbol') and
+         $elem->snext_sibling->snext_sibling and
+         $elem->snext_sibling->snext_sibling->isa('PPI::Token::Operator') and
+         $elem->snext_sibling->snext_sibling->content eq '->' ) {
+        $elem->snext_sibling->snext_sibling->snext_sibling->insert_after(
+            PPI::Token::Word->new(':delete')
+        );
+        $elem->snext_sibling->snext_sibling->set_content('.');
+        $elem->next_sibling->delete if
+            $elem->next_sibling and
+            $elem->next_sibling->isa('PPI::Token::Whitespace');
+        $elem->remove;
+    }
+    elsif ( $elem->snext_sibling and
          $elem->snext_sibling->isa('PPI::Token::Symbol') and
          $elem->snext_sibling->snext_sibling and
          $elem->snext_sibling->snext_sibling->isa('PPI::Structure::Subscript') ) {
