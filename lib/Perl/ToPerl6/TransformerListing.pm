@@ -47,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::TransformerListing - Display minimal information about Policies.
+Perl::ToPerl6::TransformerListing - Display minimal information about Transformers.
 
 
 =head1 DESCRIPTION

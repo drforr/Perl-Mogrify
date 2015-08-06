@@ -308,7 +308,7 @@ that correspond to the methods listed below.
 This is usually only invoked by
 L<Perl::ToPerl6::UserProfile|Perl::ToPerl6::UserProfile>, which passes
 in the global values from a F<.perlmogrifyrc> file.  This object
-contains no information for individual Policies.
+contains no information for individual Transformers.
 
 =back
 

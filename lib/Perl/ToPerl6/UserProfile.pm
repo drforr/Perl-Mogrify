@@ -382,7 +382,7 @@ configuration parameters for that policy.
 
 =item C< listed_transformers() >
 
-Returns a list of the names of all the Policies that are mentioned in
+Returns a list of the names of all the Transformers that are mentioned in
 the profile.  The Transformer names will be fully qualified (e.g.
 Perl::ToPerl6::Foo).
 

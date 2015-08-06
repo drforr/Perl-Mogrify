@@ -237,8 +237,8 @@ the severity settings at the command-line.  For example:
     perlmogrify --exclude=strict my_file.pl
 
 This would cause C<perlmogrify> to not apply the C<RequireUseStrict> and
-C<ProhibitNoStrict> Policies even though they have the highest severity level.
-You can specify multiple C<--exclude> options and you can use it in
+C<ProhibitNoStrict> Transformers even though they have the highest severity
+level. You can specify multiple C<--exclude> options and you can use it in
 conjunction with the C<--include> option.  Note that C<--exclude> takes
 precedence over C<--include> when a Transformer matches both patterns.  You can set
 the default value for this option in your F<.perlmogrifyrc> file.
@@ -246,9 +246,9 @@ the default value for this option in your F<.perlmogrifyrc> file.
 =item C<--single-policy PATTERN> or C<-s PATTERN>
 
 Directs C<perlmogrify> to apply just one Transformer module matching the regex
-C</PATTERN/ixms>, and exclude all other Policies.  This option has precedence
-over the C<--severity>, C<--theme>, C<--include>, C<--exclude>, and C<--only>
-options.  For example:
+C</PATTERN/ixms>, and exclude all other Transformers.  This option has
+precedence over the C<--severity>, C<--theme>, C<--include>, C<--exclude>, and
+C<--only> options.  For example:
 
     perlmogrify --single-policy=nowarnings my_file.pl
 
@@ -377,8 +377,8 @@ prototype for your F<.perlmogrifyrc> file.
 
 Directs perlmogrify to apply only Transformers that are explicitly mentioned in
 your F<.perlmogrifyrc> file.  This is useful if you want to use just a small
-subset of Policies without having to disable all the others.  You can set the
-default value for this option in your F<.perlmogrifyrc> file.
+subset of Transformers without having to disable all the others.  You can set
+the default value for this option in your F<.perlmogrifyrc> file.
 
 =item C<--profile-strictness {warn|fatal|quiet}>
 
@@ -485,15 +485,15 @@ eredocTerminator"> at the command prompt.
 
 =item C<--allow-unsafe>
 
-This option directs C<perlmogrify> to allow the use of Policies that have been
-marked as "unsafe".  Unsafe Policies may result in risky operations by
-compiling and executing the code they analyze.  All the Policies that ship in
-the core L<Perl::ToPerl6> distribution are safe.  However, third- party
-Policies, such as those in the L<Perl::ToPerl6::Dynamic> distribution are not
-safe. Note that "safety" is honorary -- if a Transformer author marks a Transformer as
-safe, it is not a guarantee that it won't do nasty things.  B<If you don't
-trust your Policies and the code you are analyzing, then do not use this
-switch>.
+This option directs C<perlmogrify> to allow the use of Transformers that have
+been marked as "unsafe".  Unsafe Transformers may result in risky operations by
+compiling and executing the code they analyze.  All the Transformers that ship
+in the core L<Perl::ToPerl6> distribution are safe.  However, third- party
+Transformers, such as those in the L<Perl::ToPerl6::Dynamic> distribution are
+not safe. Note that "safety" is honorary -- if a Transformer author marks a
+Transformer as safe, it is not a guarantee that it won't do nasty things. 
+B<If you don't trust your Transformers and the code you are analyzing, then do
+not use this switch>.
 
 =item C<--quiet>
 
@@ -637,7 +637,7 @@ A simple configuration might look like this:
     [-ValuesAndExpressions::ProhibitMagicNumbers]
 
     #--------------------------------------------------------------
-    # For all other Policies, I accept the default severity,
+    # For all other Transformers, I accept the default severity,
     # so no additional configuration is required for them.
 
 Note that all transformers included with the Perl::ToPerl6 distribution that have
@@ -671,28 +671,28 @@ these distributions.
 =head1 POLICY THEMES
 
 Each Transformer is defined with one or more "themes".  Themes can be used to
-create arbitrary groups of Policies.  They are intended to provide an
-alternative mechanism for selecting your preferred set of Policies. For
-example, you may wish disable a certain set of Policies when analyzing test
+create arbitrary groups of Transformers.  They are intended to provide an
+alternative mechanism for selecting your preferred set of Transformers. For
+example, you may wish disable a certain set of Transformers when analyzing test
 programs.  Conversely, you may wish to enable only a specific subset of
-Policies when analyzing modules.
+Transformers when analyzing modules.
 
-The Policies that ship with Perl::ToPerl6 are have been divided into the
+The Transformers that ship with Perl::ToPerl6 are have been divided into the
 following themes.  This is just our attempt to provide some basic logical
 groupings.  You are free to invent new themes that suit your needs.
 
     THEME             DESCRIPTION
     ------------------------------------------------------------------------
     core              All transformers that ship with Perl::ToPerl6
-    pbp               Policies that come directly from "Perl Best Practices"
-    bugs              Policies that that prevent or reveal bugs
-    certrec           Policies that CERT recommends
-    certrule          Policies that CERT considers rules
-    maintenance       Policies that affect the long-term health of the code
-    cosmetic          Policies that only have a superficial effect
-    complexity        Policies that specificaly relate to code complexity
-    security          Policies that relate to security issues
-    tests             Policies that are specific to test programs
+    pbp               Transformers that come directly from "Perl Best Practices"
+    bugs              Transformers that that prevent or reveal bugs
+    certrec           Transformers that CERT recommends
+    certrule          Transformers that CERT considers rules
+    maintenance       Transformers that affect the long-term health of the code
+    cosmetic          Transformers that only have a superficial effect
+    complexity        Transformers that specificaly relate to code complexity
+    security          Transformers that relate to security issues
+    tests             Transformers that are specific to test programs
 
 Say C<"perlmogrify --list"> to get a listing of all available transformers and the
 themes that are associated with each one.  You can also change the theme for
@@ -700,7 +700,7 @@ any Transformer in your F<.perlmogrifyrc> file.  See the L<"CONFIGURATION"> sect
 for more information about that.
 
 Using the C<--theme> command-line option, you can create an arbitrarily
-complex rule that determines which Policies to apply. Precedence is the same
+complex rule that determines which Transformers to apply. Precedence is the same
 as regular Perl code, and you can use parentheses to enforce precedence as
 well.  Supported operators are:
 
@@ -711,7 +711,7 @@ well.  Supported operators are:
     !           not            'pbp && ! (portability || complexity)'
 
 Theme names are case-insensitive.  If the C<--theme> is set to an empty
-string, then it evaluates as true all Policies.
+string, then it evaluates as true all Transformers.
 
 
 =head1 BENDING THE RULES
@@ -748,8 +748,8 @@ line of code is overlooked.  To direct perlmogrify to ignore the C<"## no
 mogrify"> annotations, use the C<--force> option.
 
 A bare C<"## no mogrify"> annotation disables all the active Transformers.
-If you wish to disable only specific Policies, add a list of Transformer names
-as arguments just as you would for the C<"no strict"> or C<"no warnings">
+If you wish to disable only specific Transformers, add a list of Transformer
+names as arguments just as you would for the C<"no strict"> or C<"no warnings">
 pragma.  For example, this would disable the C<Variables::FormatSigils> and
 C<Variables::FormatHashKeys> transformers until the end of the block or until
 the next C<"## use mogrify"> annotation (whichever comes first):
@@ -777,9 +777,9 @@ comma-separated barewords (i.e. don't use quotes).  The C<"## no mogrify">
 annotations can be nested, and Transformers named by an inner annotation will be
 disabled along with those already disabled an outer annotation.
 
-Some Policies like C<Subroutines::ProhibitExcessComplexity> apply to an entire
-block of code.  In those cases, C<"## no mogrify"> must appear on the line
-where the transformations is reported.  For example:
+Some Transformer like C<Subroutines::ProhibitExcessComplexity> apply to an
+entire block of code.  In those cases, C<"## no mogrify"> must appear on the
+line where the transformations is reported.  For example:
 
     sub complicated_function {  ## no mogrify (ProhibitExcessComplexity)
         # Your code here...

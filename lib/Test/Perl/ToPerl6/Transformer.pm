@@ -399,7 +399,7 @@ __END__
 
 =head1 NAME
 
-Test::Perl::ToPerl6::Transformer - A framework for testing your custom Policies
+Test::Perl::ToPerl6::Transformer - A framework for testing your custom Transformers
 
 =head1 SYNOPSIS
 
@@ -446,8 +446,8 @@ against this module until it has stabilized.
 Loads all the F<*.run> files beneath the C<-test-directory> and runs the
 tests.  If C<-test-directory> is not specified, it defaults to F<t/>.
 C<-transformers> is an optional reference to an array of shortened Transformer names.
-If C<-transformers> specified, only the tests for Policies that match one of the
-C<m/$POLICY_NAME/imx> will be run.
+If C<-transformers> specified, only the tests for Transformers that match one
+of the C<m/$POLICY_NAME/imx> will be run.
 
 
 =back

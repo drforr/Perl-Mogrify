@@ -529,7 +529,7 @@ Perl::ToPerl6::Transformer - Base class for all Transformer modules.
 =head1 DESCRIPTION
 
 Perl::ToPerl6::Transformer is the abstract base class for all Transformer
-objects.  If you're developing your own Policies, your job is to
+objects.  If you're developing your own Transformers, your job is to
 implement and override its methods in a subclass.  To work with the
 L<Perl::ToPerl6|Perl::ToPerl6> engine, your implementation must behave
 as described below.  For a detailed explanation on how to make new
@@ -565,7 +565,7 @@ initialization.
 
 Implementations of this method should return a boolean value
 indicating whether the Transformer should continue to be enabled.  For most
-subclasses, this will always be C<$TRUE>.  Policies that depend upon
+subclasses, this will always be C<$TRUE>.  Transformers that depend upon
 external modules or other system facilities that may or may not be
 available should test for the availability of these dependencies and
 return C<$FALSE> if they are not.

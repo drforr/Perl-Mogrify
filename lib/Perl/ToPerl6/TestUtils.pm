@@ -409,7 +409,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::TestUtils - Utility functions for testing new Policies.
+Perl::ToPerl6::TestUtils - Utility functions for testing new Transformers.
 
 
 =head1 INTERFACE SUPPORT

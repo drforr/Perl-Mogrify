@@ -48,13 +48,13 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::ThemeListing - List the themes of the installed Policies.
+Perl::ToPerl6::ThemeListing - List the themes of the installed Transformers.
 
 
 =head1 DESCRIPTION
 
 This is a helper class that gathers the themes of the installed
-Policies.  There are no user-serviceable parts here.
+Transformers.  There are no user-serviceable parts here.
 
 
 =head1 INTERFACE SUPPORT
