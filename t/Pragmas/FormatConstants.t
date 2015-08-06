@@ -16,17 +16,11 @@ transform_ok( 'Pragmas::FormatConstants', *DATA );
 __DATA__
 ## name: readonly
 Readonly my $x => 1;
-Readonly my @x => (1,2,3);
+Readonly our @x => (1,2,3);
 ##-->
-constant $x = 1;
-constant @x = (1,2,3);
+my constant x = 1;
+our constant x = (1,2,3);
 ## name: constant
 use constant X => 1;
-use constant {
-  Y => 1
-};
 ##-->
 constant X = 1;
-constant {
-  Y = 1
-};

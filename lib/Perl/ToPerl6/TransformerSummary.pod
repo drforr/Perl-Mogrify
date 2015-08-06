@@ -64,10 +64,6 @@ Format for(;;) loops [Default severity 5]
 
 Give variables their proper sigils. [Default severity 5]
 
-=head2 L<Operators::AddWhitespace|Perl::ToPerl6::Transformer::Operators::AddWhitespace>
-
-Add whitespace between conditionals 'if', 'unless' &c and () [Default severity 5]
-
 =head2 L<CompoundStatements::FormatMapGreps|Perl::ToPerl6::Transformer::CompoundStatements::FormatMapGreps>
 
 Format map{}, grep{} [Default severity 5]
@@ -135,10 +131,6 @@ Regexen can no longer have alphanumeric delimiters [Default severity 5]
 =head2 L<BasicTypes::Strings::FormatHereDocs|Perl::ToPerl6::Transformer::BasicTypes::Strings::FormatHereDocs>
 
 Format <<EOF constructs correctly [Default severity 5]
-
-=head2 L<Operators::FormatCircumfixOperators|Perl::ToPerl6::Transformer::Operators::FormatCircumfixOperators>
-
-Format the {}, [], () operators [Default severity 5]
 
 =head2 L<Variables::FormatMatchVariables|Perl::ToPerl6::Transformer::Variables::FormatMatchVariables>
 

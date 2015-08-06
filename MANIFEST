@@ -65,12 +65,11 @@ lib/Perl/ToPerl6/Transformer/CompoundStatements/SwapForArguments.pm
 lib/Perl/ToPerl6/Transformer/FormatConstants.pm
 lib/Perl/ToPerl6/Transformer/FormatSpecialLiterals.pm
 lib/Perl/ToPerl6/Transformer/Instances/Creation.pm
-lib/Perl/ToPerl6/Transformer/Operators/AddWhitespace.pm
-lib/Perl/ToPerl6/Transformer/Operators/FormatCircumfixOperators.pm
 lib/Perl/ToPerl6/Transformer/Operators/FormatOperators.pm
 lib/Perl/ToPerl6/Transformer/Packages/FormatPackageDeclarations.pm
 lib/Perl/ToPerl6/Transformer/Packages/FormatPackageUsages.pm
 lib/Perl/ToPerl6/Transformer/PostfixExpressions/AddWhitespace.pm
+lib/Perl/ToPerl6/Transformer/Pragmas/FormatConstants.pm
 lib/Perl/ToPerl6/Transformer/Pragmas/FormatPragmas.pm
 lib/Perl/ToPerl6/Transformer/References/FormatDereferences.pm
 lib/Perl/ToPerl6/Transformer/Regexes/StandardizeDelimiters.pm

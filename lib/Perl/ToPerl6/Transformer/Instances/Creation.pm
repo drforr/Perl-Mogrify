@@ -6,7 +6,7 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :characters :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word dscanf };
+use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word dscanf make_ppi_structure_list };
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -26,11 +26,11 @@ sub run_before           { return 'Operators::FormatOperators' }
 sub supported_parameters { return () }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-#
-# XXX Yes, yes, more than 'new' can be an indirect object caller.
-#
 sub applies_to           {
-    return dscanf('new %W %L')
+    return sub {
+        dscanf('new %W %L')->(@_) ||
+        dscanf('new %W %s')->(@_)
+    }
 }
 
 #-----------------------------------------------------------------------------
@@ -39,6 +39,24 @@ sub transform {
     my ($self, $elem, $doc) = @_;
 
     my $token = $elem->clone;
+    if ( $elem->snext_sibling->snext_sibling->isa('PPI::Token::Quote') ) {
+        my $new_list = make_ppi_structure_list;
+        my $new_statement = PPI::Statement->new;
+        $new_list->add_element($new_statement);
+        $new_statement->add_element(
+            $elem->snext_sibling->snext_sibling->clone
+        );
+
+        while ( $token and $token->next_sibling ) {
+            last if $token->content eq ',';
+            $new_statement->add_element($token->clone);
+            $token = $token->next_sibling;
+        }
+        $elem->snext_sibling->snext_sibling->remove;
+        $elem->snext_sibling->insert_after($new_list);
+        $elem->snext_sibling->snext_sibling->next_sibling->remove if
+            $elem->snext_sibling->snext_sibling->next_sibling->isa('PPI::Token::Whitespace');
+    }
     $elem->snext_sibling->insert_after($token);
     $elem->snext_sibling->insert_after(
         PPI::Token::Operator->new('->')

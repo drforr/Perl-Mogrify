@@ -24,7 +24,7 @@ sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Token::Regexp') and
-        $_[1]->{sections}[0]{type} =~ /[a-zA-Z0-9]/
+        $_[1]->{sections}[0]{type} =~ /[a-zA-Z0-9#]/
     }
 }
 
@@ -50,6 +50,7 @@ sub transform {
                       join('/', @content) . '/' .
                       $modifiers;
 
+    $elem->{separator} = '/';
     $elem->set_content( $new_content );
 
     return $self->transformation( $DESC, $EXPL, $elem );
