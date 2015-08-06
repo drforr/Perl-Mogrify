@@ -163,7 +163,7 @@ severity = 5
 # them to any Transformer.  If defined, this should be a string of
 # whitespace-delimited words.
 
-[Operators::AddWhitespace]
+[Operators::FormatOperators]
 add_themes = client_foo
 severity   = 3
 

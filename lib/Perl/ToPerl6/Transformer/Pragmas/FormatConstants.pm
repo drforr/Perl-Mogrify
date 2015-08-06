@@ -1,4 +1,4 @@
-package Perl::ToPerl6::Transformer::FormatConstants;
+package Perl::ToPerl6::Transformer::Pragmas::FormatConstants;
 
 use 5.006001;
 use strict;
@@ -9,7 +9,7 @@ use Perl::ToPerl6::Utils qw{ :characters :severities };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 #-----------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ sub applies_to           { return 'PPI::Statement' }
 #-----------------------------------------------------------------------------
 
 my %map = (
-    'my' => 1,
+    'my'  => 1,
     'our' => 1
 );
 
@@ -43,23 +43,29 @@ sub transform {
          $current->content =~ m{^Readonly} ) {
 
         $current->set_content('constant');
+        $current->next_sibling->delete if
+            $current->next_sibling->isa('PPI::Token::Whitespace');
 
         $current = $current->snext_sibling;
 
         if ( exists $map{$current->content} ) {
-            my $scope = PPI::Token::Word->new($current->content);
+            $head->insert_before(
+                PPI::Token::Word->new($current->content)
+            );
 
-            $head->insert_before($scope);
-
-            my $whitespace = PPI::Token::Whitespace->new(' ');
-
-            $head->insert_before($whitespace);
+            $head->insert_before(
+                PPI::Token::Whitespace->new(' ')
+            );
 
             my $temp = $current;
-
             $current = $current->snext_sibling;
 
             $temp->remove;
+        }
+        if ( $current->content =~ / ^ ( \$ | \@ ) /x ) {
+            my $new_content = $current->content;
+            $new_content =~ s< ^ ( \$ | \@ ) ><>x;
+            $current->set_content($new_content);
         }
 
         $current = $current->snext_sibling;
@@ -71,19 +77,15 @@ sub transform {
             $head->snext_sibling->isa('PPI::Token::Word') and
             $head->snext_sibling->content eq 'constant' ) {
 
-        my $new_content = $head->snext_sibling->content;
+        while ( $current->snext_sibling and $current->content ne '=>' ) {
+            $current = $current->snext_sibling;
+        }
+        $current->set_content('=');
 
-        $current = $current->snext_sibling;
-
+        if ( $head->next_sibling->isa('PPI::Token::Whitespace') ) {
+            $head->next_sibling->remove;
+        }
         $head->remove;
-
-        $current = $current->snext_sibling;
-
-        $current->set_content( '$' . $current->content );
-
-        $current->snext_sibling->set_content('=');
-
-        $current = $current->snext_sibling;
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

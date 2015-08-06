@@ -297,14 +297,6 @@
          "file" : "lib/Perl/ToPerl6/Transformer/Instances/Creation.pm",
          "version" : "0.02"
       },
-      "Perl::ToPerl6::Transformer::Operators::AddWhitespace" : {
-         "file" : "lib/Perl/ToPerl6/Transformer/Operators/AddWhitespace.pm",
-         "version" : "0.02"
-      },
-      "Perl::ToPerl6::Transformer::Operators::FormatCircumfixOperators" : {
-         "file" : "lib/Perl/ToPerl6/Transformer/Operators/FormatCircumfixOperators.pm",
-         "version" : "0.02"
-      },
       "Perl::ToPerl6::Transformer::Operators::FormatOperators" : {
          "file" : "lib/Perl/ToPerl6/Transformer/Operators/FormatOperators.pm",
          "version" : "0.02"
@@ -319,6 +311,10 @@
       },
       "Perl::ToPerl6::Transformer::PostfixExpressions::AddWhitespace" : {
          "file" : "lib/Perl/ToPerl6/Transformer/PostfixExpressions/AddWhitespace.pm",
+         "version" : "0.02"
+      },
+      "Perl::ToPerl6::Transformer::Pragmas::FormatConstants" : {
+         "file" : "lib/Perl/ToPerl6/Transformer/Pragmas/FormatConstants.pm",
          "version" : "0.02"
       },
       "Perl::ToPerl6::Transformer::Pragmas::FormatPragmas" : {
