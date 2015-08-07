@@ -35,25 +35,26 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
-#
-# %foo{'a'} --> %foo{'a'}
-# %foo{a}   --> %foo{'a'}
-#
 sub transform {
     my ($self, $elem, $doc) = @_;
+    my $token = $elem;
 
-    my $bareword = $elem->schild(0)->schild(0);
-
-    my $old_content = $bareword->content;
-
-    $old_content =~ s{'}{\\'}g;
-
-    my $new_content = "'" . $old_content . "'";
-
-    $bareword->insert_after(
-        PPI::Token::Quote::Single->new($new_content)
-    );
-    $bareword->delete;
+    while ( $token and
+            $token->isa('PPI::Structure::Subscript') ) {
+        if ( $token->start->content eq '{' ) {
+            my $bareword = $token->schild(0)->schild(0);
+            my $old_content = $bareword->content;
+            $old_content =~ s{'}{\\'}g;
+    
+            my $new_content = "'" . $old_content . "'";
+    
+            $bareword->insert_after(
+                PPI::Token::Quote::Single->new($new_content)
+            );
+            $bareword->delete;
+        }
+        $token = $token->snext_sibling;
+    }
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

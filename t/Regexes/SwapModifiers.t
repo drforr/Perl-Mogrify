@@ -17,6 +17,7 @@ __DATA__
 ## name: match transformed
 /foo/
 m/foo/
+y/foo/
 m<foo>
 m/foo/i
 m/foo/i if 1
@@ -27,6 +28,7 @@ m<foo>i
 ##-->
 m:P5/foo/
 m:P5/foo/
+tr:P5/foo/
 m:P5<foo>
 m:i:P5/foo/
 m:i:P5/foo/ if 1

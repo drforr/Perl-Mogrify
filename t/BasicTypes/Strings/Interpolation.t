@@ -117,6 +117,7 @@ is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"')
 "\<leftop='$name(s?)': $name $2 $name\>(s?) "
 "$code$argcode($1..)"
 "\<leftop='$name(..$1)': $name $2 $name\>(..$1) "
+"push \@{\$thisparser->{deferred}}, sub $code;"
 ##-->
 "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}"
 " @ %$f/s \(n=$n\)"
@@ -132,3 +133,4 @@ is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"')
 "\<leftop='$name\(s?\)': $name $2 $name\>\(s?\) "
 "$code$argcode\($1..\)"
 "\<leftop='$name\(..$1\)': $name $2 $name\>\(..$1\) "
+"push \@\{\$thisparser->\{deferred\}\}, sub $code;"
