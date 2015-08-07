@@ -52,15 +52,11 @@ Perl::ToPerl6::TransformerSummary - Descriptions of the Transformer modules incl
 =head1 DESCRIPTION
 
 The following Transformer modules are distributed with Perl::ToPerl6. (There are
-additional Policies that can be found in add-on distributions.)  The Transformer
-modules have been categorized according to the table of contents in Damian
-Conway's book B<Perl Best Practices>. Since most coding standards take the
-form "do this..." or "don't do that...", I have adopted the convention of
-naming each module C<RequireSomething> or C<ProhibitSomething>.  Each Transformer
-is listed here with its default severity.  If you don't agree with the default
-severity, you can change it in your F<.perlmogrifyrc> file (try C<perlmogrify
---profile-proto> for a starting version).  See the documentation of each
-module for its specific details.
+additional Transformers that can be found in add-on distributions.) Each
+Transformer is listed here with its default severity.  If you don't agree with
+the default severity, you can change it in your F<.perlmogrifyrc> file (try
+C<perlmogrify --profile-proto> for a starting version).  See the documentation
+of each module for its specific details.
 
 
 =head1 POLICIES
@@ -159,7 +155,7 @@ Perl::ToPerl6::TransformerSummaryGenerator - Create F<TransformerSummary.pod> fi
 
 This module contains subroutines for generating the
 L<Perl::ToPerl6::TransformerSummary> POD file.  This file contains a brief
-summary of all the Policies that ship with L<Perl::ToPerl6>.  These
+summary of all the Transformers that ship with L<Perl::ToPerl6>.  These
 summaries are extracted from the C<NAME> section of the POD for each
 Transformer module.
 
@@ -175,7 +171,7 @@ also the C<policysummary> action in L<Perl::ToPerl6::Module::Build>.
 =item C<generate_policy_summary()>
 
 Generates the F<TransformerSummary.pod> file which contains a brief summary of all
-the Policies in this distro.  Returns the relative path this file.  Unlike
+the Transformers in this distro.  Returns the relative path this file.  Unlike
 most of the other subroutines here, this subroutine should be used when
 creating a distribution, not when building or installing an existing
 distribution.

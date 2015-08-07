@@ -569,7 +569,7 @@ sub _at_tty {
 #-----------------------------------------------------------------------------
 
 sub _render_all_policy_listing {
-    # Force P-C parameters, to catch all Policies on this site
+    # Force P-C parameters, to catch all Transformers on this site
     my %pc_params = (-profile => $EMPTY, -severity => $SEVERITY_LOWEST);
     return _render_policy_listing( %pc_params );
 }

@@ -855,7 +855,7 @@ is(
 # only return one Transformation at a time.  But the next three cases
 # involve transformers that apply to the whole document and can return
 # multiple transformations at a time.  These tests make sure that the 'no
-# mogrify' pragmas are effective with those Policies
+# mogrify' pragmas are effective with those Transformers
 #-----------------------------------------------------------------------------
 
 $code = <<'END_PERL';

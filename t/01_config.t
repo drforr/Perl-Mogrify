@@ -132,7 +132,7 @@ SKIP: {
 #-----------------------------------------------------------------------------
 # Test config w/ multiple severity levels.  In this profile, we
 # define an arbitrary severity for each Transformer so that severity
-# levels 5 through 2 each have 10 Policies.  All remaining Policies
+# levels 5 through 2 each have 10 Transformers.  All remaining Transformers
 # are in the 1st severity level.
 
 

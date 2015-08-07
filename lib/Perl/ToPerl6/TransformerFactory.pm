@@ -59,16 +59,16 @@ sub import {
         if (not $eval_worked) {
             if ( $EVAL_ERROR ) {
                 throw_generic
-                    qq<Can't load Policies from namespace "$POLICY_NAMESPACE": $EVAL_ERROR>;
+                    qq<Can't load Transformers from namespace "$POLICY_NAMESPACE": $EVAL_ERROR>;
             }
 
             throw_generic
-                qq<Can't load Policies from namespace "$POLICY_NAMESPACE" for an unknown reason.>;
+                qq<Can't load Transformers from namespace "$POLICY_NAMESPACE" for an unknown reason.>;
         }
 
         if ( not @site_policy_names ) {
             throw_generic
-                qq<No Policies found in namespace "$POLICY_NAMESPACE".>;
+                qq<No Transformers found in namespace "$POLICY_NAMESPACE".>;
         }
     }
 
@@ -436,7 +436,7 @@ sub _profile {
 #-----------------------------------------------------------------------------
 
 # This two-phase initialization is caused by the historical lack of a
-# requirement for Policies to invoke their super-constructor.
+# requirement for Transformers to invoke their super-constructor.
 sub _instantiate_policy {
     my ($self, $policy_name, $policy_config) = @_;
 
@@ -590,7 +590,7 @@ L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer> subclass that is
 installed on the local system.  Each Transformer will be created with the
 appropriate parameters from the user's configuration profile.
 
-Note that the Policies will not have had
+Note that the Transformers will not have had
 L<Perl::ToPerl6::Transformer/"initialize_if_enabled"> invoked on them, so
 they may not yet be usable.
 

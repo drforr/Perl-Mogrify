@@ -195,7 +195,7 @@ C<:color_severity> tag.
 As the names suggest, these are lists of modules that are equivalent to
 applying the L<strict|strict> or L<warnings|warnings> pragma when loaded. At
 the moment, both lists are exactly the same. B<Note:> These lists are not
-exhaustive; they only include the most commonly used modules. Policies that
+exhaustive; they only include the most commonly used modules. Transformers that
 use these lists should permit configuration of additional modules.
 
 =back
