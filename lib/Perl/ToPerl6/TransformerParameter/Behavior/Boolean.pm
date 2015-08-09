@@ -12,7 +12,7 @@ our $VERSION = '0.03';
 #-----------------------------------------------------------------------------
 
 sub _parse {
-    my ($policy, $parameter, $config_string) = @_;
+    my ($transformer, $parameter, $config_string) = @_;
 
     my $value;
     my $value_string = $parameter->get_default_string();
@@ -27,7 +27,7 @@ sub _parse {
         $value = $FALSE;
     }
 
-    $policy->__set_parameter_value($parameter, $value);
+    $transformer->__set_parameter_value($parameter, $value);
 
     return;
 }
@@ -63,7 +63,7 @@ Perl::ToPerl6::TransformerParameter::Behavior::Boolean - Actions appropriate for
 
 Provides a standard set of functionality for a boolean
 L<Perl::ToPerl6::TransformerParameter|Perl::ToPerl6::TransformerParameter> so that
-the developer of a policy does not have to provide it her/himself.
+the developer of a transformer does not have to provide it her/himself.
 
 NOTE: Do not instantiate this class.  Use the singleton instance held
 onto by

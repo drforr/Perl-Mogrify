@@ -11,7 +11,7 @@ use Config::Tiny qw();
 use File::Spec qw();
 
 use Perl::ToPerl6::OptionsProcessor qw();
-use Perl::ToPerl6::Utils qw{ :characters policy_long_name policy_short_name };
+use Perl::ToPerl6::Utils qw{ :characters transformer_long_name transformer_short_name };
 use Perl::ToPerl6::Exception::Fatal::Internal qw{ throw_internal };
 use Perl::ToPerl6::Exception::Configuration::Generic qw{ throw_generic };
 use Perl::ToPerl6::TransformerConfig;
@@ -50,26 +50,26 @@ sub options_processor {
 
 #-----------------------------------------------------------------------------
 
-sub policy_params {
+sub transformer_params {
 
-    my ( $self, $policy ) = @_;
+    my ( $self, $transformer ) = @_;
 
-    my $short_name = policy_short_name($policy);
+    my $short_name = transformer_short_name($transformer);
 
     return Perl::ToPerl6::TransformerConfig->new(
         $short_name,
-        $self->raw_policy_params($policy),
+        $self->raw_transformer_params($transformer),
     );
 }
 
 #-----------------------------------------------------------------------------
 
-sub raw_policy_params {
+sub raw_transformer_params {
 
-    my ( $self, $policy ) = @_;
+    my ( $self, $transformer ) = @_;
     my $profile = $self->{_profile};
-    my $long_name  = ref $policy || policy_long_name( $policy );
-    my $short_name = policy_short_name( $long_name );
+    my $long_name  = ref $transformer || transformer_long_name( $transformer );
+    my $short_name = transformer_short_name( $long_name );
 
     return
             $profile->{$short_name}
@@ -81,12 +81,12 @@ sub raw_policy_params {
 
 #-----------------------------------------------------------------------------
 
-sub policy_is_disabled {
+sub transformer_is_disabled {
 
-    my ( $self, $policy ) = @_;
+    my ( $self, $transformer ) = @_;
     my $profile = $self->{_profile};
-    my $long_name  = ref $policy || policy_long_name( $policy );
-    my $short_name = policy_short_name( $long_name );
+    my $long_name  = ref $transformer || transformer_long_name( $transformer );
+    my $short_name = transformer_short_name( $long_name );
 
     return exists $profile->{"-$short_name"}
         || exists $profile->{"-$long_name"};
@@ -94,12 +94,12 @@ sub policy_is_disabled {
 
 #-----------------------------------------------------------------------------
 
-sub policy_is_enabled {
+sub transformer_is_enabled {
 
-    my ( $self, $policy ) = @_;
+    my ( $self, $transformer ) = @_;
     my $profile = $self->{_profile};
-    my $long_name  = ref $policy || policy_long_name( $policy );
-    my $short_name = policy_short_name( $long_name );
+    my $long_name  = ref $transformer || transformer_long_name( $transformer );
+    my $short_name = transformer_short_name( $long_name );
 
     return exists $profile->{$short_name}
         || exists $profile->{$long_name};
@@ -109,16 +109,16 @@ sub policy_is_enabled {
 
 sub listed_transformers {
 
-    my ( $self, $policy ) = @_;
-    my @normalized_policy_names = ();
+    my ( $self, $transformer ) = @_;
+    my @normalized_transformer_names = ();
 
-    for my $policy_name ( sort keys %{$self->{_profile}} ) {
-        $policy_name =~ s/\A - //xmso; #Chomp leading "-"
-        my $policy_long_name = policy_long_name( $policy_name );
-        push @normalized_policy_names, $policy_long_name;
+    for my $transformer_name ( sort keys %{$self->{_profile}} ) {
+        $transformer_name =~ s/\A - //xmso; #Chomp leading "-"
+        my $transformer_long_name = transformer_long_name( $transformer_name );
+        push @normalized_transformer_names, $transformer_long_name;
     }
 
-    return @normalized_policy_names;
+    return @normalized_transformer_names;
 }
 
 #-----------------------------------------------------------------------------
@@ -351,33 +351,33 @@ L<Perl::ToPerl6::OptionsProcessor|Perl::ToPerl6::OptionsProcessor>
 object for this UserProfile.
 
 
-=item C< policy_is_disabled( $policy ) >
+=item C< transformer_is_disabled( $transformer ) >
 
 Given a reference to a L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>
 object or the name of one, returns true if the user has disabled that
-policy in their profile.
+transformer in their profile.
 
 
-=item C< policy_is_enabled( $policy ) >
+=item C< transformer_is_enabled( $transformer ) >
 
 Given a reference to a L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>
 object or the name of one, returns true if the user has explicitly
-enabled that policy in their user profile.
+enabled that transformer in their user profile.
 
 
-=item C< policy_params( $policy ) >
+=item C< transformer_params( $transformer ) >
 
 Given a reference to a L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>
 object or the name of one, returns a
 L<Perl::ToPerl6::TransformerConfig|Perl::ToPerl6::TransformerConfig> for the
-user's configuration parameters for that policy.
+user's configuration parameters for that transformer.
 
 
-=item C< raw_policy_params( $policy ) >
+=item C< raw_transformer_params( $transformer ) >
 
 Given a reference to a L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>
 object or the name of one, returns a reference to a hash of the user's
-configuration parameters for that policy.
+configuration parameters for that transformer.
 
 
 =item C< listed_transformers() >

@@ -12,7 +12,7 @@ Readonly::Array our @EXPORT_OK => qw{ $NO_DESCRIPTION_AVAILABLE };
 use String::Format qw{ stringf };
 
 use Perl::ToPerl6::Exception::Fatal::TransformerDefinition
-    qw{ throw_policy_definition };
+    qw{ throw_transformer_definition };
 use Perl::ToPerl6::TransformerParameter::Behavior;
 use Perl::ToPerl6::TransformerParameter::Behavior::Boolean;
 use Perl::ToPerl6::TransformerParameter::Behavior::Enumeration;
@@ -45,7 +45,7 @@ sub _get_behavior_for_name {
     my $behavior_name = shift;
 
     my $behavior = $BEHAVIORS{$behavior_name}
-        or throw_policy_definition( qq{There's no "$behavior_name" behavior.} );
+        or throw_transformer_definition( qq{There's no "$behavior_name" behavior.} );
 
     return $behavior;
 }
@@ -57,7 +57,7 @@ sub new {
     my $self = bless {}, $class;
 
     defined $specification
-        or throw_policy_definition(
+        or throw_transformer_definition(
             'Attempt to create a ', __PACKAGE__, ' without a specification.' );
 
     my $behavior_specification;
@@ -69,14 +69,14 @@ sub new {
         $behavior_specification = {};
     } else {
         $specification_type eq 'HASH'
-            or throw_policy_definition(
+            or throw_transformer_definition(
                 'Attempt to create a ',
                 __PACKAGE__,
                 " with a $specification_type as a specification.",
                 );
 
         defined $specification->{name}
-            or throw_policy_definition(
+            or throw_transformer_definition(
                 'Attempt to create a ', __PACKAGE__, ' without a name.' );
         $self->{_name} = $specification->{name};
 
@@ -216,13 +216,13 @@ sub _set_parser {
 #-----------------------------------------------------------------------------
 
 sub parse_and_validate_config_value {
-    my ($self, $policy, $config) = @_;
+    my ($self, $transformer, $config) = @_;
 
     my $config_string = $config->{$self->get_name()};
 
     my $parser = $self->_get_parser();
     if ($parser) {
-        $parser->($policy, $self, $config_string);
+        $parser->($transformer, $self, $config_string);
     }
 
     return;
@@ -311,7 +311,7 @@ for in the F<.perlmogrifyrc>.
 =item C<get_description()>
 
 Return an explanation of the significance of the parameter, as
-provided by the developer of the policy.
+provided by the developer of the transformer.
 
 
 =item C<get_default_string()>
@@ -323,7 +323,7 @@ would appear if it was specified in a F<.perlmogrifyrc> file.
 =item C<parse_and_validate_config_value( $parser, $config )>
 
 Extract the configuration value for this parameter from the overall
-configuration and initialize the policy based upon it.
+configuration and initialize the transformer based upon it.
 
 
 =item C<generate_full_description()>

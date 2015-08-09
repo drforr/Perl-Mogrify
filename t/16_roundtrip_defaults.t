@@ -28,18 +28,18 @@ my $default_configuration =
     );
 my @default_transformers = $default_configuration->transformers();
 
-my $policy_test_count;
+my $transformer_test_count;
 
-$policy_test_count = 4 * @default_transformers;
-foreach my $policy (@default_transformers) {
+$transformer_test_count = 4 * @default_transformers;
+foreach my $transformer (@default_transformers) {
     if (
-            $policy->parameter_metadata_available()
-        and not $policy->isa('Perl::ToPerl6::Transformer::Arrays::FormatArrayQws')
+            $transformer->parameter_metadata_available()
+        and not $transformer->isa('Perl::ToPerl6::Transformer::Arrays::FormatArrayQws')
     ) {
-        $policy_test_count += scalar @{$policy->get_parameters()};
+        $transformer_test_count += scalar @{$transformer->get_parameters()};
     }
 }
-my $test_count = 18 + $policy_test_count;
+my $test_count = 18 + $transformer_test_count;
 plan tests => $test_count;
 
 #-----------------------------------------------------------------------------
@@ -77,12 +77,12 @@ cmp_deeply(
 
 #-----------------------------------------------------------------------------
 
-my @derived_single_policy = $derived_configuration->single_policy();
-my @default_single_policy = $default_configuration->single_policy();
+my @derived_single_transformer = $derived_configuration->single_transformer();
+my @default_single_transformer = $default_configuration->single_transformer();
 cmp_deeply(
-    \@derived_single_policy,
-    \@default_single_policy,
-    'single_policy',
+    \@derived_single_transformer,
+    \@default_single_transformer,
+    'single_transformer',
 );
 
 #-----------------------------------------------------------------------------
@@ -206,58 +206,58 @@ cmp_deeply(
 
 my @derived_transformers = $derived_configuration->transformers();
 
-my $policy_counts_match =
+my $transformer_counts_match =
     is(
         scalar @derived_transformers,
         scalar @default_transformers,
-        'same policy count'
+        'same transformer count'
     );
 
 SKIP: {
-    skip q{XXX Fix this later}, $policy_test_count;
+    skip q{XXX Fix this later}, $transformer_test_count;
     skip
         q{because there weren't the same number of transformers},
-            $policy_test_count
-        if not $policy_counts_match;
+            $transformer_test_count
+        if not $transformer_counts_match;
 
     for (my $x = 0; $x < @default_transformers; $x++) {
-        my $derived_policy = $derived_transformers[$x];
-        my $default_policy = $default_transformers[$x];
+        my $derived_transformer = $derived_transformers[$x];
+        my $default_transformer = $default_transformers[$x];
 
         is(
-            $derived_policy->get_short_name(),
-            $default_policy->get_short_name(),
-            'policy names match',
+            $derived_transformer->get_short_name(),
+            $default_transformer->get_short_name(),
+            'transformer names match',
         );
         is(
-            $derived_policy->get_maximum_transformations_per_document(),
-            $default_policy->get_maximum_transformations_per_document(),
-            $default_policy->get_short_name() . ' maximum transformations per document match',
+            $derived_transformer->get_maximum_transformations_per_document(),
+            $default_transformer->get_maximum_transformations_per_document(),
+            $default_transformer->get_short_name() . ' maximum transformations per document match',
         );
         is(
-            $derived_policy->get_severity(),
-            $default_policy->get_severity(),
-            $default_policy->get_short_name() . ' severities match',
+            $derived_transformer->get_severity(),
+            $default_transformer->get_severity(),
+            $default_transformer->get_short_name() . ' severities match',
         );
         is(
-            $derived_policy->get_themes(),
-            $default_policy->get_themes(),
-            $default_policy->get_short_name() . ' themes match',
+            $derived_transformer->get_themes(),
+            $default_transformer->get_themes(),
+            $default_transformer->get_short_name() . ' themes match',
         );
 
         if (
-                $default_policy->parameter_metadata_available()
-            and not $default_policy->isa('Perl::ToPerl6::Transformer::Arrays::FOrmatArrayQws')
+                $default_transformer->parameter_metadata_available()
+            and not $default_transformer->isa('Perl::ToPerl6::Transformer::Arrays::FOrmatArrayQws')
         ) {
             # Encapsulation transformation alert!
-            foreach my $parameter ( @{$default_policy->get_parameters()} ) {
+            foreach my $parameter ( @{$default_transformer->get_parameters()} ) {
                 my $parameter_name =
-                    $default_policy->__get_parameter_name( $parameter );
+                    $default_transformer->__get_parameter_name( $parameter );
 
                 cmp_deeply(
-                    $derived_policy->{$parameter_name},
-                    $default_policy->{$parameter_name},
-                    $default_policy->get_short_name()
+                    $derived_transformer->{$parameter_name},
+                    $default_transformer->{$parameter_name},
+                    $default_transformer->get_short_name()
                         . $SPACE
                         . $parameter_name
                         . ' match',

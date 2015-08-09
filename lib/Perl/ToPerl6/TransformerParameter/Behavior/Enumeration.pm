@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Perl::ToPerl6::Exception::Fatal::TransformerDefinition
-    qw{ &throw_policy_definition };
+    qw{ &throw_transformer_definition };
 use Perl::ToPerl6::Utils qw{ :characters &words_from_string &hashify };
 
 use base qw{ Perl::ToPerl6::TransformerParameter::Behavior };
@@ -18,17 +18,17 @@ sub initialize_parameter {
     my ($self, $parameter, $specification) = @_;
 
     my $valid_values = $specification->{enumeration_values}
-        or throw_policy_definition(
+        or throw_transformer_definition(
             'No enumeration_values given for '
                 . $parameter->get_name()
                 . $PERIOD);
     ref $valid_values eq 'ARRAY'
-        or throw_policy_definition(
+        or throw_transformer_definition(
             'The value given for enumeration_values for '
                 . $parameter->get_name()
                 . ' is not an array reference.');
     scalar @{$valid_values} > 1
-        or throw_policy_definition(
+        or throw_transformer_definition(
             'There were not at least two valid values given for'
                 . ' enumeration_values for '
                 . $parameter->get_name()
@@ -50,7 +50,7 @@ sub initialize_parameter {
                 # Normally bad thing, obscuring a variable in a outer scope
                 # with a variable with the same name is being done here in
                 # order to remain consistent with the parser function interface.
-                my ($policy, $parameter, $config_string) = @_;
+                my ($transformer, $parameter, $config_string) = @_;
 
                 my @potential_values;
                 my $value_string = $parameter->get_default_string();
@@ -65,7 +65,7 @@ sub initialize_parameter {
                     my @bad_values =
                         grep { not exists $value_lookup->{$_} } @potential_values;
                     if (@bad_values) {
-                        $policy->throw_parameter_value_exception(
+                        $transformer->throw_parameter_value_exception(
                             $parameter->get_name(),
                             $value_string,
                             undef,
@@ -80,7 +80,7 @@ sub initialize_parameter {
 
                 my %actual_values = hashify(@potential_values);
 
-                $policy->__set_parameter_value($parameter, \%actual_values);
+                $transformer->__set_parameter_value($parameter, \%actual_values);
 
                 return;
             }
@@ -91,7 +91,7 @@ sub initialize_parameter {
                 # Normally bad thing, obscuring a variable in a outer scope
                 # with a variable with the same name is being done here in
                 # order to remain consistent with the parser function interface.
-                my ($policy, $parameter, $config_string) = @_;
+                my ($transformer, $parameter, $config_string) = @_;
 
                 my $value_string = $parameter->get_default_string();
 
@@ -104,7 +104,7 @@ sub initialize_parameter {
                     and $EMPTY ne $value_string
                     and not defined $value_lookup->{$value_string}
                 ) {
-                    $policy->throw_parameter_value_exception(
+                    $transformer->throw_parameter_value_exception(
                         $parameter->get_name(),
                         $value_string,
                         undef,
@@ -114,7 +114,7 @@ sub initialize_parameter {
                     );
                 }
 
-                $policy->__set_parameter_value($parameter, $value_string);
+                $transformer->__set_parameter_value($parameter, $value_string);
 
                 return;
             }
@@ -163,7 +163,7 @@ Perl::ToPerl6::TransformerParameter::Behavior::Enumeration - Actions appropriate
 
 Provides a standard set of functionality for an enumerated
 L<Perl::ToPerl6::TransformerParameter|Perl::ToPerl6::TransformerParameter> so that
-the developer of a policy does not have to provide it her/himself.
+the developer of a transformer does not have to provide it her/himself.
 
 NOTE: Do not instantiate this class.  Use the singleton instance held
 onto by

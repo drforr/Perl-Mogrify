@@ -400,20 +400,20 @@ sub process_annotations {
 
 #-----------------------------------------------------------------------------
 
-sub line_is_disabled_for_policy {
-    my ($self, $line, $policy) = @_;
-    my $policy_name = ref $policy || $policy;
+sub line_is_disabled_for_transformer {
+    my ($self, $line, $transformer) = @_;
+    my $transformer_name = ref $transformer || $transformer;
 
     # HACK: This Transformer is special.  If it is active, it cannot be
     # disabled by a "## no mogrify" annotation.  Rather than create a general
     # hook in Transformer.pm for enabling this behavior, we chose to hack
     # it here, since this isn't the kind of thing that most transformers do
 
-    return 0 if $policy_name eq
+    return 0 if $transformer_name eq
         'Perl::ToPerl6::Transformer::Miscellanea::ProhibitUnrestrictedNoCritic';
 
     return 0 unless $line;
-    return 1 if $self->{_disabled_line_map}->{$line}->{$policy_name};
+    return 1 if $self->{_disabled_line_map}->{$line}->{$transformer_name};
     return 1 if $self->{_disabled_line_map}->{$line}->{ALL};
     return 0;
 }
@@ -432,8 +432,8 @@ sub add_annotation {
 
         # TODO: Find clever way to do this with hash slices
         for my $line ($start .. $end) {
-            for my $policy (@affected_transformers) {
-                $self->{_disabled_line_map}->{$line}->{$policy} = 1;
+            for my $transformer (@affected_transformers) {
+                $self->{_disabled_line_map}->{$line}->{$transformer} = 1;
             }
         }
     }
@@ -815,9 +815,9 @@ Causes this Document to scan itself and mark which lines &
 transformers are disabled by the C<"## no mogrify"> annotations.
 
 
-=item C<< line_is_disabled_for_policy($line, $policy_object) >>
+=item C<< line_is_disabled_for_transformer($line, $transformer_object) >>
 
-Returns true if the given C<$policy_object> or C<$policy_name> has
+Returns true if the given C<$transformer_object> or C<$transformer_name> has
 been disabled for at C<$line> in this Document.  Otherwise, returns false.
 
 

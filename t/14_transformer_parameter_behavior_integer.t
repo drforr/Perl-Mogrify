@@ -21,7 +21,7 @@ our $VERSION = '0.01';
 my $specification;
 my $parameter;
 my %config;
-my $policy;
+my $transformer;
 
 $specification =
     {
@@ -32,48 +32,48 @@ $specification =
 
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, undef, q{no value, no default});
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, undef, q{no value, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '2943';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 2943, q{2943, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 2943, q{2943, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '+2943';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 2943, q{+2943, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 2943, q{+2943, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '-2943';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, -2943, q{-2943, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, -2943, q{-2943, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '29_43';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 2943, q{29_43, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 2943, q{29_43, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '+29_43';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 2943, q{+29_43, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 2943, q{+29_43, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '-29_43';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, -2943, q{-29_43, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, -2943, q{-29_43, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '0';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 0, q{0, no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 0, q{0, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '1.5';
-eval { $parameter->parse_and_validate_config_value($policy, \%config); };
+eval { $parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{not an integer});
 
 
@@ -81,32 +81,32 @@ $specification->{default_string} = '0';
 delete $config{test};
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 0, q{no value, default 0});
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 0, q{no value, default 0});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '5';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 5, q{5, default 0});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 5, q{5, default 0});
 
 
 $specification->{integer_minimum} = 0;
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '5';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 5, q{5, minimum 0});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 5, q{5, minimum 0});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '0';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 0, q{0, minimum 0});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 0, q{0, minimum 0});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '-5';
-eval { $parameter->parse_and_validate_config_value($policy, \%config); };
+eval { $parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{below minimum});
 
 
@@ -114,19 +114,19 @@ delete $specification->{integer_minimum};
 $specification->{integer_maximum} = 0;
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '-5';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, -5, q{-5, maximum 0});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, -5, q{-5, maximum 0});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '0';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 0, q{0, maximum 0});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 0, q{0, maximum 0});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '5';
-eval { $parameter->parse_and_validate_config_value($policy, \%config); };
+eval { $parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{above maximum});
 
 
@@ -134,29 +134,29 @@ $specification->{integer_minimum} = 0;
 $specification->{integer_maximum} = 5;
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '-5';
-eval { $parameter->parse_and_validate_config_value($policy, \%config); };
+eval { $parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{below minimum of range});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '0';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 0, q{0, minimum 0, maximum 5});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 0, q{0, minimum 0, maximum 5});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '3';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 3, q{3, minimum 0, maximum 5});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 3, q{3, minimum 0, maximum 5});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '5';
-$parameter->parse_and_validate_config_value($policy, \%config);
-cmp_ok($policy->{_test}, q<==>, 5, q{5, minimum 0, maximum 5});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+cmp_ok($transformer->{_test}, q<==>, 5, q{5, minimum 0, maximum 5});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = '10';
-eval { $parameter->parse_and_validate_config_value($policy, \%config); };
+eval { $parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{above maximum of range});
 
 ###############################################################################

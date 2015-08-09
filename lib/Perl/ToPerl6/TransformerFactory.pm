@@ -14,8 +14,8 @@ use Perl::ToPerl6::Utils qw{
     :characters
     $POLICY_NAMESPACE
     :data_conversion
-    policy_long_name
-    policy_short_name
+    transformer_long_name
+    transformer_short_name
     :internal_lookup
 };
 use Perl::ToPerl6::TransformerConfig;
@@ -24,7 +24,7 @@ use Perl::ToPerl6::Exception::Configuration;
 use Perl::ToPerl6::Exception::Fatal::Generic qw{ throw_generic };
 use Perl::ToPerl6::Exception::Fatal::Internal qw{ throw_internal };
 use Perl::ToPerl6::Exception::Fatal::TransformerDefinition
-    qw{ throw_policy_definition };
+    qw{ throw_transformer_definition };
 use Perl::ToPerl6::Exception::Configuration::NonExistentTransformer qw< >;
 use Perl::ToPerl6::Utils::Constants qw{ :profile_strictness };
 
@@ -35,7 +35,7 @@ our $VERSION = '0.03';
 #-----------------------------------------------------------------------------
 
 # Globals.  Ick!
-my @site_policy_names = ();
+my @site_transformer_names = ();
 
 #-----------------------------------------------------------------------------
 
@@ -47,12 +47,12 @@ sub import {
     my $test_mode = $args{-test};
     my $extra_test_transformers = $args{'-extra-test-transformers'};
 
-    if ( not @site_policy_names ) {
+    if ( not @site_transformer_names ) {
         my $eval_worked = eval {
             require Module::Pluggable;
             Module::Pluggable->import(search_path => $POLICY_NAMESPACE,
                                       require => 1, inner => 0);
-            @site_policy_names = plugins(); #Exported by Module::Pluggable
+            @site_transformer_names = plugins(); #Exported by Module::Pluggable
             1;
         };
 
@@ -66,26 +66,26 @@ sub import {
                 qq<Can't load Transformers from namespace "$POLICY_NAMESPACE" for an unknown reason.>;
         }
 
-        if ( not @site_policy_names ) {
+        if ( not @site_transformer_names ) {
             throw_generic
                 qq<No Transformers found in namespace "$POLICY_NAMESPACE".>;
         }
     }
 
     # In test mode, only load native transformers, not third-party ones.  So this
-    # filters out any policy that was loaded from within a directory called
+    # filters out any transformer that was loaded from within a directory called
     # "blib".  During the usual "./Build test" process this works fine,
     # but it doesn't work if you are using prove to test against the code
     # directly in the lib/ directory.
 
     if ( $test_mode && any {m/\b blib \b/xms} @INC ) {
-        @site_policy_names = _modules_from_blib( @site_policy_names );
+        @site_transformer_names = _modules_from_blib( @site_transformer_names );
 
         if ($extra_test_transformers) {
-            my @extra_policy_full_names =
+            my @extra_transformer_full_names =
                 map { "${POLICY_NAMESPACE}::$_" } @{$extra_test_transformers};
 
-            push @site_policy_names, @extra_policy_full_names;
+            push @site_transformer_names, @extra_transformer_full_names;
         }
     }
 
@@ -93,7 +93,7 @@ sub import {
 }
 
 #-----------------------------------------------------------------------------
-# Shuffle policy order based on preferences, if any.
+# Shuffle transformer order based on preferences, if any.
 
 # Transformers can request to run before or after a given list of other
 # transformers. This code rewrites the list as follows:
@@ -119,15 +119,15 @@ sub _collect_preferences {
     my (@policies) = @_;
     my $preferences;
 
-    for my $policy ( @policies ) {
-        my $ref_name = ref($policy);
+    for my $transformer ( @policies ) {
+        my $ref_name = ref($transformer);
         $ref_name =~ s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
         $preferences->{$ref_name} = { };
 
         # Get the list of transformers this module wants to run *after*.
         #
-        if ( $policy->can('run_before') ) {
-            my @before = $policy->run_before();
+        if ( $transformer->can('run_before') ) {
+            my @before = $transformer->run_before();
             $preferences->{$ref_name}{before} = { map {
                 s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
                 $_ => 1
@@ -136,8 +136,8 @@ sub _collect_preferences {
 
         # Get the list of transformers this module wants to run *before*.
         #
-        if ( $policy->can('run_after') ) {
-            my @after = $policy->run_after();
+        if ( $transformer->can('run_after') ) {
+            my @after = $transformer->run_after();
             $preferences->{$ref_name}{after} = { map {
                 s< ^ Perl\::ToPerl6\::Transformer\:: ><>x;
                 $_ => 1
@@ -355,36 +355,36 @@ sub _init {
 
 #-----------------------------------------------------------------------------
 
-sub create_policy {
+sub create_transformer {
 
     my ($self, %args ) = @_;
 
-    my $policy_name = $args{-name}
+    my $transformer_name = $args{-name}
         or throw_internal q{The -name argument is required};
 
-    # Normalize policy name to a fully-qualified package name
-    $policy_name = policy_long_name( $policy_name );
-    my $policy_short_name = policy_short_name( $policy_name );
+    # Normalize transformer name to a fully-qualified package name
+    $transformer_name = transformer_long_name( $transformer_name );
+    my $transformer_short_name = transformer_short_name( $transformer_name );
 
 
-    # Get the policy parameters from the user profile if they were
+    # Get the transformer parameters from the user profile if they were
     # not given to us directly.  If none exist, use an empty hash.
     my $profile = $self->_profile();
-    my $policy_config;
+    my $transformer_config;
     if ( $args{-params} ) {
-        $policy_config =
+        $transformer_config =
             Perl::ToPerl6::TransformerConfig->new(
-                $policy_short_name, $args{-params}
+                $transformer_short_name, $args{-params}
             );
     }
     else {
-        $policy_config = $profile->policy_params($policy_name);
-        $policy_config ||=
-            Perl::ToPerl6::TransformerConfig->new( $policy_short_name );
+        $transformer_config = $profile->transformer_params($transformer_name);
+        $transformer_config ||=
+            Perl::ToPerl6::TransformerConfig->new( $transformer_short_name );
     }
 
     # Pull out base parameters.
-    return $self->_instantiate_policy( $policy_name, $policy_config );
+    return $self->_instantiate_transformer( $transformer_name, $transformer_config );
 }
 
 #-----------------------------------------------------------------------------
@@ -399,13 +399,13 @@ sub create_all_transformers {
             : Perl::ToPerl6::Exception::AggregateConfiguration->new();
     my @transformers;
 
-    foreach my $name ( site_policy_names() ) {
-        my $policy = eval { $self->create_policy( -name => $name ) };
+    foreach my $name ( site_transformer_names() ) {
+        my $transformer = eval { $self->create_transformer( -name => $name ) };
 
         $errors->add_exception_or_rethrow( $EVAL_ERROR );
 
-        if ( $policy ) {
-            push @transformers, $policy;
+        if ( $transformer ) {
+            push @transformers, $transformer;
         }
     }
 
@@ -420,9 +420,9 @@ sub create_all_transformers {
 
 #-----------------------------------------------------------------------------
 
-sub site_policy_names {
-    my @sorted_policy_names = sort @site_policy_names;
-    return @sorted_policy_names;
+sub site_transformer_names {
+    my @sorted_transformer_names = sort @site_transformer_names;
+    return @sorted_transformer_names;
 }
 
 #-----------------------------------------------------------------------------
@@ -437,30 +437,30 @@ sub _profile {
 
 # This two-phase initialization is caused by the historical lack of a
 # requirement for Transformers to invoke their super-constructor.
-sub _instantiate_policy {
-    my ($self, $policy_name, $policy_config) = @_;
+sub _instantiate_transformer {
+    my ($self, $transformer_name, $transformer_config) = @_;
 
-    $policy_config->set_profile_strictness( $self->{_profile_strictness} );
+    $transformer_config->set_profile_strictness( $self->{_profile_strictness} );
 
-    my $policy = eval { $policy_name->new( %{$policy_config} ) };
-    _handle_policy_instantiation_exception(
-        $policy_name,
-        $policy,        # Note: being used as a boolean here.
+    my $transformer = eval { $transformer_name->new( %{$transformer_config} ) };
+    _handle_transformer_instantiation_exception(
+        $transformer_name,
+        $transformer,        # Note: being used as a boolean here.
         $EVAL_ERROR,
     );
 
-    $policy->__set_config( $policy_config );
+    $transformer->__set_config( $transformer_config );
 
-    my $eval_worked = eval { $policy->__set_base_parameters(); 1; };
-    _handle_policy_instantiation_exception(
-        $policy_name, $eval_worked, $EVAL_ERROR,
+    my $eval_worked = eval { $transformer->__set_base_parameters(); 1; };
+    _handle_transformer_instantiation_exception(
+        $transformer_name, $eval_worked, $EVAL_ERROR,
     );
 
-    return $policy;
+    return $transformer;
 }
 
-sub _handle_policy_instantiation_exception {
-    my ($policy_name, $eval_worked, $eval_error) = @_;
+sub _handle_transformer_instantiation_exception {
+    my ($transformer_name, $eval_worked, $eval_error) = @_;
 
     if (not $eval_worked) {
         if ($eval_error) {
@@ -470,12 +470,12 @@ sub _handle_policy_instantiation_exception {
                 $exception->rethrow();
             }
 
-            throw_policy_definition(
-                qq<Unable to create policy "$policy_name": $eval_error>);
+            throw_transformer_definition(
+                qq<Unable to create transformer "$transformer_name": $eval_error>);
         }
 
-        throw_policy_definition(
-            qq<Unable to create policy "$policy_name" for an unknown reason.>);
+        throw_transformer_definition(
+            qq<Unable to create transformer "$transformer_name" for an unknown reason.>);
     }
 
     return;
@@ -487,16 +487,16 @@ sub _validate_transformers_in_profile {
     my ($self, $errors) = @_;
 
     my $profile = $self->_profile();
-    my %known_transformers = hashify( $self->site_policy_names() );
+    my %known_transformers = hashify( $self->site_transformer_names() );
 
-    for my $policy_name ( $profile->listed_transformers() ) {
-        if ( not exists $known_transformers{$policy_name} ) {
-            my $message = qq{Transformer "$policy_name" is not installed.};
+    for my $transformer_name ( $profile->listed_transformers() ) {
+        if ( not exists $known_transformers{$transformer_name} ) {
+            my $message = qq{Transformer "$transformer_name" is not installed.};
 
             if ( $errors ) {
                 $errors->add_exception(
                     Perl::ToPerl6::Exception::Configuration::NonExistentTransformer->new(
-                        policy  => $policy_name,
+                        transformer  => $transformer_name,
                     )
                 );
             }
@@ -563,7 +563,7 @@ added to the object.
 
 =over
 
-=item C<< create_policy( -name => $policy_name, -params => \%param_hash ) >>
+=item C<< create_transformer( -name => $transformer_name, -params => \%param_hash ) >>
 
 Creates one Transformer object.  If the object cannot be instantiated, it
 will throw a fatal exception.  Otherwise, it returns a reference to
@@ -618,7 +618,7 @@ run before and/or after.
 If a transformer you specified doesn't exist, your transformer code should
 still run, but with a warning.
 
-=item C<site_policy_names()>
+=item C<site_transformer_names()>
 
 Returns a list of all the Transformer modules that are currently installed
 in the Perl::ToPerl6:Transformer namespace.  These will include modules that

@@ -13,8 +13,8 @@ our $VERSION = '0.03';
 use Exception::Class (
     'Perl::ToPerl6::Exception::Configuration::NonExistentTransformer' => {
         isa         => 'Perl::ToPerl6::Exception::Configuration',
-        description => 'The configuration referred to a non-existant policy.',
-        fields      => [ qw{ policy } ],
+        description => 'The configuration referred to a non-existant transformer.',
+        fields      => [ qw{ transformer } ],
     },
 );
 
@@ -27,9 +27,9 @@ Readonly::Array our @EXPORT_OK => qw< throw_extra_parameter >;
 sub full_message {
     my ( $self ) = @_;
 
-    my $policy = $self->policy();
+    my $transformer = $self->transformer();
 
-    return qq<There is no $policy policy installed.>;
+    return qq<There is no $transformer transformer installed.>;
 }
 
 
@@ -45,7 +45,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Exception::Configuration::NonExistentTransformer - The configuration referred to a non-existent policy.
+Perl::ToPerl6::Exception::Configuration::NonExistentTransformer - The configuration referred to a non-existent transformer.
 
 =head1 DESCRIPTION
 
@@ -64,12 +64,12 @@ will go through a deprecation cycle.
 
 =over
 
-=item C<< throw( policy => $policy ) >>
+=item C<< throw( transformer => $transformer ) >>
 
 See L<Exception::Class/"throw">.
 
 
-=item C<< new( policy => $policy ) >>
+=item C<< new( transformer => $transformer ) >>
 
 See L<Exception::Class/"new">.
 

@@ -32,7 +32,7 @@ sub initialize_parameter {
             # Normally bad thing, obscuring a variable in a outer scope
             # with a variable with the same name is being done here in
             # order to remain consistent with the parser function interface.
-            my ($policy, $parameter, $config_string) = @_;
+            my ($transformer, $parameter, $config_string) = @_;
 
             my @values = @{$always_present_values};
             my $value_string = $parameter->get_default_string();
@@ -47,7 +47,7 @@ sub initialize_parameter {
 
             my %values = hashify(@values);
 
-            $policy->__set_parameter_value($parameter, \%values);
+            $transformer->__set_parameter_value($parameter, \%values);
 
             return;
         }
@@ -97,7 +97,7 @@ Perl::ToPerl6::TransformerParameter::Behavior::StringList - Actions appropriate 
 
 Provides a standard set of functionality for a string list
 L<Perl::ToPerl6::TransformerParameter|Perl::ToPerl6::TransformerParameter> so that
-the developer of a policy does not have to provide it her/himself.
+the developer of a transformer does not have to provide it her/himself.
 
 NOTE: Do not instantiate this class.  Use the singleton instance held
 onto by

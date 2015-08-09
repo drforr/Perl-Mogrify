@@ -48,7 +48,7 @@ sub _init {
     $self->{_only}            = dor(delete $args{only},               $FALSE);
     $self->{_profile_strictness} =
         dor(delete $args{'profile-strictness'}, $PROFILE_STRICTNESS_DEFAULT);
-    $self->{_single_policy}   = dor(delete $args{'single-policy'},    $EMPTY);
+    $self->{_single_transformer}   = dor(delete $args{'single-transformer'},    $EMPTY);
     $self->{_severity}        = dor(delete $args{severity},           $SEVERITY_HIGHEST);
     $self->{_theme}           = dor(delete $args{theme},              $EMPTY);
     $self->{_top}             = dor(delete $args{top},                $FALSE);
@@ -171,9 +171,9 @@ sub profile_strictness {
 
 #-----------------------------------------------------------------------------
 
-sub single_policy {
+sub single_transformer {
     my ($self) = @_;
-    return $self->{_single_policy};
+    return $self->{_single_transformer};
 }
 
 #-----------------------------------------------------------------------------
@@ -346,9 +346,9 @@ Returns the default value of C<profile_strictness> as an unvalidated
 string.
 
 
-=item C< single_policy() >
+=item C< single_transformer() >
 
-Returns the default C<single-policy> pattern.  (As a string.)
+Returns the default C<single-transformer> pattern.  (As a string.)
 
 
 =item C< severity() >

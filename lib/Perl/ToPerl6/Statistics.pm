@@ -28,7 +28,7 @@ sub new {
     $self->{_lines_of_data} = 0;
     $self->{_lines_of_perl} = 0;
     $self->{_lines_of_pod} = 0;
-    $self->{_transformations_by_policy} = {};
+    $self->{_transformations_by_transformer} = {};
     $self->{_transformations_by_severity} = {};
     $self->{_total_transformations} = 0;
 
@@ -81,7 +81,7 @@ sub accumulate {
 
     foreach my $transformation ( @{ $transformations } ) {
         $self->{_transformations_by_severity}->{ $transformation->severity() }++;
-        $self->{_transformations_by_policy}->{ $transformation->policy() }++;
+        $self->{_transformations_by_transformer}->{ $transformation->transformer() }++;
         $self->{_total_transformations}++;
     }
 
@@ -178,10 +178,10 @@ sub transformations_by_severity {
 
 #-----------------------------------------------------------------------------
 
-sub transformations_by_policy {
+sub transformations_by_transformer {
     my ( $self ) = @_;
 
-    return $self->{_transformations_by_policy};
+    return $self->{_transformations_by_transformer};
 }
 
 #-----------------------------------------------------------------------------
@@ -344,10 +344,10 @@ The number of transformations of each severity found by this ToPerl6 as a
 reference to a hash keyed by severity.
 
 
-=item C<transformations_by_policy()>
+=item C<transformations_by_transformer()>
 
-The number of transformations of each policy found by this ToPerl6 as a
-reference to a hash keyed by full policy name.
+The number of transformations of each transformer found by this ToPerl6 as a
+reference to a hash keyed by full transformer name.
 
 
 =item C<total_transformations()>

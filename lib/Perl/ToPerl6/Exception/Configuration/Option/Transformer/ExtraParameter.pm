@@ -13,7 +13,7 @@ our $VERSION = '0.03';
 use Exception::Class (
     'Perl::ToPerl6::Exception::Configuration::Option::Transformer::ExtraParameter' => {
         isa         => 'Perl::ToPerl6::Exception::Configuration::Option::Transformer',
-        description => 'The configuration of a policy referred to a non-existant parameter.',
+        description => 'The configuration of a transformer referred to a non-existant parameter.',
         alias       => 'throw_extra_parameter',
     },
 );
@@ -35,11 +35,11 @@ sub full_message {
         $source = q{};
     }
 
-    my $policy = $self->policy();
+    my $transformer = $self->transformer();
     my $option_name = $self->option_name();
 
     return
-        qq{The $policy policy doesn't take a "$option_name" option$source.};
+        qq{The $transformer transformer doesn't take a "$option_name" option$source.};
 }
 
 
@@ -55,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Exception::Configuration::Option::Transformer::ExtraParameter - The configuration referred to a non-existent parameter for a policy.
+Perl::ToPerl6::Exception::Configuration::Option::Transformer::ExtraParameter - The configuration referred to a non-existent parameter for a transformer.
 
 =head1 DESCRIPTION
 
@@ -75,12 +75,12 @@ will go through a deprecation cycle.
 
 =over
 
-=item C<< throw( policy => $policy, option_name => $option_name, source => $source ) >>
+=item C<< throw( transformer => $transformer, option_name => $option_name, source => $source ) >>
 
 See L<Exception::Class/"throw">.
 
 
-=item C<< new( policy => $policy, option_name => $option_name, source => $source ) >>
+=item C<< new( transformer => $transformer, option_name => $option_name, source => $source ) >>
 
 See L<Exception::Class/"new">.
 

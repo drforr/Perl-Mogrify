@@ -19,68 +19,68 @@ our $VERSION = '0.01';
 # Create profile from hash
 
 {
-    my %policy_params = (min_elements => 4);
+    my %transformer_params = (min_elements => 4);
     my %profile_hash = ( '-BasicTypes::Strings::FormatShellStrings' => {},
-        '-Variables::FormatHashKeys' => \%policy_params );
+        '-Variables::FormatHashKeys' => \%transformer_params );
 
     my $up = Perl::ToPerl6::UserProfile->new( -profile => \%profile_hash );
 
-    # Using short policy names
+    # Using short transformer names
 SKIP: {
   skip "XXX Need to restore this eventually", 1;
     is(
-        $up->policy_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::FormatHashKeys'),
         1,
         'Variables::FormatHashKeys is enabled.',
     );
 }
     is(
-        $up->policy_is_disabled('Variables::FormatHashKeys'),
+        $up->transformer_is_disabled('Variables::FormatHashKeys'),
         1,
         'Variables::FormatHashKeys is disabled.',
     );
 SKIP: {
   skip "XXX Need to restore this eventually", 1;
     is_deeply(
-        $up->raw_policy_params('Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        \%transformer_params,
         'Variables::FormatHashKeys got the correct configuration.',
     );
 }
 
 SKIP: {
   skip "XXX Need to restore these eventually", 2;
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
 }
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        \%transformer_params,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Using bogus policy names
+    # Using bogus transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
@@ -90,7 +90,7 @@ SKIP: {
 # Create profile from array
 
 {
-    my %policy_params = (min_elements => 4);
+    my %transformer_params = (min_elements => 4);
     my @profile_array = ( q{ [-NamingConventions::Capitalization] },
                           q{ [Variables::FormatHashKeys]           },
                           q{ min_elements = 4                         },
@@ -99,53 +99,53 @@ SKIP: {
 
     my $up = Perl::ToPerl6::UserProfile->new( -profile => \@profile_array );
 
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::FormatHashKeys'),
         1,
         'Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('NamingConventions::Capitalization'),
         1,
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        \%transformer_params,
         'Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        \%transformer_params,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Using bogus policy names
+    # Using bogus transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
@@ -155,7 +155,7 @@ SKIP: {
 # Create profile from string
 
 {
-    my %policy_params = (min_elements => 4);
+    my %transformer_params = (min_elements => 4);
     my $profile_string = <<'END_PROFILE';
 [-NamingConventions::Capitalization]
 [Variables::FormatHashKeys]
@@ -164,63 +164,63 @@ END_PROFILE
 
     my $up = Perl::ToPerl6::UserProfile->new( -profile => \$profile_string );
 
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::FormatHashKeys'),
         1,
         'Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('NamingConventions::Capitalization'),
         1,
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        \%transformer_params,
         'Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        \%transformer_params,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Using bogus policy names
+    # Using bogus transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );
 }
 
 #-----------------------------------------------------------------------------
-# Test long policy names
+# Test long transformer names
 
 {
-    my %policy_params = (min_elements => 4);
+    my %transformer_params = (min_elements => 4);
     my $long_profile_string = <<'END_PROFILE';
 [-Perl::ToPerl6::Transformer::NamingConventions::Capitalization]
 [Perl::ToPerl6::Transformer::Variables::FormatHashKeys]
@@ -229,53 +229,53 @@ END_PROFILE
 
     my $up = Perl::ToPerl6::UserProfile->new( -profile => \$long_profile_string );
 
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::FormatHashKeys'),
         1,
         'Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('NamingConventions::Capitalization'),
         1,
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        \%transformer_params,
         'Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Now using long policy names
+    # Now using long transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
         1,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
         1,
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
-        \%policy_params,
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        \%transformer_params,
         'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
     );
 
-    # Using bogus policy names
+    # Using bogus transformer names
     is(
-        $up->policy_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't enabled>,
     );
     is(
-        $up->policy_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
+        $up->transformer_is_disabled('Perl::ToPerl6::Transformer::Bogus'),
         q{},
         q<Bogus Transformer isn't disabled>,
     );
     is_deeply(
-        $up->raw_policy_params('Perl::ToPerl6::Transformer::Bogus'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Bogus'),
         {},
         q<Bogus Transformer doesn't have any configuration.>,
     );

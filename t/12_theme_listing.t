@@ -19,9 +19,9 @@ our $VERSION = '0.01';
 #-----------------------------------------------------------------------------
 
 my $profile = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
-my @policy_names = Perl::ToPerl6::TransformerFactory::site_policy_names();
+my @transformer_names = Perl::ToPerl6::TransformerFactory::site_transformer_names();
 my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
-my @transformers = map { $factory->create_policy( -name => $_ ) } @policy_names;
+my @transformers = map { $factory->create_transformer( -name => $_ ) } @transformer_names;
 my $listing = Perl::ToPerl6::ThemeListing->new( -transformers => \@transformers );
 
 my $expected = <<'END_EXPECTED';

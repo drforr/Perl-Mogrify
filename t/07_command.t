@@ -121,10 +121,10 @@ is( $options{-profile}, 'foo', $message);
 
 #-----------------------------------------------------------------------------
 
-local @ARGV = qw(-single-policy nowarnings);
+local @ARGV = qw(-single-transformer nowarnings);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{'-single-policy'}, 'nowarnings', $message);
+is( $options{'-single-transformer'}, 'nowarnings', $message);
 
 #-----------------------------------------------------------------------------
 

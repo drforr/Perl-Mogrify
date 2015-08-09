@@ -112,14 +112,14 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 {
     my $profile = Perl::ToPerl6::UserProfile->new( -profile => q{} );
     my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
-    my @policy_names = Perl::ToPerl6::TransformerFactory::site_policy_names();
-    my @pols = map { $factory->create_policy( -name => $_ ) } @policy_names;
+    my @transformer_names = Perl::ToPerl6::TransformerFactory::site_transformer_names();
+    my @pols = map { $factory->create_transformer( -name => $_ ) } @transformer_names;
 
     #--------------
 
     my $rule = 'cosmetic';
     my $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    my @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
+    my @members = grep { $theme->transformer_is_thematic( -transformer => $_) }  @pols;
     ok(
         ( all { has_theme( $_, 'cosmetic' ) } @members ),
         'theme rule: "cosmetic"',
@@ -129,7 +129,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic - pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) }  @pols;
     ok(
         ( all  { has_theme( $_, 'cosmetic' ) } @members ),
         'theme rule: "cosmetic - pbp", all has_theme(cosmetic)',
@@ -141,7 +141,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic and not pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) }  @pols;
     ok(
         ( all  { has_theme( $_, 'cosmetic' ) } @members ),
         'theme rule: "cosmetic and not pbp", all has_theme(cosmetic)',
@@ -153,7 +153,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic && ! pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) }  @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) }  @pols;
     ok(
         ( all  { has_theme( $_, 'cosmetic' ) } @members ),
         'theme rule: "cosmetic && ! pbp", all has_theme(cosmetic)',
@@ -167,7 +167,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic + pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'cosmetic') || has_theme($_, 'pbp') } @members ),
         'theme rule: "cosmetic + pbp"',
@@ -175,7 +175,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic || pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'cosmetic') || has_theme($_, 'pbp') } @members ),
         'theme rule: "cosmetic || pbp"',
@@ -183,7 +183,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic or pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'cosmetic') || has_theme($_, 'pbp') } @members),
         'theme rule: "cosmetic or pbp"',
@@ -193,7 +193,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'bugs * pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'bugs')  } @members ),
         'theme rule: "bugs * pbp", all has_theme(bugs)',
@@ -205,7 +205,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'bugs and pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'bugs')  } @members ),
         'theme rule: "bugs and pbp", all has_theme(bugs)',
@@ -217,7 +217,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'bugs && pbp';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'bugs')  } @members ),
         'theme rule: "bugs && pbp", all has_theme(bugs)',
@@ -231,7 +231,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'pbp - (danger * security)';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'pbp') } @members ),
         'theme rule: "pbp - (danger * security)", all has_theme(pbp)',
@@ -243,7 +243,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'pbp and ! (danger and security)';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'pbp') } @members ),
         'theme rule: "pbp and not (danger and security)", all has_theme(pbp)',
@@ -255,7 +255,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'pbp && not (danger && security)';
     $theme = Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     ok(
         ( all  { has_theme($_, 'pbp') } @members ),
         'theme rule: "pbp && not (danger && security)", all has_theme(pbp)',
@@ -269,22 +269,22 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'bogus';
     $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     is( scalar @members, 0, 'bogus theme' );
 
     $rule = 'bogus - pbp';
     $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     is( scalar @members, 0, 'bogus theme' );
 
     $rule = q{};
     $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     is( scalar @members, scalar @pols, 'empty theme' );
 
     $rule = q{};
     $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
-    @members = grep { $theme->policy_is_thematic( -policy => $_) } @pols;
+    @members = grep { $theme->transformer_is_thematic( -transformer => $_) } @pols;
     is( scalar @members, scalar @pols, 'undef theme' );
 
     #--------------
@@ -292,7 +292,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
     $rule = 'cosmetic *(';
     $theme =  Perl::ToPerl6::Theme->new( -rule => $rule );
-    eval{ $theme->policy_is_thematic( -policy => $pols[0] ) };
+    eval{ $theme->transformer_is_thematic( -transformer => $pols[0] ) };
     like(
         $EVAL_ERROR,
         qr/syntax [ ] error/xms,
@@ -304,8 +304,8 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 sub has_theme {
-    my ($policy, $theme) = @_;
-    return any { $_ eq $theme } $policy->get_themes();
+    my ($transformer, $theme) = @_;
+    return any { $_ eq $theme } $transformer->get_themes();
 }
 
 #-----------------------------------------------------------------------------

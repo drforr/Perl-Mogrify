@@ -89,8 +89,8 @@ Readonly::Array our @EXPORT_OK => qw(
     is_unchecked_call
     is_valid_numeric_verbosity
     parse_arg_list
-    policy_long_name
-    policy_short_name
+    transformer_long_name
+    transformer_short_name
     precedence_of
     severity_to_number
     shebang_line
@@ -890,20 +890,20 @@ sub is_in_void_context {
 
 #-----------------------------------------------------------------------------
 
-sub policy_long_name {
-    my ( $policy_name ) = @_;
-    if ( $policy_name !~ m{ \A $POLICY_NAMESPACE }xms ) {
-        $policy_name = $POLICY_NAMESPACE . q{::} . $policy_name;
+sub transformer_long_name {
+    my ( $transformer_name ) = @_;
+    if ( $transformer_name !~ m{ \A $POLICY_NAMESPACE }xms ) {
+        $transformer_name = $POLICY_NAMESPACE . q{::} . $transformer_name;
     }
-    return $policy_name;
+    return $transformer_name;
 }
 
 #-----------------------------------------------------------------------------
 
-sub policy_short_name {
-    my ( $policy_name ) = @_;
-    $policy_name =~ s{\A $POLICY_NAMESPACE ::}{}xms;
-    return $policy_name;
+sub transformer_short_name {
+    my ( $transformer_name ) = @_;
+    $transformer_name =~ s{\A $POLICY_NAMESPACE ::}{}xms;
+    return $transformer_name;
 }
 
 #-----------------------------------------------------------------------------
@@ -1681,14 +1681,14 @@ Given a L<PPI::Token|PPI::Token>, answer whether it appears to be in a
 void context.
 
 
-=item C<policy_long_name( $policy_name )>
+=item C<transformer_long_name( $transformer_name )>
 
-Given a policy class name in long or short form, return the long form.
+Given a transformer class name in long or short form, return the long form.
 
 
-=item C<policy_short_name( $policy_name )>
+=item C<transformer_short_name( $transformer_name )>
 
-Given a policy class name in long or short form, return the short
+Given a transformer class name in long or short form, return the short
 form.
 
 

@@ -20,7 +20,7 @@ our $VERSION = '0.01';
 my $specification;
 my $parameter;
 my %config;
-my $policy;
+my $transformer;
 
 $specification =
     {
@@ -65,32 +65,32 @@ like(
 $specification->{enumeration_values} = [ qw{ mercury gemini apollo } ];
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, undef, q{no value, no default});
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, undef, q{no value, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'gemini';
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, 'gemini', q{'gemini', no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, 'gemini', q{'gemini', no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'easter_bunny';
-eval {$parameter->parse_and_validate_config_value($policy, \%config); };
+eval {$parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{invalid value});
 
 $specification->{default_string} = 'apollo';
 delete $config{test};
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, 'apollo', q{no value, default 'apollo'});
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, 'apollo', q{no value, default 'apollo'});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'gemini';
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, 'gemini', q{'gemini', default 'apollo'});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, 'gemini', q{'gemini', default 'apollo'});
 
 
 delete $specification->{default_string};
@@ -101,53 +101,53 @@ delete $config{test};
 my $values;
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 0, q{no value, no default} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'moore';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 1, q{'moore', no default} );
 ok( $values->{moore}, q{'moore', no default} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'gaiman miller';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 2, q{'gaiman miller', no default} );
 ok( $values->{gaiman}, q{'gaiman miller', no default} );
 ok( $values->{miller}, q{'gaiman miller', no default} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'leeb';
-eval {$parameter->parse_and_validate_config_value($policy, \%config); };
+eval {$parameter->parse_and_validate_config_value($transformer, \%config); };
 ok($EVAL_ERROR, q{invalid value});
 
 $specification->{default_string} = 'ellis miller';
 delete $config{test};
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 2, q{no value, default 'ellis miller'} );
 ok( $values->{ellis}, q{no value, default 'ellis miller'} );
 ok( $values->{miller}, q{no value, default 'ellis miller'} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'moore';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 1, q{'moore', default 'ellis miller'} );
 ok( $values->{moore}, q{'moore', default 'ellis miller'} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'gaiman miller';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 2, q{'gaiman miller', default 'ellis miller'} );
 ok( $values->{gaiman}, q{'gaiman miller', default 'ellis miller'} );
 ok( $values->{miller}, q{'gaiman miller', default 'ellis miller'} );

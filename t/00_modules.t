@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 
 use PPI::Document;
 
-use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::TestUtils qw(bundled_transformer_names);
 
 use Test::More;
 
@@ -20,7 +20,7 @@ our $VERSION = '0.03';
 
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
-my @bundled_policy_names = bundled_policy_names();
+my @bundled_transformer_names = bundled_transformer_names();
 
 my @concrete_exceptions = qw{
     AggregateConfiguration
@@ -39,7 +39,7 @@ my @concrete_exceptions = qw{
 plan tests =>
         144
     +   (  9 * scalar @concrete_exceptions  )
-    +   ( 17 * scalar @bundled_policy_names )
+    +   ( 17 * scalar @bundled_transformer_names )
 ;
 
 # pre-compute for version comparisons
@@ -73,14 +73,14 @@ can_ok('Perl::ToPerl6::Config', 'include');
 can_ok('Perl::ToPerl6::Config', 'only');
 can_ok('Perl::ToPerl6::Config', 'profile_strictness');
 can_ok('Perl::ToPerl6::Config', 'severity');
-can_ok('Perl::ToPerl6::Config', 'single_policy');
+can_ok('Perl::ToPerl6::Config', 'single_transformer');
 can_ok('Perl::ToPerl6::Config', 'theme');
 can_ok('Perl::ToPerl6::Config', 'top');
 can_ok('Perl::ToPerl6::Config', 'verbose');
 can_ok('Perl::ToPerl6::Config', 'color');
 can_ok('Perl::ToPerl6::Config', 'unsafe_allowed');
 can_ok('Perl::ToPerl6::Config', 'mogrification_fatal');
-can_ok('Perl::ToPerl6::Config', 'site_policy_names');
+can_ok('Perl::ToPerl6::Config', 'site_transformer_names');
 can_ok('Perl::ToPerl6::Config', 'color_severity_highest');
 can_ok('Perl::ToPerl6::Config', 'color_severity_high');
 can_ok('Perl::ToPerl6::Config', 'color_severity_medium');
@@ -104,7 +104,7 @@ can_ok('Perl::ToPerl6::OptionsProcessor', 'include');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'force');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'only');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'profile_strictness');
-can_ok('Perl::ToPerl6::OptionsProcessor', 'single_policy');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'single_transformer');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'severity');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'theme');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'top');
@@ -159,9 +159,9 @@ can_ok('Perl::ToPerl6::Transformer', 'transformation');
 can_ok('Perl::ToPerl6::Transformer', 'is_safe');
 
 {
-    my $policy = Perl::ToPerl6::Transformer->new();
-    isa_ok($policy, 'Perl::ToPerl6::Transformer');
-    is($policy->VERSION(), $version_string, 'Perl::ToPerl6::Transformer version');
+    my $transformer = Perl::ToPerl6::Transformer->new();
+    isa_ok($transformer, 'Perl::ToPerl6::Transformer');
+    is($transformer->VERSION(), $version_string, 'Perl::ToPerl6::Transformer version');
 }
 
 #-----------------------------------------------------------------------------
@@ -174,7 +174,7 @@ can_ok('Perl::ToPerl6::Transformation', 'explanation');
 can_ok('Perl::ToPerl6::Transformation', 'get_format');
 can_ok('Perl::ToPerl6::Transformation', 'location');
 can_ok('Perl::ToPerl6::Transformation', 'new');
-can_ok('Perl::ToPerl6::Transformation', 'policy');
+can_ok('Perl::ToPerl6::Transformation', 'transformer');
 can_ok('Perl::ToPerl6::Transformation', 'set_format');
 can_ok('Perl::ToPerl6::Transformation', 'severity');
 can_ok('Perl::ToPerl6::Transformation', 'sort_by_location');
@@ -194,8 +194,8 @@ is($viol->VERSION(), $version_string, 'Perl::ToPerl6::Transformation version');
 use_ok('Perl::ToPerl6::UserProfile') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::ToPerl6::UserProfile', 'options_processor');
 can_ok('Perl::ToPerl6::UserProfile', 'new');
-can_ok('Perl::ToPerl6::UserProfile', 'policy_is_disabled');
-can_ok('Perl::ToPerl6::UserProfile', 'policy_is_enabled');
+can_ok('Perl::ToPerl6::UserProfile', 'transformer_is_disabled');
+can_ok('Perl::ToPerl6::UserProfile', 'transformer_is_enabled');
 
 my $up = Perl::ToPerl6::UserProfile->new();
 isa_ok($up, 'Perl::ToPerl6::UserProfile');
@@ -205,9 +205,9 @@ is($up->VERSION(), $version_string, 'Perl::ToPerl6::UserProfile version');
 # Test Perl::ToPerl6::TransformerFactory module interface
 
 use_ok('Perl::ToPerl6::TransformerFactory') or BAIL_OUT(q<Can't continue.>);
-can_ok('Perl::ToPerl6::TransformerFactory', 'create_policy');
+can_ok('Perl::ToPerl6::TransformerFactory', 'create_transformer');
 can_ok('Perl::ToPerl6::TransformerFactory', 'new');
-can_ok('Perl::ToPerl6::TransformerFactory', 'site_policy_names');
+can_ok('Perl::ToPerl6::TransformerFactory', 'site_transformer_names');
 
 
 my $profile = Perl::ToPerl6::UserProfile->new();
@@ -221,7 +221,7 @@ is($factory->VERSION(), $version_string, 'Perl::ToPerl6::TransformerFactory vers
 use_ok('Perl::ToPerl6::Theme') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::ToPerl6::Theme', 'new');
 can_ok('Perl::ToPerl6::Theme', 'rule');
-can_ok('Perl::ToPerl6::Theme', 'policy_is_thematic');
+can_ok('Perl::ToPerl6::Theme', 'transformer_is_thematic');
 
 
 my $theme = Perl::ToPerl6::Theme->new( -rule => 'foo' );
@@ -281,7 +281,7 @@ can_ok('Perl::ToPerl6::Command', 'run');
 # Test module interface for each Transformer subclass
 
 {
-    for my $mod ( @bundled_policy_names ) {
+    for my $mod ( @bundled_transformer_names ) {
 
         use_ok($mod) or BAIL_OUT(q<Can't continue.>);
         can_ok($mod, 'applies_to');
@@ -298,10 +298,10 @@ can_ok('Perl::ToPerl6::Command', 'run');
         can_ok($mod, 'transformation');
         can_ok($mod, 'is_safe');
 
-        my $policy = $mod->new();
-        isa_ok($policy, 'Perl::ToPerl6::Transformer');
-        is($policy->VERSION(), $version_string, "Version of $mod");
-        ok($policy->is_safe(), "CORE policy $mod is marked safe");
+        my $transformer = $mod->new();
+        isa_ok($transformer, 'Perl::ToPerl6::Transformer');
+        is($transformer->VERSION(), $version_string, "Version of $mod");
+        ok($transformer->is_safe(), "CORE transformer $mod is marked safe");
     }
 }
 

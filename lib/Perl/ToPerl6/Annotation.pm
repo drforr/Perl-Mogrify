@@ -145,9 +145,9 @@ sub disabled_transformers {
 
 #-----------------------------------------------------------------------------
 
-sub disables_policy {
-    my ($self, $policy_name) = @_;
-    return 1 if $self->{_disabled_transformers}->{$policy_name};
+sub disables_transformer {
+    my ($self, $transformer_name) = @_;
+    return 1 if $self->{_disabled_transformers}->{$transformer_name};
     return 1 if $self->disables_all_transformers();
     return 0;
 }
@@ -236,32 +236,32 @@ sub _parse_annotation {
     #
     #############################################################################
 
-    my @disabled_policy_names = ();
+    my @disabled_transformer_names = ();
     if ( my ($patterns_string) = $annotation_element =~ $no_mogrify ) {
 
         # Compose the specified modules into a regex alternation.  Wrap each
         # in a no-capturing group to permit "|" in the modules specification.
 
-        my @policy_name_patterns = grep { $_ ne $EMPTY }
+        my @transformer_name_patterns = grep { $_ ne $EMPTY }
             split m{\s *[,\s] \s*}xms, $patterns_string;
-        my $re = join $PIPE, map {"(?:$_)"} @policy_name_patterns;
-        my @site_policy_names = Perl::ToPerl6::TransformerFactory::site_policy_names();
-        @disabled_policy_names = grep {m/$re/ixms} @site_policy_names;
+        my $re = join $PIPE, map {"(?:$_)"} @transformer_name_patterns;
+        my @site_transformer_names = Perl::ToPerl6::TransformerFactory::site_transformer_names();
+        @disabled_transformer_names = grep {m/$re/ixms} @site_transformer_names;
 
         # It is possible that the Transformer patterns listed in the annotation do not
-        # match any of the site policy names.  This could happen when running
+        # match any of the site transformer names.  This could happen when running
         # on a machine that does not have the same set of Transformers as the
         # author.
         # So we must return something here, otherwise all Transformers will be
         # disabled.  We probably need to add a mechanism to (optionally) warn
         # about this, just to help the author avoid writing invalid Transformer names.
 
-        if (not @disabled_policy_names) {
-            @disabled_policy_names = @policy_name_patterns;
+        if (not @disabled_transformer_names) {
+            @disabled_transformer_names = @transformer_name_patterns;
         }
     }
 
-    return hashify(@disabled_policy_names);
+    return hashify(@disabled_transformer_names);
 }
 
 #-----------------------------------------------------------------------------
@@ -283,11 +283,11 @@ Perl::ToPerl6::Annotation - A "## no mogrify" annotation in a document.
   $annotation = Perl::ToPerl6::Annotation->new( -element => $no_mogrify_ppi_element );
 
   $bool = $annotation->disables_line( $number );
-  $bool = $annotation->disables_policy( $policy_object );
+  $bool = $annotation->disables_transformer( $transformer_object );
   $bool = $annotation->disables_all_transformers();
 
   ($start, $end) = $annotation->effective_range();
-  @disabled_policy_names = $annotation->disabled_transformers();
+  @disabled_transformer_names = $annotation->disabled_transformers();
 
 
 =head1 DESCRIPTION
@@ -347,12 +347,12 @@ Returns true if this Annotation disables C<$line> for any (or all)
 Transformers.
 
 
-=item C<< disables_policy( $policy_object ) >>
+=item C<< disables_transformer( $transformer_object ) >>
 
-=item C<< disables_policy( $policy_name ) >>
+=item C<< disables_transformer( $transformer_name ) >>
 
 Returns true if this Annotation disables C<$polciy_object> or
-C<$policy_name> at any (or all) lines.
+C<$transformer_name> at any (or all) lines.
 
 
 =item C<< disables_all_transformers() >>

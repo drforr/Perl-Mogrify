@@ -14,16 +14,16 @@ use English qw< $OS_ERROR $EXECUTABLE_NAME -no_match_vars >;
 use base 'Perl::ToPerl6::Module::Build::Standard';
 
 
-sub ACTION_policysummary {
+sub ACTION_transformersummary {
     my ($self) = @_;
 
     require Perl::ToPerl6::TransformerSummaryGenerator;
     Perl::ToPerl6::TransformerSummaryGenerator->import(
-        qw< generate_policy_summary >
+        qw< generate_transformer_summary >
     );
 
-    my $policy_summary_file = generate_policy_summary();
-    $self->add_to_cleanup( $policy_summary_file );
+    my $transformer_summary_file = generate_transformer_summary();
+    $self->add_to_cleanup( $transformer_summary_file );
 
     return;
 }
@@ -42,7 +42,7 @@ sub ACTION_nytprof {
 sub authortest_dependencies {
     my ($self) = @_;
 
-    $self->depends_on('policysummary');
+    $self->depends_on('transformersummary');
     $self->SUPER::authortest_dependencies();
 
     return;
@@ -115,7 +115,7 @@ The following actions have been added or redefined:
 
 =over
 
-=item policysummary
+=item transformersummary
 
 Generates the F<TransformerSummary.pod> file.  This should only be used by
 C<Perl::ToPerl6> developers.  This action is also invoked by the C<authortest>

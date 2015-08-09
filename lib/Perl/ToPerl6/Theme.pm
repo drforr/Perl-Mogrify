@@ -73,20 +73,20 @@ sub rule {
 
 #-----------------------------------------------------------------------------
 
-sub policy_is_thematic {
+sub transformer_is_thematic {
 
     my ($self, %args) = @_;
-    my $policy = $args{-policy}
-        || throw_internal 'The -policy argument is required';
-    ref $policy
-        || throw_internal 'The -policy must be an object';
+    my $transformer = $args{-transformer}
+        || throw_internal 'The -transformer argument is required';
+    ref $transformer
+        || throw_internal 'The -transformer must be an object';
 
     my $rule = $self->{_rule} or return 1;
-    my %themes = hashify( $policy->get_themes() );
+    my %themes = hashify( $transformer->get_themes() );
 
     # This bit of magic turns the rule into a perl expression that can be
     # eval-ed for truth.  Each theme name in the rule is translated to 1 or 0
-    # if the $policy belongs in that theme.  For example:
+    # if the $transformer belongs in that theme.  For example:
     #
     # 'bugs && (pbp || core)'  ...could become... '1 && (0 || 1)'
 
@@ -162,7 +162,7 @@ a string expression that evaluates to true or false for each Transformer..
 See L<"THEME RULES"> for more information.
 
 
-=item C<< policy_is_thematic( -policy => $policy ) >>
+=item C<< transformer_is_thematic( -transformer => $transformer ) >>
 
 Given a reference to a L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>
 object, this method returns evaluates the rule against the themes that

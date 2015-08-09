@@ -13,7 +13,7 @@ use Perl::ToPerl6::Exception::AggregateConfiguration;
 use Perl::ToPerl6::Config qw<>;
 use Perl::ToPerl6::TransformerFactory (-test => 1);
 use Perl::ToPerl6::TestUtils qw<
-    bundled_policy_names
+    bundled_transformer_names
     names_of_transformers_willing_to_work
 >;
 use Perl::ToPerl6::Utils qw< :booleans :characters :severities >;
@@ -36,13 +36,13 @@ my @names_of_transformers_willing_to_work =
         -severity   => $SEVERITY_LOWEST,
         -theme      => 'core',
     );
-my @native_policy_names  = bundled_policy_names();
+my @native_transformer_names  = bundled_transformer_names();
 my $total_transformers   = scalar @names_of_transformers_willing_to_work;
 
 #-----------------------------------------------------------------------------
 
 {
-    my $all_policy_count =
+    my $all_transformer_count =
         scalar
             Perl::ToPerl6::Config
                 ->new(
@@ -51,9 +51,9 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
                 )
                 ->all_transformers_enabled_or_not();
 
-#    plan tests => 93 + $all_policy_count - (129-88); # XXX Look into this later
+#    plan tests => 93 + $all_transformer_count - (129-88); # XXX Look into this later
 plan tests => 88;
-diag("XXX Fix the policy count later");
+diag("XXX Fix the transformer count later");
 }
 
 #-----------------------------------------------------------------------------
@@ -63,17 +63,17 @@ diag("XXX Fix the policy count later");
 
 SKIP: {
     skip "XXX For now all transformers are the same 'severity'", 4;
-    my $last_policy_count = $total_transformers + 1;
+    my $last_transformer_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my $configuration =
             Perl::ToPerl6::Config->new(
                 -severity   => $severity,
                 -theme      => 'core',
             );
-        my $policy_count = scalar $configuration->transformers();
+        my $transformer_count = scalar $configuration->transformers();
         my $test_name = "Count native transformers, severity: $severity";
-        cmp_ok($policy_count, '<', $last_policy_count, $test_name);
-        $last_policy_count = $policy_count;
+        cmp_ok($transformer_count, '<', $last_transformer_count, $test_name);
+        $last_transformer_count = $transformer_count;
     }
 }
 
@@ -83,8 +83,8 @@ SKIP: {
 
 SKIP: {
     skip "XXX For now all transformers are the same 'severity'", 4;
-    my %profile = map { $_ => {} } @native_policy_names;
-    my $last_policy_count = $total_transformers + 1;
+    my %profile = map { $_ => {} } @native_transformer_names;
+    my $last_transformer_count = $total_transformers + 1;
     for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
         my %pc_args = (
             -profile    => \%profile,
@@ -92,10 +92,10 @@ SKIP: {
             -theme      => 'core',
         );
         my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
-        my $policy_count = scalar $mogrify->transformers();
+        my $transformer_count = scalar $mogrify->transformers();
         my $test_name = "Count all transformers, severity: $severity";
-        cmp_ok($policy_count, '<', $last_policy_count, $test_name);
-        $last_policy_count = $policy_count;
+        cmp_ok($transformer_count, '<', $last_transformer_count, $test_name);
+        $last_transformer_count = $transformer_count;
     }
 }
 
@@ -111,18 +111,18 @@ SKIP: {
     my %transformers_by_name =
         map { $_->get_short_name() => $_ } $configuration->transformers();
 
-    foreach my $policy ( $configuration->all_transformers_enabled_or_not() ) {
-        my $enabled = $policy->is_enabled();
-        if ( delete $transformers_by_name{ $policy->get_short_name() } ) {
+    foreach my $transformer ( $configuration->all_transformers_enabled_or_not() ) {
+        my $enabled = $transformer->is_enabled();
+        if ( delete $transformers_by_name{ $transformer->get_short_name() } ) {
             ok(
                 $enabled,
-                $policy->get_short_name() . ' is enabled.',
+                $transformer->get_short_name() . ' is enabled.',
             );
         }
         else {
             ok(
                 ! $enabled && defined $enabled,
-                $policy->get_short_name() . ' is not enabled.',
+                $transformer->get_short_name() . ' is not enabled.',
             );
         }
     }
@@ -159,19 +159,19 @@ SKIP: {
             -theme      => 'core',
         );
         my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
-        my $policy_count = scalar $mogrify->transformers();
+        my $transformer_count = scalar $mogrify->transformers();
         my $expected_count = ($SEVERITY_HIGHEST - $severity + 1) * 10;
         my $test_name = "user-defined severity level: $severity";
-        is( $policy_count, $expected_count, $test_name );
+        is( $transformer_count, $expected_count, $test_name );
     }
 
     # All remaining transformers should be at the lowest severity
     my %pc_args = (-profile => \%profile, -severity => $SEVERITY_LOWEST);
     my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
-    my $policy_count = scalar $mogrify->transformers();
+    my $transformer_count = scalar $mogrify->transformers();
     my $expected_count = $SEVERITY_HIGHEST * 10;
     my $test_name = 'user-defined severity, all remaining transformers';
-    cmp_ok( $policy_count, '>=', $expected_count, $test_name);
+    cmp_ok( $transformer_count, '>=', $expected_count, $test_name);
 }
 
 #-----------------------------------------------------------------------------
@@ -393,12 +393,12 @@ SKIP: {
 }
 
 #-----------------------------------------------------------------------------
-# Test the -single-policy switch
+# Test the -single-transformer switch
 
 {
-    my %pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
+    my %pc_config = ('-single-transformer' => 'Variables::FormatHashKeys');
     my @transformers = Perl::ToPerl6::Config->new( %pc_config )->transformers();
-    is(scalar @transformers, 1, '-single-policy switch');
+    is(scalar @transformers, 1, '-single-transformer switch');
 }
 
 #-----------------------------------------------------------------------------
@@ -442,19 +442,19 @@ SKIP: {
 {
     my $config = Perl::ToPerl6::Config->new( -profile => 'NONE' );
 
-    # Try adding a bogus policy
-    eval{ $config->apply_transform( -policy => 'Bogus::Transformer') };
+    # Try adding a bogus transformer
+    eval{ $config->apply_transform( -transformer => 'Bogus::Transformer') };
     like(
         $EVAL_ERROR,
-        qr/Unable [ ] to [ ] create [ ] policy/xms,
+        qr/Unable [ ] to [ ] create [ ] transformer/xms,
         'apply_transform w/ bad args',
     );
 
-    # Try adding w/o policy
+    # Try adding w/o transformer
     eval { $config->apply_transform() };
     like(
         $EVAL_ERROR,
-        qr/The [ ] -policy [ ] argument [ ] is [ ] required/xms,
+        qr/The [ ] -transformer [ ] argument [ ] is [ ] required/xms,
         'apply_transform w/o args',
     );
 
@@ -466,20 +466,20 @@ SKIP: {
         'invalid severity'
     );
 
-    # Try using vague -single-policy option
-    eval{ Perl::ToPerl6::Config->new( '-single-policy' => q<.*> ) };
+    # Try using vague -single-transformer option
+    eval{ Perl::ToPerl6::Config->new( '-single-transformer' => q<.*> ) };
     like(
         $EVAL_ERROR,
         qr/matched [ ] multiple [ ] transformers/xms,
-        'vague -single-policy',
+        'vague -single-transformer',
     );
 
-    # Try using invalid -single-policy option
-    eval{ Perl::ToPerl6::Config->new( '-single-policy' => 'bogus' ) };
+    # Try using invalid -single-transformer option
+    eval{ Perl::ToPerl6::Config->new( '-single-transformer' => 'bogus' ) };
     like(
         $EVAL_ERROR,
         qr/did [ ] not [ ] match [ ] any [ ] transformers/xms,
-        'invalid -single-policy',
+        'invalid -single-transformer',
     );
 }
 
@@ -503,9 +503,9 @@ SKIP: {
     @p = Perl::ToPerl6::Config->new( %unsafe_pc_config )->transformers();
     is(scalar @p, 2, 'Also loaded unsafe transformers with -allow-unsafe switch');
 
-    my %singular_pc_config = ('-single-policy' => 'Variables::FormatHashKeys');
+    my %singular_pc_config = ('-single-transformer' => 'Variables::FormatHashKeys');
     @p = Perl::ToPerl6::Config->new( %singular_pc_config )->transformers();
-    is(scalar @p, 1, '-single-policy always loads Transformer, even if unsafe');
+    is(scalar @p, 1, '-single-transformer always loads Transformer, even if unsafe');
 }
 
 #-----------------------------------------------------------------------------

@@ -20,7 +20,7 @@ our $VERSION = '0.01';
 my $specification;
 my $parameter;
 my %config;
-my $policy;
+my $transformer;
 my $values;
 
 $specification =
@@ -32,22 +32,22 @@ $specification =
 
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 0, q{no value, no default} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'koyaanisqatsi';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 1, q{'koyaanisqatsi', no default} );
 ok( $values->{koyaanisqatsi}, q{'koyaanisqatsi', no default} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'powaqqatsi naqoyqatsi';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 2, q{'powaqqatsi naqoyqatsi', no default} );
 ok( $values->{powaqqatsi}, q{'powaqqatsi naqoyqatsi', no default} );
 ok( $values->{naqoyqatsi}, q{'powaqqatsi naqoyqatsi', no default} );
@@ -57,24 +57,24 @@ $specification->{default_string} = 'baraka chronos';
 delete $config{test};
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 2, q{no value, default 'baraka chronos'} );
 ok( $values->{baraka}, q{no value, default 'baraka chronos'} );
 ok( $values->{chronos}, q{no value, default 'baraka chronos'} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'akira';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 1, q{'akira', default 'baraka chronos'} );
 ok( $values->{akira}, q{'akira', default 'baraka chronos'} );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'downfall murderball';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is( scalar( keys %{$values} ), 2, q{'downfall murderball', default 'baraka chronos'} );
 ok( $values->{downfall}, q{'downfall murderball', default 'baraka chronos'} );
 ok( $values->{murderball}, q{'downfall murderball', default 'baraka chronos'} );
@@ -86,9 +86,9 @@ $specification->{list_always_present_values} =
 delete $config{test};
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is(
     scalar( keys %{$values} ),
     4,
@@ -111,10 +111,10 @@ ok(
     q{no value, default 'chainsuck snog', always 'leaether strip' & 'front line assembly'}
 );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'pig';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is(
     scalar( keys %{$values} ),
     3,
@@ -133,10 +133,10 @@ ok(
     q{'pig', default 'chainsuck snog', always 'leaether strip' & 'front line assembly'}
 );
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'microdisney foetus';
-$parameter->parse_and_validate_config_value($policy, \%config);
-$values = $policy->{_test};
+$parameter->parse_and_validate_config_value($transformer, \%config);
+$values = $transformer->{_test};
 is(
     scalar( keys %{$values} ),
     4,

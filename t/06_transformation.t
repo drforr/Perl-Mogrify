@@ -40,7 +40,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
     can_ok('Perl::ToPerl6::Transformation', 'explanation');
     can_ok('Perl::ToPerl6::Transformation', 'filename');
     can_ok('Perl::ToPerl6::Transformation', 'source');
-    can_ok('Perl::ToPerl6::Transformation', 'policy');
+    can_ok('Perl::ToPerl6::Transformation', 'transformer');
     can_ok('Perl::ToPerl6::Transformation', 'get_format');
     can_ok('Perl::ToPerl6::Transformation', 'set_format');
     can_ok('Perl::ToPerl6::Transformation', 'to_string');
@@ -73,7 +73,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
     is(   $viol->visual_column_number(), 1,               'visual_column_number');
     is(   $viol->severity(),             99,              'severity');
     is(   $viol->source(),               $code,           'source');
-    is(   $viol->policy(),               $pkg,            'policy');
+    is(   $viol->transformer(),               $pkg,            'transformer');
     is(   $viol->element_class(),        'PPI::Document', 'element class');
     like( $viol->diagnostics(), qr/ \A $no_diagnostics_msg \z /xms, 'diagnostics');
 
@@ -122,7 +122,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
     is( $viol->visual_column_number(), 1,                  'visual_column_number after dropping document');
     is( $viol->severity(),             99,                 'severity after dropping document');
     is( $viol->source(),               $code,              'source after dropping document');
-    is( $viol->policy(),               $pkg,               'policy after dropping document');
+    is( $viol->transformer(),               $pkg,               'transformer after dropping document');
     is( $viol->element_class(),        'PPI::Token::Word', 'element class after dropping document');
     like(
         $viol->diagnostics(),

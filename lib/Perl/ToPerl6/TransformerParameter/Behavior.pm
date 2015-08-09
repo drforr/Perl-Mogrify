@@ -53,7 +53,7 @@ Perl::ToPerl6::TransformerParameter::Behavior - Default type-specific actions fo
 
 Provides a standard set of functionality for a
 L<Perl::ToPerl6::TransformerParameter|Perl::ToPerl6::TransformerParameter> so that
-the developer of a policy does not have to provide it her/himself.
+the developer of a transformer does not have to provide it her/himself.
 The developer can override most of the functionality in the
 subclasses; these are just defaults.
 

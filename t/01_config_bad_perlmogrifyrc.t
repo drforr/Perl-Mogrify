@@ -50,7 +50,7 @@ Readonly::Scalar my $PROFILE => 't/01_bad_perlmogrifyrc';
 Readonly::Scalar my $NO_ENABLED_POLICIES_MESSAGE =>
     q<There are no enabled transformers.>;
 Readonly::Scalar my $INVALID_PARAMETER_MESSAGE =>
-    q<The BuiltinFunctions::RequireBlockGrep policy doesn't take a "no_such_parameter" option.>;
+    q<The BuiltinFunctions::RequireBlockGrep transformer doesn't take a "no_such_parameter" option.>;
 Readonly::Scalar my $REQUIRE_POD_SECTIONS_SOURCE_MESSAGE_PREFIX =>
     q<The value for the Variables::FormatHashKeys "source" option ("Zen_and_the_Art_of_Motorcycle_Maintenance") is not one of the allowed values: >;
 
@@ -86,7 +86,7 @@ my @parameters = (
         include
         profile-strictness
         severity
-        single-policy
+        single-transformer
         theme
         top
         verbose
@@ -128,7 +128,7 @@ is(
     'should not have received an extra-parameter exception',
 );
 
-# Test that we get an exception for bad individual policy configuration.
+# Test that we get an exception for bad individual transformer configuration.
 # The selection of FormatHashKeys is arbitrary.
 SKIP: {
     skip "XXX Not sure what to do with this", 1;

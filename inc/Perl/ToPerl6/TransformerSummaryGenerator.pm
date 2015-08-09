@@ -24,11 +24,11 @@ our $VERSION = '1.116';
 
 #-----------------------------------------------------------------------------
 
-our @EXPORT_OK = qw< generate_policy_summary >;
+our @EXPORT_OK = qw< generate_transformer_summary >;
 
 #-----------------------------------------------------------------------------
 
-sub generate_policy_summary {
+sub generate_transformer_summary {
 
     print "\n\nGenerating Perl::ToPerl6::TransformerSummary.\n";
 
@@ -37,10 +37,10 @@ sub generate_policy_summary {
       Perl::ToPerl6::Config->new(-profile => $EMPTY, -severity => 1, -theme => 'core');
 
     my @transformers = $configuration->all_transformers_enabled_or_not();
-    my $policy_summary = 'lib/Perl/ToPerl6/TransformerSummary.pod';
+    my $transformer_summary = 'lib/Perl/ToPerl6/TransformerSummary.pod';
 
-    open my $pod_file, '>', $policy_summary
-      or confess "Could not open $policy_summary: $ERRNO";
+    open my $pod_file, '>', $transformer_summary
+      or confess "Could not open $transformer_summary: $ERRNO";
 
     print {$pod_file} <<'END_HEADER';
 
@@ -72,16 +72,16 @@ my $format = <<'END_POLICY';
 END_POLICY
 
 eval {
-    foreach my $policy (@transformers) {
-        my $module_abstract = $policy->get_raw_abstract();
+    foreach my $transformer (@transformers) {
+        my $module_abstract = $transformer->get_raw_abstract();
 
         printf
             {$pod_file}
             $format,
-            $policy->get_short_name(),
-            $policy->get_long_name(),
+            $transformer->get_short_name(),
+            $transformer->get_long_name(),
             $module_abstract,
-            $policy->default_severity();
+            $transformer->default_severity();
     }
 
     1;
@@ -127,11 +127,11 @@ can be found in the LICENSE file included with this module.
 END_FOOTER
 
 
-    close $pod_file or confess "Could not close $policy_summary: $ERRNO";
+    close $pod_file or confess "Could not close $transformer_summary: $ERRNO";
 
     print "Done.\n\n";
 
-    return $policy_summary;
+    return $transformer_summary;
 
 }
 
@@ -161,14 +161,14 @@ Transformer module.
 
 This library should be used at author-time to generate the
 F<TransformerSummary.pod> file B<before> releasing a new distribution.  See
-also the C<policysummary> action in L<Perl::ToPerl6::Module::Build>.
+also the C<transformersummary> action in L<Perl::ToPerl6::Module::Build>.
 
 
 =head1 IMPORTABLE SUBROUTINES
 
 =over
 
-=item C<generate_policy_summary()>
+=item C<generate_transformer_summary()>
 
 Generates the F<TransformerSummary.pod> file which contains a brief summary of all
 the Transformers in this distro.  Returns the relative path this file.  Unlike

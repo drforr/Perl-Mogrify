@@ -14,7 +14,7 @@ use PPI::Document qw< >;
 use PPI::Document::File qw< >;
 
 use Perl::ToPerl6::TransformerFactory;
-use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::TestUtils qw(bundled_transformer_names);
 use Perl::ToPerl6::Utils;
 
 use Test::More tests => 153;
@@ -35,7 +35,7 @@ test_is_perl_builtin();
 test_is_perl_global();
 test_precedence_of();
 test_is_subroutine_name();
-test_policy_long_name_and_policy_short_name();
+test_transformer_long_name_and_transformer_short_name();
 test_interpolate();
 test_is_perl_and_shebang_line();
 test_is_backup();
@@ -59,8 +59,8 @@ sub test_export {
     can_ok('main', 'is_subroutine_name');
     can_ok('main', 'first_arg');
     can_ok('main', 'parse_arg_list');
-    can_ok('main', 'policy_long_name');
-    can_ok('main', 'policy_short_name');
+    can_ok('main', 'transformer_long_name');
+    can_ok('main', 'transformer_short_name');
     can_ok('main', 'precedence_of');
     can_ok('main', 'severity_to_number');
     can_ok('main', 'shebang_line');
@@ -283,13 +283,13 @@ sub test_is_subroutine_name {
 
 #-----------------------------------------------------------------------------
 
-sub test_policy_long_name_and_policy_short_name {
+sub test_transformer_long_name_and_transformer_short_name {
     my $short_name = 'Baz::Nuts';
     my $long_name  = "${POLICY_NAMESPACE}::$short_name";
-    is( policy_long_name(  $short_name ), $long_name,  'policy_long_name'  );
-    is( policy_long_name(  $long_name  ), $long_name,  'policy_long_name'  );
-    is( policy_short_name( $short_name ), $short_name, 'policy_short_name' );
-    is( policy_short_name( $long_name  ), $short_name, 'policy_short_name' );
+    is( transformer_long_name(  $short_name ), $long_name,  'transformer_long_name'  );
+    is( transformer_long_name(  $long_name  ), $long_name,  'transformer_long_name'  );
+    is( transformer_short_name( $short_name ), $short_name, 'transformer_short_name' );
+    is( transformer_short_name( $long_name  ), $short_name, 'transformer_short_name' );
 
     return;
 }
@@ -453,9 +453,9 @@ sub test_is_function_call {
 sub test_find_bundled_transformers {
     Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
-    my @native_transformers = bundled_policy_names();
-    my $policy_dir = File::Spec->catfile( qw(lib Perl ToPerl6 Transformer) );
-    my @found_transformers  = all_perl_files( $policy_dir );
+    my @native_transformers = bundled_transformer_names();
+    my $transformer_dir = File::Spec->catfile( qw(lib Perl ToPerl6 Transformer) );
+    my @found_transformers  = all_perl_files( $transformer_dir );
 SKIP: {
     skip "XXX Must fix this later", 1;
     is( scalar @found_transformers, scalar @native_transformers, 'Find all perl code');

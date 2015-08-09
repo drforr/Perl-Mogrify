@@ -6,7 +6,7 @@ use warnings;
 
 use Perl::ToPerl6::UserProfile;
 use Perl::ToPerl6::TransformerFactory (-test => 1);
-use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::TestUtils qw(bundled_transformer_names);
 
 use Test::More tests => 1;
 
@@ -26,7 +26,7 @@ my @found_transformers = sort map { ref } $factory->create_all_transformers();
 my $test_label = 'successfully loaded transformers matches MANIFEST';
 SKIP: {
   skip "XXX Need to restore this eventually", 1;
-is_deeply( \@found_transformers, [bundled_policy_names()], $test_label );
+is_deeply( \@found_transformers, [bundled_transformer_names()], $test_label );
 }
 
 #-----------------------------------------------------------------------------

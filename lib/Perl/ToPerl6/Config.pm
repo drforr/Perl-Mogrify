@@ -33,7 +33,7 @@ our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $SINGLE_POLICY_CONFIG_KEY => 'single-policy';
+Readonly::Scalar my $SINGLE_POLICY_CONFIG_KEY => 'single-transformer';
 
 #-----------------------------------------------------------------------------
 # Constructor
@@ -79,7 +79,7 @@ sub _init {
     $self->_validate_and_save_regex(
         $SINGLE_POLICY_CONFIG_KEY,
         $args{ qq/-$SINGLE_POLICY_CONFIG_KEY/ },
-        $options_processor->single_policy(),
+        $options_processor->single_transformer(),
         $errors,
     );
     $self->_validate_and_save_color_severity(
@@ -158,15 +158,15 @@ sub apply_transform {
 
     my ( $self, %args ) = @_;
 
-    if ( not $args{-policy} ) {
-        throw_internal q{The -policy argument is required};
+    if ( not $args{-transformer} ) {
+        throw_internal q{The -transformer argument is required};
     }
 
-    my $policy  = $args{-policy};
+    my $transformer  = $args{-transformer};
 
-    # If the -policy is already a blessed object, then just add it directly.
-    if ( blessed $policy ) {
-        $self->_apply_transform_if_enabled($policy);
+    # If the -transformer is already a blessed object, then just add it directly.
+    if ( blessed $transformer ) {
+        $self->_apply_transform_if_enabled($transformer);
         return $self;
     }
 
@@ -174,9 +174,9 @@ sub apply_transform {
     my $params = $args{-params} || $args{-config};
 
     my $factory       = $self->{_factory};
-    my $policy_object =
-        $factory->create_policy(-name=>$policy, -params=>$params);
-    $self->_apply_transform_if_enabled($policy_object);
+    my $transformer_object =
+        $factory->create_transformer(-name=>$transformer, -params=>$params);
+    $self->_apply_transform_if_enabled($transformer_object);
 
     return $self;
 }
@@ -184,20 +184,20 @@ sub apply_transform {
 #-----------------------------------------------------------------------------
 
 sub _apply_transform_if_enabled {
-    my ( $self, $policy_object ) = @_;
+    my ( $self, $transformer_object ) = @_;
 
-    my $config = $policy_object->__get_config()
+    my $config = $transformer_object->__get_config()
         or throw_internal
             q{Transformer was not set up properly because it does not have }
                 . q{a value for its config attribute.};
 
-    push @{ $self->{_all_transformers_enabled_or_not} }, $policy_object;
-    if ( $policy_object->initialize_if_enabled( $config ) ) {
-        $policy_object->__set_enabled($TRUE);
-        push @{ $self->{_transformers} }, $policy_object;
+    push @{ $self->{_all_transformers_enabled_or_not} }, $transformer_object;
+    if ( $transformer_object->initialize_if_enabled( $config ) ) {
+        $transformer_object->__set_enabled($TRUE);
+        push @{ $self->{_transformers} }, $transformer_object;
     }
     else {
-        $policy_object->__set_enabled($FALSE);
+        $transformer_object->__set_enabled($FALSE);
     }
 
     return;
@@ -213,37 +213,37 @@ sub _load_transformers {
 
     return if $errors->has_exceptions();
 
-    for my $policy ( @transformers ) {
+    for my $transformer ( @transformers ) {
 
-        # If -single-policy is true, only load transformers that match it
-        if ( $self->single_policy() ) {
-            if ( $self->_policy_is_single_policy( $policy ) ) {
-                $self->apply_transform( -policy => $policy );
+        # If -single-transformer is true, only load transformers that match it
+        if ( $self->single_transformer() ) {
+            if ( $self->_transformer_is_single_transformer( $transformer ) ) {
+                $self->apply_transform( -transformer => $transformer );
             }
             next;
         }
 
         # Always exclude unsafe transformers, unless instructed not to
-        next if not ( $policy->is_safe() or $self->unsafe_allowed() );
+        next if not ( $transformer->is_safe() or $self->unsafe_allowed() );
 
         # To load, or not to load -- that is the question.
         my $load_me = $self->only() ? $FALSE : $TRUE;
 
-        $load_me = $FALSE if     $self->_policy_is_disabled( $policy );
-        $load_me = $TRUE  if     $self->_policy_is_enabled( $policy );
-        $load_me = $FALSE if     $self->_policy_is_unimportant( $policy );
-        $load_me = $FALSE if not $self->_policy_is_thematic( $policy );
-        $load_me = $TRUE  if     $self->_policy_is_included( $policy );
-        $load_me = $FALSE if     $self->_policy_is_excluded( $policy );
+        $load_me = $FALSE if     $self->_transformer_is_disabled( $transformer );
+        $load_me = $TRUE  if     $self->_transformer_is_enabled( $transformer );
+        $load_me = $FALSE if     $self->_transformer_is_unimportant( $transformer );
+        $load_me = $FALSE if not $self->_transformer_is_thematic( $transformer );
+        $load_me = $TRUE  if     $self->_transformer_is_included( $transformer );
+        $load_me = $FALSE if     $self->_transformer_is_excluded( $transformer );
 
 
         next if not $load_me;
-        $self->apply_transform( -policy => $policy );
+        $self->apply_transform( -transformer => $transformer );
     }
 
-    # When using -single-policy, only one policy should ever be loaded.
-    if ($self->single_policy() && scalar $self->transformers() != 1) {
-        $self->_add_single_policy_exception_to($errors);
+    # When using -single-transformer, only one transformer should ever be loaded.
+    if ($self->single_transformer() && scalar $self->transformers() != 1) {
+        $self->_add_single_transformer_exception_to($errors);
     }
 
     return;
@@ -251,65 +251,65 @@ sub _load_transformers {
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_disabled {
-    my ($self, $policy) = @_;
+sub _transformer_is_disabled {
+    my ($self, $transformer) = @_;
     my $profile = $self->_profile();
-    return $profile->policy_is_disabled( $policy );
+    return $profile->transformer_is_disabled( $transformer );
 }
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_enabled {
-    my ($self, $policy) = @_;
+sub _transformer_is_enabled {
+    my ($self, $transformer) = @_;
     my $profile = $self->_profile();
-    return $profile->policy_is_enabled( $policy );
+    return $profile->transformer_is_enabled( $transformer );
 }
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_thematic {
-    my ($self, $policy) = @_;
+sub _transformer_is_thematic {
+    my ($self, $transformer) = @_;
     my $theme = $self->theme();
-    return $theme->policy_is_thematic( -policy => $policy );
+    return $theme->transformer_is_thematic( -transformer => $transformer );
 }
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_unimportant {
-    my ($self, $policy) = @_;
-    my $policy_severity = $policy->get_severity();
+sub _transformer_is_unimportant {
+    my ($self, $transformer) = @_;
+    my $transformer_severity = $transformer->get_severity();
     my $min_severity    = $self->{_severity};
-    return $policy_severity < $min_severity;
+    return $transformer_severity < $min_severity;
 }
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_included {
-    my ($self, $policy) = @_;
-    my $policy_long_name = ref $policy;
+sub _transformer_is_included {
+    my ($self, $transformer) = @_;
+    my $transformer_long_name = ref $transformer;
     my @inclusions  = $self->include();
-    return any { $policy_long_name =~ m/$_/ixms } @inclusions;
+    return any { $transformer_long_name =~ m/$_/ixms } @inclusions;
 }
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_excluded {
-    my ($self, $policy) = @_;
-    my $policy_long_name = ref $policy;
+sub _transformer_is_excluded {
+    my ($self, $transformer) = @_;
+    my $transformer_long_name = ref $transformer;
     my @exclusions  = $self->exclude();
-    return any { $policy_long_name =~ m/$_/ixms } @exclusions;
+    return any { $transformer_long_name =~ m/$_/ixms } @exclusions;
 }
 
 #-----------------------------------------------------------------------------
 
-sub _policy_is_single_policy {
-    my ($self, $policy) = @_;
+sub _transformer_is_single_transformer {
+    my ($self, $transformer) = @_;
 
-    my @patterns = $self->single_policy();
+    my @patterns = $self->single_transformer();
     return if not @patterns;
 
-    my $policy_long_name = ref $policy;
-    return any { $policy_long_name =~ m/$_/ixms } @patterns;
+    my $transformer_long_name = ref $transformer;
+    return any { $transformer_long_name =~ m/$_/ixms } @patterns;
 }
 
 #-----------------------------------------------------------------------------
@@ -324,16 +324,16 @@ sub _new_global_value_exception {
 
 #-----------------------------------------------------------------------------
 
-sub _add_single_policy_exception_to {
+sub _add_single_transformer_exception_to {
     my ($self, $errors) = @_;
 
     my $message_suffix = $EMPTY;
-    my $patterns = join q{", "}, $self->single_policy();
+    my $patterns = join q{", "}, $self->single_transformer();
 
     if (scalar $self->transformers() == 0) {
         $message_suffix =
             q{did not match any transformers (in combination with }
-                . q{other policy restrictions).};
+                . q{other transformer restrictions).};
     }
     else {
         $message_suffix  = qq{matched multiple transformers:\n\t};
@@ -831,9 +831,9 @@ sub severity {
 
 #-----------------------------------------------------------------------------
 
-sub single_policy {
+sub single_transformer {
     my ($self) = @_;
-    return @{ $self->{_single_policy} };
+    return @{ $self->{_single_transformer} };
 }
 
 #-----------------------------------------------------------------------------
@@ -887,8 +887,8 @@ sub mogrification_fatal {
 
 #-----------------------------------------------------------------------------
 
-sub site_policy_names {
-    return Perl::ToPerl6::TransformerFactory::site_policy_names();
+sub site_transformer_names {
+    return Perl::ToPerl6::TransformerFactory::site_transformer_names();
 }
 
 #-----------------------------------------------------------------------------
@@ -996,13 +996,13 @@ Not properly documented because you shouldn't be using this.
 
 =over
 
-=item C<< apply_transform( -policy => $policy_name, -params => \%param_hash ) >>
+=item C<< apply_transform( -transformer => $transformer_name, -params => \%param_hash ) >>
 
 Creates a Transformer object and loads it into this Config.  If the object
 cannot be instantiated, it will throw a fatal exception.  Otherwise,
 it returns a reference to this ToPerl6.
 
-B<-policy> is the name of a
+B<-transformer> is the name of a
 L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer> subclass module.  The
 C<'Perl::ToPerl6::Transformer'> portion of the name can be omitted for
 brevity.  This argument is required.
@@ -1058,9 +1058,9 @@ Config.
 Returns the value of the C<-severity> attribute for this Config.
 
 
-=item C< single_policy() >
+=item C< single_transformer() >
 
-Returns the value of the C<-single-policy> attribute for this Config.
+Returns the value of the C<-single-transformer> attribute for this Config.
 
 
 =item C< theme() >
@@ -1150,7 +1150,7 @@ internally, but may be useful to you in some way.
 
 =over
 
-=item C<site_policy_names()>
+=item C<site_transformer_names()>
 
 Returns a list of all the Transformer modules that are currently installed
 in the Perl::ToPerl6:Transformer namespace.  These will include modules that
@@ -1212,7 +1212,7 @@ this:
     arg2 = value2
 
 C<Perl::ToPerl6::Transformer::Category::TransformerName> is the full name of a
-module that implements the policy.  The Transformer modules distributed
+module that implements the transformer.  The Transformer modules distributed
 with Perl::ToPerl6 have been grouped into categories according to the
 table of contents in Damian Conway's book B<Perl Best Practices>. For
 brevity, you can omit the C<'Perl::ToPerl6::Transformer'> part of the module

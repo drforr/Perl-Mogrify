@@ -13,14 +13,14 @@ our $VERSION = '0.03';
 use Exception::Class (
     'Perl::ToPerl6::Exception::Fatal::TransformerDefinition' => {
         isa         => 'Perl::ToPerl6::Exception::Fatal',
-        description => 'A bug in a policy was found.',
-        alias       => 'throw_policy_definition',
+        description => 'A bug in a transformer was found.',
+        alias       => 'throw_transformer_definition',
     },
 );
 
 #-----------------------------------------------------------------------------
 
-Readonly::Array our @EXPORT_OK => qw< throw_policy_definition >;
+Readonly::Array our @EXPORT_OK => qw< throw_transformer_definition >;
 
 #-----------------------------------------------------------------------------
 
@@ -37,11 +37,11 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Exception::Fatal::TransformerDefinition - A bug in a policy.
+Perl::ToPerl6::Exception::Fatal::TransformerDefinition - A bug in a transformer.
 
 =head1 DESCRIPTION
 
-A bug in a policy was found, e.g. it didn't implement a method that it should
+A bug in a transformer was found, e.g. it didn't implement a method that it should
 have.
 
 

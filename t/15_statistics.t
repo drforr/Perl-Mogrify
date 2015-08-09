@@ -32,7 +32,7 @@ my @methods = qw(
     statements
     subs
     total_transformations
-    transformations_by_policy
+    transformations_by_transformer
     transformations_by_severity
     statements_other_than_subs
     transformations_per_file

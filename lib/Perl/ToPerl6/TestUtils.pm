@@ -19,7 +19,7 @@ use Perl::ToPerl6;
 use Perl::ToPerl6::Config;
 use Perl::ToPerl6::Exception::Fatal::Generic qw{ &throw_generic };
 use Perl::ToPerl6::Exception::Fatal::Internal qw{ &throw_internal };
-use Perl::ToPerl6::Utils qw{ :severities :data_conversion policy_long_name };
+use Perl::ToPerl6::Utils qw{ :severities :data_conversion transformer_long_name };
 use Perl::ToPerl6::TransformerFactory (-test => 1);
 
 our $VERSION = '0.03';
@@ -32,7 +32,7 @@ Readonly::Array our @EXPORT_OK => qw(
     should_skip_author_tests
     get_author_test_skip_message
     starting_points_including_examples
-    bundled_policy_names
+    bundled_transformer_names
     names_of_transformers_willing_to_work
 );
 
@@ -48,15 +48,15 @@ sub block_perlmogrifyrc {
 }
 
 #-----------------------------------------------------------------------------
-# ToPerl6 a code snippet using only one policy.  Returns the transformations.
+# ToPerl6 a code snippet using only one transformer.  Returns the transformations.
 #
 # Also uses a secret escape hatch in $c->transform() so we can get at the
 # raw PPI::Document object without breaking AUTOLOAD.
 
 sub ptransform_with_transformations {
-    my($policy, $code_ref, $config_ref) = @_;
+    my($transformer, $code_ref, $config_ref) = @_;
     my $c = Perl::ToPerl6->new( -profile => 'NONE' );
-    $c->apply_transform(-policy => $policy, -config => $config_ref);
+    $c->apply_transform(-transformer => $transformer, -config => $config_ref);
     my $doc;
     $code_ref = \join("\n",@{$code_ref});
     my @rv = $c->transform($code_ref, doc => \$doc);
@@ -64,7 +64,7 @@ sub ptransform_with_transformations {
 }
 
 #-----------------------------------------------------------------------------
-# Mogrifyize a code snippet using only one policy.  Returns the number
+# Mogrifyize a code snippet using only one transformer.  Returns the number
 # of transformations
 
 sub ptransform {  ##no mogrify(ArgUnpacking)
@@ -95,9 +95,9 @@ sub transform {  ##no mogrify(ArgUnpacking)
 Readonly::Scalar my $TEMP_FILE_PERMISSIONS => oct 700;
 
 sub ftransform_with_transformations {
-    my($policy, $code_ref, $filename, $config_ref) = @_;
+    my($transformer, $code_ref, $filename, $config_ref) = @_;
     my $c = Perl::ToPerl6->new( -profile => 'NONE' );
-    $c->apply_transform(-policy => $policy, -config => $config_ref);
+    $c->apply_transform(-transformer => $transformer, -config => $config_ref);
 
     my $dir = File::Temp::tempdir( 'PerlMogrify-tmpXXXXXX', TMPDIR => 1 );
     $filename ||= 'Temp.pm';
@@ -149,16 +149,16 @@ sub subtests_in_tree {
 
                 my @pathparts = File::Spec->splitdir($fileroot);
                 if (@pathparts < 2) {
-                    throw_internal 'confusing policy test filename ' . $_;
+                    throw_internal 'confusing transformer test filename ' . $_;
                 }
 
-#                my $policy = join q{::}, @pathparts[-2, -1];
+#                my $transformer = join q{::}, @pathparts[-2, -1];
 		my @remaining_path = @pathparts;
 
 		shift @remaining_path if $remaining_path[0] eq 't';
 		shift @remaining_path if $remaining_path[0] eq 'Perl';
 		shift @remaining_path if $remaining_path[0] eq 'ToPerl6';
-		my $policy = join q{::}, @remaining_path;
+		my $transformer = join q{::}, @remaining_path;
 
                 my $globals = _globals_from_file( $_ );
                 if ( my $prerequisites = $globals->{prerequisites} ) {
@@ -170,11 +170,11 @@ sub subtests_in_tree {
                 my @subtests = _subtests_from_file( $_ );
 
                 if ($include_extras) {
-                    $subtests{$policy} =
+                    $subtests{$transformer} =
                         { subtests => [ @subtests ], globals => $globals };
                 }
                 else {
-                    $subtests{$policy} = [ @subtests ];
+                    $subtests{$transformer} = [ @subtests ];
                 }
 
                 return;
@@ -377,11 +377,11 @@ sub _finalize_subtest {
     return $subtest;
 }
 
-sub bundled_policy_names {
+sub bundled_transformer_names {
     require ExtUtils::Manifest;
     my $manifest = ExtUtils::Manifest::maniread();
-    my @policy_paths = map {m{\A lib/(Perl/ToPerl6/Transformer/.*).pm \z}xms} keys %{$manifest};
-    my @transformers = map { join q{::}, split m{/}xms } @policy_paths;
+    my @transformer_paths = map {m{\A lib/(Perl/ToPerl6/Transformer/.*).pm \z}xms} keys %{$manifest};
+    my @transformers = map { join q{::}, split m{/}xms } @transformer_paths;
     my @sorted_transformers = sort @transformers;
     return @sorted_transformers;
 }
@@ -433,13 +433,13 @@ interface will go through a deprecation cycle.
     my $perl_mogrify_config = { -severity => 2 };
     my $transformation_count = transform( \$code, $perl_mogrify_config);
 
-    # Critique code against one policy...
-    my $custom_policy = 'Miscellanea::ProhibitFrobulation'
-    my $transformation_count = ptransform( $custom_policy, \$code );
+    # Critique code against one transformer...
+    my $custom_transformer = 'Miscellanea::ProhibitFrobulation'
+    my $transformation_count = ptransform( $custom_transformer, \$code );
 
-    # Critique code against one filename-related policy...
-    my $custom_policy = 'Modules::RequireFilenameMatchesPackage'
-    my $transformation_count = ftransform( $custom_policy, \$code, 'Foo/Bar.pm' );
+    # Critique code against one filename-related transformer...
+    my $custom_transformer = 'Modules::RequireFilenameMatchesPackage'
+    my $transformation_count = ftransform( $custom_transformer, \$code, 'Foo/Bar.pm' );
 
 
 =head1 DESCRIPTION
@@ -476,19 +476,19 @@ instance (or C<undef> for the default).  Returns the number of
 transformations that occurred.
 
 
-=item ptransform_with_transformations( $policy_name, $code_string_ref, $config_ref )
+=item ptransform_with_transformations( $transformer_name, $code_string_ref, $config_ref )
 
-Like C<transform_with_transformations()>, but tests only a single policy
+Like C<transform_with_transformations()>, but tests only a single transformer
 instead of the whole bunch.
 
 
-=item ptransform( $policy_name, $code_string_ref, $config_ref )
+=item ptransform( $transformer_name, $code_string_ref, $config_ref )
 
-Like C<transform()>, but tests only a single policy instead of the
+Like C<transform()>, but tests only a single transformer instead of the
 whole bunch.
 
 
-=item ftransform_with_transformations( $policy_name, $code_string_ref, $filename, $config_ref )
+=item ftransform_with_transformations( $transformer_name, $code_string_ref, $filename, $config_ref )
 
 Like C<ptransform_with_transformations()>, but pretends that the code was
 loaded from the specified filename.  This is handy for testing
@@ -500,7 +500,7 @@ file and all necessary subdirectories will be created via
 L<File::Temp|File::Temp> and will be automatically deleted.
 
 
-=item ftransform( $policy_name, $code_string_ref, $filename, $config_ref )
+=item ftransform( $transformer_name, $code_string_ref, $filename, $config_ref )
 
 Like C<ptransform()>, but pretends that the code was loaded from the
 specified filename.  This is handy for testing transformers like
@@ -516,7 +516,7 @@ L<File::Temp|File::Temp> and will be automatically deleted.
 
 Searches the specified directory recursively for F<.run> files.  Each
 one found is parsed and a hash-of-list-of-hashes is returned.  The
-outer hash is keyed on policy short name, like
+outer hash is keyed on transformer short name, like
 C<Modules::RequireEndWithOne>.  The inner hash specifies a single test
 to be handed to C<ptransform()> or C<ftransform()>, including the code
 string, test name, etc.  See below for the syntax of the F<.run>
@@ -541,7 +541,7 @@ Returns a list of the directories contain code that needs to be tested
 when it is desired that the examples be included.
 
 
-=item bundled_policy_names()
+=item bundled_transformer_names()
 
 Returns a list of Transformer packages that come bundled with this package.
 This functions by searching F<MANIFEST> for
@@ -560,7 +560,7 @@ function on the current system using the specified configuration.
 
 =head1 F<.run> file information
 
-Testing a policy follows a very simple pattern:
+Testing a transformer follows a very simple pattern:
 
     * Transformer name
         * Subtest name
@@ -569,10 +569,10 @@ Testing a policy follows a very simple pattern:
         * Optional exception expected
         * Optional filename for code
 
-Each of the subtests for a policy is collected in a single F<.run>
+Each of the subtests for a transformer is collected in a single F<.run>
 file, with test properties as comments in front of each code block
 that describes how we expect Perl::ToPerl6 to react to the code.  For
-example, say you have a policy called Variables::ProhibitVowels:
+example, say you have a transformer called Variables::ProhibitVowels:
 
     (In file t/Variables/ProhibitVowels.run)
 
@@ -611,7 +611,7 @@ make a C<##TODO> entry.
 
     ## TODO Should pass when PPI 1.xxx comes out
 
-If the code is expected to trigger an exception in the policy,
+If the code is expected to trigger an exception in the transformer,
 indicate that like so:
 
     ## error 1
@@ -621,7 +621,7 @@ indicate a C<like()> test:
 
     ## error /Can't load Foo::Bar/
 
-If the policy you are testing cares about the filename of the code,
+If the transformer you are testing cares about the filename of the code,
 you can indicate that C<ftransform> should be used like so (see
 C<ftransform> for more details):
 
@@ -639,7 +639,7 @@ keywords in the file footer from producing false positives or negatives in the
 last test.
 
 Note that nowhere within the F<.run> file itself do you specify the
-policy that you're testing.  That's implicit within the filename.
+transformer that you're testing.  That's implicit within the filename.
 
 
 =head1 BUGS AND CAVEATS AND TODO ITEMS

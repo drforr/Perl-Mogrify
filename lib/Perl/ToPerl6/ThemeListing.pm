@@ -30,8 +30,8 @@ sub to_string {
     my ($self) = @_;
 
     my %themes;
-    foreach my $policy ( @{ $self->{_transformers} } ) {
-        my @themes = $policy->get_themes();
+    foreach my $transformer ( @{ $self->{_transformers} } ) {
+        my @themes = $transformer->get_themes();
         @themes{ @themes } = @themes;
     }
 
@@ -94,7 +94,7 @@ L<"OVERLOADS"> for more information.
 
 When a L<Perl::ToPerl6::ThemeListing|Perl::ToPerl6::ThemeListing> is
 evaluated in string context, it produces a one-line summary of the
-default severity, policy name, and default themes for each
+default severity, transformer name, and default themes for each
 L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer> object that was given to
 the constructor of this C<ThemeListing>.
 

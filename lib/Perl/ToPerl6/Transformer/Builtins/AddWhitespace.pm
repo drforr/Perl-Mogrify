@@ -14,8 +14,8 @@ our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform qw(...) to qw (...)};
-Readonly::Scalar my $EXPL => q{Transform qw(...) to qw (...)};
+Readonly::Scalar my $DESC => q{Transform my(...) to my (...)};
+Readonly::Scalar my $EXPL => q{Transform my(...) to my (...)};
 
 #-----------------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ sub transform {
     my ($self, $elem, $doc) = @_;
 
     if ( $elem->next_sibling and
-         $elem->next_sibling->isa('PPI::Token::Whitespace') ) {
+         not $elem->next_sibling->isa('PPI::Token::Whitespace') ) {
         $elem->insert_after(
             PPI::Token::Whitespace->new(' ')
         );

@@ -4,7 +4,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-use Perl::ToPerl6::Utils qw{ &policy_short_name };
+use Perl::ToPerl6::Utils qw{ &transformer_short_name };
 
 our $VERSION = '0.03';
 
@@ -13,8 +13,8 @@ our $VERSION = '0.03';
 use Exception::Class (
     'Perl::ToPerl6::Exception::Configuration::Option::Transformer' => {
         isa         => 'Perl::ToPerl6::Exception::Configuration::Option',
-        description => 'A problem with the configuration of a policy.',
-        fields      => [ qw{ policy } ],
+        description => 'A problem with the configuration of a transformer.',
+        fields      => [ qw{ transformer } ],
     },
 );
 
@@ -23,9 +23,9 @@ use Exception::Class (
 sub new {
     my ($class, %options) = @_;
 
-    my $policy = $options{policy};
-    if ($policy) {
-        $options{policy} = policy_short_name($policy);
+    my $transformer = $options{transformer};
+    if ($transformer) {
+        $options{transformer} = transformer_short_name($transformer);
     }
 
     return $class->SUPER::new(%options);
@@ -44,7 +44,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Exception::Configuration::Option::Enforcer - A problem with configuration of a policy.
+Perl::ToPerl6::Exception::Configuration::Option::Enforcer - A problem with configuration of a transformer.
 
 =head1 DESCRIPTION
 
@@ -65,9 +65,9 @@ will go through a deprecation cycle.
 
 =over
 
-=item C<policy()>
+=item C<transformer()>
 
-The short name of the policy that had configuration problems.
+The short name of the transformer that had configuration problems.
 
 
 =back

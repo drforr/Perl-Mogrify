@@ -43,7 +43,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
   perlmogrify [-12345 | --brutal | --cruel | --harsh | --stern | --gentle]
               [--severity number | name] [{-p | --profile} file | --noprofile]
               [--top [ number ]] [--theme expression] [--include pattern]
-              [--exclude pattern] [{-s | --single-policy} pattern]
+              [--exclude pattern] [{-s | --single-transformer} pattern]
               [--only | --noonly] [--profile-strictness {warn|fatal|quiet}]
               [--force | --noforce] [--statistics] [--statistics-only]
               [--count | -C] [--verbose {number | format}] [--allow-unsafe]
@@ -243,14 +243,14 @@ conjunction with the C<--include> option.  Note that C<--exclude> takes
 precedence over C<--include> when a Transformer matches both patterns.  You can set
 the default value for this option in your F<.perlmogrifyrc> file.
 
-=item C<--single-policy PATTERN> or C<-s PATTERN>
+=item C<--single-transformer PATTERN> or C<-s PATTERN>
 
 Directs C<perlmogrify> to apply just one Transformer module matching the regex
 C</PATTERN/ixms>, and exclude all other Transformers.  This option has
 precedence over the C<--severity>, C<--theme>, C<--include>, C<--exclude>, and
 C<--only> options.  For example:
 
-    perlmogrify --single-policy=nowarnings my_file.pl
+    perlmogrify --single-transformer=nowarnings my_file.pl
 
 This would cause C<perlmogrify> to apply just the C<ProhibitNoWarnings>
 Transformer, regardless of the severity level setting.  No other Transformers
@@ -264,7 +264,7 @@ This is equivalent to what one might intend by...
 C<--include> option.
 
 The equivalent of this option can be accomplished by creating a custom profile
-containing only the desired policy and then running...
+containing only the desired transformer and then running...
 
     perlmogrify --profile=customprofile --only my_file.pl
 
@@ -447,14 +447,14 @@ severity-lowest>, C<--color-severity-1>, or C<--colour-severity-1>.
 =item C<--files-with-transformations>
 
 Display only the names of files with transformations.  Use this feature with
---single-policy to find files that contain transformations of a given policy. Can
-also be specified as C<--l>.
+--single-transformer to find files that contain transformations of a given
+transformer. Can also be specified as C<--l>.
 
 =item C<--files-without-transformations>
 
 Display only the names of files without transformations.  Use this feature with
---single-policy to find files that do not contain transformations of a given
-policy. Can also be specified as C<--L>.
+--single-transformer to find files that do not contain transformations of a
+given transformer. Can also be specified as C<--L>.
 
 =item C<--program-extensions file_name_extension>
 
@@ -663,7 +663,7 @@ PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
 There are a number of distributions of additional transformers on CPAN. If
-L<Perl::ToPerl6> doesn't contain a policy that you want, some one may have
+L<Perl::ToPerl6> doesn't contain a transformer that you want, someone may have
 already written it.  See L<Perl::ToPerl6/"SEE ALSO"> for a list of some of
 these distributions.
 

@@ -31,38 +31,82 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+my %modifier_map = (
+    m => {
+        m => 'm',
+        s => 's', # Changes meaning actually.
+        i => 'i',
+        x => 'x',
+        p => 'p',
+        o => '', # These 5 are not allowed. Others may mean different
+        d => '', # things.
+        u => '',
+        a => '',
+        l => '',
+        g => 'c', # /g --> /c
+        c => '',  # /c --> ...
+    },
+    s => {
+        m => 'm',
+        s => 's',
+        i => 'i',
+        x => 'x',
+        p => 'p',
+        o => '', # These 5 are not allowed. Others may mean different
+        d => '', # things.
+        u => '',
+        a => '',
+        l => '',
+        g => 'c',
+        c => '',
+    },
+    tr => {
+        m => 'm',
+        s => 's',
+        i => 'i',
+        x => 'x',
+        p => 'p',
+        o => '', # These 5 are not allowed. Others may mean different
+        d => '', # things.
+        u => '',
+        a => '',
+        l => '',
+        g => 'c',
+        c => '',
+    }
+);
+
 sub transform {
     my ($self, $elem, $doc) = @_;
+    my $new_content = $elem->content;
+
+    $new_content =~ s{^/}{m/};
+    $new_content =~ s{^y}{tr};
+    $new_content =~ m{^(m|s|tr)};
+    $elem->{operator} = $1;
 
     my $num_modifiers = keys %{ $elem->get_modifiers };
     my $modifiers =
         substr( $elem->content, -$num_modifiers, $num_modifiers, '' );
-    my $old_modifiers = $modifiers;
 
-    # 'g' gets replaced with 'c', 'c' is removed? As is 'o'?
-    #
-    $modifiers =~ s{[sgo]}{}g; # XXX
+    my $operator = $elem->{operator};
+    my $new_modifiers = join( '',
+                              map { $modifier_map{$operator}{$_} }
+                              split //, $modifiers
+    );
 
+    my $delta = length($modifiers) - length($new_modifiers);
     for ( @{ $elem->{sections} } ) {
-        $_->{position} += length($modifiers) + 3;
+        $_->{position} -= $delta;
     }
 
-    my $new_content = $elem->content;
-
-    if( $elem->{operator} and
-        $elem->{operator} eq '/' ) {
-        $new_content = 'm' . $new_content;
-        $elem->{operator} = 'm';
-    }
-    $new_content = 'm' . $new_content if $new_content =~ m{ ^ / }x;
-    if ( $modifiers ) {
-        $new_content =~ s{^(m|s|y|tr)}{$1:$modifiers:P5};
+    if ( $new_modifiers ) {
+        $new_content =~ s{^(m|s|tr)}{$elem->{operator}:$new_modifiers:P5};
     }
     else {
-        $new_content =~ s{^(m|s|y|tr)}{$1:P5};
+        $new_content =~ s{^(m|s|tr)}{$elem->{operator}:P5};
     }
-    $elem->{operator} = $1;
-    $new_content =~ s{$old_modifiers$}{};
+    $new_content =~ s{$modifiers$}{};
 
     $elem->set_content($new_content);
 

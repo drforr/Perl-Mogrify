@@ -142,9 +142,9 @@ sub _gather_transformations {
         $doc->process_annotations();
     }
 
-    # Evaluate each policy
+    # Evaluate each transformer
     my @transformers = $self->config->transformers();
-    my @ordered_transformers = _futz_with_policy_order(@transformers);
+    my @ordered_transformers = _futz_with_transformer_order(@transformers);
     my @transformations = map { _transform($_, $doc) } @ordered_transformers;
 
     # Accumulate statistics
@@ -165,17 +165,17 @@ sub _gather_transformations {
 # PRIVATE functions
 
 sub _transform {
-    my ($policy, $doc) = @_;
+    my ($transformer, $doc) = @_;
 
-    return if not $policy->prepare_to_scan_document($doc);
+    return if not $transformer->prepare_to_scan_document($doc);
 
-    my $maximum_transformations = $policy->get_maximum_transformations_per_document();
+    my $maximum_transformations = $transformer->get_maximum_transformations_per_document();
     return if defined $maximum_transformations && $maximum_transformations == 0;
 
     my @transformations = ();
 
   TYPE:
-    for my $type ( $policy->applies_to() ) {
+    for my $type ( $transformer->applies_to() ) {
         my @elements;
         if ($type eq 'PPI::Document') {
             @elements = ($doc);
@@ -187,16 +187,16 @@ sub _transform {
       ELEMENT:
         for my $element (@elements) {
 
-            # Evaluate the policy on this $element.  A policy may
+            # Evaluate the transformer on this $element.  A transformer may
             # return zero or more transformations.  We only want the
             # transformations that occur on lines that have not been
             # disabled.
 
           VIOLATION:
-            for my $transformation ( $policy->transform( $element, $doc ) ) {
+            for my $transformation ( $transformer->transform( $element, $doc ) ) {
 
                 my $line = $transformation->location()->[0];
-                if ( $doc->line_is_disabled_for_policy($line, $policy) ) {
+                if ( $doc->line_is_disabled_for_transformer($line, $transformer) ) {
                     $doc->add_suppressed_transformation($transformation);
                     next VIOLATION;
                 }
@@ -212,17 +212,17 @@ sub _transform {
 
 #-----------------------------------------------------------------------------
 
-sub _futz_with_policy_order {
-    # The ProhibitUselessNoCritic policy is another special policy.  It
+sub _futz_with_transformer_order {
+    # The ProhibitUselessNoCritic transformer is another special transformer.  It
     # deals with the transformations that *other* Transformers produce.  Therefore
     # it needs to be run *after* all the other Transformers.  TODO: find
     # a way for Transformers to express an ordering preference somehow.
 
-    my @policy_objects = @_;
-    my $magical_policy_name = 'Perl::ToPerl6::Transformer::Miscellanea::ProhibitUselessNoCritic';
-    my $idx = firstidx {ref $_ eq $magical_policy_name} @policy_objects;
-    push @policy_objects, splice @policy_objects, $idx, 1;
-    return @policy_objects;
+    my @transformer_objects = @_;
+    my $magical_transformer_name = 'Perl::ToPerl6::Transformer::Miscellanea::ProhibitUselessNoCritic';
+    my $idx = firstidx {ref $_ eq $magical_transformer_name} @transformer_objects;
+    push @transformer_objects, splice @transformer_objects, $idx, 1;
+    return @transformer_objects;
 }
 
 #-----------------------------------------------------------------------------
@@ -371,7 +371,7 @@ F<.perlmogrifyrc> file.  You can also use C<-exclude> in conjunction with the
 C<-include> option.  Note that C<-exclude> takes precedence over C<-include>
 when a Transformer matches both patterns.
 
-B<-single-policy> is a string C<PATTERN>.  Only one policy that matches
+B<-single-transformer> is a string C<PATTERN>.  Only one transformer that matches
 C<m/$PATTERN/ixms> will be used.  Transformers that do not match will be
 excluded.  This option has precedence over the C<-severity>, C<-theme>,
 C<-include>, C<-exclude>, and C<-only> options.  You can set the default value
@@ -454,13 +454,13 @@ Transformers.
 The list is sorted in the order that the Transformations appear in the code.  If
 there are no transformations, this method returns an empty list.
 
-=item C<< apply_transform( -policy => $policy_name, -params => \%param_hash ) >>
+=item C<< apply_transform( -transformer => $transformer_name, -params => \%param_hash ) >>
 
 Creates a Transformer object and loads it into this ToPerl6.  If the object cannot
 be instantiated, it will throw a fatal exception.  Otherwise, it returns a
 reference to this ToPerl6.
 
-B<-policy> is the name of a L<Perl::ToPerl6::Transformer> subclass module.  The
+B<-transformer> is the name of a L<Perl::ToPerl6::Transformer> subclass module.  The
 C<'Perl::ToPerl6::Transformer'> portion of the name can be omitted for brevity.
 This argument is required.
 
@@ -556,7 +556,7 @@ The remainder of the configuration file is a series of blocks like this:
     arg2 = value2
 
 C<Perl::ToPerl6::Transformer::Category::TransformerName> is the full name of a module
-that implements the policy.  The Transformer modules distributed with Perl::ToPerl6
+that implements the transformer.  The Transformer modules distributed with Perl::ToPerl6
 have been grouped into categories according to the table of contents in Damian
 Conway's book B<Perl Best Practices>. For brevity, you can omit the
 C<'Perl::ToPerl6::Transformer'> part of the module name.
@@ -663,7 +663,7 @@ PATTERN"> to see the perldoc for all Transformer modules that match the regex
 C<m/PATTERN/ixms>
 
 There are a number of distributions of additional transformers on CPAN. If
-L<Perl::ToPerl6> doesn't contain a policy that you want, some one may have
+L<Perl::ToPerl6> doesn't contain a transformer that you want, some one may have
 already written it.  See the L</"SEE ALSO"> section below for a list of some
 of these distributions.
 
@@ -807,7 +807,7 @@ Perl::ToPerl6 is to help you write code that conforms with a set of best
 practices.  Our primary goal is not to dictate what those practices are, but
 rather, to implement the practices discovered by others.  Ultimately, you make
 the rules -- Perl::ToPerl6 is merely a tool for encouraging consistency.  If
-there is a policy that you think is important or that we have overlooked, we
+there is a transformer that you think is important or that we have overlooked, we
 would be very grateful for contributions, or you can simply load your own
 private set of transformers into Perl::ToPerl6.
 

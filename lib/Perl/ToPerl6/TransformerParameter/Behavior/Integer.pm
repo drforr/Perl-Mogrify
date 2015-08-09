@@ -26,7 +26,7 @@ sub initialize_parameter {
             # Normally bad thing, obscuring a variable in a outer scope
             # with a variable with the same name is being done here in
             # order to remain consistent with the parser function interface.
-            my ($policy, $parameter, $config_string) = @_;
+            my ($transformer, $parameter, $config_string) = @_;
 
             my $value_string = $parameter->get_default_string();
 
@@ -40,7 +40,7 @@ sub initialize_parameter {
                         $value_string !~ m/ \A [-+]? [1-9] [\d_]* \z /xms
                     and $value_string ne '0'
                 ) {
-                    $policy->throw_parameter_value_exception(
+                    $transformer->throw_parameter_value_exception(
                         $parameter->get_name(),
                         $value_string,
                         undef,
@@ -52,7 +52,7 @@ sub initialize_parameter {
                 $value = $value_string + 0;
 
                 if ( defined $minimum and $minimum > $value ) {
-                    $policy->throw_parameter_value_exception(
+                    $transformer->throw_parameter_value_exception(
                         $parameter->get_name(),
                         $value_string,
                         undef,
@@ -61,7 +61,7 @@ sub initialize_parameter {
                 }
 
                 if ( defined $maximum and $maximum < $value ) {
-                    $policy->throw_parameter_value_exception(
+                    $transformer->throw_parameter_value_exception(
                         $parameter->get_name(),
                         $value_string,
                         undef,
@@ -70,7 +70,7 @@ sub initialize_parameter {
                 }
             }
 
-            $policy->__set_parameter_value($parameter, $value);
+            $transformer->__set_parameter_value($parameter, $value);
             return;
         }
     );
@@ -131,7 +131,7 @@ Perl::ToPerl6::TransformerParameter::Behavior::Integer - Actions appropriate for
 
 Provides a standard set of functionality for an integer
 L<Perl::ToPerl6::TransformerParameter|Perl::ToPerl6::TransformerParameter> so that
-the developer of a policy does not have to provide it her/himself.
+the developer of a transformer does not have to provide it her/himself.
 
 The parser provided by this behavior allows underscores ("_") in input
 values as in a Perl numeric literal.

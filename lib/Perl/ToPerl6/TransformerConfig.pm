@@ -22,12 +22,12 @@ Readonly::Scalar my $NO_LIMIT           => 'no_limit';
 #-----------------------------------------------------------------------------
 
 sub new {
-    my ($class, $policy_short_name, $specification) = @_;
+    my ($class, $transformer_short_name, $specification) = @_;
 
     my %self = $specification ? %{ $specification } : ();
     my %non_public_data;
 
-    $non_public_data{_policy_short_name} = $policy_short_name;
+    $non_public_data{_transformer_short_name} = $transformer_short_name;
     $non_public_data{_profile_strictness} =
         $self{$NON_PUBLIC_DATA}{_profile_strictness};
 
@@ -56,10 +56,10 @@ sub _get_non_public_data {
 
 #-----------------------------------------------------------------------------
 
-sub get_policy_short_name {
+sub get_transformer_short_name {
     my $self = shift;
 
-    return $self->_get_non_public_data()->{_policy_short_name};
+    return $self->_get_non_public_data()->{_transformer_short_name};
 }
 
 #-----------------------------------------------------------------------------
@@ -152,7 +152,7 @@ sub get_parameter_names {
 #-----------------------------------------------------------------------------
 
 sub handle_extra_parameters {
-    my ($self, $policy, $errors) = @_;
+    my ($self, $transformer, $errors) = @_;
 
     my $profile_strictness = $self->{$NON_PUBLIC_DATA}{_profile_strictness};
     defined $profile_strictness
@@ -166,7 +166,7 @@ sub handle_extra_parameters {
     foreach my $offered_param ( $self->get_parameter_names() ) {
         $parameter_errors->add_exception(
             Perl::ToPerl6::Exception::Configuration::Option::Transformer::ExtraParameter->new(
-                policy => $policy->get_short_name(),
+                transformer => $transformer->get_short_name(),
                 option_name => $offered_param,
                 source  => undef,
             )
@@ -223,9 +223,9 @@ to change without notice.
 
 =over
 
-=item C<get_policy_short_name()>
+=item C<get_transformer_short_name()>
 
-The name of the policy this configuration is for.  Primarily here for
+The name of the transformer this configuration is for.  Primarily here for
 the sake of debugging.
 
 
@@ -283,19 +283,19 @@ Retrieve the names of the parameters in this object.
 Sets the profile strictness associated with the configuration.
 
 
-=item C< handle_extra_parameters($policy,$errors) >
+=item C< handle_extra_parameters($transformer,$errors) >
 
 Deals with any extra parameters according to the profile_strictness
 setting.  To be called by Perl::ToPerl6::Transformer->new() once all valid
 transformers have been processed and removed from the configuration.
 
-If profile_strictness is $PROFILE_STRICTNESS_QUIET, extra policy
+If profile_strictness is $PROFILE_STRICTNESS_QUIET, extra transformer
 parameters are ignored.
 
-If profile_strictness is $PROFILE_STRICTNESS_WARN, extra policy
+If profile_strictness is $PROFILE_STRICTNESS_WARN, extra transformer
 parameters generate a warning.
 
-If profile_strictness is $PROFILE_STRICTNESS_FATAL, extra policy
+If profile_strictness is $PROFILE_STRICTNESS_FATAL, extra transformer
 parameters generate a fatal error.
 
 If no profile_strictness was set, the behavior is that specified by

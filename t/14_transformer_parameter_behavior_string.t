@@ -20,7 +20,7 @@ our $VERSION = '0.01';
 my $specification;
 my $parameter;
 my %config;
-my $policy;
+my $transformer;
 
 $specification =
     {
@@ -31,28 +31,28 @@ $specification =
 
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, undef, q{no value, no default});
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, undef, q{no value, no default});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'foobie';
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, 'foobie', q{'foobie', no default});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, 'foobie', q{'foobie', no default});
 
 
 $specification->{default_string} = 'bletch';
 delete $config{test};
 
 $parameter = Perl::ToPerl6::TransformerParameter->new($specification);
-$policy = Perl::ToPerl6::Transformer->new();
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, 'bletch', q{no value, default 'bletch'});
+$transformer = Perl::ToPerl6::Transformer->new();
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, 'bletch', q{no value, default 'bletch'});
 
-$policy = Perl::ToPerl6::Transformer->new();
+$transformer = Perl::ToPerl6::Transformer->new();
 $config{test} = 'foobie';
-$parameter->parse_and_validate_config_value($policy, \%config);
-is($policy->{_test}, 'foobie', q{'foobie', default 'bletch'});
+$parameter->parse_and_validate_config_value($transformer, \%config);
+is($transformer->{_test}, 'foobie', q{'foobie', default 'bletch'});
 
 
 ###############################################################################

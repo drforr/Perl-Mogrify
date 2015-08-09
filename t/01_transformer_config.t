@@ -22,7 +22,7 @@ our $VERSION = '0.01';
         Perl::ToPerl6::TransformerConfig->new('Some::Transformer');
 
     is(
-        $config->get_policy_short_name(),
+        $config->get_transformer_short_name(),
         'Some::Transformer',
         'Transformer short name gets saved.',
     );
@@ -77,7 +77,7 @@ our $VERSION = '0.01';
         );
 
     is(
-        $config->get_policy_short_name(),
+        $config->get_transformer_short_name(),
         'Some::Other::Transformer',
         'Transformer short name gets saved.',
     );
@@ -142,7 +142,7 @@ our $VERSION = '0.01';
 
 sub test_standard_parameters_undef_via_get {
     my ($config) = @_;
-    my $policy_short_name = $config->get_policy_short_name();
+    my $transformer_short_name = $config->get_transformer_short_name();
 
     foreach my $parameter (
         qw<
@@ -156,7 +156,7 @@ sub test_standard_parameters_undef_via_get {
         is(
             $config->get($parameter),
             undef,
-            qq<"$parameter" is not defined via get() for $policy_short_name.>,
+            qq<"$parameter" is not defined via get() for $transformer_short_name.>,
         )
     }
 
@@ -166,7 +166,7 @@ sub test_standard_parameters_undef_via_get {
 #-----------------------------------------------------------------------------
 
 # ensure we return true if this test is loaded by
-# t/01_policy_config.t_without_optional_dependencies.t
+# t/01_transformer_config.t_without_optional_dependencies.t
 1;
 
 # Local Variables:

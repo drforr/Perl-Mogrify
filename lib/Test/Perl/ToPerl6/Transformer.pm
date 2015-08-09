@@ -76,10 +76,10 @@ sub transform_ok {
     $TEST->plan( tests => 1 );
     $TEST->note("Running tests for transformer: $transformer");
 
-    my ($full_policy_name, $method) =
+    my ($full_transformer_name, $method) =
         ("Perl::ToPerl6::Transformer::$transformer", 'transform');
-    my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
-    $TEST->ok( $full_policy_name->can($method), $can_ok_label );
+    my $can_ok_label = qq{Class '$full_transformer_name' has method '$method'};
+    $TEST->ok( $full_transformer_name->can($method), $can_ok_label );
 
     for my $subtest ( @{ $subtests } ) {
         my $todo = $subtest->{TODO};
@@ -107,7 +107,7 @@ sub all_transformers_ok {
     my $subtests_with_extras =  subtests_in_tree( $test_dir, 'include extras' );
 
     if ($wanted_transformers) {
-        _validate_wanted_policy_names($wanted_transformers, $subtests_with_extras);
+        _validate_wanted_transformer_names($wanted_transformers, $subtests_with_extras);
         _filter_unwanted_subtests($wanted_transformers, $subtests_with_extras);
     }
 
@@ -116,19 +116,19 @@ sub all_transformers_ok {
     my $transformers_to_test = join q{, }, keys %{$subtests_with_extras};
     $TEST->note("Running tests for transformers: $transformers_to_test");
 
-    for my $policy ( sort keys %{$subtests_with_extras} ) {
+    for my $transformer ( sort keys %{$subtests_with_extras} ) {
 
-	    my ($full_policy_name, $method) = ("Perl::ToPerl6::Transformer::$policy", 'transform');
-	    my $can_ok_label = qq{Class '$full_policy_name' has method '$method'};
-	    $TEST->ok( $full_policy_name->can($method), $can_ok_label );
+	    my ($full_transformer_name, $method) = ("Perl::ToPerl6::Transformer::$transformer", 'transform');
+	    my $can_ok_label = qq{Class '$full_transformer_name' has method '$method'};
+	    $TEST->ok( $full_transformer_name->can($method), $can_ok_label );
 
-	    for my $subtest ( @{ $subtests_with_extras->{$policy}{subtests} } ) {
+	    for my $subtest ( @{ $subtests_with_extras->{$transformer}{subtests} } ) {
 		    my $todo = $subtest->{TODO};
 		    if ($todo) { $TEST->todo_start( $todo ); }
 
-		    my ($error, @transformations) = _run_subtest($policy, $subtest);
+		    my ($error, @transformations) = _run_subtest($transformer, $subtest);
 #		    my ($ok, @diag)= _evaluate_test_results($subtest, $error, \@transformations);
-#		    $TEST->ok( $ok, _create_test_name($policy, $subtest) );
+#		    $TEST->ok( $ok, _create_test_name($transformer, $subtest) );
 #
 #		    if (@diag) { $TEST->diag(@diag); }
 #		    if ($todo) { $TEST->todo_end(); }
@@ -140,7 +140,7 @@ sub all_transformers_ok {
 
 #-----------------------------------------------------------------------------
 
-sub _validate_wanted_policy_names {
+sub _validate_wanted_transformer_names {
     my ($wanted_transformers, $subtests_with_extras) = @_;
     return 1 if not $wanted_transformers;
     my @all_testable_transformers = keys %{ $subtests_with_extras };
@@ -204,7 +204,7 @@ sub __results_string {
 }
 
 sub __is_deeply {
-    my ($policy, $subtest) = @_;
+    my ($transformer, $subtest) = @_;
 
     my $num_errors;
     my $last_line = min( $#{ $subtest->{sample} },
@@ -245,7 +245,7 @@ sub __is_deeply {
 #-----------------------------------------------------------------------------
 
 sub _run_subtest {
-    my ($policy, $subtest) = @_;
+    my ($transformer, $subtest) = @_;
 
     my $document;
     my @transformations;
@@ -254,7 +254,7 @@ sub _run_subtest {
         eval {
             @transformations =
                 ftransform_with_transformations(
-                    $policy,
+                    $transformer,
                     \$subtest->{code},
                     $subtest->{filename},
                     $subtest->{parms},
@@ -268,7 +268,7 @@ sub _run_subtest {
         eval {
             ($document, @transformations) =
                 ptransform_with_transformations(
-                    $policy,
+                    $transformer,
                     $subtest->{original},
                     $subtest->{parms},
                 );
@@ -283,10 +283,10 @@ sub _run_subtest {
     else {
         die "*** caught error $error!\n";
     }
-    my $num_errors = __is_deeply($policy, $subtest);
+    my $num_errors = __is_deeply($transformer, $subtest);
 
     if ( $num_errors ) {
-        $TEST->ok(0==1, "$policy - $subtest->{name} - failed");
+        $TEST->ok(0==1, "$transformer - $subtest->{name} - failed");
     }
     return;
 }
@@ -349,7 +349,7 @@ sub _evaluate_error_case {
 sub _compute_test_count {
     my ($subtests_with_extras) = @_;
 
-    # one can_ok() for each policy
+    # one can_ok() for each transformer
     my $ntransformers = scalar keys %{ $subtests_with_extras };
 
     my $nsubtests = 0;
@@ -382,8 +382,8 @@ sub _all_optional_modules_are_available {
 #-----------------------------------------------------------------------------
 
 sub _create_test_name {
-    my ($policy, $subtest) = @_;
-    return join ' - ', $policy, "line $subtest->{lineno}", $subtest->{name};
+    my ($transformer, $subtest) = @_;
+    return join ' - ', $transformer, "line $subtest->{lineno}", $subtest->{name};
 }
 
 #-----------------------------------------------------------------------------
@@ -417,8 +417,8 @@ Test::Perl::ToPerl6::Transformer - A framework for testing your custom Transform
     # If you want your test program to accept short Transformer names as
     # command-line parameters...
     #
-    # You can then test a single policy by running
-    # "perl -Ilib t/policy-test.t My::Transformer".
+    # You can then test a single transformer by running
+    # "perl -Ilib t/transformer-test.t My::Transformer".
     my %args = @ARGV ? ( -transformers => [ @ARGV ] ) : ();
     all_transformers_ok(%args);
 
@@ -441,7 +441,7 @@ against this module until it has stabilized.
 
 =over
 
-=item all_transformers_ok('-test-directory' => $path, -transformers => \@policy_names)
+=item all_transformers_ok('-test-directory' => $path, -transformers => \@transformer_names)
 
 Loads all the F<*.run> files beneath the C<-test-directory> and runs the
 tests.  If C<-test-directory> is not specified, it defaults to F<t/>.
@@ -455,7 +455,7 @@ of the C<m/$POLICY_NAME/imx> will be run.
 
 =head1 CREATING THE *.run FILES
 
-Testing a policy follows a very simple pattern:
+Testing a transformer follows a very simple pattern:
 
     * Transformer name
         * Subtest name
@@ -464,10 +464,10 @@ Testing a policy follows a very simple pattern:
         * Optional exception expected
         * Optional filename for code
 
-Each of the subtests for a policy is collected in a single F<.run>
+Each of the subtests for a transformer is collected in a single F<.run>
 file, with test properties as comments in front of each code block
 that describes how we expect Perl::ToPerl6 to react to the code.  For
-example, say you have a policy called Variables::ProhibitVowels:
+example, say you have a transformer called Variables::ProhibitVowels:
 
     (In file t/Variables/ProhibitVowels.run)
 
@@ -506,7 +506,7 @@ make a C<##TODO> entry.
 
     ## TODO Should pass when PPI 1.xxx comes out
 
-If the code is expected to trigger an exception in the policy,
+If the code is expected to trigger an exception in the transformer,
 indicate that like so:
 
     ## error 1
@@ -516,7 +516,7 @@ indicate a C<like()> test:
 
     ## error /Can't load Foo::Bar/
 
-If the policy you are testing cares about the filename of the code,
+If the transformer you are testing cares about the filename of the code,
 you can indicate that C<ftransform> should be used like so (see
 C<ftransform> for more details):
 
@@ -534,12 +534,12 @@ keywords in the file footer from producing false positives or negatives in the
 last test.
 
 Note that nowhere within the F<.run> file itself do you specify the
-policy that you're testing.  That's implicit within the filename.
+transformer that you're testing.  That's implicit within the filename.
 
 
 =head1 BUGS AND CAVEATS AND TODO ITEMS
 
-Add policy_ok() method for running subtests in just a single TODO file.
+Add transformer_ok() method for running subtests in just a single TODO file.
 
 Can users mark this entire test as TODO or SKIP, using the normal mechanisms?
 

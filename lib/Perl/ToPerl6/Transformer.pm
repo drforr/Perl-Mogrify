@@ -19,8 +19,8 @@ use Perl::ToPerl6::Utils qw<
     :data_conversion
     interpolate
     is_integer
-    policy_long_name
-    policy_short_name
+    transformer_long_name
+    transformer_short_name
     severity_to_number
 >;
 use Perl::ToPerl6::Utils::DataConversion qw< dor >;
@@ -33,7 +33,7 @@ use Perl::ToPerl6::Exception::Configuration;
 use Perl::ToPerl6::Exception::Configuration::Option::Transformer::ExtraParameter;
 use Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue;
 use Perl::ToPerl6::Exception::Fatal::TransformerDefinition
-    qw< throw_policy_definition >;
+    qw< throw_transformer_definition >;
 use Perl::ToPerl6::TransformerConfig qw<>;
 use Perl::ToPerl6::TransformerParameter qw<>;
 use Perl::ToPerl6::Transformation qw<>;
@@ -246,7 +246,7 @@ sub __set_config {
 sub get_long_name {
     my ($self) = @_;
 
-    return policy_long_name(ref $self);
+    return transformer_long_name(ref $self);
 }
 
 #-----------------------------------------------------------------------------
@@ -254,7 +254,7 @@ sub get_long_name {
 sub get_short_name {
     my ($self) = @_;
 
-    return policy_short_name(ref $self);
+    return transformer_short_name(ref $self);
 }
 
 #-----------------------------------------------------------------------------
@@ -400,7 +400,7 @@ sub get_parameters {
 sub transform {
     my ($self) = @_;
 
-    return throw_policy_definition(
+    return throw_transformer_definition(
         $self->get_short_name() . q/ does not implement transform()./ );
 }
 
@@ -420,7 +420,7 @@ sub new_parameter_value_exception {
     my ( $self, $option_name, $option_value, $source, $message_suffix ) = @_;
 
     return Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue->new(
-        policy          => $self->get_short_name(),
+        transformer          => $self->get_short_name(),
         option_name     => $option_name,
         option_value    => $option_value,
         source          => $source,
@@ -496,7 +496,7 @@ sub _format_lack_of_parameter_metadata {
     return interpolate($message) if $message;
 
     return
-        'Cannot programmatically discover what parameters this policy takes.';
+        'Cannot programmatically discover what parameters this transformer takes.';
 }
 
 #-----------------------------------------------------------------------------
@@ -599,7 +599,7 @@ your subclass B<must> override this method.
 
 Returns a reference to a new C<Perl::ToPerl6::Transformation> object. The
 arguments are a description of the transformation (as string), an
-explanation for the policy (as string) or a series of page numbers in
+explanation for the transformer (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
 caused the transformation.
 
@@ -624,18 +624,18 @@ Useful in parameter parser implementations.
 
 =item C< get_long_name() >
 
-Return the full package name of this policy.
+Return the full package name of this transformer.
 
 
 =item C< get_short_name() >
 
-Return the name of this policy without the "Perl::ToPerl6::Transformer::"
+Return the name of this transformer without the "Perl::ToPerl6::Transformer::"
 prefix.
 
 
 =item C< is_enabled() >
 
-Answer whether this policy is really active or not.  Returns a true
+Answer whether this transformer is really active or not.  Returns a true
 value if it is, a false, yet defined, value if it isn't, and an
 undefined value if it hasn't yet been decided whether it will be.
 
@@ -650,14 +650,14 @@ increases.
 
 =item C< default_maximum_transformations_per_document() >
 
-Returns the default maximum number of transformations for this policy to
+Returns the default maximum number of transformations for this transformer to
 report per document.  By default, this not defined, but subclasses may
 override this.
 
 
 =item C< get_maximum_transformations_per_document() >
 
-Returns the maximum number of transformations this policy will report for a
+Returns the maximum number of transformations this transformer will report for a
 single document.  If this is not defined, then there is no limit.  If
 L</set_maximum_transformations_per_document()> has not been invoked, then
 L</default_maximum_transformations_per_document()> is returned.
@@ -665,7 +665,7 @@ L</default_maximum_transformations_per_document()> is returned.
 
 =item C< set_maximum_transformations_per_document() >
 
-Specify the maximum transformations that this policy should report for a
+Specify the maximum transformations that this transformer should report for a
 document.
 
 
@@ -705,7 +705,7 @@ possible values.
 Returns a sorted list of the default themes associated with this
 Transformer.  The default method returns an empty list.  Transformer authors
 should override this method to return a list of themes that are
-appropriate for their policy.
+appropriate for their transformer.
 
 
 =item C< get_themes() >
@@ -729,13 +729,13 @@ preserved.  Duplicate themes will be removed.
 
 =item C< get_abstract() >
 
-Retrieve the abstract for this policy (the part of the NAME section of
+Retrieve the abstract for this transformer (the part of the NAME section of
 the POD after the module name), if it is available.
 
 
 =item C< get_raw_abstract() >
 
-Retrieve the abstract for this policy (the part of the NAME section of
+Retrieve the abstract for this transformer (the part of the NAME section of
 the POD after the module name), if it is available, in the unparsed
 form.
 
@@ -751,8 +751,8 @@ Returns a reference to an array containing instances of
 L<Perl::ToPerl6::TransformerParameter|Perl::ToPerl6::TransformerParameter>.
 
 Note that this will return an empty list if the parameters for this
-policy are unknown.  In order to differentiate between this
-circumstance and the one where this policy does not take any
+transformer are unknown.  In order to differentiate between this
+circumstance and the one where this transformer does not take any
 parameters, it is necessary to call C<parameter_metadata_available()>.
 
 
@@ -771,7 +771,7 @@ they are evaluated in string context.
 
 =item C<to_string()>
 
-Returns a string representation of the policy.  The content of the
+Returns a string representation of the transformer.  The content of the
 string depends on the current value returned by C<get_format()>.
 See L<"OVERLOADS"> for the details.
 
@@ -783,7 +783,7 @@ Transformer doesn't have any potential side effects.
 
 This method returns a true value by default.
 
-An "unsafe" policy might attempt to compile the code, which, if you have
+An "unsafe" transformer might attempt to compile the code, which, if you have
 C<BEGIN> or C<CHECK> blocks that affect files or connect to databases, is not
 a safe thing to do.  If you are writing a such a Transformer, then you should
 override this method to return false.
@@ -830,12 +830,12 @@ Name of the Transformer without the C<Perl::ToPerl6::Transformer::> prefix.
 
 =item C<%a>
 
-The policy abstract.
+The transformer abstract.
 
 
 =item C<%O>
 
-List of supported policy parameters.  Takes an option of a format
+List of supported transformer parameters.  Takes an option of a format
 string for L<Perl::ToPerl6::TransformerParameter/"to_formatted_string">.
 For example, this can be used like C<%{%n - %d\n}O> to get a list of
 parameter names followed by their descriptions.
@@ -843,42 +843,42 @@ parameter names followed by their descriptions.
 
 =item C<%U>
 
-A message stating that the parameters for the policy are unknown if
+A message stating that the parameters for the transformer are unknown if
 C<parameter_metadata_available()> returns false.  Takes an option of
 what the message should be, which defaults to "Cannot programmatically
-discover what parameters this policy takes.".  The value of this
+discover what parameters this transformer takes.".  The value of this
 option is interpolated in order to expand the standard escape
 sequences (C<\n>, C<\t>, etc.).
 
 
 =item C<%S>
 
-The default severity level of the policy.
+The default severity level of the transformer.
 
 
 =item C<%s>
 
-The current severity level of the policy.
+The current severity level of the transformer.
 
 
 =item C<%T>
 
-The default themes for the policy.
+The default themes for the transformer.
 
 
 =item C<%t>
 
-The current themes for the policy.
+The current themes for the transformer.
 
 
 =item C<%V>
 
-The default maximum number of transformations per document of the policy.
+The default maximum number of transformations per document of the transformer.
 
 
 =item C<%v>
 
-The current maximum number of transformations per document of the policy.
+The current maximum number of transformations per document of the transformer.
 
 
 =back

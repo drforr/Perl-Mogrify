@@ -9,7 +9,7 @@ use English qw(-no_match_vars);
 use PPI::Document;
 
 use Perl::ToPerl6::Annotation;
-use Perl::ToPerl6::TestUtils qw(bundled_policy_names);
+use Perl::ToPerl6::TestUtils qw(bundled_transformer_names);
 
 use Test::More;
 
@@ -21,7 +21,7 @@ our $VERSION = '0.02';
 
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
-my @bundled_policy_names = bundled_policy_names();
+my @bundled_transformer_names = bundled_transformer_names();
 
 plan( tests => 85 );
 
@@ -33,7 +33,7 @@ can_ok('Perl::ToPerl6::Annotation', 'create_annotations');
 can_ok('Perl::ToPerl6::Annotation', 'element');
 can_ok('Perl::ToPerl6::Annotation', 'effective_range');
 can_ok('Perl::ToPerl6::Annotation', 'disabled_transformers');
-can_ok('Perl::ToPerl6::Annotation', 'disables_policy');
+can_ok('Perl::ToPerl6::Annotation', 'disables_transformer');
 can_ok('Perl::ToPerl6::Annotation', 'disables_all_transformers');
 can_ok('Perl::ToPerl6::Annotation', 'disables_line');
 
@@ -90,7 +90,7 @@ SKIP: {
 }
 
 SKIP: {
-    foreach ( @bundled_policy_names ) {
+    foreach ( @bundled_transformer_names ) {
         m/ FroBozzBazzle /smxi or next;
         skip( 'Transformer FroBozzBazzle actually implemented', 6 );
         last;   # probably not necessary.
@@ -122,20 +122,20 @@ EOD
 }
 
 SKIP: {
-    @bundled_policy_names >= 8
+    @bundled_transformer_names >= 8
         or skip( 'Need at least 8 bundled transformers', 49 );
     my $max = 0;
     my $doc;
     my @annot;
     foreach my $fmt ( '(%s)', '( %s )', '"%s"', q<'%s'> ) {
-        my $policy_name = $bundled_policy_names[$max++];
-        $policy_name =~ s/ .* :: //smx;
-        $note = sprintf "no mogrify $fmt", $policy_name;
+        my $transformer_name = $bundled_transformer_names[$max++];
+        $transformer_name =~ s/ .* :: //smx;
+        $note = sprintf "no mogrify $fmt", $transformer_name;
         push @annot, $note;
         $doc .= "## $note\n## use mogrify\n";
-        $policy_name = $bundled_policy_names[$max++];
-        $policy_name =~ s/ .* :: //smx;
-        $note = sprintf "no mogrify qw$fmt", $policy_name;
+        $transformer_name = $bundled_transformer_names[$max++];
+        $transformer_name =~ s/ .* :: //smx;
+        $note = sprintf "no mogrify qw$fmt", $transformer_name;
         push @annot, $note;
         $doc .= "## $note\n## use mogrify\n";
     }
@@ -148,10 +148,10 @@ SKIP: {
             $note or skip( "No annotation $inx found", 5 );
             ok( ! $note->disables_all_transformers(),
                 "Specific annotation $inx does not disable all transformers" );
-            my ( $policy_name ) = $bundled_policy_names[$inx] =~
+            my ( $transformer_name ) = $bundled_transformer_names[$inx] =~
                 m/ ( \w+ :: \w+ ) \z /smx;
-            ok ( $note->disables_policy( $bundled_policy_names[$inx] ),
-                "Specific annotation $inx disables $policy_name" );
+            ok ( $note->disables_transformer( $bundled_transformer_names[$inx] ),
+                "Specific annotation $inx disables $transformer_name" );
             my $line = $inx * 2 + 1;
             ok( $note->disables_line( $line ),
                 "Specific annotation $inx disables line $line" );
@@ -167,7 +167,7 @@ SKIP: {
 annotate( <<"EOD", 1, 'Annotation on split statement' );
 
 my \$foo =
-    'bar'; ## no mogrify ($bundled_policy_names[0])
+    'bar'; ## no mogrify ($bundled_transformer_names[0])
 
 my \$baz = 'burfle';
 EOD

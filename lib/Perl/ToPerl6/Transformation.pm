@@ -68,7 +68,7 @@ sub new {
     $self->{_description} = $desc;
     $self->{_explanation} = $expl;
     $self->{_severity}    = $sev;
-    $self->{_policy}      = caller;
+    $self->{_transformer}      = caller;
 
     # PPI eviscerates the Elements in a Document when the Document gets
     # DESTROY()ed, and thus they aren't useful after it is gone.  So we have
@@ -163,19 +163,19 @@ sub visual_column_number {
 
 sub diagnostics {
     my ($self) = @_;
-    my $policy = $self->policy();
+    my $transformer = $self->transformer();
 
-    if ( not $diagnostics{$policy} ) {
+    if ( not $diagnostics{$transformer} ) {
         eval {
-            my $module_name = ref $policy || $policy;
-            $diagnostics{$policy} =
+            my $module_name = ref $transformer || $transformer;
+            $diagnostics{$transformer} =
                 trim_pod_section(
                     get_pod_section_for_module( $module_name, 'DESCRIPTION' )
                 );
         };
-        $diagnostics{$policy} ||= "    No diagnostics available\n";
+        $diagnostics{$transformer} ||= "    No diagnostics available\n";
     }
-    return $diagnostics{$policy};
+    return $diagnostics{$transformer};
 }
 
 #-----------------------------------------------------------------------------
@@ -210,9 +210,9 @@ sub severity {
 
 #-----------------------------------------------------------------------------
 
-sub policy {
+sub transformer {
     my $self = shift;
-    return $self->{_policy};
+    return $self->{_transformer};
 }
 
 #-----------------------------------------------------------------------------
@@ -250,8 +250,8 @@ sub element_class {
 sub to_string {
     my $self = shift;
 
-    my $long_policy = $self->policy();
-    (my $short_policy = $long_policy) =~ s/ \A Perl::ToPerl6::Transformer:: //xms;
+    my $long_transformer = $self->transformer();
+    (my $short_transformer = $long_transformer) =~ s/ \A Perl::ToPerl6::Transformer:: //xms;
 
     # Wrap the more expensive ones in sub{} to postpone evaluation
     my %fspec = (
@@ -268,8 +268,8 @@ sub to_string {
          's' => $self->severity(),
          'd' => sub { $self->diagnostics()                  },
          'r' => sub { $self->source()                       },
-         'P' => $long_policy,
-         'p' => $short_policy,
+         'P' => $long_transformer,
+         'p' => $short_transformer,
     );
     return stringf($format, %fspec);
 }
@@ -369,7 +369,7 @@ will go through a deprecation cycle.
 
 Returns a reference to a new C<Perl::ToPerl6::Transformation> object. The
 arguments are a description of the transformation (as string), an
-explanation for the policy (as string) or a series of page numbers in
+explanation for the transformer (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
 caused the transformation, and the severity of the transformation (as an
 integer).
@@ -390,9 +390,9 @@ words, this value may change on a per transformation basis.
 
 =item C<explanation()>
 
-Returns an explanation of the policy as a string or as reference to an
+Returns an explanation of the transformer as a string or as reference to an
 array of page numbers in PBP.  This value will generally not change
-based upon the specific code violating the policy.
+based upon the specific code violating the transformer.
 
 
 =item C<location()>
@@ -473,7 +473,7 @@ Transformation.  This information is automatically extracted from the
 C<DESCRIPTION> section of the Transformer module's POD.
 
 
-=item C<policy()>
+=item C<transformer()>
 
 Returns the name of the L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>
 that created this Transformation.

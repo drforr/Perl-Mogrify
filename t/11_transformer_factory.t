@@ -23,7 +23,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 {
-    my $policy_name = 'Perl::ToPerl6::Transformer::Packages::FormatPackageUsages';
+    my $transformer_name = 'Perl::ToPerl6::Transformer::Packages::FormatPackageUsages';
     my $params = {severity => 2, set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
@@ -31,20 +31,20 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 
     # Now test...
-    my $policy = $pf->create_policy( -name => $policy_name, -params => $params );
-    is( ref $policy, $policy_name, 'Created correct type of policy');
+    my $transformer = $pf->create_transformer( -name => $transformer_name, -params => $params );
+    is( ref $transformer, $transformer_name, 'Created correct type of transformer');
 
-    my $severity = $policy->get_severity();
+    my $severity = $transformer->get_severity();
     is( $severity, 2, 'Set the severity');
 
-    my @themes = $policy->get_themes();
+    my @themes = $transformer->get_themes();
     is_deeply( \@themes, [ qw(betty wilma) ], 'Set the theme');
 }
 
 #-----------------------------------------------------------------------------
 # Using short module name.
 {
-    my $policy_name = 'Variables::ReplaceUndef';
+    my $transformer_name = 'Variables::ReplaceUndef';
     my $params = {set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
@@ -52,11 +52,11 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 
     # Now test...
-    my $policy = $pf->create_policy( -name => $policy_name, -params => $params );
-    my $policy_name_long = 'Perl::ToPerl6::Transformer::' . $policy_name;
-    is( ref $policy, $policy_name_long, 'Created correct type of policy');
+    my $transformer = $pf->create_transformer( -name => $transformer_name, -params => $params );
+    my $transformer_name_long = 'Perl::ToPerl6::Transformer::' . $transformer_name;
+    is( ref $transformer, $transformer_name_long, 'Created correct type of transformer');
 
-    my @themes = $policy->get_themes();
+    my @themes = $transformer->get_themes();
     is_deeply( \@themes, [ qw(betty wilma) ], 'Set the theme');
 }
 
@@ -68,29 +68,29 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
     my $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
 
     # Try missing arguments
-    eval{ $pf->create_policy() };
+    eval{ $pf->create_transformer() };
     like(
         $EVAL_ERROR,
         qr/The [ ] -name [ ] argument/xms,
         'create without -name arg',
     );
 
-    # Try creating bogus policy
-    eval{ $pf->create_policy( -name => 'Perl::ToPerl6::Foo' ) };
+    # Try creating bogus transformer
+    eval{ $pf->create_transformer( -name => 'Perl::ToPerl6::Foo' ) };
     like(
         $EVAL_ERROR,
         qr/Can't [ ] locate [ ] object [ ] method/xms,
-        'create bogus policy',
+        'create bogus transformer',
     );
 
     # Try using a bogus severity level
-    my $policy_name = 'Packages::FormatPackageUsages';
-    my $policy_params = {severity => 'bogus'};
-    eval{ $pf->create_policy( -name => $policy_name, -params => $policy_params)};
+    my $transformer_name = 'Packages::FormatPackageUsages';
+    my $transformer_params = {severity => 'bogus'};
+    eval{ $pf->create_transformer( -name => $transformer_name, -params => $transformer_params)};
     like(
         $EVAL_ERROR,
         qr/Invalid [ ] severity: [ ] "bogus"/xms,
-        'create policy w/ bogus severity',
+        'create transformer w/ bogus severity',
     );
 }
 
@@ -125,7 +125,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 # ensure we return true if this test is loaded by
-# t/11_policyfactory.t_without_optional_dependencies.t
+# t/11_transformerfactory.t_without_optional_dependencies.t
 1;
 
 ##############################################################################

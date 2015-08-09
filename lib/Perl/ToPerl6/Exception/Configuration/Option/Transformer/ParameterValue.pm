@@ -15,14 +15,14 @@ our $VERSION = '0.03';
 use Exception::Class (
     'Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue' => {
         isa         => 'Perl::ToPerl6::Exception::Configuration::Option::Transformer',
-        description => 'A problem with the value of a parameter for a policy.',
-        alias       => 'throw_policy_value',
+        description => 'A problem with the value of a parameter for a transformer.',
+        alias       => 'throw_transformer_value',
     },
 );
 
 #-----------------------------------------------------------------------------
 
-Readonly::Array our @EXPORT_OK => qw< throw_policy_value >;
+Readonly::Array our @EXPORT_OK => qw< throw_transformer_value >;
 
 #-----------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ sub full_message {
         $source = $EMPTY;
     }
 
-    my $policy = $self->policy();
+    my $transformer = $self->transformer();
     my $option_name = $self->option_name();
     my $option_value =
         defined $self->option_value()
@@ -46,7 +46,7 @@ sub full_message {
     my $message_suffix = $self->message_suffix() || $EMPTY;
 
     return
-            qq{The value for the $policy "$option_name" option }
+            qq{The value for the $transformer "$option_name" option }
         .   qq{($option_value)$source $message_suffix};
 }
 
@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue - A problem with the value of a parameter for a policy.
+Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue - A problem with the value of a parameter for a transformer.
 
 =head1 DESCRIPTION
 
@@ -82,12 +82,12 @@ will go through a deprecation cycle.
 
 =over
 
-=item C<< throw( policy => $policy, option_name => $option_name, option_value => $option_value, source => $source, message_suffix => $message_suffix ) >>
+=item C<< throw( transformer => $transformer, option_name => $option_name, option_value => $option_value, source => $source, message_suffix => $message_suffix ) >>
 
 See L<Exception::Class/"throw">.
 
 
-=item C<< new( policy => $policy, option_name => $option_name, option_value => $option_value, source => $source, message_suffix => $message_suffix ) >>
+=item C<< new( transformer => $transformer, option_name => $option_name, option_value => $option_value, source => $source, message_suffix => $message_suffix ) >>
 
 See L<Exception::Class/"new">.
 
@@ -101,7 +101,7 @@ See L<Exception::Class/"new">.
 
 =item C<full_message()>
 
-Provide a standard message for policy parameter value problems.  See
+Provide a standard message for transformer parameter value problems.  See
 L<Exception::Class/"full_message">.
 
 
