@@ -48,22 +48,22 @@ sub transform_ok {
     my $subtests_with_extras =  subtests_in_tree( 't', 'include extras' );
 
     my $subtests = [];
-    my $in_sample;
+    my $in_expected;
     for my $line (<$fh>) {
         chomp $line;
         if ( $line =~ /^## name: (.+)/ ) {
-            $in_sample = undef;
+            $in_expected = undef;
             push @{ $subtests }, {
                 name => $1,
                 failures => 0,
                 lineno   => 1,
                 parms    => {},
                 original => [],
-                sample => [],
+                expected => [],
             }
         }
-        elsif ( $line eq '##-->' ) { $in_sample = 1 }
-        elsif ( $in_sample ) { push @{ $subtests->[-1]{sample} }, $line }
+        elsif ( $line eq '##-->' ) { $in_expected = 1 }
+        elsif ( $in_expected ) { push @{ $subtests->[-1]{expected} }, $line }
         else {
             unless ( $subtests and @{ $subtests } ) {
                 $TEST->ok( 0, 'Test formatted correctly' );
@@ -73,7 +73,6 @@ sub transform_ok {
         }
     }
 
-    $TEST->plan( tests => 1 );
     $TEST->note("Running tests for transformer: $transformer");
 
     my ($full_transformer_name, $method) =
@@ -86,9 +85,9 @@ sub transform_ok {
         if ($todo) { $TEST->todo_start( $todo ); }
 
         my ($error, @transformations) = _run_subtest($transformer, $subtest);
+        $TEST->ok( !$error, _create_test_name($transformer, $subtest) );
 #        my ($ok, @diag)=
 #            _evaluate_test_results($subtest, $error, \@transformations);
-#        $TEST->ok( $ok, _create_test_name($transformer, $subtest) );
 #
 #        if (@diag) { $TEST->diag(@diag); }
 #        if ($todo) { $TEST->todo_end(); }
@@ -188,31 +187,31 @@ sub __results_string {
     # Sigh, for the moment just walk the strings. ^ should work...
     #
     my $offset;
-    for ( 0 .. length($subtest->{sample}[$error_line]) ) {
-        next if substr($subtest->{sample}[$error_line], $_, 1 ) eq
-                substr($subtest->{transformed}[$error_line], $_, 1 );
+    for ( 0 .. length($subtest->{expected}[$error_line]) ) {
+        next if substr($subtest->{expected}[$error_line], $_, 1 ) eq
+                substr($subtest->{got}[$error_line], $_, 1 );
         $offset = $_ + 1;
         last;
     }
 
     join( "\n", __markup_array( $subtest->{original}, $error_line ),
                 '====??====>',
-                __markup_array( $subtest->{sample}, $error_line, $offset ),
+                __markup_array( $subtest->{expected}, $error_line, $offset ),
                 '====!!====>',
-                __markup_array( $subtest->{transformed}, $error_line, $offset )
+                __markup_array( $subtest->{got}, $error_line, $offset )
     );
 }
 
 sub __is_deeply {
     my ($transformer, $subtest) = @_;
 
-    my $num_errors;
-    my $last_line = min( $#{ $subtest->{sample} },
-                         $#{ $subtest->{transformed} } );
+    my $error_line = 0;
+    my $last_line = min( $#{ $subtest->{expected} },
+                         $#{ $subtest->{got} } );
     my $first_different_line = 0;
     for my $idx ( 0 .. $last_line ) {
-        next if $subtest->{sample}[$idx] eq
-                $subtest->{transformed}[$idx];
+        next if $subtest->{expected}[$idx] eq
+                $subtest->{got}[$idx];
         $first_different_line = $idx;
         $TEST->diag(
             "Output begins to differ at line " .
@@ -220,26 +219,27 @@ sub __is_deeply {
             ":\n" .
             __results_string($subtest, $first_different_line)
         );
-        $num_errors++;
+        $error_line = $first_different_line;
         last;
     }
 
-    if ( $#{ $subtest->{sample} } > $#{ $subtest->{transformed} } ) {
+    if ( $#{ $subtest->{expected} } > $#{ $subtest->{got} } ) {
         warn "Error was [$@]\n" if $@;
         $TEST->diag(
             "Transformed file missing lines from original:\n".
             __results_string($subtest)
         );
-        $num_errors++;
+        $error_line = $#{ $subtest->{got} };
     }
-    elsif ( $#{ $subtest->{sample} } < $#{ $subtest->{transformed} } ) {
+    elsif ( $#{ $subtest->{expected} } < $#{ $subtest->{got} } ) {
         $TEST->diag(
             "Transformed file has more lines than original:\n".
             __results_string($subtest)
         );
-        $num_errors++;
+        $error_line = $#{ $subtest->{expected} };
     }
-    return $num_errors;
+    $subtest->{lineno} = $error_line + 1;
+    return $error_line;
 }
 
 #-----------------------------------------------------------------------------
@@ -278,17 +278,13 @@ sub _run_subtest {
         };
     }
     if ( $document ) {
-        $subtest->{transformed} = [split /\n/,$document];
+        $subtest->{got} = [split /\n/,$document];
     }
     else {
         die "*** caught error $error!\n";
     }
     my $num_errors = __is_deeply($transformer, $subtest);
-
-    if ( $num_errors ) {
-        $TEST->ok(0==1, "$transformer - $subtest->{name} - failed");
-    }
-    return;
+    return $num_errors;
 }
 
 #-----------------------------------------------------------------------------
