@@ -51,7 +51,9 @@ sub transform {
     my $token = $elem->snext_sibling;
 
     if ( $token->isa('PPI::Structure::Block') and
+         $token->start and
          $token->start eq '{' and
+         $token->finish and
          $token->finish eq '}' ) {
         return if $token->snext_sibling and
                   $token->snext_sibling->isa('PPI::Token::Operator') and

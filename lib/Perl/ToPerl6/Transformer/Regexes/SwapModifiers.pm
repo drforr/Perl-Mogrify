@@ -44,7 +44,9 @@ my %modifier_map = (
         a => '',
         l => '',
         g => 'c', # /g --> /c
+        r => 'r',
         c => '',  # /c --> ...
+        e => 'e',
     },
     s => {
         m => 'm',
@@ -58,7 +60,9 @@ my %modifier_map = (
         a => '',
         l => '',
         g => 'c',
+        r => 'r',
         c => '',
+        e => 'e',
     },
     tr => {
         m => 'm',
@@ -72,7 +76,9 @@ my %modifier_map = (
         a => '',
         l => '',
         g => 'c',
+        r => 'r',
         c => '',
+        e => 'e',
     }
 );
 
@@ -90,10 +96,11 @@ sub transform {
         substr( $elem->content, -$num_modifiers, $num_modifiers, '' );
 
     my $operator = $elem->{operator};
-    my $new_modifiers = join( '',
+    my $new_modifiers = '';
+    $new_modifiers = join( '',
                               map { $modifier_map{$operator}{$_} }
                               split //, $modifiers
-    );
+    ) if $modifiers;
 
     my $delta = length($modifiers) - length($new_modifiers);
     for ( @{ $elem->{sections} } ) {

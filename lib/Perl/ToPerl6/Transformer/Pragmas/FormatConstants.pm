@@ -18,10 +18,10 @@ Readonly::Scalar my $EXPL => q{Perl6 has real constants};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
+sub supported_parameters { return ()                }
 sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
-sub applies_to           { return 'PPI::Statement' }
+sub applies_to           { return 'PPI::Statement'  }
 
 #-----------------------------------------------------------------------------
 
@@ -35,11 +35,12 @@ my %map = (
 #
 sub transform {
     my ($self, $elem, $doc) = @_;
+    return unless $elem and $elem->first_element;
+
     my $head = $elem->first_element;
     my $current = $head;
 
-    if ( $current and
-         $current->isa('PPI::Token::Word') and
+    if ( $current->isa('PPI::Token::Word') and
          $current->content =~ m{^Readonly} ) {
 
         $current->set_content('constant');
@@ -74,6 +75,7 @@ sub transform {
     }
     elsif ( $head->isa('PPI::Token::Word') and
             $head->content eq 'use' and
+            $head->snext_sibling and
             $head->snext_sibling->isa('PPI::Token::Word') and
             $head->snext_sibling->content eq 'constant' ) {
 
