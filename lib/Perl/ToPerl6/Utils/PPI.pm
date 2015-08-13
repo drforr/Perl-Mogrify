@@ -332,7 +332,7 @@ sub set_string {
         substr($content, 2, -1) = $string;
     }
     else {
-        die "Unknown string delimiters!\n";
+        die "Unknown string delimiters! >$content<\n";
     }
     $elem->set_content( $content );
 }

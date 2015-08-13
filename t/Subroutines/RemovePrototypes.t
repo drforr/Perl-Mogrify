@@ -17,9 +17,13 @@ __DATA__
 sub { }
 sub foo { }
 sub foo($) { }
+sub foo($)
+{ }
 sub foo($a) { }
 ##-->
 sub { }
 sub foo { }
 sub foo { }
+sub foo
+{ }
 sub foo($a) { }

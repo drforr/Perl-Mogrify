@@ -41,7 +41,8 @@ sub transform {
 
     while ( $token and
             $token->isa('PPI::Structure::Subscript') ) {
-        if ( $token->start->content eq '{' ) {
+        if ( $token->start and
+             $token->start->content eq '{' ) {
             my $bareword = $token->schild(0)->schild(0);
             my $old_content = $bareword->content;
             $old_content =~ s{'}{\\'}g;
