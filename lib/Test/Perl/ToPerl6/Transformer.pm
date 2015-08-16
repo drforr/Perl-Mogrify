@@ -184,14 +184,16 @@ sub __markup_array {
 sub __results_string {
     my ($subtest, $error_line) = @_;
 
-    # Sigh, for the moment just walk the strings. ^ should work...
-    #
     my $offset;
-    for ( 0 .. length($subtest->{expected}[$error_line]) ) {
-        next if substr($subtest->{expected}[$error_line], $_, 1 ) eq
-                substr($subtest->{got}[$error_line], $_, 1 );
-        $offset = $_ + 1;
-        last;
+    if ( $error_line ) {
+        # Sigh, for the moment just walk the strings. ^ should work...
+        #
+        for ( 0 .. length($subtest->{expected}[$error_line]) ) {
+            next if substr($subtest->{expected}[$error_line], $_, 1 ) eq
+                    substr($subtest->{got}[$error_line], $_, 1 );
+            $offset = $_ + 1;
+            last;
+        }
     }
 
     join( "\n", __markup_array( $subtest->{original}, $error_line ),
