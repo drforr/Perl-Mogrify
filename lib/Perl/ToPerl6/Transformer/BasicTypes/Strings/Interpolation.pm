@@ -112,60 +112,76 @@ sub tokenize {
 # Get rid of it.
 #
 sub casefold {
-    my ($self, $residue) = @_;
+    my ($self, $text) = @_;
+    my @split = grep { $_ ne '' } split /( \\[luEFLQU] )/x, $text;
 
-    my @tokens;
-    my @split = grep { $_ ne '' } split /( \\[luEFLQU] )/x, $residue;
+    my @token;
     for ( my $i = 0; $i < @split; $i++ ) {
         my ($v, $la1) = @split[$i,$i+1];
         if ( $v =~ m< ^ \\[FLU] $ >x and
              $la1 and $la1 eq '\\E' ) {
             $i+=2;
         }
+        elsif ( $v =~ m{ \\[luEFLQU] }x ) {
+            push @token, { type => 'casefold', content => $v };
+        }
         else {
-            push @tokens, $v;
+            push @token, { type => 'uninterpolated', content => $v };
         }
     }
-    return @tokens;
+    return @token;
 }
 
 sub tokenize_variables {
     my ($self, $elem, $string) = @_;
     my $full_string = $string;
 
-    my @tokens;
+    my @token;
 my $iter = 100;
     while ( $string ) {
 unless ( --$iter  ) {
     my $line_number = $elem->line_number;
     die "Congratulations, you've broken string interpolation. Please report this message, along with the test file you were using to the author: <<$full_string>> on line $line_number\n";
 }
-        my $residue;
 
         # '${foo}', '@{foo}' is an interpolated value.
         #
-        if ( $string =~ s< ^ ( [\$\@] \{ [^}]+ \} ) ><>x ) {
-            push @tokens, $1;
+        if ( $string =~ s< ^ ( [\$\@] ) \{ ( [^}]+ ) \} ><>x ) {
+            push @token, {
+                type => 'disambiguated variable',
+                sigil => $1,
+                content => $2
+            };
         }
 
-        # '\c' is a token on its own.
-        # '$\', '@\', '$ ', '@ ' is also its own token. Feels buggy though.
+        # '\c[...]' is a Unicode character.
         #
-        elsif ( $string =~ s< ^ ( \\ c . ) ><>x or
-                $string =~ s< ^ ( [\$\@] (?: \\ | \s ) ) ><>x ) {
-            if ( @tokens ) {
-                $tokens[-1] .= $1;
+        elsif ( $string =~ s< ^ ( \\ c \[ .+? \] ) ><>sxe or
+                $string =~ s< ^ ( \\ c . ) ><>x  or
+                $string =~ s< ^ ( [\$\@] \s ) ><>x ) {
+            if ( @token and $token[-1]{type} eq 'uninterpolated' ) {
+                $token[-1]{content} .= $1;
             }
             else {
-                push @tokens, $1;
+                push @token, {
+                    type => 'uninterpolated',
+                    content => $1
+                };
             }
+        }
+
+        elsif ( $string =~ s< ^ ( [\$\@] [-+\\] ) ><>x ) {
+            push @token, {
+                type => 'variable',
+                content => $1
+            };
         }
 
         # Anything that does *not* start with '$' or '@' is its own token,
         # at least up until the next '$' or '@' encountered.
         #
         elsif ( $string =~ s< ^ ( [^\$\@]+ ) ><>x ) {
-            $residue .= $1;
+            my $residue = $1;
 
             while ( $residue and $residue =~ m< \\ $ >x ) {
                 if ( $string =~ s< ^ ( \$\@ ) ><>x ) {
@@ -180,7 +196,15 @@ unless ( --$iter  ) {
                     last;
                 }
             }
-            push @tokens, $self->casefold($residue);
+
+            # Merge the first element of the residue with the last token if
+            # possible.
+            #
+            my @result = $self->casefold($residue);
+            if ( @token and $token[-1]{type} eq 'uninterpolated' ) {
+                $token[-1]{content} .= shift(@result)->{content};
+            }
+            push @token, @result if @result;
         }
 
         # Anything else starting with a '$' or '@' is fair game.
@@ -189,20 +213,22 @@ unless ( --$iter  ) {
             my ( $var_name, $remainder, $prefix ) =
                  extract_variable( $string );
             if ( $var_name ) {
-                 push @tokens, $var_name;
-                 $string = $remainder;
+                push @token, { type => 'variable', content => $var_name };
+                $string = $remainder;
             }
-#
-# XXX I"m betting that extract_variable() doesn't quite catch $] etc.
-#
-            else {
-                $string =~ s< ^ ( [\$\@] [^\$\@]* ) ><>x;
-                if ( @tokens ) {
-                    $tokens[-1] .= $1;
+            #
+            # XXX I"m betting that extract_variable() doesn't catch $] etc.
+            #
+            elsif ( $string =~ s< ^ ( [\$\@] [^\$\@]* ) ><>x ) {
+                if ( @token ) {
+                    $token[-1]{content} .= $1;
                 }
                 else {
-                    push @tokens, $1;
+                    push @token, { type => 'g', content =>  $1 };
                 }
+            }
+            else {
+warn "XXX YYY failed\n";
             }
         }
         else {
@@ -210,7 +236,7 @@ warn "XXX failed\n";
         }
     }
 
-    return grep { $_ ne '' } @tokens;
+    return grep { $_ ne '' } @token;
 }
 
 sub transform {
@@ -313,7 +339,8 @@ warn "Interpolating perl code.";
     # hanging around in the string, because those would get messed up.
     #
 
-    my @tokens = $self->tokenize_variables($elem,$old_string);
+    my @token = $self->tokenize_variables($elem,$old_string);
+#use YAML;warn Dump grep { $_->{type} eq 'a' } @token;
 
     # Now on to rewriting \l, \u, \E, \F, \L, \Q, \U in Perl6.
     #
@@ -328,33 +355,47 @@ warn "Interpolating perl code.";
     # lc(..) block after the first...
     #
     my $new_content;
-    for ( my $i = 0; $i < @tokens; $i++ ) {
-        my ( $v, $la1 ) = @tokens[$i,$i+1];
+    for ( my $i = 0; $i < @token; $i++ ) {
+        my ( $v, $la1 ) = @token[$i,$i+1];
 
-        if ( $v =~ m< ^ ( \$ | \@ ) >x ) {
-            if ( $v =~ s< ^ \$ \@ ><\\\$\@>x ) {
-            }
-            elsif ( $v =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>sx ) {
+        # '${a}' is mapped to '{$a}'.
+        # '${$a}' is a varvar in Perl5, needs other techniques in perl6
+        #
+        if ( $v->{type} eq 'disambiguated variable' ) {
+            if ( $v->{content} =~ m{ ^ ( \$ | \@ ) }x ) {
+                warn "Use of varvar in string, not translating.\n";
+                $v->{content} = $v->{sigil} . '{' . $v->{content} . '}';
             }
             else {
-                $v =~ s< [-][\>] ><.>gx;
-                $v =~ s< \{ (\w+) (\s*) \} >< '{' .
+                $v->{content} = '{' . $v->{sigil} . $v->{content} . '}';
+            }
+        }
+        elsif ( $v->{type} eq 'unicode character' ) {
+        }
+        elsif ( $v->{content} =~ m< ^ ( \$ | \@ ) >x ) {
+            if ( $v->{content} =~ s< ^ \$ \@ ><\\\$\@>x ) {
+            }
+            elsif ( $v->{content} =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>sx ) {
+            }
+            else {
+                $v->{content} =~ s< [-][\>] ><.>gx;
+                $v->{content} =~ s< \{ (\w+) (\s*) \} >< '{' .
                                         $start_delimiter . $1 .
                                         $end_delimiter . $2 .
                                         '}'>segx;
             }
 
-            $v =~ s< ^ ( [(<>)] ) ><\\$1>sgx;
-            $v =~ s< ( [^\\] ) ( [(<>)] ) ><$1\\$2>sgx;
+            $v->{content} =~ s< ^ ( [(<>)] ) ><\\$1>sgx;
+            $v->{content} =~ s< ( [^\\] ) ( [(<>)] ) ><$1\\$2>sgx;
         }
         else {
             # < > is now a pointy block, { } is now a code block, ( ) is also
             # used.
             #
-            $v =~ s< ^ ( [{(<>)}] ) ><\\$1>sgx;
-            $v =~ s< ( [^\\] ) ( [{(<>)}] ) ><$1\\$2>sgx;
+            $v->{content} =~ s< ^ ( [{(<>)}] ) ><\\$1>sgx;
+            $v->{content} =~ s< ( [^\\] ) ( [{(<>)}] ) ><$1\\$2>sgx;
         }
-        $new_content .= $v;
+        $new_content .= $v->{content};
     }
 
 #        if ( $v eq '\\l' ) {

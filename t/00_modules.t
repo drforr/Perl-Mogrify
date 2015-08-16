@@ -9,12 +9,13 @@ use English qw(-no_match_vars);
 use PPI::Document;
 
 use Perl::ToPerl6::TestUtils qw(bundled_transformer_names);
+use Perl::ToPerl6;
 
 use Test::More;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.03';
+our $VERSION = '0.031';
 
 #-----------------------------------------------------------------------------
 
@@ -37,13 +38,18 @@ my @concrete_exceptions = qw{
 };
 
 plan tests =>
-        144
+        86
     +   (  9 * scalar @concrete_exceptions  )
     +   ( 17 * scalar @bundled_transformer_names )
 ;
 
-# pre-compute for version comparisons
-my $version_string = __PACKAGE__->VERSION;
+#-----------------------------------------------------------------------------
+# Validate main package version against this version
+
+my $this_version = __PACKAGE__->VERSION;
+my $pt_version = $Perl::ToPerl6::VERSION;
+
+is $this_version, $pt_version, 'Main package and this version match';
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6 module interface
@@ -58,7 +64,6 @@ can_ok('Perl::ToPerl6', 'transformers');
 #Set -profile to avoid messing with .perlmogrifyrc
 my $mogrify = Perl::ToPerl6->new( -profile => 'NONE' );
 isa_ok($mogrify, 'Perl::ToPerl6');
-is($mogrify->VERSION(), $version_string, 'Perl::ToPerl6 version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::Config module interface
@@ -92,7 +97,6 @@ can_ok('Perl::ToPerl6::Config', 'program_extensions_as_regexes');
 #Set -profile to avoid messing with .perlmogrifyrc
 my $config = Perl::ToPerl6::Config->new( -profile => 'NONE');
 isa_ok($config, 'Perl::ToPerl6::Config');
-is($config->VERSION(), $version_string, 'Perl::ToPerl6::Config version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::Config::OptionsProcessor module interface
@@ -121,7 +125,6 @@ can_ok('Perl::ToPerl6::OptionsProcessor', 'program_extensions');
 
 my $processor = Perl::ToPerl6::OptionsProcessor->new();
 isa_ok($processor, 'Perl::ToPerl6::OptionsProcessor');
-is($processor->VERSION(), $version_string, 'Perl::ToPerl6::OptionsProcessor version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::Transformer module interface
@@ -161,7 +164,6 @@ can_ok('Perl::ToPerl6::Transformer', 'is_safe');
 {
     my $transformer = Perl::ToPerl6::Transformer->new();
     isa_ok($transformer, 'Perl::ToPerl6::Transformer');
-    is($transformer->VERSION(), $version_string, 'Perl::ToPerl6::Transformer version');
 }
 
 #-----------------------------------------------------------------------------
@@ -186,7 +188,6 @@ my $code = q{print 'Hello World';};
 my $doc = PPI::Document->new(\$code);
 my $viol = Perl::ToPerl6::Transformation->new(undef, undef, $doc, undef);
 isa_ok($viol, 'Perl::ToPerl6::Transformation');
-is($viol->VERSION(), $version_string, 'Perl::ToPerl6::Transformation version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::UserProfile module interface
@@ -199,7 +200,6 @@ can_ok('Perl::ToPerl6::UserProfile', 'transformer_is_enabled');
 
 my $up = Perl::ToPerl6::UserProfile->new();
 isa_ok($up, 'Perl::ToPerl6::UserProfile');
-is($up->VERSION(), $version_string, 'Perl::ToPerl6::UserProfile version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::TransformerFactory module interface
@@ -213,7 +213,6 @@ can_ok('Perl::ToPerl6::TransformerFactory', 'site_transformer_names');
 my $profile = Perl::ToPerl6::UserProfile->new();
 my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );
 isa_ok($factory, 'Perl::ToPerl6::TransformerFactory');
-is($factory->VERSION(), $version_string, 'Perl::ToPerl6::TransformerFactory version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::Theme module interface
@@ -226,7 +225,6 @@ can_ok('Perl::ToPerl6::Theme', 'transformer_is_thematic');
 
 my $theme = Perl::ToPerl6::Theme->new( -rule => 'foo' );
 isa_ok($theme, 'Perl::ToPerl6::Theme');
-is($theme->VERSION(), $version_string, 'Perl::ToPerl6::Theme version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::TransformerListing module interface
@@ -237,7 +235,6 @@ can_ok('Perl::ToPerl6::TransformerListing', 'to_string');
 
 my $listing = Perl::ToPerl6::TransformerListing->new();
 isa_ok($listing, 'Perl::ToPerl6::TransformerListing');
-is($listing->VERSION(), $version_string, 'Perl::ToPerl6::TransformerListing version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::ProfilePrototype module interface
@@ -248,7 +245,6 @@ can_ok('Perl::ToPerl6::ProfilePrototype', 'to_string');
 
 my $prototype = Perl::ToPerl6::ProfilePrototype->new();
 isa_ok($prototype, 'Perl::ToPerl6::ProfilePrototype');
-is($prototype->VERSION(), $version_string, 'Perl::ToPerl6::ProfilePrototype version');
 
 #-----------------------------------------------------------------------------
 # Test Perl::ToPerl6::Command module interface
@@ -273,7 +269,6 @@ can_ok('Perl::ToPerl6::Command', 'run');
 
         my $exception = $class->new();
         isa_ok($exception, $class);
-        is($exception->VERSION(), $version_string, "$class version");
     }
 }
 
@@ -300,7 +295,6 @@ can_ok('Perl::ToPerl6::Command', 'run');
 
         my $transformer = $mod->new();
         isa_ok($transformer, 'Perl::ToPerl6::Transformer');
-        is($transformer->VERSION(), $version_string, "Version of $mod");
         ok($transformer->is_safe(), "CORE transformer $mod is marked safe");
     }
 }
@@ -323,6 +317,8 @@ ok( !transform(undef, undef), 'Functional style, undef args');
 
 # ensure we return true if this test is loaded by
 # t/00_modules.t_without_optional_dependencies.t
+
+done_testing();
 1;
 
 # Local Variables:

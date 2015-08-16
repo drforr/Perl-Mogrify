@@ -56,6 +56,7 @@ lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/FormatHereDocs.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/FormatRegexp.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/FormatShellStrings.pm
 lib/Perl/ToPerl6/Transformer/BasicTypes/Strings/Interpolation.pm
+lib/Perl/ToPerl6/Transformer/Builtins/AddWhitespace.pm
 lib/Perl/ToPerl6/Transformer/Builtins/FormatPrint.pm
 lib/Perl/ToPerl6/Transformer/CompoundStatements/AddWhitespace.pm
 lib/Perl/ToPerl6/Transformer/CompoundStatements/FormatConditionals.pm
@@ -93,6 +94,7 @@ lib/Perl/ToPerl6/TransformerParameter/Behavior/Enumeration.pm
 lib/Perl/ToPerl6/TransformerParameter/Behavior/Integer.pm
 lib/Perl/ToPerl6/TransformerParameter/Behavior/String.pm
 lib/Perl/ToPerl6/TransformerParameter/Behavior/StringList.pm
+lib/Perl/ToPerl6/TransformerSummary.pod
 lib/Perl/ToPerl6/UserProfile.pm
 lib/Perl/ToPerl6/Utils.pm
 lib/Perl/ToPerl6/Utils/Constants.pm
@@ -103,6 +105,7 @@ lib/Perl/ToPerl6/Utils/POD.pm
 lib/Perl/ToPerl6/Utils/PPI.pm
 lib/Test/Perl/ToPerl6/Transformer.pm
 LICENSE
+lockup.txt
 MANIFEST			This list of files
 README.md
 t/00_modules.t
@@ -152,6 +155,7 @@ t/BasicTypes/Strings/FormatHereDocs.t
 t/BasicTypes/Strings/FormatRegexp.t
 t/BasicTypes/Strings/FormatShellStrings.t
 t/BasicTypes/Strings/Interpolation.t
+t/Builtins/AddWhitespace.t
 t/Builtins/FormatPrint.t
 t/CompoundStatements/AddWhitespace.t
 t/CompoundStatements/FormatConditionals.t
@@ -180,6 +184,7 @@ t/Variables/FormatSpecialVariables.t
 t/Variables/ReplaceNegativeIndex.t
 t/Variables/ReplaceUndef.t
 tools/ppidump
+upgrade.log
 README
 META.yml
 META.json

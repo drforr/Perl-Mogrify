@@ -20,7 +20,7 @@ use Exception::Class ();  # Must be after P::C::Exception::*
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '1.116';
+our $VERSION = '0.031';
 
 #-----------------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ eval {
             $format,
             $transformer->get_short_name(),
             $transformer->get_long_name(),
-            $module_abstract,
+            $module_abstract || '',
             $transformer->default_severity();
     }
 

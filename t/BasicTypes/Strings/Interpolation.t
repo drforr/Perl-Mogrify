@@ -125,7 +125,7 @@ is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"')
 is( "\$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' )
 "my \$E; \{ local \$@; \}"
 is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"')
-"{$$_[0]}"
+"${$_[0]}"
 "sections=s@"
 "@[\n"
 "_alternation_{$impcount}_of_production_{$prodcount}_of_rule_$self.{"name"}"
