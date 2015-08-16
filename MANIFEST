@@ -19,7 +19,6 @@ lib/Perl/ToPerl6/Annotation.pm
 lib/Perl/ToPerl6/Command.pm
 lib/Perl/ToPerl6/Config.pm
 lib/Perl/ToPerl6/CORE_DEVELOPER.pod
-lib/Perl/ToPerl6/DEVELOPER.pod
 lib/Perl/ToPerl6/Document.pm
 lib/Perl/ToPerl6/Exception.pm
 lib/Perl/ToPerl6/Exception/AggregateConfiguration.pm
@@ -94,7 +93,6 @@ lib/Perl/ToPerl6/TransformerParameter/Behavior/Enumeration.pm
 lib/Perl/ToPerl6/TransformerParameter/Behavior/Integer.pm
 lib/Perl/ToPerl6/TransformerParameter/Behavior/String.pm
 lib/Perl/ToPerl6/TransformerParameter/Behavior/StringList.pm
-lib/Perl/ToPerl6/TransformerSummary.pod
 lib/Perl/ToPerl6/UserProfile.pm
 lib/Perl/ToPerl6/Utils.pm
 lib/Perl/ToPerl6/Utils/Constants.pm
@@ -165,7 +163,6 @@ t/CompoundStatements/RenameForeach.t
 t/CompoundStatements/SwapForArguments.t
 t/FormatSpecialLiterals.pm
 t/Instances/Creation.t
-t/Operators/AddWhitespace.t
 t/Operators/FormatOperators.t
 t/Packages/FormatPackageDeclarations.t
 t/Packages/FormatPackageUsages.t
