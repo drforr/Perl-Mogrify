@@ -122,6 +122,9 @@ sub casefold {
              $la1 and $la1 eq '\\E' ) {
             $i+=2;
         }
+        elsif ( $v eq '\\Q' ) {
+            push @token, { type => 'quotemeta', content => $v };
+        }
         elsif ( $v =~ m{ \\[luEFLQU] }x ) {
             push @token, { type => 'casefold', content => $v };
         }
@@ -132,11 +135,20 @@ sub casefold {
     return @token;
 }
 
+# At the end of this process, ideally we should only have these types of tokens:
+#
+#   Disambiguated variable - '${foo}' (needs separate handling)
+#   Variable - '$foo', '$foo[32]', '$foo{blah}'
+#   Case folding - '\l', '\E'
+#   Quotemeta - '\Q'
+#   Uninterpolated content - Anything that's not one of the above.
+#
 sub tokenize_variables {
     my ($self, $elem, $string) = @_;
     my $full_string = $string;
 
     my @token;
+
 my $iter = 100;
     while ( $string ) {
 unless ( --$iter  ) {
@@ -154,27 +166,45 @@ unless ( --$iter  ) {
             };
         }
 
-        # '\c[...]' is a Unicode character.
+        # extract_variable() doesn't handle most 'special' Perl variables,
+        # so handle them specially.
         #
-        elsif ( $string =~ s< ^ ( \\ c \[ .+? \] ) ><>sxe or
-                $string =~ s< ^ ( \\ c . ) ><>x  or
-                $string =~ s< ^ ( [\$\@] \s ) ><>x ) {
-            if ( @token and $token[-1]{type} eq 'uninterpolated' ) {
-                $token[-1]{content} .= $1;
+        elsif ( $string =~ s< ^ ( [\$\@] ) ( \s | [^a-zA-Z] ) }><>x ) {
+            my ( $sigil, $content ) = ( $1, $2 );
+            while ( $string =~ s< ^ ( \[ [^\]]+ \] ) ><>sx or
+                    $string =~ s< ^ ( \{ [^\}]+ \} ) ><>sx ) {
+                $content .= $1;
             }
-            else {
-                push @token, {
-                    type => 'uninterpolated',
-                    content => $1
-                };
-            }
-        }
-
-        elsif ( $string =~ s< ^ ( [\$\@] [-+\\] ) ><>x ) {
             push @token, {
                 type => 'variable',
-                content => $1
+                sigil => $sigil,
+                content => $content
             };
+        }
+
+        # Anything else starting with a '$' or '@' is fair game.
+        #
+        elsif ( $string =~ m< ^ [\$\@] >x ) {
+            my ( $var_name, $remainder, $prefix ) =
+                 extract_variable( $string );
+            if ( $var_name ) {
+                push @token, { type => 'variable', content => $var_name };
+                $string = $remainder;
+            }
+            #
+            # XXX I"m betting that extract_variable() doesn't catch $] etc.
+            #
+            elsif ( $string =~ s< ^ ( [\$\@] [^\$\@]* ) ><>x ) {
+                if ( @token ) {
+                    $token[-1]{content} .= $1;
+                }
+                else {
+                    push @token, { type => 'g', content =>  $1 };
+                }
+            }
+            else {
+warn "XXX YYY failed\n";
+            }
         }
 
         # Anything that does *not* start with '$' or '@' is its own token,
@@ -207,30 +237,6 @@ unless ( --$iter  ) {
             push @token, @result if @result;
         }
 
-        # Anything else starting with a '$' or '@' is fair game.
-        #
-        elsif ( $string =~ m< ^ [\$\@] >x ) {
-            my ( $var_name, $remainder, $prefix ) =
-                 extract_variable( $string );
-            if ( $var_name ) {
-                push @token, { type => 'variable', content => $var_name };
-                $string = $remainder;
-            }
-            #
-            # XXX I"m betting that extract_variable() doesn't catch $] etc.
-            #
-            elsif ( $string =~ s< ^ ( [\$\@] [^\$\@]* ) ><>x ) {
-                if ( @token ) {
-                    $token[-1]{content} .= $1;
-                }
-                else {
-                    push @token, { type => 'g', content =>  $1 };
-                }
-            }
-            else {
-warn "XXX YYY failed\n";
-            }
-        }
         else {
 warn "XXX failed\n";
         }
@@ -367,11 +373,15 @@ warn "Interpolating perl code.";
                 $v->{content} = $v->{sigil} . '{' . $v->{content} . '}';
             }
             else {
+                $v->{content} =~ s< [-][\>] ><.>gx;
+                $v->{content} =~ s< \{ (\w+) (\s*) \} >< '{' .
+                                        $start_delimiter . $1 .
+                                        $end_delimiter . $2 .
+                                        '}'>segx;
                 $v->{content} = '{' . $v->{sigil} . $v->{content} . '}';
             }
         }
-        elsif ( $v->{type} eq 'unicode character' ) {
-        }
+
         elsif ( $v->{content} =~ m< ^ ( \$ | \@ ) >x ) {
             if ( $v->{content} =~ s< ^ \$ \@ ><\\\$\@>x ) {
             }
