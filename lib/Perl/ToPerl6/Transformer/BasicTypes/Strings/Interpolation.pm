@@ -460,7 +460,7 @@ eval {
     set_string($elem,$new_content);
 };
 if ( $@ ) {
-    die "set_string broke! Please report this: ".Dump($elem);
+    use YAML;die "set_string broke! Please report this: ".Dump($elem);
 }
 
     return $self->transformation( $DESC, $EXPL, $elem );
