@@ -122,7 +122,7 @@ is("\N{NULL}", "\c@", 'Verify "\N{NULL}" eq "\c@"')
 ##-->
 "$weeks @{[$weeks == 1 ? q(week) : q(weeks)]}"
 " @ %$f/s \(n=$n\)"
-is( "\$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' )
+is( "$@$!$,$/$\$^W", "1\n0", 'DB::save() should reset punctuation vars' )
 "my \$E; \{ local \$@; \}"
 is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"')
 "${$_[0]}"
@@ -130,7 +130,7 @@ is("\c[NULL]", "\c@", 'Verify "\N{NULL}" eq "\c@"')
 "@[\n"
 "_alternation_{$impcount}_of_production_{$prodcount}_of_rule_$self.{"name"}"
 "Incomplete \<$next.{"type"}op:...\>."
-"Incorrect token specification: \"\$@\""
+"Incorrect token specification: \"$@\""
 "\<leftop='$name\(s?\)': $name $2 $name\>\(s?\) "
 "$code$argcode\($1..\)"
 "\<leftop='$name\(..$1\)': $name $2 $name\>\(..$1\) "

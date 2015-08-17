@@ -199,11 +199,11 @@ unless ( --$iter  ) {
                     $token[-1]{content} .= $1;
                 }
                 else {
-                    push @token, { type => 'g', content =>  $1 };
+                    push @token, { type => 'variable', content => $1 };
                 }
             }
             else {
-warn "XXX YYY failed\n";
+die "XXX String interpolation (leading variable) failed on '$string'! Please report this to the author.\n";
             }
         }
 
@@ -238,7 +238,7 @@ warn "XXX YYY failed\n";
         }
 
         else {
-warn "XXX failed\n";
+die "XXX String interpolation failed on '$string'! Please report this to the author.\n";
         }
     }
 
@@ -382,18 +382,12 @@ warn "Interpolating perl code.";
             }
         }
 
-        elsif ( $v->{content} =~ m< ^ ( \$ | \@ ) >x ) {
-            if ( $v->{content} =~ s< ^ \$ \@ ><\\\$\@>x ) {
-            }
-            elsif ( $v->{content} =~ s< ^ ( \$ | \@ ) \{ ([^\}]+) \} ><{$1$2}>sx ) {
-            }
-            else {
-                $v->{content} =~ s< [-][\>] ><.>gx;
-                $v->{content} =~ s< \{ (\w+) (\s*) \} >< '{' .
-                                        $start_delimiter . $1 .
-                                        $end_delimiter . $2 .
-                                        '}'>segx;
-            }
+        elsif ( $v->{type} eq 'variable' ) {
+            $v->{content} =~ s< [-][\>] ><.>gx;
+            $v->{content} =~ s< \{ (\w+) (\s*) \} >< '{' .
+                                    $start_delimiter . $1 .
+                                    $end_delimiter . $2 .
+                                    '}'>segx;
 
             $v->{content} =~ s< ^ ( [(<>)] ) ><\\$1>sgx;
             $v->{content} =~ s< ( [^\\] ) ( [(<>)] ) ><$1\\$2>sgx;
@@ -408,11 +402,6 @@ warn "Interpolating perl code.";
         $new_content .= $v->{content};
     }
 
-#        if ( $v eq '\\l' ) {
-#        }
-#        elsif ( $v eq '\\u' ) {
-#        }
-#
 #        elsif ( $v eq '\\F' or $v eq '\\L' ) {
 #            $collected .= '{' if @manip == 0;
 #            if ( @manip == 0 ) {
@@ -451,9 +440,6 @@ warn "Interpolating perl code.";
 #            else {
 #                $collected .= $end_delimiter . ')';
 #            }
-#        }
-#        elsif ( $v =~ / ^ ( \$ | \@ ) /x ) {
-#            $collected .= $v;
 #        }
 
 eval {
