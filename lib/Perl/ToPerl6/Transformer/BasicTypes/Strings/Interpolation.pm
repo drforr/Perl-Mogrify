@@ -382,6 +382,9 @@ warn "Interpolating perl code.";
             }
         }
 
+        # All the other variables, including those with {} and [] indices,
+        # are grouped in this category.
+        #
         elsif ( $v->{type} eq 'variable' ) {
             $v->{content} =~ s< [-][\>] ><.>gx;
             $v->{content} =~ s< \{ (\w+) (\s*) \} >< '{' .
@@ -392,6 +395,9 @@ warn "Interpolating perl code.";
             $v->{content} =~ s< ^ ( [(<>)] ) ><\\$1>sgx;
             $v->{content} =~ s< ( [^\\] ) ( [(<>)] ) ><$1\\$2>sgx;
         }
+
+        # Non-variables are handled down here.
+        #
         else {
             # < > is now a pointy block, { } is now a code block, ( ) is also
             # used.
@@ -477,11 +483,14 @@ In Perl6, contents inside {} are now executable code. That means that inside int
 
   "The $x bit"      --> "The $x bit"
   "The $x-30 bit"   --> "The $x\-30 bit"
-  "\N{FOO}"         --> "\c{FOO}"
+  "\N{FOO}"         --> "\c[FOO]"
   "The \l$x bit"    --> "The {lc $x} bit"
   "The \v bit"      --> "The  bit"
   "The ${x}rd bit"  --> "The {$x}rd bit"
   "The \${x}rd bit" --> "The \$\{x\}rd bit"
+
+Many other transforms are performed in this module, see the code for a better
+idea of how complex this transformation really is.
 
 Transforms only interpolated strings outside of comments, heredocs and POD.
 
