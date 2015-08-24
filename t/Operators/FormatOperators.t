@@ -71,5 +71,7 @@ $x = $y > 1 ?? 0 !! 1 and 1;
 1 and $x = $y > 1 ?? 0 !! 1;
 ## name: regression
 eval { @yaml = $code->($local_file); };
+my $object  = ref($_[0])->isa('UNIVERSAL') ? shift : die "Failed to pass method_fails test an object";
 ##-->
 eval { @yaml = $code.($local_file); };
+my $object  = ref($_[0]).isa('UNIVERSAL') ?? shift !! die "Failed to pass method_fails test an object";

@@ -139,8 +139,8 @@ program-extensions =
 # will never be applied unless you use the "-include" option to apply
 # it explicitly.
 
-[-Arrays::FormatArrayQws]
-[-BasicTypes::Strings::FormatHereDocs]
+[-Arrays::AddWhitespace]
+[-BasicTypes::Strings::RewriteHereDocs]
 
 #-----------------------------------------------------------------------------
 # If you agree with a Transformer, but feel that it's severity level is not
@@ -148,10 +148,10 @@ program-extensions =
 # defined this should be an integer from 1 to 5, where 5 is the
 # highest severity.
 
-[Builtins::FormatPrint]
+[Builtins::RewritePrint]
 severity = 2
 
-[CompoundStatements::FormatConditionals]
+[CompoundStatements::RenameForeach]
 severity = 1
 
 [BasicTypes::Strings::Interpolation]
@@ -167,7 +167,7 @@ severity = 5
 add_themes = client_foo
 severity   = 3
 
-[Packages::FormatPackageDeclarations]
+[Packages::RewriteDeclarations]
 add_themes = client_foo client_bar
 severity   = 3
 
@@ -181,7 +181,7 @@ severity   = 3
 allow    = for if
 severity = 4
 
-[Pragmas::FormatPragmas]
+[Pragmas::RewritePragmas]
 lib_sections = NAME | SYNOPSIS | METHODS | AUTHOR
 add_themes = my_favorites
 severity   = 4
@@ -193,8 +193,8 @@ severity   = 4
 # Transformers.  So just create blocks for any other Transformers that you
 # want to use.
 
-[Packages::FormatPackageDeclarations]
-[Packages::FormatPackageUsages]
+[Packages::RewriteDeclarations]
+[Packages::RewriteUsages]
 [Regexes::SwapModifiers]
 [Subroutines::RemovePrototypes]
 

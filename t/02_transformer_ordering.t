@@ -16,24 +16,24 @@ our $VERSION = '0.03';
 
 # Choose two packages tha are required to run in a certain order:
 #
-# FormatMatchVariables changes $N to $N-1.
-# FormatSpecialVariables changes $0 (which would have been $1 earlier)
+# RewriteMatchVariables changes $N to $N-1.
+# RewriteSpecialVariables changes $0 (which would have been $1 earlier)
 # into $*PROGRAM-NAME.
 #
-# Therefore FormatSpecialVariables has to change $0 before it gets owerwritten.
+# Therefore RewriteSpecialVariables has to change $0 before it gets owerwritten.
 #
 my @unordered = map { $_->new } qw(
-    Perl::ToPerl6::Transformer::Variables::FormatSpecialVariables
-    Perl::ToPerl6::Transformer::Variables::FormatMatchVariables
+    Perl::ToPerl6::Transformer::Variables::RewriteSpecialVariables
+    Perl::ToPerl6::Transformer::Variables::RewriteMatchVariables
 );
 
 my @ordered = Perl::ToPerl6::TransformerFactory::topological_sort( @unordered );
 isa_ok $ordered[0],
-       'Perl::ToPerl6::Transformer::Variables::FormatSpecialVariables',
-       'FormatSpecialVariables runs first';
+       'Perl::ToPerl6::Transformer::Variables::RewriteSpecialVariables',
+       'RewriteSpecialVariables runs first';
 isa_ok $ordered[1],
-       'Perl::ToPerl6::Transformer::Variables::FormatMatchVariables',
-       'FormatMatchVariables runs first';
+       'Perl::ToPerl6::Transformer::Variables::RewriteMatchVariables',
+       'RewriteMatchVariables runs first';
 
 1;
 

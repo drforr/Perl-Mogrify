@@ -21,11 +21,11 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 # Configure ToPerl6 not to load certain transformers.  This
 # just makes it a little easier to create test cases
 my $profile = {
-    '-Arrays::FormatArrayQws'            => {},
+    '-Arrays::AddWhitespace'             => {},
     '-BasicTypes::Strings::FormatRegexp' => {},
-    '-Builtins::FormatPrint'             => {},
+    '-Builtins::RewritePrint'            => {},
     '-CompoundStatements::AddWhitespace' => {},
-    '-Operators::FormatUnaryOperators'   => {},
+    '-Operators::FormatOperators'        => {},
     '-Variables::ReplaceUndef'           => {},
 };
 

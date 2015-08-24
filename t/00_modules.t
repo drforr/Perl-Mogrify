@@ -38,7 +38,7 @@ my @concrete_exceptions = qw{
 };
 
 plan tests =>
-        86
+        89
     +   (  9 * scalar @concrete_exceptions  )
     +   ( 17 * scalar @bundled_transformer_names )
 ;

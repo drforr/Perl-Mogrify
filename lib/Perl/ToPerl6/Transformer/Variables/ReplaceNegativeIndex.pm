@@ -23,9 +23,9 @@ Readonly::Scalar my $EXPL => q{Negative array indexes now need [*-1] notation};
 # That way we don't have to deal with the integer conversions.
 #
 sub run_before           {
-    return 'BasicTypes::Integers::FormatBinaryLiterals',
-           'BasicTypes::Integers::FormatOctalLiterals',
-           'BasicTypes::Integers::FormatHexLiterals'
+    return 'BasicTypes::Integers::RewriteBinaryNumbers',
+           'BasicTypes::Integers::RewriteOctalNumbers',
+           'BasicTypes::Integers::RewriteHexNumbers'
 }
 
 sub supported_parameters { return () }

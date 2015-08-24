@@ -56,7 +56,7 @@ END_PERL
 
 #-----------------------------------------------------------------------------
 
-my $profile = { '-Arrays::FormatArrayQws' => {} };
+my $profile = { '-Arrays::AddWhitespace' => {} };
 my $mogrify =
     Perl::ToPerl6->new(
         -severity => 1,

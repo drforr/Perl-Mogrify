@@ -23,7 +23,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 #-----------------------------------------------------------------------------
 
 {
-    my $transformer_name = 'Perl::ToPerl6::Transformer::Packages::FormatPackageUsages';
+    my $transformer_name = 'Perl::ToPerl6::Transformer::Packages::RewriteUsages';
     my $params = {severity => 2, set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
@@ -84,7 +84,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
     );
 
     # Try using a bogus severity level
-    my $transformer_name = 'Packages::FormatPackageUsages';
+    my $transformer_name = 'Packages::RewriteUsages';
     my $transformer_params = {severity => 'bogus'};
     eval{ $pf->create_transformer( -name => $transformer_name, -params => $transformer_params)};
     like(

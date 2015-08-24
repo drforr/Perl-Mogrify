@@ -92,7 +92,12 @@ sub default_severity     { return $SEVERITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {
-        is_ppi_token_operator($_[1], %mutate, %before, %after)
+        is_ppi_token_operator($_[1], %mutate, %before, %after) or
+        ( $_[1]->isa('PPI::Token::Label') and
+          $_[1]->content =~ /\:$/ and
+          $_[1]->sprevious_sibling and
+          $_[1]->sprevious_sibling->isa('PPI::Token::Operator') and
+          $_[1]->sprevious_sibling->content eq '?' )
     }
 }
 
@@ -100,6 +105,13 @@ sub applies_to           {
 
 sub transform {
     my ($self, $elem, $doc) = @_;
+    if ( $elem->isa('PPI::Token::Label') ) {
+      my $old_content = $elem->content;
+
+      $old_content =~ s< : $ ><!!>sx;
+
+      $elem->set_content( $old_content );
+    }
 
     # nonassoc ++
     # nonassoc --
@@ -121,7 +133,7 @@ sub transform {
     my $old_content = $elem->content;
 
     $elem->set_content( $mutate{$old_content} ) if
-        exists $mutate{$old_content};;
+        exists $mutate{$old_content};
 
     if ( $old_content eq '=>' ) { # XXX This is a special case.
     }

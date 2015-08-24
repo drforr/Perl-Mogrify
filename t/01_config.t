@@ -225,8 +225,8 @@ SKIP: {
     # transformers.
 
     my %profile = (
-        '-BasicTypes::Strings::FormatShellStrings' => {},
-        '-Variables::FormatHashKeys' => {},
+        '-BasicTypes::Strings::RenameShell' => {},
+        '-Variables::QuoteHashKeys' => {},
     );
 
     my @include = qw(capital quoted);
@@ -383,8 +383,8 @@ SKIP: {
 
 {
     my %profile = (
-        'BasicTypes::Strings::FormatShellStrings' => {},
-        'Variables::FormatHashKeys' => {},
+        'BasicTypes::Strings::RenameShell' => {},
+        'Variables::QuoteHashKeys' => {},
     );
 
     my %pc_config = (-severity => 1, -only => 1, -profile => \%profile);
@@ -396,7 +396,7 @@ SKIP: {
 # Test the -single-transformer switch
 
 {
-    my %pc_config = ('-single-transformer' => 'Variables::FormatHashKeys');
+    my %pc_config = ('-single-transformer' => 'Variables::QuoteHashKeys');
     my @transformers = Perl::ToPerl6::Config->new( %pc_config )->transformers();
     is(scalar @transformers, 1, '-single-transformer switch');
 }
@@ -487,13 +487,13 @@ SKIP: {
 # Test the -allow-unsafe switch
 {
     my %profile = (
-        'BasicTypes::Strings::FormatShellStrings' => {},
-        'Variables::FormatHashKeys' => {},
+        'BasicTypes::Strings::RenameShell' => {},
+        'Variables::QuoteHashKeys' => {},
     );
 
     # Pretend that ProhibitQuotedWordLists is actually unsafe
     no warnings qw(redefine once);
-    local *Perl::ToPerl6::Transformer::BasicTypes::Strings::FormatShellStrings::is_safe = sub {return 0};
+    local *Perl::ToPerl6::Transformer::BasicTypes::Strings::RenameShell::is_safe = sub {return 0};
 
     my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);
     my @p = Perl::ToPerl6::Config->new( %safe_pc_config )->transformers();
@@ -503,7 +503,7 @@ SKIP: {
     @p = Perl::ToPerl6::Config->new( %unsafe_pc_config )->transformers();
     is(scalar @p, 2, 'Also loaded unsafe transformers with -allow-unsafe switch');
 
-    my %singular_pc_config = ('-single-transformer' => 'Variables::FormatHashKeys');
+    my %singular_pc_config = ('-single-transformer' => 'Variables::QuoteHashKeys');
     @p = Perl::ToPerl6::Config->new( %singular_pc_config )->transformers();
     is(scalar @p, 1, '-single-transformer always loads Transformer, even if unsafe');
 }

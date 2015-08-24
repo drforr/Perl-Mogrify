@@ -34,7 +34,7 @@ $transformer_test_count = 4 * @default_transformers;
 foreach my $transformer (@default_transformers) {
     if (
             $transformer->parameter_metadata_available()
-        and not $transformer->isa('Perl::ToPerl6::Transformer::Arrays::FormatArrayQws')
+        and not $transformer->isa('Perl::ToPerl6::Transformer::Arrays::AddWhitespace')
     ) {
         $transformer_test_count += scalar @{$transformer->get_parameters()};
     }

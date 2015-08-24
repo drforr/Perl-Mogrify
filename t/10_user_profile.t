@@ -20,8 +20,8 @@ our $VERSION = '0.01';
 
 {
     my %transformer_params = (min_elements => 4);
-    my %profile_hash = ( '-BasicTypes::Strings::FormatShellStrings' => {},
-        '-Variables::FormatHashKeys' => \%transformer_params );
+    my %profile_hash = ( '-BasicTypes::Strings::RenameShell' => {},
+        '-Variables::QuoteHashKeys' => \%transformer_params );
 
     my $up = Perl::ToPerl6::UserProfile->new( -profile => \%profile_hash );
 
@@ -29,22 +29,22 @@ our $VERSION = '0.01';
 SKIP: {
   skip "XXX Need to restore this eventually", 1;
     is(
-        $up->transformer_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::QuoteHashKeys'),
         1,
-        'Variables::FormatHashKeys is enabled.',
+        'Variables::QuoteHashKeys is enabled.',
     );
 }
     is(
-        $up->transformer_is_disabled('Variables::FormatHashKeys'),
+        $up->transformer_is_disabled('Variables::QuoteHashKeys'),
         1,
-        'Variables::FormatHashKeys is disabled.',
+        'Variables::QuoteHashKeys is disabled.',
     );
 SKIP: {
   skip "XXX Need to restore this eventually", 1;
     is_deeply(
-        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Variables::FormatHashKeys got the correct configuration.',
+        'Variables::QuoteHashKeys got the correct configuration.',
     );
 }
 
@@ -52,9 +52,9 @@ SKIP: {
   skip "XXX Need to restore these eventually", 2;
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         1,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
@@ -63,9 +63,9 @@ SKIP: {
     );
 }
     is_deeply(
-        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Using bogus transformer names
@@ -92,7 +92,7 @@ SKIP: {
 {
     my %transformer_params = (min_elements => 4);
     my @profile_array = ( q{ [-NamingConventions::Capitalization] },
-                          q{ [Variables::FormatHashKeys]           },
+                          q{ [Variables::QuoteHashKeys]           },
                           q{ min_elements = 4                         },
     );
 
@@ -101,9 +101,9 @@ SKIP: {
 
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::QuoteHashKeys'),
         1,
-        'Variables::FormatHashKeys is enabled.',
+        'Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('NamingConventions::Capitalization'),
@@ -111,16 +111,16 @@ SKIP: {
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Variables::FormatHashKeys got the correct configuration.',
+        'Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         1,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
@@ -128,9 +128,9 @@ SKIP: {
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Using bogus transformer names
@@ -158,7 +158,7 @@ SKIP: {
     my %transformer_params = (min_elements => 4);
     my $profile_string = <<'END_PROFILE';
 [-NamingConventions::Capitalization]
-[Variables::FormatHashKeys]
+[Variables::QuoteHashKeys]
 min_elements = 4
 END_PROFILE
 
@@ -166,9 +166,9 @@ END_PROFILE
 
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::QuoteHashKeys'),
         1,
-        'Variables::FormatHashKeys is enabled.',
+        'Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('NamingConventions::Capitalization'),
@@ -176,16 +176,16 @@ END_PROFILE
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Variables::FormatHashKeys got the correct configuration.',
+        'Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         1,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
@@ -193,9 +193,9 @@ END_PROFILE
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Using bogus transformer names
@@ -223,7 +223,7 @@ END_PROFILE
     my %transformer_params = (min_elements => 4);
     my $long_profile_string = <<'END_PROFILE';
 [-Perl::ToPerl6::Transformer::NamingConventions::Capitalization]
-[Perl::ToPerl6::Transformer::Variables::FormatHashKeys]
+[Perl::ToPerl6::Transformer::Variables::QuoteHashKeys]
 min_elements = 4
 END_PROFILE
 
@@ -231,9 +231,9 @@ END_PROFILE
 
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Variables::QuoteHashKeys'),
         1,
-        'Variables::FormatHashKeys is enabled.',
+        'Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('NamingConventions::Capitalization'),
@@ -241,16 +241,16 @@ END_PROFILE
         'NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_transformer_params('Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Variables::FormatHashKeys got the correct configuration.',
+        'Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Now using long transformer names
     is(
-        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->transformer_is_enabled('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         1,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys is enabled.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys is enabled.',
     );
     is(
         $up->transformer_is_disabled('Perl::ToPerl6::Transformer::NamingConventions::Capitalization'),
@@ -258,9 +258,9 @@ END_PROFILE
         'Perl::ToPerl6::Transformer::NamingConventions::Capitalization is disabled.',
     );
     is_deeply(
-        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::FormatHashKeys'),
+        $up->raw_transformer_params('Perl::ToPerl6::Transformer::Variables::QuoteHashKeys'),
         \%transformer_params,
-        'Perl::ToPerl6::Transformer::Variables::FormatHashKeys got the correct configuration.',
+        'Perl::ToPerl6::Transformer::Variables::QuoteHashKeys got the correct configuration.',
     );
 
     # Using bogus transformer names
