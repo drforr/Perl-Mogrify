@@ -29,5 +29,5 @@ rx{} and 1;
 1 if rx{};
 1 and rx{};
 my $x = rx{};
-rx ();
-my $x = rx ();
+rx();
+my $x = rx();

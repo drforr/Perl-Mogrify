@@ -29,5 +29,5 @@ qqx{} and 1;
 1 if qqx{};
 1 and qqx{};
 my $x = qqx{};
-qqx ();
-my $x = qqx ();
+qqx();
+my $x = qqx();
