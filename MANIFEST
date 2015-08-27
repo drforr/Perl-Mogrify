@@ -94,7 +94,6 @@ lib/Perl/ToPerl6/UserProfile.pm
 lib/Perl/ToPerl6/Utils.pm
 lib/Perl/ToPerl6/Utils/Constants.pm
 lib/Perl/ToPerl6/Utils/DataConversion.pm
-lib/Perl/ToPerl6/Utils/McCabe.pm
 lib/Perl/ToPerl6/Utils/Perl.pm
 lib/Perl/ToPerl6/Utils/POD.pm
 lib/Perl/ToPerl6/Utils/PPI.pm

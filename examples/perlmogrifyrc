@@ -34,6 +34,13 @@ include   = CodeLayout Modules
 force = 1
 
 #-----------------------------------------------------------------------------
+# in-place: Directs Perl::ToPerl6 to alter files in-place. Otherwise
+# it adds a .pl6 extension to the existing file, which is the recommended
+# setting. The default is 0.  If defined, this should be either 1 or 0.
+
+in-place = 0
+
+#-----------------------------------------------------------------------------
 # only: Directs Perl::ToPerl6 to only choose from Transformers that are
 # explicitly mentioned in this file.  Otherwise, Perl::ToPerl6 chooses
 # from all the Perl::ToPerl6::Transformer classes that are found on the

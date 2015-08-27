@@ -71,7 +71,7 @@ Perl6 has a C<qx()> operator, but the C<qqx()> operator is more akin to Perl5:
   qx{..} --> qx{..}
   qx(..) --> qx (..)
 
-This enforcer only operates on qx() constructs.
+This transformer only operates on qx() constructs.
 
 =head1 CONFIGURATION
 

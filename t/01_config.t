@@ -52,7 +52,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
                 ->all_transformers_enabled_or_not();
 
 #    plan tests => 93 + $all_transformer_count - (129-88); # XXX Look into this later
-plan tests => 88;
+plan tests => 92;
 diag("XXX Fix the transformer count later");
 }
 
@@ -189,6 +189,7 @@ SKIP: {
               'user default include from file' );
 
     is($c->force(),    1,  'user default force from file'     );
+    is($c->in_place(), 0,  'user default in-place from file'  );
     is($c->only(),     1,  'user default only from file'      );
     is($c->severity(), 3,  'user default severity from file'  );
     is($c->theme()->rule(),    'danger || risky && ! pbp',  'user default theme from file');
@@ -294,6 +295,7 @@ SKIP: {
         -verbose
         -theme
         -severity
+        -in-place
         -only
         -force
         -color
@@ -314,6 +316,7 @@ SKIP: {
     my $c = Perl::ToPerl6::Config->new( %undef_args );
     $c = Perl::ToPerl6::Config->new( %undef_args );
     is( $c->force(),            0,      'Undefined -force');
+    is( $c->in_place(),         0,      'Undefined -in-place');
     is( $c->only(),             0,      'Undefined -only');
     is( $c->severity(),         5,      'Undefined -severity');
     is( $c->theme()->rule(),    q{},    'Undefined -theme');
@@ -348,34 +351,36 @@ SKIP: {
         # Zero is an invalid Term::ANSIColor value.
         grep { ! / \A-color-severity- /smx } @switches;
     $c = Perl::ToPerl6::Config->new( %zero_args );
-    is( $c->force(),     0,       'zero -force');
-    is( $c->only(),      0,       'zero -only');
-    is( $c->severity(),  1,       'zero -severity');
-    is( $c->theme()->rule(),     q{},     'zero -theme');
-    is( $c->top(),       0,       'zero -top');
-    is( $c->color(),     $FALSE,  'zero -color');
-    is( $c->pager(),     $EMPTY,  'zero -pager');
-    is( $c->unsafe_allowed(),    0,       'zero -allow-unsafe');
-    is( $c->verbose(),   4,       'zero -verbose');
-    is( $c->mogrification_fatal(), 0, 'zero -mogrification-fatal');
+    is( $c->force(),               0,      'zero -force');
+    is( $c->in_place(),            0,      'zero -in-place');
+    is( $c->only(),                0,      'zero -only');
+    is( $c->severity(),            1,      'zero -severity');
+    is( $c->theme()->rule(),       q{},    'zero -theme');
+    is( $c->top(),                 0,      'zero -top');
+    is( $c->color(),               $FALSE, 'zero -color');
+    is( $c->pager(),               $EMPTY, 'zero -pager');
+    is( $c->unsafe_allowed(),      0,      'zero -allow-unsafe');
+    is( $c->verbose(),             4,      'zero -verbose');
+    is( $c->mogrification_fatal(), 0,      'zero -mogrification-fatal');
 
     my %empty_args = map { $_ => q{} } @switches;
     $c = Perl::ToPerl6::Config->new( %empty_args );
-    is( $c->force(),     0,       'empty -force');
-    is( $c->only(),      0,       'empty -only');
-    is( $c->severity(),  1,       'empty -severity');
-    is( $c->theme->rule(),     q{},     'empty -theme');
-    is( $c->top(),       0,       'empty -top');
-    is( $c->color(),     $FALSE,  'empty -color');
-    is( $c->pager(),     q{},     'empty -pager');
-    is( $c->unsafe_allowed(),    0,       'empty -allow-unsafe');
-    is( $c->verbose(),   4,       'empty -verbose');
-    is( $c->mogrification_fatal(), 0, 'empty -mogrification-fatal');
+    is( $c->force(),                  0,      'empty -force');
+    is( $c->in_place(),               0,      'empty -in-place');
+    is( $c->only(),                   0,      'empty -only');
+    is( $c->severity(),               1,      'empty -severity');
+    is( $c->theme->rule(),            q{},    'empty -theme');
+    is( $c->top(),                    0,      'empty -top');
+    is( $c->color(),                  $FALSE, 'empty -color');
+    is( $c->pager(),                  q{},    'empty -pager');
+    is( $c->unsafe_allowed(),         0,      'empty -allow-unsafe');
+    is( $c->verbose(),                4,      'empty -verbose');
+    is( $c->mogrification_fatal(),    0,      'empty -mogrification-fatal');
     is( $c->color_severity_highest(), $EMPTY, 'empty -color-severity-highest');
-    is( $c->color_severity_high(),   $EMPTY, 'empty -color-severity-high');
-    is( $c->color_severity_medium(), $EMPTY, 'empty -color-severity-medium');
-    is( $c->color_severity_low(),    $EMPTY, 'empty -color-severity-low');
-    is( $c->color_severity_lowest(), $EMPTY, 'empty -color-severity-lowest');
+    is( $c->color_severity_high(),    $EMPTY, 'empty -color-severity-high');
+    is( $c->color_severity_medium(),  $EMPTY, 'empty -color-severity-medium');
+    is( $c->color_severity_low(),     $EMPTY, 'empty -color-severity-low');
+    is( $c->color_severity_lowest(),  $EMPTY, 'empty -color-severity-lowest');
 }
 
 #-----------------------------------------------------------------------------

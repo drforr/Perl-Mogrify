@@ -87,6 +87,11 @@ sub to_string {
     $prototype .= "\n";
 
     $prototype .= $prefix;
+    $prototype .= q{in-place = };
+    $prototype .= $configuration->in_place();
+    $prototype .= "\n";
+
+    $prototype .= $prefix;
     $prototype .= q{only = };
     $prototype .= $configuration->only();
     $prototype .= "\n";

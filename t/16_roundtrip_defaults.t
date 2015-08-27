@@ -39,7 +39,7 @@ foreach my $transformer (@default_transformers) {
         $transformer_test_count += scalar @{$transformer->get_parameters()};
     }
 }
-my $test_count = 18 + $transformer_test_count;
+my $test_count = 19 + $transformer_test_count;
 plan tests => $test_count;
 
 #-----------------------------------------------------------------------------
@@ -96,6 +96,14 @@ is(
 #-----------------------------------------------------------------------------
 
 is(
+    $derived_configuration->in_place(),
+    $default_configuration->in_place(),
+    'in_place',
+);
+
+#-----------------------------------------------------------------------------
+
+is(
     $derived_configuration->only(),
     $default_configuration->only(),
     'only',
@@ -106,7 +114,7 @@ is(
 is(
     $derived_configuration->profile_strictness(),
     $default_configuration->profile_strictness(),
-    'force',
+    'profile_strictness',
 );
 
 #-----------------------------------------------------------------------------

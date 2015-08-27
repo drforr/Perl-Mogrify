@@ -45,6 +45,7 @@ sub _init {
 
     # Single-value defaults
     $self->{_force}           = dor(delete $args{force},              $FALSE);
+    $self->{_in_place}        = dor(delete $args{'in-place'},         $FALSE);
     $self->{_only}            = dor(delete $args{only},               $FALSE);
     $self->{_profile_strictness} =
         dor(delete $args{'profile-strictness'}, $PROFILE_STRICTNESS_DEFAULT);
@@ -153,6 +154,13 @@ sub exclude {
 sub include {
     my ($self) = @_;
     return $self->{_include};
+}
+
+#-----------------------------------------------------------------------------
+
+sub in_place {
+    my ($self) = @_;
+    return $self->{_in_place};
 }
 
 #-----------------------------------------------------------------------------
@@ -333,6 +341,11 @@ Returns the default value of the C<force> flag (Either 1 or 0).
 
 Returns a reference to a list of the default inclusion patterns.  If
 there are no default exclusion patterns, then the list will be empty.
+
+
+=item C< in_place() >
+
+Returns the default value of the C<in_place> flag (Either 1 or 0).
 
 
 =item C< only() >

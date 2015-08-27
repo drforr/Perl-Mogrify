@@ -377,14 +377,6 @@ sub _report_statistics {
     _out sprintf "    %*s %s.\n", $width, $lines_of_perl, 'lines of Perl code';
     _out sprintf "    %*s %s.\n", $width, $lines_of_pod, 'lines of POD';
 
-    my $average_sub_mccabe = $statistics->average_sub_mccabe();
-    if (defined $average_sub_mccabe) {
-        _out
-            sprintf
-                "\nAverage McCabe score of subroutines was %.2f.\n",
-                $average_sub_mccabe;
-        }
-
     _out "\n";
 
     _out _commaify($statistics->total_transformations()), " transformations.\n";
@@ -487,6 +479,7 @@ sub _get_option_specification {
         man
         color|colour!
         noprofile
+        in-place!
         only!
         options
         pager=s

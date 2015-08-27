@@ -6,8 +6,6 @@ use warnings;
 
 use English qw(-no_match_vars);
 
-use Perl::ToPerl6::Utils::McCabe qw{ calculate_mccabe_of_sub };
-
 #-----------------------------------------------------------------------------
 
 our $VERSION = '0.03';
@@ -46,7 +44,6 @@ sub accumulate {
     if ($subs) {
         foreach my $sub ( @{$subs} ) {
             $self->{_subs}++;
-            $self->{_subs_total_mccabe} += calculate_mccabe_of_sub( $sub );
         }
     }
 
@@ -162,14 +159,6 @@ sub lines_of_pod {
 
 #-----------------------------------------------------------------------------
 
-sub _subs_total_mccabe {
-    my ( $self ) = @_;
-
-    return $self->{_subs_total_mccabe};
-}
-
-#-----------------------------------------------------------------------------
-
 sub transformations_by_severity {
     my ( $self ) = @_;
 
@@ -201,14 +190,6 @@ sub statements_other_than_subs {
 }
 
 #-----------------------------------------------------------------------------
-
-sub average_sub_mccabe {
-    my ( $self ) = @_;
-
-    return if $self->subs() == 0;
-
-    return $self->_subs_total_mccabe() / $self->subs();
-}
 
 #-----------------------------------------------------------------------------
 
@@ -251,8 +232,6 @@ __END__
 #-----------------------------------------------------------------------------
 
 =pod
-
-=for stopwords McCabe
 
 =head1 NAME
 
@@ -359,11 +338,6 @@ The total number of transformations found by this ToPerl6.
 
 The total number of statements minus the number of subroutines.
 Useful because a subroutine is considered a statement by PPI.
-
-
-=item C<average_sub_mccabe()>
-
-The average McCabe score of all scanned subroutines.
 
 
 =item C<transformations_per_file()>

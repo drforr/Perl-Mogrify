@@ -38,7 +38,7 @@ my @concrete_exceptions = qw{
 };
 
 plan tests =>
-        89
+        91
     +   (  9 * scalar @concrete_exceptions  )
     +   ( 17 * scalar @bundled_transformer_names )
 ;
@@ -75,6 +75,7 @@ can_ok('Perl::ToPerl6::Config', 'transformers');
 can_ok('Perl::ToPerl6::Config', 'exclude');
 can_ok('Perl::ToPerl6::Config', 'force');
 can_ok('Perl::ToPerl6::Config', 'include');
+can_ok('Perl::ToPerl6::Config', 'in_place');
 can_ok('Perl::ToPerl6::Config', 'only');
 can_ok('Perl::ToPerl6::Config', 'profile_strictness');
 can_ok('Perl::ToPerl6::Config', 'severity');
@@ -107,6 +108,7 @@ can_ok('Perl::ToPerl6::OptionsProcessor', 'exclude');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'include');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'force');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'only');
+can_ok('Perl::ToPerl6::OptionsProcessor', 'in_place');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'profile_strictness');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'single_transformer');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'severity');

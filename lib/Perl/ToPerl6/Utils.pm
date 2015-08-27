@@ -1978,7 +1978,6 @@ C<find_keywords>
 =head1 SEE ALSO
 
 L<Perl::ToPerl6::Utils::Constants|Perl::ToPerl6::Utils::Constants>,
-L<Perl::ToPerl6::Utils::McCabe|Perl::ToPerl6::Utils::McCabe>,
 L<Perl::ToPerl6::Utils::PPI|Perl::ToPerl6::Utils::PPI>,
 
 

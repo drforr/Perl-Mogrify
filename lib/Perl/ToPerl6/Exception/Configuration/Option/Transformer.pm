@@ -44,12 +44,12 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Exception::Configuration::Option::Enforcer - A problem with configuration of a transformer.
+Perl::ToPerl6::Exception::Configuration::Option::Transformer - A problem with configuration of a transformer.
 
 =head1 DESCRIPTION
 
 A representation of a problem found with the configuration of a
-L<Perl::ToPerl6::Enforcer|Perl::ToPerl6::Enforcer>, whether from a
+L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>, whether from a
 F<.perlmogrifyrc>, another profile file, or command line.
 
 This is an abstract class.  It should never be instantiated.

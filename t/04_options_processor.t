@@ -10,7 +10,7 @@ use Perl::ToPerl6::OptionsProcessor;
 use Perl::ToPerl6::Utils qw< :booleans >;
 use Perl::ToPerl6::Utils::Constants qw< :color_severity >;
 
-use Test::More tests => 54;
+use Test::More tests => 56;
 
 #-----------------------------------------------------------------------------
 
@@ -24,6 +24,7 @@ our $VERSION = '0.01';
 
     my $processor = Perl::ToPerl6::OptionsProcessor->new();
     is($processor->force(),    0,           'native default force');
+    is($processor->in_place(), 0,           'native default in-place');
     is($processor->only(),     0,           'native default only');
     is($processor->severity(), 5,           'native default severity');
     is($processor->theme(),    q{},         'native default theme');
@@ -57,37 +58,41 @@ our $VERSION = '0.01';
 
 {
     my %user_defaults = (
-         force     => 1,
-         only      => 1,
-         severity  => 4,
-         theme     => 'pbp',
-         top       => 50,
-         color     => $FALSE,
-         pager     => 'less',
-         verbose   => 7,
-         'mogrification-fatal'   => 1,
-         include   => 'foo bar',
-         exclude   => 'baz nuts',
-         'color-severity-highest'   => 'chartreuse',
-         'color-severity-high'      => 'fuschia',
-         'color-severity-medium'    => 'blue',
-         'color-severity-low'       => 'gray',
-         'color-severity-lowest'    => 'scots tartan',
-         'program-extensions'  => '.PL .pl .t',
+         force                    => 1,
+         'in-place'               => 0,
+         only                     => 1,
+         severity                 => 4,
+         theme                    => 'pbp',
+         top                      => 50,
+         color                    => $FALSE,
+         pager                    => 'less',
+         verbose                  => 7,
+         'mogrification-fatal'    => 1,
+         include                  => 'foo bar',
+         exclude                  => 'baz nuts',
+         'color-severity-highest' => 'chartreuse',
+         'color-severity-high'    => 'fuschia',
+         'color-severity-medium'  => 'blue',
+         'color-severity-low'     => 'gray',
+         'color-severity-lowest'  => 'scots tartan',
+         'program-extensions'     => '.PL .pl .t',
     );
 
     my $processor = Perl::ToPerl6::OptionsProcessor->new( %user_defaults );
-    is($processor->force(),    1,           'user default force');
-    is($processor->only(),     1,           'user default only');
-    is($processor->severity(), 4,           'user default severity');
-    is($processor->theme(),    'pbp',       'user default theme');
-    is($processor->top(),      50,          'user default top');
-    is($processor->color(),    $FALSE,      'user default color');
-    is($processor->pager(),    'less',      'user default pager');
-    is($processor->verbose(),  7,           'user default verbose');
-    is($processor->mogrification_fatal(),  1,   'user default mogrification_fatal');
-    is_deeply($processor->include(), [ qw(foo bar) ], 'user default include');
-    is_deeply($processor->exclude(), [ qw(baz nuts)], 'user default exclude');
+    is($processor->force(),    1,             'user default force');
+    is($processor->in_place(), 0,             'user default in_place');
+    is($processor->only(),     1,             'user default only');
+    is($processor->severity(), 4,             'user default severity');
+    is($processor->theme(),    'pbp',         'user default theme');
+    is($processor->top(),      50,            'user default top');
+    is($processor->color(),    $FALSE,        'user default color');
+    is($processor->pager(),    'less',        'user default pager');
+    is($processor->verbose(),  7,             'user default verbose');
+    is($processor->mogrification_fatal(),  1, 'user default mogrification_fatal');
+    is_deeply($processor->include(),
+              [ qw(foo bar) ], 'user default include');
+    is_deeply($processor->exclude(),
+              [ qw(baz nuts)], 'user default exclude');
     is($processor->color_severity_highest(),
                                 'chartreuse', 'user default color_severity_highest');
     is($processor->color_severity_high(),

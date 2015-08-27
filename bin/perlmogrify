@@ -44,6 +44,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
               [--severity number | name] [{-p | --profile} file | --noprofile]
               [--top [ number ]] [--theme expression] [--include pattern]
               [--exclude pattern] [{-s | --single-transformer} pattern]
+              [--in-place]
               [--only | --noonly] [--profile-strictness {warn|fatal|quiet}]
               [--force | --noforce] [--statistics] [--statistics-only]
               [--count | -C] [--verbose {number | format}] [--allow-unsafe]
@@ -373,6 +374,12 @@ severity and default themes are shown, as well as the name of any additional
 parameters that the Transformer supports.  The format is suitable as a
 prototype for your F<.perlmogrifyrc> file.
 
+=item C<--in-place>
+
+Directs perlmogrify to transform the file or directory in-place. This obviously
+alters your data, so please do not run it on a repository you want to preserve.
+You can set the default value for this option in your F<.perlmogrifyrc> file.
+
 =item C<--only>
 
 Directs perlmogrify to apply only Transformers that are explicitly mentioned in
@@ -546,6 +553,7 @@ command-line argument.
 
     severity  = 3                                     #Integer or named level
     only      = 1                                     #Zero or One
+    in-place  = 0                                     #Zero or One
     force     = 0                                     #Zero or One
     verbose   = 4                                     #Integer or format spec
     top       = 50                                    #A positive integer

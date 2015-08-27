@@ -291,7 +291,7 @@ through a deprecation cycle.
 
 =over
 
-=item C<< new( [ -profile => $FILE, -severity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B) >>
+=item C<< new( [ -profile => $FILE, -severity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B) >>
 
 =item C<< new() >>
 
@@ -383,6 +383,13 @@ returned in the order that they occur within the file. Unless the C<-severity>
 option is explicitly given, setting C<-top> silently causes the C<-severity>
 to be set to 1.  You can set the default value for this option in your
 F<.perlmogrifyrc> file.
+
+B<-in_place> is a boolean value. If set to a true value, Perl::ToPerl6 will
+replace the existing Perl source with its transformed equivalent. This of
+course overwrites the file's contents, and should be done sparingly, if at all.
+If set to a false value (which is the default), then Perl::ToPerl6 creates a
+new file, adding '.pl6' to the existing filename.  You can set the default
+value for this option in your F<.perlmogrifyrc> file.
 
 B<-only> is a boolean value.  If set to a true value, Perl::ToPerl6 will only
 choose from Transformers that are mentioned in the user's profile.  If set to a
@@ -533,6 +540,7 @@ configuration file will set the default value for the corresponding
 constructor argument.
 
     severity  = 3                                     #Integer or named level
+    in_place  = 0                                     #Zero or One
     only      = 1                                     #Zero or One
     force     = 0                                     #Zero or One
     verbose   = 4                                     #Integer or format spec
@@ -555,15 +563,15 @@ The remainder of the configuration file is a series of blocks like this:
     arg1 = value1
     arg2 = value2
 
-C<Perl::ToPerl6::Transformer::Category::TransformerName> is the full name of a module
-that implements the transformer.  The Transformer modules distributed with Perl::ToPerl6
-have been grouped into categories according to the table of contents in Damian
-Conway's book B<Perl Best Practices>. For brevity, you can omit the
-C<'Perl::ToPerl6::Transformer'> part of the module name.
+C<Perl::ToPerl6::Transformer::Category::TransformerName> is the full name of a
+module that implements the transformer.  The Transformer modules distributed
+with Perl::ToPerl6 have been grouped into categories according to token type.
+For brevity, you can omit the C<'Perl::ToPerl6::Transformer'> part of the
+module name.
 
-C<severity> is the level of importance you wish to assign to the Transformer.  All
-Transformer modules are defined with a default severity value ranging from 1 (least
-severe) to 5 (most severe).  However, you may disagree with the default
+C<severity> is the level of importance you wish to assign to the Transformer.
+All Transformer modules are defined with a default severity value ranging from
+1 (least severe) to 5 (most severe).  However, you may disagree with the default
 severity and choose to give it a higher or lower severity, based on your own
 coding philosophy.  You can set the C<severity> to an integer from 1 to 5, or
 use one of the equivalent names:
@@ -580,26 +588,25 @@ The names reflect how severely the code is mogrified: a C<gentle>
 mogrification reports only the most severe transformations, and so on down to a
 C<brutal> mogrification which reports even the most minor transformations.
 
-C<set_themes> sets the theme for the Transformer and overrides its default theme.
-The argument is a string of one or more whitespace-delimited alphanumeric
+C<set_themes> sets the theme for the Transformer and overrides its default theme.  The argument is a string of one or more whitespace-delimited alphanumeric
 words.  Themes are case-insensitive.  See L<"POLICY THEMES"> for more
 information.
 
-C<add_themes> appends to the default themes for this Transformer.  The argument is
-a string of one or more whitespace-delimited words. Themes are case-
+C<add_themes> appends to the default themes for this Transformer.  The argument
+is a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See L<"POLICY THEMES"> for more information.
 
-C<maximum_transformations_per_document> limits the number of Transformations the Transformer
-will return for a given document.  Some Transformers have a default limit; see
-the documentation for the individual Transformers to see whether there is one.
-To force a Transformer to not have a limit, specify "no_limit" or the empty string for
-the value of this parameter.
+C<maximum_transformations_per_document> limits the number of Transformations
+the Transformer will return for a given document.  Some Transformers have a
+default limit; see the documentation for the individual Transformers to see
+whether there is one.  To force a Transformer to not have a limit, specify
+"no_limit" or the empty string for the value of this parameter.
 
 The remaining key-value pairs are configuration parameters that will be passed
-into the constructor for that Transformer.  The constructors for most Transformer
-objects do not support arguments, and those that do should have reasonable
-defaults.  See the documentation on the appropriate Transformer module for more
-details.
+into the constructor for that Transformer.  The constructors for most
+Transformer objects do not support arguments, and those that do should have
+reasonable defaults.  See the documentation on the appropriate Transformer
+module for more details.
 
 Instead of redefining the severity for a given Transformer, you can completely
 disable a Transformer by prepending a '-' to the name of the module in your

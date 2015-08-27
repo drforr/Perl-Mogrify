@@ -114,6 +114,7 @@ sub _init {
     # If given, these options can be true or false (but defined)
     # We normalize these to numeric values by multiplying them by 1;
     $self->{_force} = boolean_to_number( dor( $args{-force}, $options_processor->force() ) );
+    $self->{_in_place}  = boolean_to_number( dor( $args{'-in-place'},  $options_processor->in_place()  ) );
     $self->{_only}  = boolean_to_number( dor( $args{-only},  $options_processor->only()  ) );
     $self->{_color} = boolean_to_number( dor( $args{-color}, $options_processor->color() ) );
     $self->{_unsafe_allowed} =
@@ -810,6 +811,13 @@ sub include {
 
 #-----------------------------------------------------------------------------
 
+sub in_place {
+    my ($self) = @_;
+    return $self->{_in_place};
+}
+
+#-----------------------------------------------------------------------------
+
 sub only {
     my ($self) = @_;
     return $self->{_only};
@@ -1042,6 +1050,11 @@ Returns the value of the C<-include> attribute for this Config.
 Returns the value of the C<-force> attribute for this Config.
 
 
+=item C< in_place() >
+
+Returns the value of the C<-in-place> attribute for this Config.
+
+
 =item C< only() >
 
 Returns the value of the C<-only> attribute for this Config.
@@ -1185,6 +1198,7 @@ your configuration file will set the default value for the
 corresponding Perl::ToPerl6 constructor argument.
 
     severity  = 3                                     #Integer from 1 to 5
+    in_place  = 0                                     #Zero or One
     only      = 1                                     #Zero or One
     force     = 0                                     #Zero or One
     verbose   = 4                                     #Integer or format spec

@@ -10,7 +10,7 @@ use Perl::ToPerl6::TransformerFactory (-test => 1);
 use Perl::ToPerl6::Statistics;
 use Perl::ToPerl6::TestUtils;
 
-use Test::More tests => 18;
+use Test::More tests => 17;
 
 #-----------------------------------------------------------------------------
 
@@ -25,7 +25,6 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 my $package = 'Perl::ToPerl6::Statistics';
 
 my @methods = qw(
-    average_sub_mccabe
     lines
     modules
     new
@@ -69,7 +68,6 @@ my @transformations = $mogrify->transform( \$code );
 #exit;
 
 my %expected_stats = (
-    average_sub_mccabe            => 2,
     lines                         => 5,
     modules                       => 1,
     statements                    => 6,
