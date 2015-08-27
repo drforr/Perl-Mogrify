@@ -10,7 +10,7 @@ use Perl::ToPerl6::OptionsProcessor;
 use Perl::ToPerl6::Utils qw< :booleans >;
 use Perl::ToPerl6::Utils::Constants qw< :color_necessity >;
 
-use Test::More tests => 56;
+use Test::More tests => 58;
 
 #-----------------------------------------------------------------------------
 
@@ -25,6 +25,7 @@ our $VERSION = '0.01';
     my $processor = Perl::ToPerl6::OptionsProcessor->new();
     is($processor->force(),    0,           'native default force');
     is($processor->in_place(), 0,           'native default in-place');
+    is($processor->detail(),   2,           'native default detail');
     is($processor->only(),     0,           'native default only');
     is($processor->necessity(), 5,           'native default necessity');
     is($processor->theme(),    q{},         'native default theme');
@@ -60,8 +61,9 @@ our $VERSION = '0.01';
     my %user_defaults = (
          force                    => 1,
          'in-place'               => 0,
+         detail                   => 0,
          only                     => 1,
-         necessity                 => 4,
+         necessity                => 4,
          theme                    => 'pbp',
          top                      => 50,
          color                    => $FALSE,
@@ -81,6 +83,7 @@ our $VERSION = '0.01';
     my $processor = Perl::ToPerl6::OptionsProcessor->new( %user_defaults );
     is($processor->force(),    1,             'user default force');
     is($processor->in_place(), 0,             'user default in_place');
+    is($processor->detail(),   0,             'user default detail');
     is($processor->only(),     1,             'user default only');
     is($processor->necessity(), 4,             'user default necessity');
     is($processor->theme(),    'pbp',         'user default theme');

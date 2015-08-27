@@ -315,6 +315,11 @@ sub _render_report {
     Perl::ToPerl6::Transformation::set_format( $fmt );
 
     my $color = $mogrify->config->color();
+    if ( $mogrify->config->detail() ) {
+        @transformations = grep {
+            $_->necessity <= $mogrify->config->detail()
+        } @transformations;
+    }
     _out $color ? _colorize_by_necessity(@transformations) : @transformations;
 
     return $number_of_transformations;
@@ -487,6 +492,7 @@ sub _get_option_specification {
         profile-proto
         quiet
         necessity=i
+        detail=i
         single-transformer|s=s
         stern
         statistics!

@@ -45,6 +45,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
               [--top [ number ]] [--theme expression] [--include pattern]
               [--exclude pattern] [{-s | --single-transformer} pattern]
               [--in-place]
+              [--detail number]
               [--only | --noonly] [--profile-strictness {warn|fatal|quiet}]
               [--force | --noforce] [--statistics] [--statistics-only]
               [--count | -C] [--verbose {number | format}] [--allow-unsafe]
@@ -281,6 +282,12 @@ set the default value for this option in your F<.perlmogrifyrc> file.  NOTE: Be
 careful not to put one of the necessity shortcut options immediately after the
 C<--top> flag or C<perlmogrify> will interpret it as the number of
 transformations to report.
+
+=item C<--detail [ N ]>
+
+Directs C<perlmogrify> to report details of transformations of necessity C<N>
+and above. If C<N> is not specified, it defaults to 5. You can set the default
+value for this option in your F<.perlmogrifyrc> file.
 
 =item C<--force>
 
@@ -552,14 +559,15 @@ F<.perlmogrifyrc> file will set the default value for the corresponding
 command-line argument.
 
     necessity  = 3                                     #Integer or named level
-    only      = 1                                     #Zero or One
-    in-place  = 0                                     #Zero or One
-    force     = 0                                     #Zero or One
-    verbose   = 4                                     #Integer or format spec
-    top       = 50                                    #A positive integer
-    theme     = (pbp + security) * bugs               #A theme expression
-    include   = NamingConventions ClassHierarchies    #Space-delimited list
-    exclude   = Variables  Modules::RequirePackage    #Space-delimited list
+    only       = 1                                     #Zero or One
+    in-place   = 0                                     #Zero or One
+    force      = 0                                     #Zero or One
+    detail     = 0                                     #Integer
+    verbose    = 4                                     #Integer or format spec
+    top        = 50                                    #A positive integer
+    theme      = (pbp + security) * bugs               #A theme expression
+    include    = NamingConventions ClassHierarchies    #Space-delimited list
+    exclude    = Variables  Modules::RequirePackage    #Space-delimited list
 
 The remainder of the configuration file is a series of blocks like this:
 

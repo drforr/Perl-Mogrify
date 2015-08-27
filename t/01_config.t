@@ -52,7 +52,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
                 ->all_transformers_enabled_or_not();
 
 #    plan tests => 93 + $all_transformer_count - (129-88); # XXX Look into this later
-plan tests => 92;
+plan tests => 96;
 diag("XXX Fix the transformer count later");
 }
 
@@ -190,6 +190,7 @@ SKIP: {
 
     is($c->force(),    1,  'user default force from file'     );
     is($c->in_place(), 0,  'user default in-place from file'  );
+    is($c->detail(),   2,  'user default detail from file'  );
     is($c->only(),     1,  'user default only from file'      );
     is($c->necessity(), 3,  'user default necessity from file'  );
     is($c->theme()->rule(),    'danger || risky && ! pbp',  'user default theme from file');
@@ -295,6 +296,7 @@ SKIP: {
         -verbose
         -theme
         -necessity
+        -detail
         -in-place
         -only
         -force
@@ -317,6 +319,7 @@ SKIP: {
     $c = Perl::ToPerl6::Config->new( %undef_args );
     is( $c->force(),            0,      'Undefined -force');
     is( $c->in_place(),         0,      'Undefined -in-place');
+    is( $c->detail(),           2,      'Undefined -detail');
     is( $c->only(),             0,      'Undefined -only');
     is( $c->necessity(),         5,      'Undefined -necessity');
     is( $c->theme()->rule(),    q{},    'Undefined -theme');
@@ -353,8 +356,9 @@ SKIP: {
     $c = Perl::ToPerl6::Config->new( %zero_args );
     is( $c->force(),               0,      'zero -force');
     is( $c->in_place(),            0,      'zero -in-place');
+    is( $c->detail(),              2,      'zero -detail');
     is( $c->only(),                0,      'zero -only');
-    is( $c->necessity(),            1,      'zero -necessity');
+    is( $c->necessity(),           1,      'zero -necessity');
     is( $c->theme()->rule(),       q{},    'zero -theme');
     is( $c->top(),                 0,      'zero -top');
     is( $c->color(),               $FALSE, 'zero -color');
@@ -367,8 +371,9 @@ SKIP: {
     $c = Perl::ToPerl6::Config->new( %empty_args );
     is( $c->force(),                  0,      'empty -force');
     is( $c->in_place(),               0,      'empty -in-place');
+    is( $c->detail(),                 2,      'empty -detail');
     is( $c->only(),                   0,      'empty -only');
-    is( $c->necessity(),               1,      'empty -necessity');
+    is( $c->necessity(),              1,      'empty -necessity');
     is( $c->theme->rule(),            q{},    'empty -theme');
     is( $c->top(),                    0,      'empty -top');
     is( $c->color(),                  $FALSE, 'empty -color');

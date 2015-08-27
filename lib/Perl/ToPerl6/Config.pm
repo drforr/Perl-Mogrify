@@ -105,6 +105,7 @@ sub _init {
 
     $self->_validate_and_save_verbosity($args{-verbose}, $errors);
     $self->_validate_and_save_necessity($args{-necessity}, $errors);
+    $self->_validate_and_save_detail($args{-detail}, $errors);
     $self->_validate_and_save_top($args{-top}, $errors);
     $self->_validate_and_save_theme($args{-theme}, $errors);
     $self->_validate_and_save_pager($args{-pager}, $errors);
@@ -690,6 +691,65 @@ sub _validate_and_save_pager {
 
 #-----------------------------------------------------------------------------
 
+sub _validate_and_save_detail {
+    my ($self, $args_value, $errors) = @_;
+
+    my $option_name;
+    my $source;
+    my $detail;
+
+    if ($args_value) {
+        $option_name = '-detail';
+        $detail = $args_value;
+    }
+    else {
+        $option_name = 'detail';
+
+        my $profile = $self->_profile();
+        $source = $profile->source();
+        $detail = $profile->options_processor()->detail();
+    }
+
+    if ( is_integer($detail) ) {
+        if (
+            $detail >= $NECESSITY_LOWEST and $detail <= $NECESSITY_HIGHEST
+        ) {
+            $self->{_detail} = $detail;
+        }
+        else {
+            $errors->add_exception(
+                $self->_new_global_value_exception(
+                    option_name     => $option_name,
+                    option_value    => $detail,
+                    source          => $source,
+                    message_suffix  =>
+                        "is not between $NECESSITY_LOWEST (low) and $NECESSITY_HIGHEST (high).",
+                )
+            );
+        }
+    }
+    elsif ( not any { $_ eq lc $detail } @NECESSITY_NAMES ) {
+        $errors->add_exception(
+            $self->_new_global_value_exception(
+                option_name     => $option_name,
+                option_value    => $detail,
+                source          => $source,
+                message_suffix  =>
+                    q{is not one of the valid necessity names: "}
+                        . join (q{", "}, @NECESSITY_NAMES)
+                        . q{".},
+            )
+        );
+    }
+    else {
+        $self->{_detail} = necessity_to_number($detail);
+    }
+
+    return;
+}
+
+#-----------------------------------------------------------------------------
+
 sub _validate_and_save_color_necessity {
     my ($self, $option_name, $args_value, $default_value, $errors) = @_;
 
@@ -793,6 +853,13 @@ sub transformers {
 sub exclude {
     my ($self) = @_;
     return @{ $self->{_exclude} };
+}
+
+#-----------------------------------------------------------------------------
+
+sub detail {
+    my ($self) = @_;
+    return $self->{_detail};
 }
 
 #-----------------------------------------------------------------------------
@@ -1045,6 +1112,11 @@ Returns the value of the C<-exclude> attribute for this Config.
 Returns the value of the C<-include> attribute for this Config.
 
 
+=item C< detail() >
+
+Returns the value of the C<-detail> attribute for this Config.
+
+
 =item C< force() >
 
 Returns the value of the C<-force> attribute for this Config.
@@ -1200,6 +1272,7 @@ corresponding Perl::ToPerl6 constructor argument.
     necessity  = 3                                     #Integer from 1 to 5
     in_place  = 0                                     #Zero or One
     only      = 1                                     #Zero or One
+    detail    = 0                                     #Integer from 1 to 5
     force     = 0                                     #Zero or One
     verbose   = 4                                     #Integer or format spec
     top       = 50                                    #A positive integer
