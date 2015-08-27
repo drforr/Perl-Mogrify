@@ -27,6 +27,13 @@ exclude = Array Variables
 include   = CodeLayout Modules
 
 #-----------------------------------------------------------------------------
+# detail: Directs Perl::ToPerl6 to report more or less detail on the
+# transformation being made in the source code. The default is 0. If defined,
+# this should be a necessity level from 1 to 5.
+
+detail = 2
+
+#-----------------------------------------------------------------------------
 # force: Directs Perl::ToPerl6 to ignore the special "##no mogrify"
 # comments embedded in the source code.  The default is 0.  If
 # defined, this should be either 1 or 0.

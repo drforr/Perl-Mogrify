@@ -51,6 +51,7 @@ sub _init {
         dor(delete $args{'profile-strictness'}, $PROFILE_STRICTNESS_DEFAULT);
     $self->{_single_transformer}   = dor(delete $args{'single-transformer'},    $EMPTY);
     $self->{_necessity}        = dor(delete $args{necessity},           $NECESSITY_HIGHEST);
+    $self->{_detail}           = dor(delete $args{detail},           $NECESSITY_LOWEST + 1);
     $self->{_theme}           = dor(delete $args{theme},              $EMPTY);
     $self->{_top}             = dor(delete $args{top},                $FALSE);
     $self->{_verbose}         = dor(delete $args{verbose},            $DEFAULT_VERBOSITY);
@@ -221,6 +222,13 @@ sub mogrification_fatal {
 
 #-----------------------------------------------------------------------------
 
+sub detail {
+    my ($self) = @_;
+    return $self->{_detail};
+}
+
+#-----------------------------------------------------------------------------
+
 sub force {
     my ($self) = @_;
     return $self->{_force};
@@ -330,6 +338,11 @@ Returns a reference to a list of the default exclusion patterns.  If
 onto by
 L<Perl::ToPerl6::TransformeryParameter|Perl::ToPerl6::TransformerParameter>.  there
 are no default exclusion patterns, then the list will be empty.
+
+
+=item C< detail() >
+
+Returns the default value of the C<detail> setting (0, 1..5)
 
 
 =item C< force() >

@@ -487,6 +487,7 @@ sub _get_option_specification {
         profile-proto
         quiet
         necessity=i
+        detail=i
         single-transformer|s=s
         stern
         statistics!

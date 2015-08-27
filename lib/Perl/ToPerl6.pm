@@ -299,7 +299,7 @@ through a deprecation cycle.
 
 =over
 
-=item C<< new( [ -profile => $FILE, -necessity => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B) >>
+=item C<< new( [ -profile => $FILE, -necessity => $N, -detail => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B) >>
 
 =item C<< new() >>
 
@@ -416,6 +416,11 @@ only C<warn>s about profiles referring to non-existent Transformers, but this
 value makes this situation fatal.  Correspondingly,
 L<Perl::ToPerl6::Utils::Constants/"$PROFILE_STRICTNESS_QUIET"> makes
 Perl::ToPerl6 shut up about these things.
+
+B<-detail> can be an integer (from 0 to 5). If set to a non-zero value, all
+transformations of a necessity equal to or B<less> than B<-detail> will be
+reported on.  You can set the default value for this option in your
+F<.perlmogrifyrc> file.
 
 B<-force> is a boolean value that controls whether Perl::ToPerl6 observes the
 magical C<"## no mogrify"> annotations in your code. If set to a true value,
@@ -548,18 +553,19 @@ configuration file will set the default value for the corresponding
 constructor argument.
 
     necessity  = 3                                     #Integer or named level
-    in_place  = 0                                     #Zero or One
-    only      = 1                                     #Zero or One
-    force     = 0                                     #Zero or One
-    verbose   = 4                                     #Integer or format spec
-    top       = 50                                    #A positive integer
-    theme     = (pbp || security) && bugs             #A theme expression
-    include   = NamingConventions ClassHierarchies    #Space-delimited list
-    exclude   = Variables  Modules::RequirePackage    #Space-delimited list
-    mogrification-fatal = 1                           #Zero or One
-    color     = 1                                     #Zero or One
-    allow-unsafe = 1                                  #Zero or One
-    pager     = less                                  #pager to pipe output to
+    in_place   = 0                                     #Zero or One
+    only       = 1                                     #Zero or One
+    force      = 0                                     #Zero or One
+    detail     = 0                                     #Integer or named level
+    verbose    = 4                                     #Integer or format spec
+    top        = 50                                    #A positive integer
+    theme      = (pbp || security) && bugs             #A theme expression
+    include    = NamingConventions ClassHierarchies    #Space-delimited list
+    exclude    = Variables  Modules::RequirePackage    #Space-delimited list
+    mogrification-fatal = 1                            #Zero or One
+    color               = 1                            #Zero or One
+    allow-unsafe        = 1                            #Zero or One
+    pager               = less                         #pager to pipe output to
 
 The remainder of the configuration file is a series of blocks like this:
 
