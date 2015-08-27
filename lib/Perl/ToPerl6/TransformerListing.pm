@@ -91,7 +91,7 @@ L<"OVERLOADS"> for more information.
 
 When a L<Perl::ToPerl6::TransformerListing|Perl::ToPerl6::TransformerListing> is
 evaluated in string context, it produces a one-line summary of the
-default severity, transformer name, and default themes for each
+default necessity, transformer name, and default themes for each
 L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer> object that was given to
 the constructor of this C<TransformerListing>.
 

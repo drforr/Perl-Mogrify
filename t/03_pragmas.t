@@ -50,7 +50,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'}
+        {-profile => $profile, -necessity => 1, -theme => 'core'}
     ),
     0,
     'inline no-mogrify disables transformations'
@@ -83,7 +83,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     0,
     'region no-mogrify',
@@ -114,7 +114,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     1,
     'scoped no-mogrify',
@@ -145,7 +145,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     1,
     'scoped no-mogrify',
@@ -177,7 +177,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     1,
     'region no-mogrify across a scope',
@@ -210,7 +210,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     2,
     'scoped region no-mogrify',
@@ -242,7 +242,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     0,
     'unterminated no-mogrify across a scope',
@@ -271,7 +271,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     1,
     'inline use-mogrify',
@@ -304,7 +304,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     5,
     q<inline no-mogrify doesn't block later transformations>,
@@ -340,7 +340,7 @@ is(
         \$code,
         {
             -profile  => $profile,
-            -severity => 1,
+            -necessity => 1,
             -theme    => 'core',
             -force    => 1,
         }
@@ -377,7 +377,7 @@ is(
         \$code,
         {
             -profile  => $profile,
-            -severity => 1,
+            -necessity => 1,
             -theme    => 'core',
             -force    => 1,
         }
@@ -415,7 +415,7 @@ is(
         \$code,
         {
             -profile  => $profile,
-            -severity => 1,
+            -necessity => 1,
             -theme    => 'core',
             -force    => 1,
         }
@@ -454,7 +454,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'},
+        {-profile  => $profile, -necessity => 1, -theme => 'core'},
     ),
     4,
     'RT bug 15295',
@@ -493,7 +493,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     6,
     'RT bug 15295',
@@ -521,7 +521,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'},
+        {-profile  => $profile, -necessity => 1, -theme => 'core'},
     ),
     0,
     'no-mogrify on sub name',
@@ -548,7 +548,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity =>1, -theme => 'core'}
+        {-profile  => $profile, -necessity =>1, -theme => 'core'}
     ),
     1,
     'no-mogrify on sub name',
@@ -576,7 +576,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     2,
     'per-transformer no-mogrify',
@@ -604,7 +604,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     1,
     'per-transformer no-mogrify',
@@ -632,7 +632,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     1,
     'per-transformer no-mogrify',
@@ -660,7 +660,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     0,
     'per-transformer no-mogrify',
@@ -693,7 +693,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     3,
     'per-transformer no-mogrify',
@@ -721,7 +721,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     0,
     'per-transformer no-mogrify',
@@ -749,7 +749,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     3,
     'per-transformer no-mogrify',
@@ -789,7 +789,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'}
+        {-profile  => $profile, -necessity => 1, -theme => 'core'}
     ),
     2,
     'per-transformer no-mogrify',
@@ -843,7 +843,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile => $profile, -severity => 1, -theme => 'core'},
+        {-profile => $profile, -necessity => 1, -theme => 'core'},
     ),
     0,
     'no mogrify: syntaxes',
@@ -877,7 +877,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 5, -theme => 'core'},
+        {-profile  => $profile, -necessity => 5, -theme => 'core'},
     ),
     1,
     'no mogrify & RequireUseStrict',
@@ -905,7 +905,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 4, -theme => 'core'},
+        {-profile  => $profile, -necessity => 4, -theme => 'core'},
     ),
     1,
     'no mogrify & RequireUseWarnings',
@@ -931,7 +931,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 4, -theme => 'core'},
+        {-profile  => $profile, -necessity => 4, -theme => 'core'},
     ),
     1,
     'no mogrify & RequireExplicitPackage',
@@ -957,7 +957,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'},
+        {-profile  => $profile, -necessity => 1, -theme => 'core'},
     ),
     1,
     'no-mogrify on shebang line'
@@ -988,7 +988,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'},
+        {-profile  => $profile, -necessity => 1, -theme => 'core'},
     ),
     0,
     'no-mogrify where logical line == 1, but physical line != 1'
@@ -1019,7 +1019,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'},
+        {-profile  => $profile, -necessity => 1, -theme => 'core'},
     ),
     2,
     'no-mogrify at logical line != 1, and physical line != 1'
@@ -1049,7 +1049,7 @@ SKIP: {
 is(
     transform(
         \$code,
-        {-profile  => $profile, -severity => 1, -theme => 'core'},
+        {-profile  => $profile, -necessity => 1, -theme => 'core'},
     ),
     0,
     'no-mogrify on shebang line, where physical line != 1, but logical line == 1'

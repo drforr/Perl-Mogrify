@@ -11,7 +11,7 @@ our $VERSION = '0.03';
 use Perl::ToPerl6::Exception::AggregateConfiguration;
 use Perl::ToPerl6::Exception::Configuration::Option::Transformer::ParameterValue;
 use Perl::ToPerl6::Exception::Configuration::Option::Transformer::ExtraParameter;
-use Perl::ToPerl6::Utils qw< :booleans :characters severity_to_number >;
+use Perl::ToPerl6::Utils qw< :booleans :characters necessity_to_number >;
 use Perl::ToPerl6::Utils::Constants qw< :profile_strictness >;
 
 #-----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ sub new {
         $self{$NON_PUBLIC_DATA}{_profile_strictness};
 
     foreach my $standard_parameter (
-        qw< maximum_transformations_per_document severity set_themes add_themes >
+        qw< maximum_transformations_per_document necessity set_themes add_themes >
     ) {
         if ( exists $self{$standard_parameter} ) {
             $non_public_data{"_$standard_parameter"} =
@@ -80,10 +80,10 @@ sub get_add_themes {
 
 #-----------------------------------------------------------------------------
 
-sub get_severity {
+sub get_necessity {
     my ($self) = @_;
 
-    return $self->_get_non_public_data()->{_severity};
+    return $self->_get_non_public_data()->{_necessity};
 }
 
 #-----------------------------------------------------------------------------
@@ -239,9 +239,9 @@ The value of C<set_themes> in the user's F<.perlmogrifyrc>.
 The value of C<add_themes> in the user's F<.perlmogrifyrc>.
 
 
-=item C< get_severity() >
+=item C< get_necessity() >
 
-The value of C<severity> in the user's F<.perlmogrifyrc>.
+The value of C<necessity> in the user's F<.perlmogrifyrc>.
 
 
 =item C< is_maximum_transformations_per_document_unlimited() >

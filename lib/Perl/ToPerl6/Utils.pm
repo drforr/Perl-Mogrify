@@ -31,12 +31,12 @@ Readonly::Array our @EXPORT_OK => qw(
 
     $POLICY_NAMESPACE
 
-    $SEVERITY_HIGHEST
-    $SEVERITY_HIGH
-    $SEVERITY_MEDIUM
-    $SEVERITY_LOW
-    $SEVERITY_LOWEST
-    @SEVERITY_NAMES
+    $NECESSITY_HIGHEST
+    $NECESSITY_HIGH
+    $NECESSITY_MEDIUM
+    $NECESSITY_LOW
+    $NECESSITY_LOWEST
+    @NECESSITY_NAMES
 
     $DEFAULT_VERBOSITY
     $DEFAULT_VERBOSITY_WITH_FILE_NAME
@@ -92,7 +92,7 @@ Readonly::Array our @EXPORT_OK => qw(
     transformer_long_name
     transformer_short_name
     precedence_of
-    severity_to_number
+    necessity_to_number
     shebang_line
     split_nodes_on_comma
     verbosity_to_format
@@ -110,12 +110,12 @@ Readonly::Hash our %EXPORT_TAGS => (
     booleans        => [ qw{ $TRUE $FALSE } ],
     severities      => [
         qw{
-            $SEVERITY_HIGHEST
-            $SEVERITY_HIGH
-            $SEVERITY_MEDIUM
-            $SEVERITY_LOW
-            $SEVERITY_LOWEST
-            @SEVERITY_NAMES
+            $NECESSITY_HIGHEST
+            $NECESSITY_HIGH
+            $NECESSITY_MEDIUM
+            $NECESSITY_LOW
+            $NECESSITY_LOWEST
+            @NECESSITY_NAMES
         }
     ],
     characters      => [
@@ -168,7 +168,7 @@ Readonly::Hash our %EXPORT_TAGS => (
     ],
     data_conversion => [ qw{ hashify words_from_string interpolate } ],
     ppi             => [ qw{ first_arg parse_arg_list } ],
-    internal_lookup => [ qw{ severity_to_number verbosity_to_format } ],
+    internal_lookup => [ qw{ necessity_to_number verbosity_to_format } ],
     language        => [ qw{ precedence_of } ],
     deprecated      => [ qw{ find_keywords } ],
 );
@@ -179,11 +179,11 @@ Readonly::Scalar our $POLICY_NAMESPACE => 'Perl::ToPerl6::Transformer';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar our $SEVERITY_HIGHEST => 5;
-Readonly::Scalar our $SEVERITY_HIGH    => 4;
-Readonly::Scalar our $SEVERITY_MEDIUM  => 3;
-Readonly::Scalar our $SEVERITY_LOW     => 2;
-Readonly::Scalar our $SEVERITY_LOWEST  => 1;
+Readonly::Scalar our $NECESSITY_HIGHEST => 5;
+Readonly::Scalar our $NECESSITY_HIGH    => 4;
+Readonly::Scalar our $NECESSITY_MEDIUM  => 3;
+Readonly::Scalar our $NECESSITY_LOW     => 2;
+Readonly::Scalar our $NECESSITY_LOWEST  => 1;
 
 #-----------------------------------------------------------------------------
 
@@ -1009,14 +1009,14 @@ Readonly::Hash my %FORMAT_OF => (
     1 => "%f:%l:%c:%m\n",
     2 => "%f: (%l:%c) %m\n",
     3 => "%m at %f line %l\n",
-    4 => "%m at line %l, column %c.  %e.  (Severity: %s)\n",
-    5 => "%f: %m at line %l, column %c.  %e.  (Severity: %s)\n",
-    6 => "%m at line %l, near '%r'.  (Severity: %s)\n",
-    7 => "%f: %m at line %l near '%r'.  (Severity: %s)\n",
-    8 => "[%p] %m at line %l, column %c.  (Severity: %s)\n",
-    9 => "[%p] %m at line %l, near '%r'.  (Severity: %s)\n",
-   10 => "%m at line %l, column %c.\n  %p (Severity: %s)\n%d\n",
-   11 => "%m at line %l, near '%r'.\n  %p (Severity: %s)\n%d\n",
+    4 => "%m at line %l, column %c.  %e.  (Necessity: %s)\n",
+    5 => "%f: %m at line %l, column %c.  %e.  (Necessity: %s)\n",
+    6 => "%m at line %l, near '%r'.  (Necessity: %s)\n",
+    7 => "%f: %m at line %l near '%r'.  (Necessity: %s)\n",
+    8 => "[%p] %m at line %l, column %c.  (Necessity: %s)\n",
+    9 => "[%p] %m at line %l, near '%r'.  (Necessity: %s)\n",
+   10 => "%m at line %l, column %c.\n  %p (Necessity: %s)\n%d\n",
+   11 => "%m at line %l, near '%r'.\n  %p (Necessity: %s)\n%d\n",
 );
 
 Readonly::Scalar our $DEFAULT_VERBOSITY => 4;
@@ -1038,7 +1038,7 @@ sub verbosity_to_format {
 
 #-----------------------------------------------------------------------------
 
-Readonly::Hash my %SEVERITY_NUMBER_OF => (
+Readonly::Hash my %NECESSITY_NUMBER_OF => (
    gentle  => 5,
    stern   => 4,
    harsh   => 3,
@@ -1046,27 +1046,27 @@ Readonly::Hash my %SEVERITY_NUMBER_OF => (
    brutal  => 1,
 );
 
-Readonly::Array our @SEVERITY_NAMES =>  #This is exported!
+Readonly::Array our @NECESSITY_NAMES =>  #This is exported!
     sort
-        { $SEVERITY_NUMBER_OF{$a} <=> $SEVERITY_NUMBER_OF{$b} }
-        keys %SEVERITY_NUMBER_OF;
+        { $NECESSITY_NUMBER_OF{$a} <=> $NECESSITY_NUMBER_OF{$b} }
+        keys %NECESSITY_NUMBER_OF;
 
-sub severity_to_number {
-    my ($severity) = @_;
-    return _normalize_severity( $severity ) if is_integer( $severity );
-    my $severity_number = $SEVERITY_NUMBER_OF{lc $severity};
+sub necessity_to_number {
+    my ($necessity) = @_;
+    return _normalize_necessity( $necessity ) if is_integer( $necessity );
+    my $necessity_number = $NECESSITY_NUMBER_OF{lc $necessity};
 
-    if ( not defined $severity_number ) {
-        throw_generic qq{Invalid severity: "$severity"};
+    if ( not defined $necessity_number ) {
+        throw_generic qq{Invalid necessity: "$necessity"};
     }
 
-    return $severity_number;
+    return $necessity_number;
 }
 
-sub _normalize_severity {
-    my $s = shift || return $SEVERITY_HIGHEST;
-    $s = $s > $SEVERITY_HIGHEST ? $SEVERITY_HIGHEST : $s;
-    $s = $s < $SEVERITY_LOWEST  ? $SEVERITY_LOWEST : $s;
+sub _normalize_necessity {
+    my $s = shift || return $NECESSITY_HIGHEST;
+    $s = $s > $NECESSITY_HIGHEST ? $NECESSITY_HIGHEST : $s;
+    $s = $s < $NECESSITY_LOWEST  ? $NECESSITY_LOWEST : $s;
     return $s;
 }
 
@@ -1711,17 +1711,17 @@ A Perl code file is:
 =back
 
 
-=item C<severity_to_number( $severity )>
+=item C<necessity_to_number( $necessity )>
 
-If C<$severity> is given as an integer, this function returns
-C<$severity> but normalized to lie between C<$SEVERITY_LOWEST> and
-C<$SEVERITY_HIGHEST>.  If C<$severity> is given as a string, this
-function returns the corresponding severity number.  If the string
+If C<$necessity> is given as an integer, this function returns
+C<$necessity> but normalized to lie between C<$NECESSITY_LOWEST> and
+C<$NECESSITY_HIGHEST>.  If C<$necessity> is given as a string, this
+function returns the corresponding necessity number.  If the string
 doesn't have a corresponding number, this function will throw an
 exception.
 
 
-=item C<is_valid_numeric_verbosity( $severity )>
+=item C<is_valid_numeric_verbosity( $necessity )>
 
 Answers whether the argument has a translation to a Transformation format.
 
@@ -1813,19 +1813,19 @@ These character constants give clear names to commonly-used strings
 that can be hard to read when surrounded by quotes and other
 punctuation.  Can be imported in one go via the C<:characters> tag.
 
-=item C<$SEVERITY_HIGHEST>
+=item C<$NECESSITY_HIGHEST>
 
-=item C<$SEVERITY_HIGH>
+=item C<$NECESSITY_HIGH>
 
-=item C<$SEVERITY_MEDIUM>
+=item C<$NECESSITY_MEDIUM>
 
-=item C<$SEVERITY_LOW>
+=item C<$NECESSITY_LOW>
 
-=item C<$SEVERITY_LOWEST>
+=item C<$NECESSITY_LOWEST>
 
-These numeric constants define the relative severity of violating each
-L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>.  The C<get_severity> and
-C<default_severity> methods of every Transformer subclass must return one
+These numeric constants define the relative necessity of violating each
+L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer>.  The C<get_necessity> and
+C<default_necessity> methods of every Transformer subclass must return one
 of these values. Can be imported via the C<:severities> tag.
 
 =item C<$DEFAULT_VERBOSITY>
@@ -1870,12 +1870,12 @@ C<$TRUE>, C<$FALSE>
 =item C<:severities>
 
 Includes:
-C<$SEVERITY_HIGHEST>,
-C<$SEVERITY_HIGH>,
-C<$SEVERITY_MEDIUM>,
-C<$SEVERITY_LOW>,
-C<$SEVERITY_LOWEST>,
-C<@SEVERITY_NAMES>
+C<$NECESSITY_HIGHEST>,
+C<$NECESSITY_HIGH>,
+C<$NECESSITY_MEDIUM>,
+C<$NECESSITY_LOW>,
+C<$NECESSITY_LOWEST>,
+C<@NECESSITY_NAMES>
 
 
 =item C<:characters>
@@ -1950,7 +1950,7 @@ See also L<Perl::ToPerl6::Utils::PPI|Perl::ToPerl6::Utils::PPI>.
 Translations between internal representations.
 
 Includes:
-C<severity_to_number>,
+C<necessity_to_number>,
 C<verbosity_to_format>
 
 

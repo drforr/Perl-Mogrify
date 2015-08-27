@@ -32,7 +32,7 @@ my @methods = qw(
     subs
     total_transformations
     transformations_by_transformer
-    transformations_by_severity
+    transformations_by_necessity
     statements_other_than_subs
     transformations_per_file
     transformations_per_statement
@@ -58,7 +58,7 @@ END_PERL
 my $profile = { '-Arrays::AddWhitespace' => {} };
 my $mogrify =
     Perl::ToPerl6->new(
-        -severity => 1,
+        -necessity => 1,
         -profile => $profile,
         -theme => 'core',
     );

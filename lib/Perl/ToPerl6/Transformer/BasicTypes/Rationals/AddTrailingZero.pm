@@ -19,7 +19,7 @@ Readonly::Scalar my $EXPL => q{'1.' is no longer a valid floating-point number f
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_necessity     { return $NECESSITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           { return 'PPI::Token::Number::Float' }
 

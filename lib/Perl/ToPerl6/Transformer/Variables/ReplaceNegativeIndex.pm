@@ -29,7 +29,7 @@ sub run_before           {
 }
 
 sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST  }
+sub default_necessity     { return $NECESSITY_HIGHEST  }
 sub default_themes       { return qw(core bugs)      }
 #
 # Don't test the subscript type because the [-N] may be after a {}.

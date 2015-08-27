@@ -77,8 +77,8 @@ sub to_string {
     my $prototype = "# Globals\n";
 
     $prototype .= $prefix;
-    $prototype .= q{severity = };
-    $prototype .= $configuration->severity();
+    $prototype .= q{necessity = };
+    $prototype .= $configuration->necessity();
     $prototype .= "\n";
 
     $prototype .= $prefix;
@@ -147,11 +147,11 @@ sub to_string {
     $prototype .= "\n";
 
     foreach my $item (qw<
-        color-severity-highest
-        color-severity-high
-        color-severity-medium
-        color-severity-low
-        color-severity-lowest
+        color-necessity-highest
+        color-necessity-high
+        color-necessity-medium
+        color-necessity-low
+        color-necessity-lowest
         >) {
         ( my $accessor = $item ) =~ s/ - /_/gmsx;
         $prototype .= $prefix;
@@ -195,7 +195,7 @@ sub _proto_format {
 [%p]
 ${prefix}set_themes                         = %t
 ${prefix}add_themes                         =
-${prefix}severity                           = %s
+${prefix}necessity                           = %s
 ${prefix}maximum_transformations_per_document    = %v
 %{\\n%\\x7b# \\x7df\\n${prefix}%n = %D\\n}O%{${prefix}Cannot programmatically discover what parameters this transformer takes.\\n}U
 END_OF_FORMAT
@@ -260,7 +260,7 @@ L<"OVERLOADS"> for more information.
 When a
 L<Perl::ToPerl6::ProfilePrototype|Perl::ToPerl6::ProfilePrototype> is
 evaluated in string context, it produces a multi-line summary of the
-transformer name, default themes, and default severity for each
+transformer name, default themes, and default necessity for each
 L<Perl::ToPerl6::Transformer|Perl::ToPerl6::Transformer> object that was given to
 the constructor of this C<ProfilePrototype>.  If the Transformer supports
 an additional parameters, they will also be listed (but

@@ -19,11 +19,11 @@ our @EXPORT_OK = qw{
     $PROFILE_STRICTNESS_QUIET
     $PROFILE_STRICTNESS_DEFAULT
     %PROFILE_STRICTNESSES
-    $PROFILE_COLOR_SEVERITY_HIGHEST_DEFAULT
-    $PROFILE_COLOR_SEVERITY_HIGH_DEFAULT
-    $PROFILE_COLOR_SEVERITY_MEDIUM_DEFAULT
-    $PROFILE_COLOR_SEVERITY_LOW_DEFAULT
-    $PROFILE_COLOR_SEVERITY_LOWEST_DEFAULT
+    $PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT
+    $PROFILE_COLOR_NECESSITY_HIGH_DEFAULT
+    $PROFILE_COLOR_NECESSITY_MEDIUM_DEFAULT
+    $PROFILE_COLOR_NECESSITY_LOW_DEFAULT
+    $PROFILE_COLOR_NECESSITY_LOWEST_DEFAULT
     $_MODULE_VERSION_TERM_ANSICOLOR
     @STRICT_EQUIVALENT_MODULES
     @WARNINGS_EQUIVALENT_MODULES
@@ -40,13 +40,13 @@ our %EXPORT_TAGS = (
             %PROFILE_STRICTNESSES
         }
     ],
-    color_severity  => [
+    color_necessity  => [
         qw{
-            $PROFILE_COLOR_SEVERITY_HIGHEST_DEFAULT
-            $PROFILE_COLOR_SEVERITY_HIGH_DEFAULT
-            $PROFILE_COLOR_SEVERITY_MEDIUM_DEFAULT
-            $PROFILE_COLOR_SEVERITY_LOW_DEFAULT
-            $PROFILE_COLOR_SEVERITY_LOWEST_DEFAULT
+            $PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT
+            $PROFILE_COLOR_NECESSITY_HIGH_DEFAULT
+            $PROFILE_COLOR_NECESSITY_MEDIUM_DEFAULT
+            $PROFILE_COLOR_NECESSITY_LOW_DEFAULT
+            $PROFILE_COLOR_NECESSITY_LOWEST_DEFAULT
         }
     ],
     equivalent_modules => [
@@ -71,11 +71,11 @@ Readonly::Hash our %PROFILE_STRICTNESSES =>
         $PROFILE_STRICTNESS_QUIET,
     );
 
-Readonly::Scalar our $PROFILE_COLOR_SEVERITY_HIGHEST_DEFAULT    => 'bold red';
-Readonly::Scalar our $PROFILE_COLOR_SEVERITY_HIGH_DEFAULT       => 'magenta';
-Readonly::Scalar our $PROFILE_COLOR_SEVERITY_MEDIUM_DEFAULT     => $EMPTY;
-Readonly::Scalar our $PROFILE_COLOR_SEVERITY_LOW_DEFAULT        => $EMPTY;
-Readonly::Scalar our $PROFILE_COLOR_SEVERITY_LOWEST_DEFAULT     => $EMPTY;
+Readonly::Scalar our $PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT    => 'bold red';
+Readonly::Scalar our $PROFILE_COLOR_NECESSITY_HIGH_DEFAULT       => 'magenta';
+Readonly::Scalar our $PROFILE_COLOR_NECESSITY_MEDIUM_DEFAULT     => $EMPTY;
+Readonly::Scalar our $PROFILE_COLOR_NECESSITY_LOW_DEFAULT        => $EMPTY;
+Readonly::Scalar our $PROFILE_COLOR_NECESSITY_LOWEST_DEFAULT     => $EMPTY;
 
 # If the following changes, the corresponding change needs to be made in
 # inc/Perl/ToPerl6/BuildUtilities.pm, sub recommended_module_versions().
@@ -163,30 +163,30 @@ C<$PROFILE_STRICTNESS_DEFAULT> is set to C<$PROFILE_STRICTNESS_WARN>.
 Importable via the C<:profile_strictness> tag.
 
 
-=item C<$PROFILE_COLOR_SEVERITY_HIGHEST_DEFAULT>
+=item C<$PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT>
 
-Default for the -color-severity-highest option. Importable via the
-C<:color_severity> tag.
+Default for the -color-necessity-highest option. Importable via the
+C<:color_necessity> tag.
 
-=item C<$PROFILE_COLOR_SEVERITY_HIGH_DEFAULT>
+=item C<$PROFILE_COLOR_NECESSITY_HIGH_DEFAULT>
 
-Default for the -color-severity-high option. Importable via the
-C<:color_severity> tag.
+Default for the -color-necessity-high option. Importable via the
+C<:color_necessity> tag.
 
-=item C<$PROFILE_COLOR_SEVERITY_MEDIUM_DEFAULT>
+=item C<$PROFILE_COLOR_NECESSITY_MEDIUM_DEFAULT>
 
-Default for the -color-severity-medium option. Importable via the
-C<:color_severity> tag.
+Default for the -color-necessity-medium option. Importable via the
+C<:color_necessity> tag.
 
-=item C<$PROFILE_COLOR_SEVERITY_LOW_DEFAULT>
+=item C<$PROFILE_COLOR_NECESSITY_LOW_DEFAULT>
 
-Default for the -color-severity-low option. Importable via the
-C<:color_severity> tag.
+Default for the -color-necessity-low option. Importable via the
+C<:color_necessity> tag.
 
-=item C<$PROFILE_COLOR_SEVERITY_LOWEST_DEFAULT>
+=item C<$PROFILE_COLOR_NECESSITY_LOWEST_DEFAULT>
 
-Default for the -color-severity-lowest option. Importable via the
-C<:color_severity> tag.
+Default for the -color-necessity-lowest option. Importable via the
+C<:color_necessity> tag.
 
 =item C<@STRICT_EQUIVALENT_MODULES>
 

@@ -30,7 +30,7 @@ Readonly::Scalar my $EXPL => q{Transform $1..$n to $0..$n-1};
 
 sub run_after            { 'Variables::RewriteSpecialVariables' }
 sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_necessity     { return $NECESSITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           {
     return sub {

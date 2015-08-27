@@ -119,16 +119,16 @@ is(
 );
 
 
-# Test default severity...
-is( $p->default_severity(), 1, 'default_severity()');
-is( $p->get_severity(), 1, 'get_severity()' );
+# Test default necessity...
+is( $p->default_necessity(), 1, 'default_necessity()');
+is( $p->get_necessity(), 1, 'get_necessity()' );
 
-# Change severity level...
-$p->set_severity(3);
+# Change necessity level...
+$p->set_necessity(3);
 
-# Test severity again...
-is( $p->default_severity(), 1, q<default_severity() hasn't changed.>);
-is( $p->get_severity(), 3, q<get_severity() returns the new value.> );
+# Test necessity again...
+is( $p->default_necessity(), 1, q<default_necessity() hasn't changed.>);
+is( $p->get_necessity(), 3, q<get_necessity() returns the new value.> );
 
 
 # Test default theme...

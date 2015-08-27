@@ -21,7 +21,7 @@ use Perl::ToPerl6::Utils qw<
     is_integer
     transformer_long_name
     transformer_short_name
-    severity_to_number
+    necessity_to_number
 >;
 use Perl::ToPerl6::Utils::DataConversion qw< dor >;
 use Perl::ToPerl6::Utils::POD qw<
@@ -153,10 +153,10 @@ sub __set_base_parameters {
 
     $self->_set_maximum_transformations_per_document($errors);
 
-    my $user_severity = $config->get_severity();
-    if ( defined $user_severity ) {
-        my $normalized_severity = severity_to_number( $user_severity );
-        $self->set_severity( $normalized_severity );
+    my $user_necessity = $config->get_necessity();
+    if ( defined $user_necessity ) {
+        my $normalized_necessity = necessity_to_number( $user_necessity );
+        $self->set_necessity( $normalized_necessity );
     }
 
     my $user_set_themes = $config->get_set_themes();
@@ -311,23 +311,23 @@ sub default_maximum_transformations_per_document {
 
 #-----------------------------------------------------------------------------
 
-sub set_severity {
-    my ($self, $severity) = @_;
-    $self->{_severity} = $severity;
+sub set_necessity {
+    my ($self, $necessity) = @_;
+    $self->{_necessity} = $necessity;
     return $self;
 }
 
 #-----------------------------------------------------------------------------
 
-sub get_severity {
+sub get_necessity {
     my ($self) = @_;
-    return $self->{_severity} || $self->default_severity();
+    return $self->{_necessity} || $self->default_necessity();
 }
 
 #-----------------------------------------------------------------------------
 
-sub default_severity {
-    return $SEVERITY_LOWEST;
+sub default_necessity {
+    return $NECESSITY_LOWEST;
 }
 
 #-----------------------------------------------------------------------------
@@ -409,7 +409,7 @@ sub transform {
 sub transformation {
     my ( $self, $desc, $expl, $elem ) = @_;
     # HACK!! Use goto instead of an explicit call because P::C::V::new() uses caller()
-    my $sev = $self->get_severity();
+    my $sev = $self->get_necessity();
     @_ = ('Perl::ToPerl6::Transformation', $desc, $expl, $elem, $sev );
     goto &Perl::ToPerl6::Transformation::new;
 }
@@ -460,8 +460,8 @@ sub to_string {
          'a' => sub { dor($self->get_abstract(), $EMPTY) },
          'O' => sub { $self->_format_parameters(@_) },
          'U' => sub { $self->_format_lack_of_parameter_metadata(@_) },
-         'S' => sub { $self->default_severity() },
-         's' => sub { $self->get_severity() },
+         'S' => sub { $self->default_necessity() },
+         's' => sub { $self->get_necessity() },
          'T' => sub { join $SPACE, $self->default_themes() },
          't' => sub { join $SPACE, $self->get_themes() },
          'V' => sub { dor( $self->default_maximum_transformations_per_document(), $NO_LIMIT ) },
@@ -605,7 +605,7 @@ caused the transformation.
 
 These are the same as the constructor to
 L<Perl::ToPerl6::Transformation|Perl::ToPerl6::Transformation>, but without the
-severity.  The Transformer itself knows the severity.
+necessity.  The Transformer itself knows the necessity.
 
 
 =item C< new_parameter_value_exception( $option_name, $option_value, $source, $message_suffix ) >
@@ -669,33 +669,33 @@ Specify the maximum transformations that this transformer should report for a
 document.
 
 
-=item C< default_severity() >
+=item C< default_necessity() >
 
-Returns the default severity for violating this Transformer.  See the
-C<$SEVERITY> constants in L<Perl::ToPerl6::Utils|Perl::ToPerl6::Utils>
-for an enumeration of possible severity values.  By default, this
-method returns C<$SEVERITY_LOWEST>.  Authors of Perl::ToPerl6::Transformer
+Returns the default necessity for violating this Transformer.  See the
+C<$NECESSITY> constants in L<Perl::ToPerl6::Utils|Perl::ToPerl6::Utils>
+for an enumeration of possible necessity values.  By default, this
+method returns C<$NECESSITY_LOWEST>.  Authors of Perl::ToPerl6::Transformer
 subclasses should override this method to return a value that they
 feel is appropriate for their Transformer.  In general, Polices that are
-widely accepted or tend to prevent bugs should have a higher severity
+widely accepted or tend to prevent bugs should have a higher necessity
 than those that are more subjective or cosmetic in nature.
 
 
-=item C< get_severity() >
+=item C< get_necessity() >
 
-Returns the severity of violating this Transformer.  If the severity has
-not been explicitly defined by calling C<set_severity>, then the
-C<default_severity> is returned.  See the C<$SEVERITY> constants in
+Returns the necessity of violating this Transformer.  If the necessity has
+not been explicitly defined by calling C<set_necessity>, then the
+C<default_necessity> is returned.  See the C<$NECESSITY> constants in
 L<Perl::ToPerl6::Utils|Perl::ToPerl6::Utils> for an enumeration of
-possible severity values.
+possible necessity values.
 
 
-=item C< set_severity( $N ) >
+=item C< set_necessity( $N ) >
 
-Sets the severity for violating this Transformer.  Clients of
+Sets the necessity for violating this Transformer.  Clients of
 Perl::ToPerl6::Transformer objects can call this method to assign a
-different severity to the Transformer if they don't agree with the
-C<default_severity>.  See the C<$SEVERITY> constants in
+different necessity to the Transformer if they don't agree with the
+C<default_necessity>.  See the C<$NECESSITY> constants in
 L<Perl::ToPerl6::Utils|Perl::ToPerl6::Utils> for an enumeration of
 possible values.
 
@@ -853,12 +853,12 @@ sequences (C<\n>, C<\t>, etc.).
 
 =item C<%S>
 
-The default severity level of the transformer.
+The default necessity level of the transformer.
 
 
 =item C<%s>
 
-The current severity level of the transformer.
+The current necessity level of the transformer.
 
 
 =item C<%T>

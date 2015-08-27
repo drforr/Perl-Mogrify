@@ -17,7 +17,7 @@ use Perl::ToPerl6::TestUtils qw<
     names_of_transformers_willing_to_work
 >;
 use Perl::ToPerl6::Utils qw< :booleans :characters :severities >;
-use Perl::ToPerl6::Utils::Constants qw< :color_severity >;
+use Perl::ToPerl6::Utils::Constants qw< :color_necessity >;
 
 use Test::More;
 
@@ -33,7 +33,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 my @names_of_transformers_willing_to_work =
     names_of_transformers_willing_to_work(
-        -severity   => $SEVERITY_LOWEST,
+        -necessity   => $NECESSITY_LOWEST,
         -theme      => 'core',
     );
 my @native_transformer_names  = bundled_transformer_names();
@@ -46,7 +46,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
         scalar
             Perl::ToPerl6::Config
                 ->new(
-                    -severity   => $SEVERITY_LOWEST,
+                    -necessity   => $NECESSITY_LOWEST,
                     -theme      => 'core',
                 )
                 ->all_transformers_enabled_or_not();
@@ -57,21 +57,21 @@ diag("XXX Fix the transformer count later");
 }
 
 #-----------------------------------------------------------------------------
-# Test default config.  Increasing the severity should yield
+# Test default config.  Increasing the necessity should yield
 # fewer and fewer transformers.  The exact number will fluctuate
-# as we introduce new polices and/or change their severity.
+# as we introduce new polices and/or change their necessity.
 
 SKIP: {
-    skip "XXX For now all transformers are the same 'severity'", 4;
+    skip "XXX For now all transformers are the same 'necessity'", 4;
     my $last_transformer_count = $total_transformers + 1;
-    for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
+    for my $necessity ($NECESSITY_LOWEST .. $NECESSITY_HIGHEST) {
         my $configuration =
             Perl::ToPerl6::Config->new(
-                -severity   => $severity,
+                -necessity   => $necessity,
                 -theme      => 'core',
             );
         my $transformer_count = scalar $configuration->transformers();
-        my $test_name = "Count native transformers, severity: $severity";
+        my $test_name = "Count native transformers, necessity: $necessity";
         cmp_ok($transformer_count, '<', $last_transformer_count, $test_name);
         $last_transformer_count = $transformer_count;
     }
@@ -82,18 +82,18 @@ SKIP: {
 # Same tests as above, but using a generated config
 
 SKIP: {
-    skip "XXX For now all transformers are the same 'severity'", 4;
+    skip "XXX For now all transformers are the same 'necessity'", 4;
     my %profile = map { $_ => {} } @native_transformer_names;
     my $last_transformer_count = $total_transformers + 1;
-    for my $severity ($SEVERITY_LOWEST .. $SEVERITY_HIGHEST) {
+    for my $necessity ($NECESSITY_LOWEST .. $NECESSITY_HIGHEST) {
         my %pc_args = (
             -profile    => \%profile,
-            -severity   => $severity,
+            -necessity   => $necessity,
             -theme      => 'core',
         );
         my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
         my $transformer_count = scalar $mogrify->transformers();
-        my $test_name = "Count all transformers, severity: $severity";
+        my $test_name = "Count all transformers, necessity: $necessity";
         cmp_ok($transformer_count, '<', $last_transformer_count, $test_name);
         $last_transformer_count = $transformer_count;
     }
@@ -102,10 +102,10 @@ SKIP: {
 #-----------------------------------------------------------------------------
 
 SKIP: {
-    skip "XXX For now all transformers are the same 'severity'", 1;
+    skip "XXX For now all transformers are the same 'necessity'", 1;
     my $configuration =
         Perl::ToPerl6::Config->new(
-            -severity   => $SEVERITY_LOWEST,
+            -necessity   => $NECESSITY_LOWEST,
             -theme      => 'core',
         );
     my %transformers_by_name =
@@ -130,47 +130,47 @@ SKIP: {
 }
 
 #-----------------------------------------------------------------------------
-# Test config w/ multiple severity levels.  In this profile, we
-# define an arbitrary severity for each Transformer so that severity
+# Test config w/ multiple necessity levels.  In this profile, we
+# define an arbitrary necessity for each Transformer so that necessity
 # levels 5 through 2 each have 10 Transformers.  All remaining Transformers
-# are in the 1st severity level.
+# are in the 1st necessity level.
 
 
 SKIP: {
-    skip "XXX For now all transformers are the same 'severity'", 1;
+    skip "XXX For now all transformers are the same 'necessity'", 1;
     my %profile = ();
-    my $severity = $SEVERITY_HIGHEST;
+    my $necessity = $NECESSITY_HIGHEST;
     for my $index ( 0 .. $#names_of_transformers_willing_to_work ) {
         if ($index and $index % 10 == 0) {
-            $severity--;
+            $necessity--;
         }
-        if ($severity < $SEVERITY_LOWEST) {
-            $severity = $SEVERITY_LOWEST;
+        if ($necessity < $NECESSITY_LOWEST) {
+            $necessity = $NECESSITY_LOWEST;
         }
 
         $profile{$names_of_transformers_willing_to_work[$index]} =
-            {severity => $severity};
+            {necessity => $necessity};
     }
 
-    for my $severity ( reverse $SEVERITY_LOWEST+1 .. $SEVERITY_HIGHEST ) {
+    for my $necessity ( reverse $NECESSITY_LOWEST+1 .. $NECESSITY_HIGHEST ) {
         my %pc_args = (
             -profile    => \%profile,
-            -severity   => $severity,
+            -necessity   => $necessity,
             -theme      => 'core',
         );
         my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
         my $transformer_count = scalar $mogrify->transformers();
-        my $expected_count = ($SEVERITY_HIGHEST - $severity + 1) * 10;
-        my $test_name = "user-defined severity level: $severity";
+        my $expected_count = ($NECESSITY_HIGHEST - $necessity + 1) * 10;
+        my $test_name = "user-defined necessity level: $necessity";
         is( $transformer_count, $expected_count, $test_name );
     }
 
-    # All remaining transformers should be at the lowest severity
-    my %pc_args = (-profile => \%profile, -severity => $SEVERITY_LOWEST);
+    # All remaining transformers should be at the lowest necessity
+    my %pc_args = (-profile => \%profile, -necessity => $NECESSITY_LOWEST);
     my $mogrify = Perl::ToPerl6::Config->new( %pc_args );
     my $transformer_count = scalar $mogrify->transformers();
-    my $expected_count = $SEVERITY_HIGHEST * 10;
-    my $test_name = 'user-defined severity, all remaining transformers';
+    my $expected_count = $NECESSITY_HIGHEST * 10;
+    my $test_name = 'user-defined necessity, all remaining transformers';
     cmp_ok( $transformer_count, '>=', $expected_count, $test_name);
 }
 
@@ -191,21 +191,21 @@ SKIP: {
     is($c->force(),    1,  'user default force from file'     );
     is($c->in_place(), 0,  'user default in-place from file'  );
     is($c->only(),     1,  'user default only from file'      );
-    is($c->severity(), 3,  'user default severity from file'  );
+    is($c->necessity(), 3,  'user default necessity from file'  );
     is($c->theme()->rule(),    'danger || risky && ! pbp',  'user default theme from file');
     is($c->top(),      50, 'user default top from file'       );
     is($c->verbose(),  5,  'user default verbose from file'   );
 
-    is($c->color_severity_highest(), 'bold red underline',
-                        'user default color-severity-highest from file');
-    is($c->color_severity_high(), 'bold magenta',
-                        'user default color-severity-high from file');
-    is($c->color_severity_medium(), 'blue',
-                        'user default color-severity-medium from file');
-    is($c->color_severity_low(), $EMPTY,
-                        'user default color-severity-low from file');
-    is($c->color_severity_lowest(), $EMPTY,
-                        'user default color-severity-lowest from file');
+    is($c->color_necessity_highest(), 'bold red underline',
+                        'user default color-necessity-highest from file');
+    is($c->color_necessity_high(), 'bold magenta',
+                        'user default color-necessity-high from file');
+    is($c->color_necessity_medium(), 'blue',
+                        'user default color-necessity-medium from file');
+    is($c->color_necessity_low(), $EMPTY,
+                        'user default color-necessity-low from file');
+    is($c->color_necessity_lowest(), $EMPTY,
+                        'user default color-necessity-lowest from file');
 
     is_deeply([$c->program_extensions], [],
         'user default program-extensions from file');
@@ -219,7 +219,7 @@ SKIP: {
 
 
 SKIP: {
-    skip "XXX For now all transformers are the same 'severity'", 1;
+    skip "XXX For now all transformers are the same 'necessity'", 1;
     # In this test, we'll use a custom profile to deactivate some
     # transformers, and then use the -include option to re-activate them.  So
     # the net result is that we should still end up with the all the
@@ -233,7 +233,7 @@ SKIP: {
     my @include = qw(capital quoted);
     my %pc_args = (
         -profile    => \%profile,
-        -severity   => 1,
+        -necessity   => 1,
         -include    => \@include,
         -theme      => 'core',
     );
@@ -250,7 +250,7 @@ SKIP: {
 
     my @exclude = qw(quote mixed VALUES); #Some assorted pattterns
     my %pc_args = (
-        -severity   => 1,
+        -necessity   => 1,
         -exclude    => \@exclude,
     );
     my @transformers = Perl::ToPerl6::Config->new( %pc_args )->transformers();
@@ -268,7 +268,7 @@ SKIP: {
     my @include = qw(builtinfunc); #Include BuiltinFunctions::*
     my @exclude = qw(block);       #Exclude RequireBlockGrep, RequireBlockMap
     my %pc_args = (
-        -severity   => 1,
+        -necessity   => 1,
         -include    => \@include,
         -exclude    => \@exclude,
     );
@@ -294,7 +294,7 @@ SKIP: {
         -top
         -verbose
         -theme
-        -severity
+        -necessity
         -in-place
         -only
         -force
@@ -302,11 +302,11 @@ SKIP: {
         -pager
         -allow-unsafe
         -mogrification-fatal
-        -color-severity-highest
-        -color-severity-high
-        -color-severity-medium
-        -color-severity-low
-        -color-severity-lowest
+        -color-necessity-highest
+        -color-necessity-high
+        -color-necessity-medium
+        -color-necessity-low
+        -color-necessity-lowest
     );
 
     # Can't use IO::Interactive here because we /don't/ want to check STDIN.
@@ -318,7 +318,7 @@ SKIP: {
     is( $c->force(),            0,      'Undefined -force');
     is( $c->in_place(),         0,      'Undefined -in-place');
     is( $c->only(),             0,      'Undefined -only');
-    is( $c->severity(),         5,      'Undefined -severity');
+    is( $c->necessity(),         5,      'Undefined -necessity');
     is( $c->theme()->rule(),    q{},    'Undefined -theme');
     is( $c->top(),              0,      'Undefined -top');
     is( $c->color(),            $color, 'Undefined -color');
@@ -326,35 +326,35 @@ SKIP: {
     is( $c->unsafe_allowed(),   0,      'Undefined -allow-unsafe');
     is( $c->verbose(),          4,      'Undefined -verbose');
     is( $c->mogrification_fatal(),  0,      'Undefined -mogrification-fatal');
-    is( $c->color_severity_highest(),
-        $PROFILE_COLOR_SEVERITY_HIGHEST_DEFAULT,
-        'Undefined -color-severity-highest'
+    is( $c->color_necessity_highest(),
+        $PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT,
+        'Undefined -color-necessity-highest'
     );
-    is( $c->color_severity_high(),
-        $PROFILE_COLOR_SEVERITY_HIGH_DEFAULT,
-        'Undefined -color-severity-high'
+    is( $c->color_necessity_high(),
+        $PROFILE_COLOR_NECESSITY_HIGH_DEFAULT,
+        'Undefined -color-necessity-high'
     );
-    is( $c->color_severity_medium(),
-        $PROFILE_COLOR_SEVERITY_MEDIUM_DEFAULT,
-        'Undefined -color-severity-medium'
+    is( $c->color_necessity_medium(),
+        $PROFILE_COLOR_NECESSITY_MEDIUM_DEFAULT,
+        'Undefined -color-necessity-medium'
     );
-    is( $c->color_severity_low(),
-        $PROFILE_COLOR_SEVERITY_LOW_DEFAULT,
-        'Undefined -color-severity-low'
+    is( $c->color_necessity_low(),
+        $PROFILE_COLOR_NECESSITY_LOW_DEFAULT,
+        'Undefined -color-necessity-low'
     );
-    is( $c->color_severity_lowest(),
-        $PROFILE_COLOR_SEVERITY_LOWEST_DEFAULT,
-        'Undefined -color-severity-lowest'
+    is( $c->color_necessity_lowest(),
+        $PROFILE_COLOR_NECESSITY_LOWEST_DEFAULT,
+        'Undefined -color-necessity-lowest'
     );
 
     my %zero_args = map { $_ => 0 }
         # Zero is an invalid Term::ANSIColor value.
-        grep { ! / \A-color-severity- /smx } @switches;
+        grep { ! / \A-color-necessity- /smx } @switches;
     $c = Perl::ToPerl6::Config->new( %zero_args );
     is( $c->force(),               0,      'zero -force');
     is( $c->in_place(),            0,      'zero -in-place');
     is( $c->only(),                0,      'zero -only');
-    is( $c->severity(),            1,      'zero -severity');
+    is( $c->necessity(),            1,      'zero -necessity');
     is( $c->theme()->rule(),       q{},    'zero -theme');
     is( $c->top(),                 0,      'zero -top');
     is( $c->color(),               $FALSE, 'zero -color');
@@ -368,7 +368,7 @@ SKIP: {
     is( $c->force(),                  0,      'empty -force');
     is( $c->in_place(),               0,      'empty -in-place');
     is( $c->only(),                   0,      'empty -only');
-    is( $c->severity(),               1,      'empty -severity');
+    is( $c->necessity(),               1,      'empty -necessity');
     is( $c->theme->rule(),            q{},    'empty -theme');
     is( $c->top(),                    0,      'empty -top');
     is( $c->color(),                  $FALSE, 'empty -color');
@@ -376,11 +376,11 @@ SKIP: {
     is( $c->unsafe_allowed(),         0,      'empty -allow-unsafe');
     is( $c->verbose(),                4,      'empty -verbose');
     is( $c->mogrification_fatal(),    0,      'empty -mogrification-fatal');
-    is( $c->color_severity_highest(), $EMPTY, 'empty -color-severity-highest');
-    is( $c->color_severity_high(),    $EMPTY, 'empty -color-severity-high');
-    is( $c->color_severity_medium(),  $EMPTY, 'empty -color-severity-medium');
-    is( $c->color_severity_low(),     $EMPTY, 'empty -color-severity-low');
-    is( $c->color_severity_lowest(),  $EMPTY, 'empty -color-severity-lowest');
+    is( $c->color_necessity_highest(), $EMPTY, 'empty -color-necessity-highest');
+    is( $c->color_necessity_high(),    $EMPTY, 'empty -color-necessity-high');
+    is( $c->color_necessity_medium(),  $EMPTY, 'empty -color-necessity-medium');
+    is( $c->color_necessity_low(),     $EMPTY, 'empty -color-necessity-low');
+    is( $c->color_necessity_lowest(),  $EMPTY, 'empty -color-necessity-lowest');
 }
 
 #-----------------------------------------------------------------------------
@@ -392,7 +392,7 @@ SKIP: {
         'Variables::QuoteHashKeys' => {},
     );
 
-    my %pc_config = (-severity => 1, -only => 1, -profile => \%profile);
+    my %pc_config = (-necessity => 1, -only => 1, -profile => \%profile);
     my @transformers = Perl::ToPerl6::Config->new( %pc_config )->transformers();
     is(scalar @transformers, 2, '-only switch');
 }
@@ -430,13 +430,13 @@ SKIP: {
 }
 
 #-----------------------------------------------------------------------------
-# Test named severity levels
+# Test named necessity levels
 
 {
-    my %severity_levels = (gentle=>5, stern=>4, harsh=>3, cruel=>2, brutal=>1);
-    while (my ($name, $number) = each %severity_levels) {
-        my $config = Perl::ToPerl6::Config->new( -severity => $name );
-        is( $config->severity(), $number, qq{Severity "$name" is "$number"});
+    my %necessity_levels = (gentle=>5, stern=>4, harsh=>3, cruel=>2, brutal=>1);
+    while (my ($name, $number) = each %necessity_levels) {
+        my $config = Perl::ToPerl6::Config->new( -necessity => $name );
+        is( $config->necessity(), $number, qq{Necessity "$name" is "$number"});
     }
 }
 
@@ -463,12 +463,12 @@ SKIP: {
         'apply_transform w/o args',
     );
 
-    # Try using bogus named severity level
-    eval{ Perl::ToPerl6::Config->new( -severity => 'bogus' ) };
+    # Try using bogus named necessity level
+    eval{ Perl::ToPerl6::Config->new( -necessity => 'bogus' ) };
     like(
         $EVAL_ERROR,
-        qr/The value for the global "-severity" option [(]"bogus"[)] is not one of the valid severity names/ms,
-        'invalid severity'
+        qr/The value for the global "-necessity" option [(]"bogus"[)] is not one of the valid necessity names/ms,
+        'invalid necessity'
     );
 
     # Try using vague -single-transformer option
@@ -500,7 +500,7 @@ SKIP: {
     no warnings qw(redefine once);
     local *Perl::ToPerl6::Transformer::BasicTypes::Strings::RenameShell::is_safe = sub {return 0};
 
-    my %safe_pc_config = (-severity => 1, -only => 1, -profile => \%profile);
+    my %safe_pc_config = (-necessity => 1, -only => 1, -profile => \%profile);
     my @p = Perl::ToPerl6::Config->new( %safe_pc_config )->transformers();
     is(scalar @p, 1, 'Only loaded safe transformers without -unsafe switch');
 

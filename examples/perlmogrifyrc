@@ -50,11 +50,11 @@ in-place = 0
 only = 1
 
 #-----------------------------------------------------------------------------
-# severity: Sets the default minimum severity level for Transformers.  The
+# necessity: Sets the default minimum necessity level for Transformers.  The
 # default is 5.  If defined, this should be an integer from 1 to 5,
-# where 5 is the highest severity.
+# where 5 is the highest necessity.
 
-severity = 3
+necessity = 3
 
 #-----------------------------------------------------------------------------
 # theme:  Sets the default theme.  Only Transformers that fit into this
@@ -65,7 +65,7 @@ theme = danger + risky - pbp
 
 #-----------------------------------------------------------------------------
 # top:  Directs Perl::ToPerl6 to only report the top N Transformer transformations,
-# as ranked by their individual severity.  If defined, this should be
+# as ranked by their individual necessity.  If defined, this should be
 # a positive integer.
 
 top = 50
@@ -78,46 +78,46 @@ top = 50
 verbose = 5
 
 #-----------------------------------------------------------------------------
-# color-severity-highest: sets the color used for displaying highest
-# severity transformations when coloring is in effect. This should be a color
+# color-necessity-highest: sets the color used for displaying highest
+# necessity transformations when coloring is in effect. This should be a color
 # specification acceptable to Term::ANSIColor. See the Perl::ToPerl6 POD
 # for details. Do not put quotes around the values. The default is 'bold
 # red'.
 
-color-severity-highest = bold red underline
+color-necessity-highest = bold red underline
 
 #-----------------------------------------------------------------------------
-# color-severity-high: sets the color used for displaying high severity
+# color-necessity-high: sets the color used for displaying high necessity
 # transformations when coloring is in effect. This should be a color
 # specification acceptable to Term::ANSIColor. See the Perl::ToPerl6 POD
 # for details. Do not put quotes around the values. The default is
 # 'magenta'.
 
-color-severity-high = bold magenta
+color-necessity-high = bold magenta
 
 #-----------------------------------------------------------------------------
-# color-severity-medium: sets the color used for displaying medium
-# severity transformations when coloring is in effect. This should be a color
+# color-necessity-medium: sets the color used for displaying medium
+# necessity transformations when coloring is in effect. This should be a color
 # specification acceptable to Term::ANSIColor. See the Perl::ToPerl6 POD
 # for details. Do not put quotes around the values. The default is ''.
 
-color-severity-medium = blue
+color-necessity-medium = blue
 
 #-----------------------------------------------------------------------------
-# color-severity-low: sets the color used for displaying low severity
+# color-necessity-low: sets the color used for displaying low necessity
 # transformations when coloring is in effect. This should be a color
 # specification acceptable to Term::ANSIColor. See the Perl::ToPerl6 POD
 # for details. Do not put quotes around the values. The default is ''.
 
-color-severity-low =
+color-necessity-low =
 
 #-----------------------------------------------------------------------------
-# color-severity-lowest: sets the color used for displaying lowest
-# severity transformations when coloring is in effect. This should be a color
+# color-necessity-lowest: sets the color used for displaying lowest
+# necessity transformations when coloring is in effect. This should be a color
 # specification acceptable to Term::ANSIColor. See the Perl::ToPerl6 POD
 # for details. Do not put quotes around the values. The default is ''.
 
-color-severity-lowest =
+color-necessity-lowest =
 
 #-----------------------------------------------------------------------------
 # program-extensions: specifies the file name endings for files that should
@@ -150,19 +150,19 @@ program-extensions =
 [-BasicTypes::Strings::RewriteHereDocs]
 
 #-----------------------------------------------------------------------------
-# If you agree with a Transformer, but feel that it's severity level is not
-# appropriate, then you can change the severity for any Transformer.  If
+# If you agree with a Transformer, but feel that it's necessity level is not
+# appropriate, then you can change the necessity for any Transformer.  If
 # defined this should be an integer from 1 to 5, where 5 is the
-# highest severity.
+# highest necessity.
 
 [Builtins::RewritePrint]
-severity = 2
+necessity = 2
 
 [CompoundStatements::RenameForeach]
-severity = 1
+necessity = 1
 
 [BasicTypes::Strings::Interpolation]
-severity = 5
+necessity = 5
 
 #-----------------------------------------------------------------------------
 # Transformers are also organized into themes.  Themes are just names for
@@ -172,11 +172,11 @@ severity = 5
 
 [Operators::FormatOperators]
 add_themes = client_foo
-severity   = 3
+necessity   = 3
 
 [Packages::RewriteDeclarations]
 add_themes = client_foo client_bar
-severity   = 3
+necessity   = 3
 
 #-----------------------------------------------------------------------------
 # Some Transformers also have specialized configuration parameters.  In
@@ -186,12 +186,12 @@ severity   = 3
 
 [PostfixExpressions::AddWhitespace]
 allow    = for if
-severity = 4
+necessity = 4
 
 [Pragmas::RewritePragmas]
 lib_sections = NAME | SYNOPSIS | METHODS | AUTHOR
 add_themes = my_favorites
-severity   = 4
+necessity   = 4
 
 #-----------------------------------------------------------------------------
 # If you set the "only" flag, then Perl::ToPerl6 only chooses from

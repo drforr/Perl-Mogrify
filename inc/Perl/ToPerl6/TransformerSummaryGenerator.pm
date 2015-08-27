@@ -34,7 +34,7 @@ sub generate_transformer_summary {
 
 
     my $configuration =
-      Perl::ToPerl6::Config->new(-profile => $EMPTY, -severity => 1, -theme => 'core');
+      Perl::ToPerl6::Config->new(-profile => $EMPTY, -necessity => 1, -theme => 'core');
 
     my @transformers = $configuration->all_transformers_enabled_or_not();
     my $transformer_summary = 'lib/Perl/ToPerl6/TransformerSummary.pod';
@@ -53,8 +53,8 @@ Perl::ToPerl6::TransformerSummary - Descriptions of the Transformer modules incl
 
 The following Transformer modules are distributed with Perl::ToPerl6. (There are
 additional Transformers that can be found in add-on distributions.) Each
-Transformer is listed here with its default severity.  If you don't agree with
-the default severity, you can change it in your F<.perlmogrifyrc> file (try
+Transformer is listed here with its default necessity.  If you don't agree with
+the default necessity, you can change it in your F<.perlmogrifyrc> file (try
 C<perlmogrify --profile-proto> for a starting version).  See the documentation
 of each module for its specific details.
 
@@ -67,7 +67,7 @@ END_HEADER
 my $format = <<'END_POLICY';
 =head2 L<%s|%s>
 
-%s [Default severity %d]
+%s [Default necessity %d]
 
 END_POLICY
 
@@ -81,7 +81,7 @@ eval {
             $transformer->get_short_name(),
             $transformer->get_long_name(),
             $module_abstract || '',
-            $transformer->default_severity();
+            $transformer->default_necessity();
     }
 
     1;

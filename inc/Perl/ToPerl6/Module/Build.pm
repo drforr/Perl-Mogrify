@@ -66,7 +66,7 @@ sub _run_nytprof {
     my @perlmogrify_args =
         qw<
             --noprofile
-            --severity=1
+            --necessity=1
             --theme=core
             --exclude=TidyCode
             --exclude=PodSpelling

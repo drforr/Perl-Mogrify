@@ -32,7 +32,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
 
 {
     can_ok('Perl::ToPerl6::Transformation', 'sort_by_location');
-    can_ok('Perl::ToPerl6::Transformation', 'sort_by_severity');
+    can_ok('Perl::ToPerl6::Transformation', 'sort_by_necessity');
     can_ok('Perl::ToPerl6::Transformation', 'new');
     can_ok('Perl::ToPerl6::Transformation', 'location');
     can_ok('Perl::ToPerl6::Transformation', 'diagnostics');
@@ -51,7 +51,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
 {
     eval { Perl::ToPerl6::Transformation->new('desc', 'expl'); };
     ok($EVAL_ERROR, 'new, wrong number of args');
-    eval { Perl::ToPerl6::Transformation->new('desc', 'expl', {}, 'severity'); };
+    eval { Perl::ToPerl6::Transformation->new('desc', 'expl', {}, 'necessity'); };
     ok($EVAL_ERROR, 'new, bad arg');
 } # end scope block
 
@@ -71,7 +71,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
     is(   $viol->logical_line_number(),  1,               'logical_line_number');
     is(   $viol->column_number(),        1,               'column_number');
     is(   $viol->visual_column_number(), 1,               'visual_column_number');
-    is(   $viol->severity(),             99,              'severity');
+    is(   $viol->necessity(),             99,              'necessity');
     is(   $viol->source(),               $code,           'source');
     is(   $viol->transformer(),               $pkg,            'transformer');
     is(   $viol->element_class(),        'PPI::Document', 'element class');
@@ -120,7 +120,7 @@ use TransformationTest2;  # this is solely to test the import() method; no diagn
     is( $viol->logical_line_number(),  1,                  'logical_line_number after dropping document');
     is( $viol->column_number(),        1,                  'column_number after dropping document');
     is( $viol->visual_column_number(), 1,                  'visual_column_number after dropping document');
-    is( $viol->severity(),             99,                 'severity after dropping document');
+    is( $viol->necessity(),             99,                 'necessity after dropping document');
     is( $viol->source(),               $code,              'source after dropping document');
     is( $viol->transformer(),               $pkg,               'transformer after dropping document');
     is( $viol->element_class(),        'PPI::Token::Word', 'element class after dropping document');
@@ -163,8 +163,8 @@ END_PERL
     @transformations =
         map { Perl::ToPerl6::Transformation->new($EMPTY, $EMPTY, $document, $_) }
         @severities;
-    @sorted = Perl::ToPerl6::Transformation->sort_by_severity( @transformations );
-    is_deeply( [map {$_->severity()} @sorted], [sort @severities], 'sort_by_severity');
+    @sorted = Perl::ToPerl6::Transformation->sort_by_necessity( @transformations );
+    is_deeply( [map {$_->necessity()} @sorted], [sort @severities], 'sort_by_necessity');
 }
 
 #-----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ END_PERL
     my $expected = join q{; }, (
        1, 1,  # line, col
        'desc', 'expl',
-       1, # severity
+       1, # necessity
        'print;', # source near token[0]
        'Perl::ToPerl6::Transformer::Test', 'Test', # long, short
        '    diagnostic',
@@ -211,7 +211,7 @@ END_PERL
     is($set_format->(3), $fmt_predefined, 'set_format by number');
     is($get_format->(),  $fmt_predefined, 'get_format by number');
 
-    my $fmt_default = "%m at line %l, column %c.  %e.  (Severity: %s)\n";
+    my $fmt_default = "%m at line %l, column %c.  %e.  (Necessity: %s)\n";
     is($set_format->(999),   $fmt_default, 'set_format by invalid number');
     is($get_format->(),      $fmt_default, 'get_format by invalid number');
     is($set_format->(undef), $fmt_default, 'set_format with undef');

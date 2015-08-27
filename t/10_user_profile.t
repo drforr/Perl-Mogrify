@@ -308,7 +308,7 @@ END_PROFILE
         'Invalid profile syntax',
     );
 
-    $invalid_syntax = 'severity 2'; # Missing "="
+    $invalid_syntax = 'necessity 2'; # Missing "="
     eval { Perl::ToPerl6::UserProfile->new( -profile => \$invalid_syntax ) };
     like(
         $EVAL_ERROR,

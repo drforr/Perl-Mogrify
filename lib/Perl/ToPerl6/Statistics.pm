@@ -27,7 +27,7 @@ sub new {
     $self->{_lines_of_perl} = 0;
     $self->{_lines_of_pod} = 0;
     $self->{_transformations_by_transformer} = {};
-    $self->{_transformations_by_severity} = {};
+    $self->{_transformations_by_necessity} = {};
     $self->{_total_transformations} = 0;
 
     return $self;
@@ -77,7 +77,7 @@ sub accumulate {
     }
 
     foreach my $transformation ( @{ $transformations } ) {
-        $self->{_transformations_by_severity}->{ $transformation->severity() }++;
+        $self->{_transformations_by_necessity}->{ $transformation->necessity() }++;
         $self->{_transformations_by_transformer}->{ $transformation->transformer() }++;
         $self->{_total_transformations}++;
     }
@@ -159,10 +159,10 @@ sub lines_of_pod {
 
 #-----------------------------------------------------------------------------
 
-sub transformations_by_severity {
+sub transformations_by_necessity {
     my ( $self ) = @_;
 
-    return $self->{_transformations_by_severity};
+    return $self->{_transformations_by_necessity};
 }
 
 #-----------------------------------------------------------------------------
@@ -317,10 +317,10 @@ The total number of lines of POD analyzed by this ToPerl6. Pod occurring in a
 data section is counted as POD, not as data.
 
 
-=item C<transformations_by_severity()>
+=item C<transformations_by_necessity()>
 
-The number of transformations of each severity found by this ToPerl6 as a
-reference to a hash keyed by severity.
+The number of transformations of each necessity found by this ToPerl6 as a
+reference to a hash keyed by necessity.
 
 
 =item C<transformations_by_transformer()>

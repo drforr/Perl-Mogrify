@@ -430,7 +430,7 @@ interface will go through a deprecation cycle.
     END_CODE
 
     # Critique code against all loaded transformers...
-    my $perl_mogrify_config = { -severity => 2 };
+    my $perl_mogrify_config = { -necessity => 2 };
     my $transformation_count = transform( \$code, $perl_mogrify_config);
 
     # Critique code against one transformer...

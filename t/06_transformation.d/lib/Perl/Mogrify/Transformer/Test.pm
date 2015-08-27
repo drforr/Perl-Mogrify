@@ -7,7 +7,7 @@ use warnings;
 use Perl::ToPerl6::Utils qw{ :severities };
 use base 'Perl::ToPerl6::Transformer';
 
-sub default_severity { return $SEVERITY_LOWEST }
+sub default_necessity { return $NECESSITY_LOWEST }
 sub applies_to { return 'PPI::Token::Word' }
 
 sub transform {

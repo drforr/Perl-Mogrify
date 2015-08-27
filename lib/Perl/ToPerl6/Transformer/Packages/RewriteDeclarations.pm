@@ -24,7 +24,7 @@ Readonly::Scalar my $EXPL => q{The Perl6 equivalent of packages are classes.};
 #-----------------------------------------------------------------------------
 
 sub supported_parameters { return () }
-sub default_severity     { return $SEVERITY_HIGHEST }
+sub default_necessity     { return $NECESSITY_HIGHEST }
 sub default_themes       { return qw(core bugs)     }
 sub applies_to           { 'PPI::Document' }
 

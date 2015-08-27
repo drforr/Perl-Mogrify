@@ -67,7 +67,7 @@ sub new {
     my $self = bless {}, $class;
     $self->{_description} = $desc;
     $self->{_explanation} = $expl;
-    $self->{_severity}    = $sev;
+    $self->{_necessity}    = $sev;
     $self->{_transformer}      = caller;
 
     # PPI eviscerates the Elements in a Document when the Document gets
@@ -106,7 +106,7 @@ sub sort_by_location {
 
 #-----------------------------------------------------------------------------
 
-sub sort_by_severity {
+sub sort_by_necessity {
 
     ref $_[0] || shift;              # Can call as object or class method
     return scalar @_ if ! wantarray; # In case we are called in scalar context
@@ -115,7 +115,7 @@ sub sort_by_severity {
     return
         map {$_->[0]}
             sort { $a->[1] <=> $b->[1] }
-                map {[$_, $_->severity() || 0]}
+                map {[$_, $_->necessity() || 0]}
                     @_;
 }
 
@@ -203,9 +203,9 @@ sub explanation {
 
 #-----------------------------------------------------------------------------
 
-sub severity {
+sub necessity {
     my $self = shift;
-    return $self->{_severity};
+    return $self->{_necessity};
 }
 
 #-----------------------------------------------------------------------------
@@ -265,7 +265,7 @@ sub to_string {
          'C' => sub { $self->element_class()                },
          'm' => $self->description(),
          'e' => $self->explanation(),
-         's' => $self->severity(),
+         's' => $self->necessity(),
          'd' => sub { $self->diagnostics()                  },
          'r' => sub { $self->source()                       },
          'P' => $long_transformer,
@@ -340,7 +340,7 @@ Perl::ToPerl6::Transformation - A transformation of a Transformer found in some 
   my $elem = $doc->child(0);      # $doc is a PPI::Document object
   my $desc = 'Offending code';    # Describe the transformation
   my $expl = [1,45,67];           # Page numbers from PBP
-  my $sev  = 5;                   # Severity level of this transformation
+  my $sev  = 5;                   # Necessity level of this transformation
 
   my $vio  = Perl::ToPerl6::Transformation->new($desc, $expl, $node, $sev);
 
@@ -365,13 +365,13 @@ will go through a deprecation cycle.
 
 =over
 
-=item C<new( $description, $explanation, $element, $severity )>
+=item C<new( $description, $explanation, $element, $necessity )>
 
 Returns a reference to a new C<Perl::ToPerl6::Transformation> object. The
 arguments are a description of the transformation (as string), an
 explanation for the transformer (as string) or a series of page numbers in
 PBP (as an ARRAY ref), a reference to the L<PPI|PPI> element that
-caused the transformation, and the severity of the transformation (as an
+caused the transformation, and the necessity of the transformation (as an
 integer).
 
 
@@ -445,17 +445,17 @@ This can differ from C<filename()> when there was a C<#line> directive
 in the code.
 
 
-=item C<severity()>
+=item C<necessity()>
 
-Returns the severity of this Transformation as an integer ranging from 1 to
+Returns the necessity of this Transformation as an integer ranging from 1 to
 5, where 5 is the "most" severe.
 
 
-=item C<sort_by_severity( @transformation_objects )>
+=item C<sort_by_necessity( @transformation_objects )>
 
-If you need to sort Transformations by severity, use this handy routine:
+If you need to sort Transformations by necessity, use this handy routine:
 
-    @sorted = Perl::ToPerl6::Transformation::sort_by_severity(@transformations);
+    @sorted = Perl::ToPerl6::Transformation::sort_by_necessity(@transformations);
 
 
 =item C<sort_by_location( @transformation_objects )>
@@ -542,7 +542,7 @@ characters are:
     %p        Name of the Transformer without the Perl::ToPerl6::Transformer:: prefix
     %r        The string of source code that caused the transformation
     %C        The class of the PPI::Element that caused the transformation
-    %s        The severity level of the transformation
+    %s        The necessity level of the transformation
 
 Explanation of the C<%F>, C<%f>, C<%G>, C<%G>, C<%l>, and C<%L> formats:
 Using C<#line> directives, you can affect what perl thinks the current line

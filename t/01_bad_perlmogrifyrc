@@ -2,7 +2,7 @@
 # one that is found.
 
 # Purposely bad values
-severity = 6
+necessity = 6
 theme = &&
 include = *
 exclude = *
@@ -10,14 +10,14 @@ single-transformer = *
 profile-strictness = silly
 top = -1
 verbose = 2095
-color-severity-highest  = chartreuse
-color-severity-high     = fuschia
-color-severity-medium   = aquamarine
-color-severity-low      = paisley
-color-severity-lowest   = they've gone to plaid
+color-necessity-highest  = chartreuse
+color-necessity-high     = fuschia
+color-necessity-medium   = aquamarine
+color-necessity-low      = paisley
+color-necessity-lowest   = they've gone to plaid
 
-# This profile is used by t/01_config_color_severity.t to load invalid
-# severity colors
+# This profile is used by t/01_config_color_necessity.t to load invalid
+# necessity colors
 
 # Test non-existent parameter
 [BuiltinFunctions::RequireBlockGrep]

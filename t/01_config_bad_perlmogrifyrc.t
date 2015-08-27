@@ -22,8 +22,8 @@ our $VERSION = '0.01';
 
 #-----------------------------------------------------------------------------
 
-my @color_severity_params;
-my $skip_color_severity =
+my @color_necessity_params;
+my $skip_color_necessity =
     eval {
         require Term::ANSIColor;
         Term::ANSIColor->VERSION( $_MODULE_VERSION_TERM_ANSICOLOR );
@@ -32,19 +32,19 @@ my $skip_color_severity =
         ? undef
         : "Term::ANSIColor $_MODULE_VERSION_TERM_ANSICOLOR is not available";
 
-# We can not do the color-severity tests if Term::ANSIColor is not available,
+# We can not do the color-necessity tests if Term::ANSIColor is not available,
 # because without Term::ANSIColor the parameters are not validated, so any
 # value will be accepted and we will not get any errors from them.
-$skip_color_severity
-    or @color_severity_params = qw<
-        color-severity-highest
-        color-severity-high
-        color-severity-medium
-        color-severity-low
-        color-severity-lowest
+$skip_color_necessity
+    or @color_necessity_params = qw<
+        color-necessity-highest
+        color-necessity-high
+        color-necessity-medium
+        color-necessity-low
+        color-necessity-lowest
     >;
 
-plan tests => 13 + scalar @color_severity_params;
+plan tests => 13 + scalar @color_necessity_params;
 
 Readonly::Scalar my $PROFILE => 't/01_bad_perlmogrifyrc';
 Readonly::Scalar my $NO_ENABLED_POLICIES_MESSAGE =>
@@ -85,13 +85,13 @@ my @parameters = (
         exclude
         include
         profile-strictness
-        severity
+        necessity
         single-transformer
         theme
         top
         verbose
     >,
-    @color_severity_params,
+    @color_necessity_params,
 );
 
 my %expected_regexes =

@@ -29,82 +29,82 @@ my %options = ();
 local @ARGV = qw(-1 -2 -3 -4 -5);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 
 local @ARGV = qw(-5 -3 -4 -1 -2);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 
 local @ARGV = qw();
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, undef, 'no arguments');
+is( $options{-necessity}, undef, 'no arguments');
 
-local @ARGV = qw(-2 -3 -severity 4);
+local @ARGV = qw(-2 -3 -necessity 4);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 4, $message);
+is( $options{-necessity}, 4, $message);
 
-local @ARGV = qw(-severity 2 -3 -4);
+local @ARGV = qw(-necessity 2 -3 -4);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 2, $message);
+is( $options{-necessity}, 2, $message);
 
-local @ARGV = qw(--severity=2 -3 -4);
+local @ARGV = qw(--necessity=2 -3 -4);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 2, $message);
+is( $options{-necessity}, 2, $message);
 
 local @ARGV = qw(-cruel);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 'cruel', $message);
+is( $options{-necessity}, 'cruel', $message);
 
-local @ARGV = qw(-cruel --severity=1 );
+local @ARGV = qw(-cruel --necessity=1 );
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 
-local @ARGV = qw(-stern --severity=1 -2);
+local @ARGV = qw(-stern --necessity=1 -2);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 
-local @ARGV = qw(-stern -severity 1 -2);
+local @ARGV = qw(-stern -necessity 1 -2);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 
 #-----------------------------------------------------------------------------
 
 local @ARGV = qw(-top);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 is( $options{-top}, 20, $message);
 
 local @ARGV = qw(-top 10);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 1, $message);
+is( $options{-necessity}, 1, $message);
 is( $options{-top}, 10, $message);
 
-local @ARGV = qw(-severity 4 -top);
+local @ARGV = qw(-necessity 4 -top);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 4, $message);
+is( $options{-necessity}, 4, $message);
 is( $options{-top}, 20, $message);
 
-local @ARGV = qw(-severity 4 -top 10);
+local @ARGV = qw(-necessity 4 -top 10);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 4, $message);
+is( $options{-necessity}, 4, $message);
 is( $options{-top}, 10, $message);
 
-local @ARGV = qw(-severity 5 -2 -top 5);
+local @ARGV = qw(-necessity 5 -2 -top 5);
 $message = "@ARGV";
 %options = Perl::ToPerl6::Command::_get_options();
-is( $options{-severity}, 5, $message);
+is( $options{-necessity}, 5, $message);
 is( $options{-top}, 5, $message);
 
 #-----------------------------------------------------------------------------
@@ -169,39 +169,39 @@ is( $options{-pager}, 'foo', $message );
 
 #-----------------------------------------------------------------------------
 
-foreach my $severity ([qw{
-    -color-severity-highest
-    -colour-severity-highest
-    -color-severity-5
-    -colour-severity-5
+foreach my $necessity ([qw{
+    -color-necessity-highest
+    -colour-necessity-highest
+    -color-necessity-5
+    -colour-necessity-5
     }],
     [qw{
-    -color-severity-high
-    -colour-severity-high
-    -color-severity-4
-    -colour-severity-4
+    -color-necessity-high
+    -colour-necessity-high
+    -color-necessity-4
+    -colour-necessity-4
     }],
     [qw{
-    -color-severity-medium
-    -colour-severity-medium
-    -color-severity-3
-    -colour-severity-3
+    -color-necessity-medium
+    -colour-necessity-medium
+    -color-necessity-3
+    -colour-necessity-3
     }],
     [qw{
-    -color-severity-low
-    -colour-severity-low
-    -color-severity-2
-    -colour-severity-2
+    -color-necessity-low
+    -colour-necessity-low
+    -color-necessity-2
+    -colour-necessity-2
     }],
     [qw{
-    -color-severity-lowest
-    -colour-severity-lowest
-    -color-severity-1
-    -colour-severity-1
+    -color-necessity-lowest
+    -colour-necessity-lowest
+    -color-necessity-1
+    -colour-necessity-1
     }],
 ) {
-    my $canonical = $severity->[0];
-    foreach my $opt (@{ $severity }) {
+    my $canonical = $necessity->[0];
+    foreach my $opt (@{ $necessity }) {
         local @ARGV = ($opt => 'cyan');
         $message = "@ARGV";
         %options = eval { Perl::ToPerl6::Command::_get_options() };
@@ -254,20 +254,20 @@ foreach my $severity ([qw{
         'Negative -verbose option',
     );
 
-    local @ARGV = qw( -severity 0 );
+    local @ARGV = qw( -necessity 0 );
     eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/out [ ] of [ ] range/xms,
-        '-severity too small',
+        '-necessity too small',
     );
 
-    local @ARGV = qw( -severity 6 );
+    local @ARGV = qw( -necessity 6 );
     eval { Perl::ToPerl6::Command::_get_options() };
     like(
         $EVAL_ERROR,
         qr/out [ ] of [ ] range/xms,
-        '-severity too large',
+        '-necessity too large',
     );
 }
 

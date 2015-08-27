@@ -41,7 +41,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
 =head1 SYNOPSIS
 
   perlmogrify [-12345 | --brutal | --cruel | --harsh | --stern | --gentle]
-              [--severity number | name] [{-p | --profile} file | --noprofile]
+              [--necessity number | name] [{-p | --profile} file | --noprofile]
               [--top [ number ]] [--theme expression] [--include pattern]
               [--exclude pattern] [{-s | --single-transformer} pattern]
               [--in-place]
@@ -49,11 +49,11 @@ C<perlmogrify> - Command-line interface to transform Perl source.
               [--force | --noforce] [--statistics] [--statistics-only]
               [--count | -C] [--verbose {number | format}] [--allow-unsafe]
               [--color | --nocolor] [--pager pager] [--quiet]
-              [--color-severity-highest color_specification]
-              [--color-severity-high color_specification]
-              [--color-severity-medium color_specification]
-              [--color-severity-low color_specification]
-              [--color-severity-lowest color_specification]
+              [--color-necessity-highest color_specification]
+              [--color-necessity-high color_specification]
+              [--color-necessity-medium color_specification]
+              [--color-necessity-low color_specification]
+              [--color-necessity-lowest color_specification]
               [--files-with-transformations | -l]
               [--files-without-transformations | -L]
               [--program-extensions file_name_extension]
@@ -102,16 +102,16 @@ examples to help get you started.
     # Recursively process all Perl files beneath directory
     perlmogrify /some/directory
 
-    # Apply slightly less severe transformations too (severity >= 4)
+    # Apply slightly less severe transformations too (necessity >= 4)
     perlmogrify -4 YourModule.pm
 
-    # Same as above, but using named severity level
+    # Same as above, but using named necessity level
     perlmogrify --stern YourModule.pm
 
-    # Apply all transformations, regardless of severity (severity >= 1)
+    # Apply all transformations, regardless of necessity (necessity >= 1)
     perlmogrify -1 YourModule.pm
 
-    # Same as above, but using named severity level
+    # Same as above, but using named necessity level
     perlmogrify --brutal YourModule.pm
 
     # Apply only core transformations
@@ -158,44 +158,44 @@ directory.  See L<Perl::ToPerl6/"CONFIGURATION"> for more information.
 Directs C<perlmogrify> not to load any configuration file, thus reverting to
 the default configuration for all Transformers.
 
-=item C<--severity N>
+=item C<--necessity N>
 
-Directs C<perlmogrify> to only apply Transformers with a severity greater than
-C<N>.  Severity values are integers ranging from 1 (least severe) to 5 (most
+Directs C<perlmogrify> to only apply Transformers with a necessity greater than
+C<N>.  Necessity values are integers ranging from 1 (least severe) to 5 (most
 severe).  The default is 5.  For a given C<--profile>, decreasing the
-C<--severity> will usually produce more transformations. You can set the default
+C<--necessity> will usually produce more transformations. You can set the default
 value for this option in your F<.perlmogrifyrc> file.  You can also redefine
-the C<severity> for any Transformer in your F<.perlmogrifyrc> file.  See
+the C<necessity> for any Transformer in your F<.perlmogrifyrc> file.  See
 L<"CONFIGURATION"> for more information.
 
 =item C<-5 | -4 | -3 | -2 | -1>
 
-These are numeric shortcuts for setting the C<--severity> option.  For
-example, C<"-4"> is equivalent to C<"--severity 4">.  If multiple shortcuts
+These are numeric shortcuts for setting the C<--necessity> option.  For
+example, C<"-4"> is equivalent to C<"--necessity 4">.  If multiple shortcuts
 are specified, then the most restrictive one wins.  If an explicit
-C<--severity> option is also given, then all shortcut options are silently
-ignored.  NOTE: Be careful not to put one of the number severity shortcut
+C<--necessity> option is also given, then all shortcut options are silently
+ignored.  NOTE: Be careful not to put one of the number necessity shortcut
 options immediately after the C<--top> flag or C<perlmogrify> will interpret it
 as the number of transformations to report.
 
-=item C<--severity NAME>
+=item C<--necessity NAME>
 
-If it is difficult for you to remember whether severity "5" is the most or
+If it is difficult for you to remember whether necessity "5" is the most or
 least restrictive level, then you can use one of these named values:
 
-    SEVERITY NAME   ...is equivalent to...   SEVERITY NUMBER
+    NECESSITY NAME   ...is equivalent to...   NECESSITY NUMBER
     --------------------------------------------------------
-    --severity gentle                           --severity 5
-    --severity stern                            --severity 4
-    --severity harsh                            --severity 3
-    --severity cruel                            --severity 2
-    --severity brutal                           --severity 1
+    --necessity gentle                           --necessity 5
+    --necessity stern                            --necessity 4
+    --necessity harsh                            --necessity 3
+    --necessity cruel                            --necessity 2
+    --necessity brutal                           --necessity 1
 
 =item C<--gentle | --stern | --harsh | --cruel | --brutal>
 
-These are named shortcuts for setting the C<--severity> option.  For example,
-C<"--cruel"> is equivalent to C<"--severity 2">.  If multiple shortcuts are
-specified, then the most restrictive one wins.  If an explicit C<--severity>
+These are named shortcuts for setting the C<--necessity> option.  For example,
+C<"--cruel"> is equivalent to C<"--necessity 2">.  If multiple shortcuts are
+specified, then the most restrictive one wins.  If an explicit C<--necessity>
 option is also given, then all shortcut options are silently ignored.
 
 =item C<--theme RULE>
@@ -208,8 +208,8 @@ have a 'bugs' AND 'core' theme:
 
     $> perlmogrify --theme='bugs && core' MyModule.pm
 
-Unless the C<--severity> option is explicitly given, setting C<--theme>
-silently causes the C<--severity> to be set to 1.  You can set the default
+Unless the C<--necessity> option is explicitly given, setting C<--theme>
+silently causes the C<--necessity> to be set to 1.  You can set the default
 value for this option in your F<.perlmogrifyrc> file. See
 L<Perl::ToPerl6/"TRANSFORMER THEMES"> for more information about themes.
 
@@ -217,12 +217,12 @@ L<Perl::ToPerl6/"TRANSFORMER THEMES"> for more information about themes.
 
 Directs C<perlmogrify> to apply additional Transformers that match the regex
 C</PATTERN/imx>.  Use this option to temporarily override your profile and/or
-the severity settings at the command-line.  For example:
+the necessity settings at the command-line.  For example:
 
     perlmogrify --include=layout my_file.pl
 
 This would cause C<perlmogrify> to apply all the C<CodeLayout::*> transformers
-even if they have a severity level that is less than the default level of 5, or
+even if they have a necessity level that is less than the default level of 5, or
 have been disabled in your F<.perlmogrifyrc> file.  You can specify multiple
 C<--include> options and you can use it in conjunction with the C<--exclude>
 option.  Note that C<--exclude> takes precedence over C<--include> when a
@@ -233,12 +233,12 @@ option in your F<.perlmogrifyrc> file.
 
 Directs C<perlmogrify> to not apply any Transformer that matches the regex
 C</PATTERN/imx>.  Use this option to temporarily override your profile and/or
-the severity settings at the command-line.  For example:
+the necessity settings at the command-line.  For example:
 
     perlmogrify --exclude=strict my_file.pl
 
 This would cause C<perlmogrify> to not apply the C<RequireUseStrict> and
-C<ProhibitNoStrict> Transformers even though they have the highest severity
+C<ProhibitNoStrict> Transformers even though they have the highest necessity
 level. You can specify multiple C<--exclude> options and you can use it in
 conjunction with the C<--include> option.  Note that C<--exclude> takes
 precedence over C<--include> when a Transformer matches both patterns.  You can set
@@ -248,13 +248,13 @@ the default value for this option in your F<.perlmogrifyrc> file.
 
 Directs C<perlmogrify> to apply just one Transformer module matching the regex
 C</PATTERN/ixms>, and exclude all other Transformers.  This option has
-precedence over the C<--severity>, C<--theme>, C<--include>, C<--exclude>, and
+precedence over the C<--necessity>, C<--theme>, C<--include>, C<--exclude>, and
 C<--only> options.  For example:
 
     perlmogrify --single-transformer=nowarnings my_file.pl
 
 This would cause C<perlmogrify> to apply just the C<ProhibitNoWarnings>
-Transformer, regardless of the severity level setting.  No other Transformers
+Transformer, regardless of the necessity level setting.  No other Transformers
 would be applied.
 
 This is equivalent to what one might intend by...
@@ -272,13 +272,13 @@ containing only the desired transformer and then running...
 =item C<--top [ N ]>
 
 Directs C<perlmogrify> to report only the top C<N> Transformer transformations
-in each file, ranked by their severity.  If C<N> is not specified, it defaults
-to 20.  If the C<--severity> option (or one of the shortcuts) is not explicitly
-given, the C<--top> option implies that the minimum severity level is "1" (i.e.
-"brutal"). Users can redefine the severity for any Transformer in their
+in each file, ranked by their necessity.  If C<N> is not specified, it defaults
+to 20.  If the C<--necessity> option (or one of the shortcuts) is not explicitly
+given, the C<--top> option implies that the minimum necessity level is "1" (i.e.
+"brutal"). Users can redefine the necessity for any Transformer in their
 F<.perlmogrifyrc> file.  See L<"CONFIGURATION"> for more information.  You can
 set the default value for this option in your F<.perlmogrifyrc> file.  NOTE: Be
-careful not to put one of the severity shortcut options immediately after the
+careful not to put one of the necessity shortcut options immediately after the
 C<--top> flag or C<perlmogrify> will interpret it as the number of
 transformations to report.
 
@@ -313,14 +313,14 @@ this option in your F<.perlmogrifyrc> file.
      1            "%f:%l:%c:%m\n",
      2            "%f: (%l:%c) %m\n",
      3            "%m at %f line %l\n",
-     4            "%m at line %l, column %c.  %e.  (Severity: %s)\n",
-     5            "%f: %m at line %l, column %c.  %e.  (Severity: %s)\n",
-     6            "%m at line %l, near '%r'.  (Severity: %s)\n",
-     7            "%f: %m at line %l near '%r'.  (Severity: %s)\n",
-     8            "[%p] %m at line %l, column %c.  (Severity: %s)\n",
-     9            "[%p] %m at line %l, near '%r'.  (Severity: %s)\n",
-    10            "%m at line %l, column %c.\n  %p (Severity: %s)\n%d\n",
-    11            "%m at line %l, near '%r'.\n  %p (Severity: %s)\n%d\n"
+     4            "%m at line %l, column %c.  %e.  (Necessity: %s)\n",
+     5            "%f: %m at line %l, column %c.  %e.  (Necessity: %s)\n",
+     6            "%m at line %l, near '%r'.  (Necessity: %s)\n",
+     7            "%f: %m at line %l near '%r'.  (Necessity: %s)\n",
+     8            "[%p] %m at line %l, column %c.  (Necessity: %s)\n",
+     9            "[%p] %m at line %l, near '%r'.  (Necessity: %s)\n",
+    10            "%m at line %l, column %c.\n  %p (Necessity: %s)\n%d\n",
+    11            "%m at line %l, near '%r'.\n  %p (Necessity: %s)\n%d\n"
 
 Formats are a combination of literal and escape characters similar to the way
 C<sprintf> works.  See L<String::Format|String::Format> for a full explanation
@@ -339,7 +339,7 @@ of the formatting capabilities.  Valid escape characters are:
     %p        Name of the Transformer without the Perl::ToPerl6::Transformer:: prefix
     %r        The string of source code that caused the transformation
     %C        The class of the PPI::Element that caused the transformation
-    %s        The severity level of the transformation
+    %s        The necessity level of the transformation
 
 The purpose of these formats is to provide some compatibility with text
 editors that have an interface for parsing certain kinds of input. See
@@ -350,7 +350,7 @@ L<"EDITOR INTEGRATION"> for more information about that.
 Displays a condensed listing of all the L<Perl::ToPerl6::Transformer> modules
 that are found on this machine.  This option lists I<all> Transformers,
 regardless of your F<.perlmogrifyrc> or command line options.  For each
-Transformer, the name, default severity and default themes are shown.
+Transformer, the name, default necessity and default themes are shown.
 
 =item C<--list-enabled>
 
@@ -359,7 +359,7 @@ that I<would> be applied, if you were actually going to transform a file with
 this command. This is useful when you've constructed a complicated command or
 modified your F<.perlmogrifyrc> file and you want to see exactly which
 Transformers are going to be enforced (or not enforced, as the case may be).
-For each Transformer, the name, default severity and default themes are shown.
+For each Transformer, the name, default necessity and default themes are shown.
 
 =item C<--list-themes>
 
@@ -370,7 +370,7 @@ that are found on this machine.
 
 Displays an expanded listing of all the L<Perl::ToPerl6::Transformer> modules
 that are found on this machine.  For each Transformer, the name, default
-severity and default themes are shown, as well as the name of any additional
+necessity and default themes are shown, as well as the name of any additional
 parameters that the Transformer supports.  The format is suitable as a
 prototype for your F<.perlmogrifyrc> file.
 
@@ -406,7 +406,7 @@ get a quick handle on where a large pile of code might need the most attention.
 =item C<--color>
 =item C<--colour>
 
-This option is on when outputting to a tty.  When set, Severity 5 and 4 are
+This option is on when outputting to a tty.  When set, Necessity 5 and 4 are
 colored red and yellow, respectively.  Colorization only happens if
 L<Term::ANSIColor> is installed and it only works on non-Windows environments.
 Negate this switch to disable color.  You can set the default value for this
@@ -421,35 +421,35 @@ Setting a pager turns off color by default.  You will have to turn color on
 explicitly.  If you want color, you'll probably also want to tell your pager
 to display raw characters.  For C<less> and C<more>, use the -R switch.
 
-=item C<--color-severity-highest COLOR_SPECIFICATION>
+=item C<--color-necessity-highest COLOR_SPECIFICATION>
 
-Specifies the color to be used for highest severity transformations, as a
+Specifies the color to be used for highest necessity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
-severity-highest>, C<--color-severity-5>, or C<--colour-severity-5>.
+necessity-highest>, C<--color-necessity-5>, or C<--colour-necessity-5>.
 
-=item C<--color-severity-high COLOR_SPECIFICATION>
+=item C<--color-necessity-high COLOR_SPECIFICATION>
 
-Specifies the color to be used for high severity transformations, as a
+Specifies the color to be used for high necessity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
-severity-high>, C<--color-severity-4>, or C<--colour-severity-4>.
+necessity-high>, C<--color-necessity-4>, or C<--colour-necessity-4>.
 
-=item C<--color-severity-medium COLOR_SPECIFICATION>
+=item C<--color-necessity-medium COLOR_SPECIFICATION>
 
-Specifies the color to be used for medium severity transformations, as a
+Specifies the color to be used for medium necessity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
-severity-medium>, C<--color-severity-3>, or C<--colour-severity-3>.
+necessity-medium>, C<--color-necessity-3>, or C<--colour-necessity-3>.
 
-=item C<--color-severity-low COLOR_SPECIFICATION>
+=item C<--color-necessity-low COLOR_SPECIFICATION>
 
-Specifies the color to be used for low severity transformations, as a
+Specifies the color to be used for low necessity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
-severity-low>, C<--color-severity-2>, or C<--colour-severity-2>.
+necessity-low>, C<--color-necessity-2>, or C<--colour-necessity-2>.
 
-=item C<--color-severity-lowest COLOR_SPECIFICATION>
+=item C<--color-necessity-lowest COLOR_SPECIFICATION>
 
-Specifies the color to be used for lowest severity transformations, as a
+Specifies the color to be used for lowest necessity transformations, as a
 Term::ANSIColor color specification. Can also be specified as C<--colour-
-severity-lowest>, C<--color-severity-1>, or C<--colour-severity-1>.
+necessity-lowest>, C<--color-necessity-1>, or C<--colour-necessity-1>.
 
 =item C<--files-with-transformations>
 
@@ -551,7 +551,7 @@ block.> For example, putting any or all of these at the top of your
 F<.perlmogrifyrc> file will set the default value for the corresponding
 command-line argument.
 
-    severity  = 3                                     #Integer or named level
+    necessity  = 3                                     #Integer or named level
     only      = 1                                     #Zero or One
     in-place  = 0                                     #Zero or One
     force     = 0                                     #Zero or One
@@ -564,7 +564,7 @@ command-line argument.
 The remainder of the configuration file is a series of blocks like this:
 
     [Perl::ToPerl6::Transformer::Category::TransformerName]
-    severity = 1
+    necessity = 1
     set_themes = foo bar
     add_themes = baz
     arg1 = value1
@@ -573,14 +573,14 @@ The remainder of the configuration file is a series of blocks like this:
 C<Perl::ToPerl6::Transformer::Category::TransformerName> is the full name of a
 module that implements the transformer.
 
-C<severity> is the level of importance you wish to assign to the Transformer.
-All Transformer modules are defined with a default severity value ranging from 1
+C<necessity> is the level of importance you wish to assign to the Transformer.
+All Transformer modules are defined with a default necessity value ranging from 1
 (least severe) to 5 (most severe).  However, you may disagree with the default
-severity and choose to give it a higher or lower severity, based on your own
-coding philosophy.  You can set the C<severity> to an integer from 1 to 5, or
+necessity and choose to give it a higher or lower necessity, based on your own
+coding philosophy.  You can set the C<necessity> to an integer from 1 to 5, or
 use one of the equivalent names:
 
-    SEVERITY NAME ...is equivalent to... SEVERITY NUMBER
+    NECESSITY NAME ...is equivalent to... NECESSITY NUMBER
     ----------------------------------------------------
     gentle                                             5
     stern                                              4
@@ -602,10 +602,10 @@ into the constructor of that Transformer.  The constructors for most Transformer
 do not support arguments, and those that do should have reasonable defaults.
 See the documentation on the appropriate Transformer module for more details.
 
-Instead of redefining the severity for a given Transformer, you can completely
+Instead of redefining the necessity for a given Transformer, you can completely
 disable a Transformer by prepending a '-' to the name of the module in your
 configuration file.  In this manner, the Transformer will never be loaded,
-regardless of the C<--severity> given on the command line.
+regardless of the C<--necessity> given on the command line.
 
 A simple configuration might look like this:
 
@@ -613,20 +613,20 @@ A simple configuration might look like this:
     # I think these are really important, so always load them
 
     [TestingAndDebugging::RequireUseStrict]
-    severity = 5
+    necessity = 5
 
     [TestingAndDebugging::RequireUseWarnings]
-    severity = 5
+    necessity = 5
 
     #--------------------------------------------------------------
     # I think these are less important, so only load when asked
 
     [Variables::ProhibitPackageVars]
-    severity = 2
+    necessity = 2
 
     [ControlStructures::ProhibitPostfixControls]
     allow = if unless  # My custom configuration
-    severity = cruel   # Same as "severity = 2"
+    necessity = cruel   # Same as "necessity = 2"
 
     #--------------------------------------------------------------
     # Give these transformers a custom theme.  I can activate just
@@ -645,7 +645,7 @@ A simple configuration might look like this:
     [-ValuesAndExpressions::ProhibitMagicNumbers]
 
     #--------------------------------------------------------------
-    # For all other Transformers, I accept the default severity,
+    # For all other Transformers, I accept the default necessity,
     # so no additional configuration is required for them.
 
 Note that all transformers included with the Perl::ToPerl6 distribution that have

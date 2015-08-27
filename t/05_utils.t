@@ -62,13 +62,13 @@ sub test_export {
     can_ok('main', 'transformer_long_name');
     can_ok('main', 'transformer_short_name');
     can_ok('main', 'precedence_of');
-    can_ok('main', 'severity_to_number');
+    can_ok('main', 'necessity_to_number');
     can_ok('main', 'shebang_line');
     can_ok('main', 'verbosity_to_format');
     can_ok('main', 'is_unchecked_call');
 
     is($SPACE, q< >, 'character constants');
-    is($SEVERITY_LOWEST, 1, 'severity constants');
+    is($NECESSITY_LOWEST, 1, 'necessity constants');
     is($POLICY_NAMESPACE, 'Perl::ToPerl6::Transformer', 'Transformer namespace');
 
     return;

@@ -24,7 +24,7 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 {
     my $transformer_name = 'Perl::ToPerl6::Transformer::Packages::RewriteUsages';
-    my $params = {severity => 2, set_themes => 'betty', add_themes => 'wilma'};
+    my $params = {necessity => 2, set_themes => 'betty', add_themes => 'wilma'};
 
     my $userprof = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
     my $pf = Perl::ToPerl6::TransformerFactory->new( -profile  => $userprof );
@@ -34,8 +34,8 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
     my $transformer = $pf->create_transformer( -name => $transformer_name, -params => $params );
     is( ref $transformer, $transformer_name, 'Created correct type of transformer');
 
-    my $severity = $transformer->get_severity();
-    is( $severity, 2, 'Set the severity');
+    my $necessity = $transformer->get_necessity();
+    is( $necessity, 2, 'Set the necessity');
 
     my @themes = $transformer->get_themes();
     is_deeply( \@themes, [ qw(betty wilma) ], 'Set the theme');
@@ -83,14 +83,14 @@ Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
         'create bogus transformer',
     );
 
-    # Try using a bogus severity level
+    # Try using a bogus necessity level
     my $transformer_name = 'Packages::RewriteUsages';
-    my $transformer_params = {severity => 'bogus'};
+    my $transformer_params = {necessity => 'bogus'};
     eval{ $pf->create_transformer( -name => $transformer_name, -params => $transformer_params)};
     like(
         $EVAL_ERROR,
-        qr/Invalid [ ] severity: [ ] "bogus"/xms,
-        'create transformer w/ bogus severity',
+        qr/Invalid [ ] necessity: [ ] "bogus"/xms,
+        'create transformer w/ bogus necessity',
     );
 }
 
