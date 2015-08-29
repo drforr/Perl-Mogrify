@@ -102,11 +102,6 @@ sub to_string {
     $prototype .= "\n";
 
     $prototype .= $prefix;
-    $prototype .= q{allow-unsafe = };
-    $prototype .= $configuration->unsafe_allowed();
-    $prototype .= "\n";
-
-    $prototype .= $prefix;
     $prototype .= q{profile-strictness = };
     $prototype .= $configuration->profile_strictness();
     $prototype .= "\n";

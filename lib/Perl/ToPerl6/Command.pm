@@ -500,7 +500,6 @@ sub _get_option_specification {
         profile-strictness=s
         theme=s
         top:i
-        allow-unsafe
         verbose=s
         color-necessity-highest|colour-necessity-highest|color-necessity-5|colour-necessity-5=s
         color-necessity-high|colour-necessity-high|color-necessity-4|colour-necessity-4=s

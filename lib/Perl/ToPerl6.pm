@@ -299,7 +299,7 @@ through a deprecation cycle.
 
 =over
 
-=item C<< new( [ -profile => $FILE, -necessity => $N, -detail => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -allow-unsafe => $B, -mogrification-fatal => $B) >>
+=item C<< new( [ -profile => $FILE, -necessity => $N, -detail => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -mogrification-fatal => $B) >>
 
 =item C<< new() >>
 
@@ -434,10 +434,6 @@ specification.  See L<Perl::ToPerl6::Transformation|Perl::ToPerl6::Transformatio
 explanation of format specifications.  You can set the default value for this
 option in your F<.perlmogrifyrc> file.
 
-B<-unsafe> directs Perl::ToPerl6 to allow the use of Transformers that are
-marked as "unsafe" by the author.  Such transformers may compile untrusted code
-or do other nefarious things.
-
 B<-color> and B<-pager> are not used by Perl::ToPerl6 but is provided for the
 benefit of L<perlmogrify|perlmogrify>.
 
@@ -564,7 +560,6 @@ constructor argument.
     exclude    = Variables  Modules::RequirePackage    #Space-delimited list
     mogrification-fatal = 1                            #Zero or One
     color               = 1                            #Zero or One
-    allow-unsafe        = 1                            #Zero or One
     pager               = less                         #pager to pipe output to
 
 The remainder of the configuration file is a series of blocks like this:

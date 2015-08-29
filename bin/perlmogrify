@@ -48,7 +48,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
               [--detail number]
               [--only | --noonly] [--profile-strictness {warn|fatal|quiet}]
               [--force | --noforce] [--statistics] [--statistics-only]
-              [--count | -C] [--verbose {number | format}] [--allow-unsafe]
+              [--count | -C] [--verbose {number | format}]
               [--color | --nocolor] [--pager pager] [--quiet]
               [--color-necessity-highest color_specification]
               [--color-necessity-high color_specification]
@@ -496,18 +496,6 @@ C<m/PATTERN/ixms>.  Since Transformer modules tend to have rather long names, th
 just provides a more convenient way to say something like: C<"perldoc
 Perl::ToPerl6::Transformer::ValuesAndExpressions::RequireUpperCaseH
 eredocTerminator"> at the command prompt.
-
-=item C<--allow-unsafe>
-
-This option directs C<perlmogrify> to allow the use of Transformers that have
-been marked as "unsafe".  Unsafe Transformers may result in risky operations by
-compiling and executing the code they analyze.  All the Transformers that ship
-in the core L<Perl::ToPerl6> distribution are safe.  However, third- party
-Transformers, such as those in the L<Perl::ToPerl6::Dynamic> distribution are
-not safe. Note that "safety" is honorary -- if a Transformer author marks a
-Transformer as safe, it is not a guarantee that it won't do nasty things. 
-B<If you don't trust your Transformers and the code you are analyzing, then do
-not use this switch>.
 
 =item C<--quiet>
 

@@ -52,7 +52,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
                 ->all_transformers_enabled_or_not();
 
 #    plan tests => 93 + $all_transformer_count - (129-88); # XXX Look into this later
-plan tests => 96;
+plan tests => 86;
 diag("XXX Fix the transformer count later");
 }
 
@@ -302,8 +302,6 @@ SKIP: {
         -force
         -color
         -pager
-        -allow-unsafe
-        -mogrification-fatal
         -color-necessity-highest
         -color-necessity-high
         -color-necessity-medium
@@ -326,9 +324,7 @@ SKIP: {
     is( $c->top(),              0,      'Undefined -top');
     is( $c->color(),            $color, 'Undefined -color');
     is( $c->pager(),            q{},    'Undefined -pager');
-    is( $c->unsafe_allowed(),   0,      'Undefined -allow-unsafe');
     is( $c->verbose(),          4,      'Undefined -verbose');
-    is( $c->mogrification_fatal(),  0,      'Undefined -mogrification-fatal');
     is( $c->color_necessity_highest(),
         $PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT,
         'Undefined -color-necessity-highest'
@@ -363,9 +359,7 @@ SKIP: {
     is( $c->top(),                 0,      'zero -top');
     is( $c->color(),               $FALSE, 'zero -color');
     is( $c->pager(),               $EMPTY, 'zero -pager');
-    is( $c->unsafe_allowed(),      0,      'zero -allow-unsafe');
     is( $c->verbose(),             4,      'zero -verbose');
-    is( $c->mogrification_fatal(), 0,      'zero -mogrification-fatal');
 
     my %empty_args = map { $_ => q{} } @switches;
     $c = Perl::ToPerl6::Config->new( %empty_args );
@@ -378,9 +372,7 @@ SKIP: {
     is( $c->top(),                    0,      'empty -top');
     is( $c->color(),                  $FALSE, 'empty -color');
     is( $c->pager(),                  q{},    'empty -pager');
-    is( $c->unsafe_allowed(),         0,      'empty -allow-unsafe');
     is( $c->verbose(),                4,      'empty -verbose');
-    is( $c->mogrification_fatal(),    0,      'empty -mogrification-fatal');
     is( $c->color_necessity_highest(), $EMPTY, 'empty -color-necessity-highest');
     is( $c->color_necessity_high(),    $EMPTY, 'empty -color-necessity-high');
     is( $c->color_necessity_medium(),  $EMPTY, 'empty -color-necessity-medium');
@@ -416,7 +408,7 @@ SKIP: {
 
 {
     my %true_defaults = (
-        force => 1, only  => 1, top => 10, 'allow-unsafe' => 1,
+        force => 1, only  => 1, top => 10
     );
     my %profile  = ( '__defaults__' => \%true_defaults );
 
@@ -424,14 +416,12 @@ SKIP: {
         -force          => 0,
         -only           => 0,
         -top            => 0,
-        '-allow-unsafe' => 0,
         -profile        => \%profile,
     );
     my $config = Perl::ToPerl6::Config->new( %pc_config );
     is( $config->force, 0, '-force: default is true, arg is false');
     is( $config->only,  0, '-only: default is true, arg is false');
     is( $config->top,   0, '-top: default is true, arg is false');
-    is( $config->unsafe_allowed, 0, '-allow-unsafe: default is true, arg is false');
 }
 
 #-----------------------------------------------------------------------------
@@ -491,31 +481,6 @@ SKIP: {
         qr/did [ ] not [ ] match [ ] any [ ] transformers/xms,
         'invalid -single-transformer',
     );
-}
-
-#-----------------------------------------------------------------------------
-# Test the -allow-unsafe switch
-{
-    my %profile = (
-        'BasicTypes::Strings::RenameShell' => {},
-        'Variables::QuoteHashKeys' => {},
-    );
-
-    # Pretend that ProhibitQuotedWordLists is actually unsafe
-    no warnings qw(redefine once);
-    local *Perl::ToPerl6::Transformer::BasicTypes::Strings::RenameShell::is_safe = sub {return 0};
-
-    my %safe_pc_config = (-necessity => 1, -only => 1, -profile => \%profile);
-    my @p = Perl::ToPerl6::Config->new( %safe_pc_config )->transformers();
-    is(scalar @p, 1, 'Only loaded safe transformers without -unsafe switch');
-
-    my %unsafe_pc_config = (%safe_pc_config, '-allow-unsafe' => 1);
-    @p = Perl::ToPerl6::Config->new( %unsafe_pc_config )->transformers();
-    is(scalar @p, 2, 'Also loaded unsafe transformers with -allow-unsafe switch');
-
-    my %singular_pc_config = ('-single-transformer' => 'Variables::QuoteHashKeys');
-    @p = Perl::ToPerl6::Config->new( %singular_pc_config )->transformers();
-    is(scalar @p, 1, '-single-transformer always loads Transformer, even if unsafe');
 }
 
 #-----------------------------------------------------------------------------

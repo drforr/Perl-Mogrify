@@ -6,7 +6,7 @@ use warnings;
 
 use English qw<-no_match_vars>;
 
-use Test::More tests => 29;
+use Test::More tests => 28;
 
 
 #-----------------------------------------------------------------------------
@@ -45,9 +45,6 @@ is(
     undef,
     'is_enabled() initially returns undef',
 );
-
-
-ok( !! $p->is_safe(), 'is_safe() returns a true value by default.' );
 
 
 # Test default application...

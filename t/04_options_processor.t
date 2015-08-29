@@ -10,7 +10,7 @@ use Perl::ToPerl6::OptionsProcessor;
 use Perl::ToPerl6::Utils qw< :booleans >;
 use Perl::ToPerl6::Utils::Constants qw< :color_necessity >;
 
-use Test::More tests => 58;
+use Test::More tests => 56;
 
 #-----------------------------------------------------------------------------
 
@@ -33,7 +33,6 @@ our $VERSION = '0.01';
     is($processor->color(),    $color,      'native default color');
     is($processor->pager(),    q{},         'native default pager');
     is($processor->verbose(),  4,           'native default verbose');
-    is($processor->mogrification_fatal,   0,    'native default mogrification-fatal');
     is_deeply($processor->include(), [],    'native default include');
     is_deeply($processor->exclude(), [],    'native default exclude');
     is($processor->color_necessity_highest(),
@@ -69,7 +68,6 @@ our $VERSION = '0.01';
          color                    => $FALSE,
          pager                    => 'less',
          verbose                  => 7,
-         'mogrification-fatal'    => 1,
          include                  => 'foo bar',
          exclude                  => 'baz nuts',
          'color-necessity-highest' => 'chartreuse',
@@ -91,7 +89,6 @@ our $VERSION = '0.01';
     is($processor->color(),    $FALSE,        'user default color');
     is($processor->pager(),    'less',        'user default pager');
     is($processor->verbose(),  7,             'user default verbose');
-    is($processor->mogrification_fatal(),  1, 'user default mogrification_fatal');
     is_deeply($processor->include(),
               [ qw(foo bar) ], 'user default include');
     is_deeply($processor->exclude(),

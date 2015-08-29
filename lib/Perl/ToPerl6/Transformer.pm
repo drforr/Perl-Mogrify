@@ -109,12 +109,6 @@ sub new {
 
 #-----------------------------------------------------------------------------
 
-sub is_safe {
-    return $TRUE;
-}
-
-#-----------------------------------------------------------------------------
-
 sub initialize_if_enabled {
     return $TRUE;
 }
@@ -774,22 +768,6 @@ they are evaluated in string context.
 Returns a string representation of the transformer.  The content of the
 string depends on the current value returned by C<get_format()>.
 See L<"OVERLOADS"> for the details.
-
-
-=item C<is_safe()>
-
-Answer whether this Transformer can be used to analyze untrusted code, i.e. the
-Transformer doesn't have any potential side effects.
-
-This method returns a true value by default.
-
-An "unsafe" transformer might attempt to compile the code, which, if you have
-C<BEGIN> or C<CHECK> blocks that affect files or connect to databases, is not
-a safe thing to do.  If you are writing a such a Transformer, then you should
-override this method to return false.
-
-By default L<Perl::ToPerl6|Perl::ToPerl6> will not run unsafe transformers.
-
 
 
 =back

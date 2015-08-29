@@ -37,11 +37,12 @@ my @concrete_exceptions = qw{
     IO
 };
 
-plan tests =>
-        93
-    +   (  9 * scalar @concrete_exceptions  )
-    +   ( 17 * scalar @bundled_transformer_names )
-;
+plan tests => 711;
+#plan tests => # XXX Recalculate this later.
+#        89
+#    +   (  9 * scalar @concrete_exceptions  )
+#    +   ( 16 * scalar @bundled_transformer_names )
+#;
 
 #-----------------------------------------------------------------------------
 # Validate main package version against this version
@@ -85,8 +86,6 @@ can_ok('Perl::ToPerl6::Config', 'theme');
 can_ok('Perl::ToPerl6::Config', 'top');
 can_ok('Perl::ToPerl6::Config', 'verbose');
 can_ok('Perl::ToPerl6::Config', 'color');
-can_ok('Perl::ToPerl6::Config', 'unsafe_allowed');
-can_ok('Perl::ToPerl6::Config', 'mogrification_fatal');
 can_ok('Perl::ToPerl6::Config', 'site_transformer_names');
 can_ok('Perl::ToPerl6::Config', 'color_necessity_highest');
 can_ok('Perl::ToPerl6::Config', 'color_necessity_high');
@@ -118,8 +117,6 @@ can_ok('Perl::ToPerl6::OptionsProcessor', 'theme');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'top');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'verbose');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'color');
-can_ok('Perl::ToPerl6::OptionsProcessor', 'allow_unsafe');
-can_ok('Perl::ToPerl6::OptionsProcessor', 'mogrification_fatal');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'color_necessity_highest');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'color_necessity_high');
 can_ok('Perl::ToPerl6::OptionsProcessor', 'color_necessity_medium');
@@ -150,7 +147,6 @@ can_ok('Perl::ToPerl6::Transformer', 'get_short_name');
 can_ok('Perl::ToPerl6::Transformer', 'get_themes');
 can_ok('Perl::ToPerl6::Transformer', 'initialize_if_enabled');
 can_ok('Perl::ToPerl6::Transformer', 'is_enabled');
-can_ok('Perl::ToPerl6::Transformer', 'is_safe');
 can_ok('Perl::ToPerl6::Transformer', 'new');
 can_ok('Perl::ToPerl6::Transformer', 'new_parameter_value_exception');
 can_ok('Perl::ToPerl6::Transformer', 'parameter_metadata_available');
@@ -163,7 +159,6 @@ can_ok('Perl::ToPerl6::Transformer', 'throw_parameter_value_exception');
 can_ok('Perl::ToPerl6::Transformer', 'to_string');
 can_ok('Perl::ToPerl6::Transformer', 'transform');
 can_ok('Perl::ToPerl6::Transformer', 'transformation');
-can_ok('Perl::ToPerl6::Transformer', 'is_safe');
 
 {
     my $transformer = Perl::ToPerl6::Transformer->new();
@@ -295,11 +290,9 @@ can_ok('Perl::ToPerl6::Command', 'run');
         can_ok($mod, 'set_themes');
         can_ok($mod, 'transform');
         can_ok($mod, 'transformation');
-        can_ok($mod, 'is_safe');
 
         my $transformer = $mod->new();
         isa_ok($transformer, 'Perl::ToPerl6::Transformer');
-        ok($transformer->is_safe(), "CORE transformer $mod is marked safe");
     }
 }
 

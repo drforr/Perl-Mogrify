@@ -55,9 +55,7 @@ sub _init {
     $self->{_theme}           = dor(delete $args{theme},              $EMPTY);
     $self->{_top}             = dor(delete $args{top},                $FALSE);
     $self->{_verbose}         = dor(delete $args{verbose},            $DEFAULT_VERBOSITY);
-    $self->{_mogrification_fatal} = dor(delete $args{'mogrification-fatal'},  $FALSE);
     $self->{_pager}           = dor(delete $args{pager},              $EMPTY);
-    $self->{_allow_unsafe}    = dor(delete $args{'allow-unsafe'},     $FALSE);
 
     $self->{_color_necessity_highest} = dor(
         delete $args{'color-necessity-highest'},
@@ -204,20 +202,6 @@ sub color {
 sub pager {
     my ($self) = @_;
     return $self->{_pager};
-}
-
-#-----------------------------------------------------------------------------
-
-sub allow_unsafe {
-    my ($self) = @_;
-    return $self->{_allow_unsafe};
-}
-
-#-----------------------------------------------------------------------------
-
-sub mogrification_fatal {
-    my ($self) = @_;
-    return $self->{_mogrification_fatal};
 }
 
 #-----------------------------------------------------------------------------
@@ -408,15 +392,6 @@ Returns the default C<color> setting. (Either 1 or 0).
 Returns the default C<pager> setting. (Either empty string or the pager
 command string).
 
-
-=item C< allow_unsafe() >
-
-Returns the default C<allow-unsafe> setting. (Either 1 or 0).
-
-
-=item C< mogrification_fatal() >
-
-Returns the default C<mogrification-fatal> setting (Either 1 or 0).
 
 =item C< color_necessity_highest() >
 

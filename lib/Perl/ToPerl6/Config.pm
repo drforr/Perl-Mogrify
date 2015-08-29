@@ -118,14 +118,6 @@ sub _init {
     $self->{_in_place}  = boolean_to_number( dor( $args{'-in-place'},  $options_processor->in_place()  ) );
     $self->{_only}  = boolean_to_number( dor( $args{-only},  $options_processor->only()  ) );
     $self->{_color} = boolean_to_number( dor( $args{-color}, $options_processor->color() ) );
-    $self->{_unsafe_allowed} =
-        boolean_to_number(
-            dor( $args{'-allow-unsafe'}, $options_processor->allow_unsafe()
-        ) );
-    $self->{_mogrification_fatal} =
-        boolean_to_number(
-            dor( $args{'-mogrification-fatal'}, $options_processor->mogrification_fatal() )
-        );
 
 
     # Construct a Factory with the Profile
@@ -224,9 +216,6 @@ sub _load_transformers {
             }
             next;
         }
-
-        # Always exclude unsafe transformers, unless instructed not to
-        next if not ( $transformer->is_safe() or $self->unsafe_allowed() );
 
         # To load, or not to load -- that is the question.
         my $load_me = $self->only() ? $FALSE : $TRUE;
@@ -948,20 +937,6 @@ sub pager  {
 
 #-----------------------------------------------------------------------------
 
-sub unsafe_allowed {
-    my ($self) = @_;
-    return $self->{_unsafe_allowed};
-}
-
-#-----------------------------------------------------------------------------
-
-sub mogrification_fatal {
-    my ($self) = @_;
-    return $self->{_mogrification_fatal};
-}
-
-#-----------------------------------------------------------------------------
-
 sub site_transformer_names {
     return Perl::ToPerl6::TransformerFactory::site_transformer_names();
 }
@@ -1174,16 +1149,6 @@ Returns the value of the C<-color> attribute for this Config.
 Returns the value of the C<-pager> attribute for this Config.
 
 
-=item C< unsafe_allowed() >
-
-Returns the value of the C<-allow-unsafe> attribute for this Config.
-
-
-=item C< mogrification_fatal() >
-
-Returns the value of the C<-mogrifysm-fatal> attribute for this Config.
-
-
 =item C< color_necessity_highest() >
 
 Returns the value of the C<-color-necessity-highest> attribute for this
@@ -1280,12 +1245,11 @@ corresponding Perl::ToPerl6 constructor argument.
     include   = NamingConventions ClassHierarchies    #Space-delimited list
     exclude   = Variables  Modules::RequirePackage    #Space-delimited list
     color     = 1                                     #Zero or One
-    allow_unsafe = 1                                  #Zero or One
-    color-necessity-highest = bold red                 #Term::ANSIColor
-    color-necessity-high = magenta                     #Term::ANSIColor
-    color-necessity-medium =                           #no coloring
-    color-necessity-low =                              #no coloring
-    color-necessity-lowest =                           #no coloring
+    color-necessity-highest = bold red                #Term::ANSIColor
+    color-necessity-high = magenta                    #Term::ANSIColor
+    color-necessity-medium =                          #no coloring
+    color-necessity-low =                             #no coloring
+    color-necessity-lowest =                          #no coloring
     program-extensions =                              #Space-delimited list
 
 The remainder of the configuration file is a series of blocks like
