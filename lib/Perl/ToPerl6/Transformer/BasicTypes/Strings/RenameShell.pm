@@ -5,11 +5,9 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::ToPerl6::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :severities };
 
 use base 'Perl::ToPerl6::Transformer';
-
-our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
@@ -20,9 +18,9 @@ Readonly::Scalar my $EXPL =>
 #-----------------------------------------------------------------------------
 
 sub run_after            { return 'BasicTypes::Strings::AddWhitespace' }
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw( core )         }
 sub applies_to           { return 'PPI::Token::QuoteLike::Command' }
 
 #-----------------------------------------------------------------------------

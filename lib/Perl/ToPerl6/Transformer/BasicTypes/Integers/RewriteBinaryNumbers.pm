@@ -5,11 +5,9 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::ToPerl6::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :severities };
 
 use base 'Perl::ToPerl6::Transformer';
-
-our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
@@ -18,18 +16,13 @@ Readonly::Scalar my $EXPL => q{Perl6 binary integers look like :2<0011>};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw( core )         }
 sub applies_to           { return 'PPI::Token::Number::Binary' }
 
 #-----------------------------------------------------------------------------
 
-#
-# 0b0101       --> :2<0101>
-# 0b010_101_01 --> :2<010_101_01>
-# 0b010__101_01 --> :2<010_101_01>
-#
 sub transform {
     my ($self, $elem, $doc) = @_;
 

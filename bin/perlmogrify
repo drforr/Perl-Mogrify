@@ -684,7 +684,7 @@ already written it.  See L<Perl::ToPerl6/"SEE ALSO"> for a list of some of
 these distributions.
 
 
-=head1 POLICY THEMES
+=head1 TRANSFORMER THEMES
 
 Each Transformer is defined with one or more "themes".  Themes can be used to
 create arbitrary groups of Transformers.  They are intended to provide an

@@ -5,12 +5,10 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::ToPerl6::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :severities };
 use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word dscanf make_ppi_structure_list };
 
 use base 'Perl::ToPerl6::Transformer';
-
-our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
@@ -23,9 +21,9 @@ Readonly::Scalar my $EXPL => q{Transform 'new Foo()' to 'Foo->new()'};
 # Run before '->' --> '.' conversion so we don't have to worry.
 #
 sub run_before           { return 'Operators::FormatOperators' }
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub supported_parameters { return ()                           }
+sub default_necessity    { return $NECESSITY_HIGHEST           }
+sub default_themes       { return qw( core )                   }
 sub applies_to           {
     return sub {
         dscanf('new %W %L')->(@_) ||

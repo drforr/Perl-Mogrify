@@ -5,12 +5,10 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::ToPerl6::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :severities };
 use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_quotelike_words_like };
 
 use base 'Perl::ToPerl6::Transformer';
-
-our $VERSION = '0.031';
 
 #-----------------------------------------------------------------------------
 
@@ -20,9 +18,9 @@ Readonly::Scalar my $EXPL =>
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return ()                             }
-sub default_necessity     { return $NECESSITY_HIGHEST              }
-sub default_themes       { return qw(core bugs)                  }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw(core bugs)      }
 sub applies_to           {
     return sub {
         is_ppi_token_quotelike_words_like($_[1],qr{^qw\(})
@@ -30,7 +28,6 @@ sub applies_to           {
 }
 
 #-----------------------------------------------------------------------------
-
 #
 # Note to the reader:
 #
@@ -38,12 +35,11 @@ sub applies_to           {
 # entire 'qw{...}' token. Therefore we can't add a Token::Whitespace between
 # the 'qw' and '{..}' like we can with loops and conditionals.
 #
-
 sub transform {
     my ($self, $elem, $doc) = @_;
     my $old_content = $elem->content;
 
-    $old_content =~ s{^qw\(}{qw (};
+    $old_content =~ s< ^ qw\( ><qw (>x;
 
     $elem->set_content( $old_content );
 

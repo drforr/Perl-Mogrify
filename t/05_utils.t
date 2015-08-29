@@ -69,7 +69,7 @@ sub test_export {
 
     is($SPACE, q< >, 'character constants');
     is($NECESSITY_LOWEST, 1, 'necessity constants');
-    is($POLICY_NAMESPACE, 'Perl::ToPerl6::Transformer', 'Transformer namespace');
+    is($TRANSFORMER_NAMESPACE, 'Perl::ToPerl6::Transformer', 'Transformer namespace');
 
     return;
 }
@@ -285,7 +285,7 @@ sub test_is_subroutine_name {
 
 sub test_transformer_long_name_and_transformer_short_name {
     my $short_name = 'Baz::Nuts';
-    my $long_name  = "${POLICY_NAMESPACE}::$short_name";
+    my $long_name  = "${TRANSFORMER_NAMESPACE}::$short_name";
     is( transformer_long_name(  $short_name ), $long_name,  'transformer_long_name'  );
     is( transformer_long_name(  $long_name  ), $long_name,  'transformer_long_name'  );
     is( transformer_short_name( $short_name ), $short_name, 'transformer_short_name' );

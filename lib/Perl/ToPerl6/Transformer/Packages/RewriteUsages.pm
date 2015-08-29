@@ -5,12 +5,10 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::ToPerl6::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :severities };
 use Perl::ToPerl6::Utils::PPI qw{ is_module_name is_pragma };
 
 use base 'Perl::ToPerl6::Transformer';
-
-our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
@@ -26,9 +24,9 @@ my %map = (
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw( core )         }
 sub applies_to           {
     return sub {
         $_[1]->isa('PPI::Statement::Include') and

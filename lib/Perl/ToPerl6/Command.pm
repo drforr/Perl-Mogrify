@@ -709,6 +709,11 @@ Turn this into an object.
 
 =head1 AUTHOR
 
+Jeffrey Goff <drforr@pobox.com>
+
+
+=head1 AUTHOR EMERITUS
+
 Jeffrey Ryan Thalhammer <jeff@imaginative-software.com>
 
 

@@ -1,3 +1,6 @@
 *.swp
 *.pl6
 *.pm6
+Build
+_build
+blib

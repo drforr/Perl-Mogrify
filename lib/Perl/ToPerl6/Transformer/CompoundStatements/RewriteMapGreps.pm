@@ -10,8 +10,6 @@ use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word make_ppi_structure_block };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC => q{Transform 'given()' to 'given ()'};
@@ -27,9 +25,9 @@ my %map = (
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw( core )         }
 sub applies_to           {
     return sub {
         is_ppi_token_word($_[1], %map) and

@@ -29,7 +29,7 @@ Readonly::Array our @EXPORT_OK => qw(
     $TRUE
     $FALSE
 
-    $POLICY_NAMESPACE
+    $TRANSFORMER_NAMESPACE
 
     $NECESSITY_HIGHEST
     $NECESSITY_HIGH
@@ -175,7 +175,7 @@ Readonly::Hash our %EXPORT_TAGS => (
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar our $POLICY_NAMESPACE => 'Perl::ToPerl6::Transformer';
+Readonly::Scalar our $TRANSFORMER_NAMESPACE => 'Perl::ToPerl6::Transformer';
 
 #-----------------------------------------------------------------------------
 
@@ -892,8 +892,8 @@ sub is_in_void_context {
 
 sub transformer_long_name {
     my ( $transformer_name ) = @_;
-    if ( $transformer_name !~ m{ \A $POLICY_NAMESPACE }xms ) {
-        $transformer_name = $POLICY_NAMESPACE . q{::} . $transformer_name;
+    if ( $transformer_name !~ m{ \A $TRANSFORMER_NAMESPACE }xms ) {
+        $transformer_name = $TRANSFORMER_NAMESPACE . q{::} . $transformer_name;
     }
     return $transformer_name;
 }
@@ -902,7 +902,7 @@ sub transformer_long_name {
 
 sub transformer_short_name {
     my ( $transformer_name ) = @_;
-    $transformer_name =~ s{\A $POLICY_NAMESPACE ::}{}xms;
+    $transformer_name =~ s{\A $TRANSFORMER_NAMESPACE ::}{}xms;
     return $transformer_name;
 }
 

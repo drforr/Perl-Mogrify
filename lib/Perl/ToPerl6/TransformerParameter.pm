@@ -374,7 +374,7 @@ C<%d>.  Takes a parameter of a prefix for the beginning of each line.
 
 =head1 SEE ALSO
 
-L<Perl::ToPerl6::DEVELOPER/"MAKING YOUR POLICY CONFIGURABLE">
+L<Perl::ToPerl6::DEVELOPER/"MAKING YOUR TRANSFORMER CONFIGURABLE">
 
 
 =head1 AUTHOR

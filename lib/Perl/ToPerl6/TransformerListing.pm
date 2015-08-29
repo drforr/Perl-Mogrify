@@ -66,7 +66,7 @@ to change without notice.
 
 =over
 
-=item C<< new( -transformers => \@POLICY_OBJECTS ) >>
+=item C<< new( -transformers => \@TRANSFORMER_OBJECTS ) >>
 
 Returns a reference to a new C<Perl::ToPerl6::TransformerListing> object.
 

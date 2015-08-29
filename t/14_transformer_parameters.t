@@ -23,14 +23,16 @@ use Test::More; #plan set below!
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 #-----------------------------------------------------------------------------
-# This program proves that each transformer that ships with Perl::ToPerl6 overrides
-# the supported_parameters() method and, assuming that the transformer is
-# configurable, that each parameter can parse its own default_string.
+# This program proves that each transformer that ships with Perl::ToPerl6
+# overrides the supported_parameters() method and, assuming that the
+# transformer is configurable, that each parameter can parse its own
+# default_string.
 #
 # This program also verifies that Perl::ToPerl6::TransformerFactory throws an
-# exception when we try to create a transformer with bogus parameters.  However, it
-# is your responsibility to verify that valid parameters actually work as
-# expected.  You can do this by using the #parms directive in the *.run files.
+# exception when we try to create a transformer with bogus parameters.
+# However, it is your responsibility to verify that valid parameters actually
+# work as expected.  You can do this by using the #parms directive in the
+# *.run files.
 #-----------------------------------------------------------------------------
 
 # Figure out how many tests there will be...

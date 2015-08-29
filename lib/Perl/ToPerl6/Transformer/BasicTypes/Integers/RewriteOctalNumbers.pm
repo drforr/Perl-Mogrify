@@ -9,8 +9,6 @@ use Perl::ToPerl6::Utils qw{ :characters :severities };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC => q{Transforms 0o11 and 011 into :8<11>};
@@ -18,9 +16,9 @@ Readonly::Scalar my $EXPL => q{Perl6 octal integers look like :8<0011>};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw( core )         }
 sub applies_to           { return 'PPI::Token::Number::Octal' }
 
 #-----------------------------------------------------------------------------

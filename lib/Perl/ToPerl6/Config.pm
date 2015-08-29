@@ -33,7 +33,7 @@ our $VERSION = '0.03';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $SINGLE_POLICY_CONFIG_KEY => 'single-transformer';
+Readonly::Scalar my $SINGLE_TRANSFORMER_CONFIG_KEY => 'single-transformer';
 
 #-----------------------------------------------------------------------------
 # Constructor
@@ -77,8 +77,8 @@ sub _init {
         'exclude', $args{-exclude}, $options_processor->exclude(), $errors
     );
     $self->_validate_and_save_regex(
-        $SINGLE_POLICY_CONFIG_KEY,
-        $args{ qq/-$SINGLE_POLICY_CONFIG_KEY/ },
+        $SINGLE_TRANSFORMER_CONFIG_KEY,
+        $args{ qq/-$SINGLE_TRANSFORMER_CONFIG_KEY/ },
         $options_processor->single_transformer(),
         $errors,
     );
@@ -344,7 +344,7 @@ sub _add_single_transformer_exception_to {
 
     $errors->add_exception(
         $self->_new_global_value_exception(
-            option_name     => $SINGLE_POLICY_CONFIG_KEY,
+            option_name     => $SINGLE_TRANSFORMER_CONFIG_KEY,
             option_value    => $patterns,
             message_suffix  => $message_suffix,
         )
@@ -1377,7 +1377,7 @@ L<Perl::ToPerl6::TransformerSummary|Perl::ToPerl6::TransformerSummary> and in mo
 detail in the individual modules themselves.
 
 
-=head1 POLICY THEMES
+=head1 TRANSFORMER THEMES
 
 Each Transformer is defined with one or more "themes".  Themes can be used
 to create arbitrary groups of Transformers.  They are intended to provide

@@ -445,7 +445,7 @@ Loads all the F<*.run> files beneath the C<-test-directory> and runs the
 tests.  If C<-test-directory> is not specified, it defaults to F<t/>.
 C<-transformers> is an optional reference to an array of shortened Transformer names.
 If C<-transformers> specified, only the tests for Transformers that match one
-of the C<m/$POLICY_NAME/imx> will be run.
+of the C<m/$TRANSFORMER_NAME/imx> will be run.
 
 
 =back
@@ -553,11 +553,15 @@ Test that we have a t/*/*.run for each lib/*/*.pm
 
 =head1 AUTHOR
 
+Jeffrey Goff <drforr@pobox.com>
+
+=head1 AUTHOR EMERITUS
+
 Andy Lester, Jeffrey Ryan Thalhammer <thaljef@cpan.org>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2009-2011 Andy Lester.  All rights reserved.
+Copyright (c) 2015 Jeffrey Goff, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.  The full text of this license

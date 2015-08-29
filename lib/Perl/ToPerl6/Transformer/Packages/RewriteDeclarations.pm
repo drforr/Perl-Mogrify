@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Readonly;
 
-use Perl::ToPerl6::Utils qw{ :characters :severities };
+use Perl::ToPerl6::Utils qw{ :severities };
 use Perl::ToPerl6::Utils::PPI qw{
     is_ppi_token_word
     is_package_boundary
@@ -14,8 +14,6 @@ use Perl::ToPerl6::Utils::PPI qw{
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC => q{Transform 'package' declaration into 'class'};
@@ -23,10 +21,10 @@ Readonly::Scalar my $EXPL => q{The Perl6 equivalent of packages are classes.};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return () }
-sub default_necessity     { return $NECESSITY_HIGHEST }
-sub default_themes       { return qw(core bugs)     }
-sub applies_to           { 'PPI::Document' }
+sub supported_parameters { return ()                 }
+sub default_necessity    { return $NECESSITY_HIGHEST }
+sub default_themes       { return qw( core )         }
+sub applies_to           { return 'PPI::Document'    }
 
 #-----------------------------------------------------------------------------
 

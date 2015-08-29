@@ -64,12 +64,12 @@ of each module for its specific details.
 END_HEADER
 
 
-my $format = <<'END_POLICY';
+my $format = <<'END_TRANSFORMER';
 =head2 L<%s|%s>
 
 %s [Default necessity %d]
 
-END_POLICY
+END_TRANSFORMER
 
 eval {
     foreach my $transformer (@transformers) {
@@ -107,17 +107,22 @@ print {$pod_file} <<'END_FOOTER';
 
 =head1 VERSION
 
-This is part of L<Perl::ToPerl6|Perl::ToPerl6> version 1.116.
+This is part of L<Perl::ToPerl6|Perl::ToPerl6> version 0.031
 
 
 =head1 AUTHOR
+
+Jeffrey Goff <drforr@pobox.com>
+
+
+=head1 AUTHOR EMERITUS
 
 Jeffrey Ryan Thalhammer <jeff@imaginative-software.com>
 
 
 =head1 COPYRIGHT
 
-Copyright (c) 2005-2011 Imaginative Software Systems.  All rights reserved.
+Copyright (c) 2015 Jeffrey Goff, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.  The full text of this license
