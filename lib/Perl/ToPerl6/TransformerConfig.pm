@@ -32,7 +32,7 @@ sub new {
         $self{$NON_PUBLIC_DATA}{_profile_strictness};
 
     foreach my $standard_parameter (
-        qw< maximum_transformations_per_document necessity set_themes add_themes >
+        qw< necessity set_themes add_themes >
     ) {
         if ( exists $self{$standard_parameter} ) {
             $non_public_data{"_$standard_parameter"} =
@@ -84,31 +84,6 @@ sub get_necessity {
     my ($self) = @_;
 
     return $self->_get_non_public_data()->{_necessity};
-}
-
-#-----------------------------------------------------------------------------
-
-sub is_maximum_transformations_per_document_unlimited {
-    my ($self) = @_;
-
-    my $maximum_transformations = $self->get_maximum_transformations_per_document();
-    if (
-            not defined $maximum_transformations
-        or  $maximum_transformations eq $EMPTY
-        or  $maximum_transformations =~ m<\A $NO_LIMIT \z>xmsio
-    ) {
-        return $TRUE;
-    }
-
-    return $FALSE;
-}
-
-#-----------------------------------------------------------------------------
-
-sub get_maximum_transformations_per_document {
-    my ($self) = @_;
-
-    return $self->_get_non_public_data()->{_maximum_transformations_per_document};
 }
 
 #-----------------------------------------------------------------------------
@@ -242,18 +217,6 @@ The value of C<add_themes> in the user's F<.perlmogrifyrc>.
 =item C< get_necessity() >
 
 The value of C<necessity> in the user's F<.perlmogrifyrc>.
-
-
-=item C< is_maximum_transformations_per_document_unlimited() >
-
-Answer whether the value of C<maximum_transformations_per_document> should
-be considered to be unlimited.
-
-
-=item C< get_maximum_transformations_per_document() >
-
-The value of C<maximum_transformations_per_document> in the user's
-F<.perlmogrifyrc>.
 
 
 =item C< get($parameter) >

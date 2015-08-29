@@ -196,7 +196,6 @@ sub _proto_format {
 ${prefix}set_themes                         = %t
 ${prefix}add_themes                         =
 ${prefix}necessity                           = %s
-${prefix}maximum_transformations_per_document    = %v
 %{\\n%\\x7b# \\x7df\\n${prefix}%n = %D\\n}O%{${prefix}Cannot programmatically discover what parameters this transformer takes.\\n}U
 END_OF_FORMAT
 

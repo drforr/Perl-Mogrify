@@ -6,7 +6,7 @@ use warnings;
 
 use English qw<-no_match_vars>;
 
-use Test::More tests => 28;
+use Test::More tests => 20;
 
 
 #-----------------------------------------------------------------------------
@@ -23,8 +23,6 @@ use base 'Perl::ToPerl6::Transformer';
 
 package TransformerTestOverriddenDefaultMaximumTransformations;
 use base 'Perl::ToPerl6::Transformer';
-
-sub default_maximum_transformations_per_document { return 31; }
 
 #-----------------------------------------------------------------------------
 
@@ -51,34 +49,6 @@ is(
 is($p->applies_to(), 'PPI::Element', 'applies_to()');
 
 
-# Test default maximum transformations per document...
-is(
-    $p->default_maximum_transformations_per_document(),
-    undef,
-    'default_maximum_transformations_per_document()',
-);
-is(
-    $p->get_maximum_transformations_per_document(),
-    undef,
-    'get_maximum_transformations_per_document()',
-);
-
-# Change maximum transformations level...
-$p->set_maximum_transformations_per_document(3);
-
-# Test maximum transformations again...
-is(
-    $p->default_maximum_transformations_per_document(),
-    undef,
-    q<default_maximum_transformations_per_document() hasn't changed>,
-);
-is(
-    $p->get_maximum_transformations_per_document(),
-    3,
-    q<get_maximum_transformations_per_document() returns new value>,
-);
-
-
 my $overridden_default = TransformerTestOverriddenDefaultMaximumTransformations->new();
 isa_ok($overridden_default, 'TransformerTestOverriddenDefaultMaximumTransformations');
 
@@ -87,34 +57,6 @@ is(
     undef,
     'is_enabled() initially returns undef',
 );
-
-# Test default maximum transformations per document...
-is(
-    $overridden_default->default_maximum_transformations_per_document(),
-    31,
-    'default_maximum_transformations_per_document() overridden',
-);
-is(
-    $overridden_default->get_maximum_transformations_per_document(),
-    31,
-    'get_maximum_transformations_per_document() overridden',
-);
-
-# Change maximum transformations level...
-$overridden_default->set_maximum_transformations_per_document(undef);
-
-# Test maximum transformations again...
-is(
-    $overridden_default->default_maximum_transformations_per_document(),
-    31,
-    q<default_maximum_transformations_per_document() overridden hasn't changed>,
-);
-is(
-    $overridden_default->get_maximum_transformations_per_document(),
-    undef,
-    q<get_maximum_transformations_per_document() overridden returns new undefined value>,
-);
-
 
 # Test default necessity...
 is( $p->default_necessity(), 1, 'default_necessity()');

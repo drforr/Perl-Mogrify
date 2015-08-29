@@ -37,7 +37,7 @@ my @concrete_exceptions = qw{
     IO
 };
 
-plan tests => 711;
+plan tests => 708;
 #plan tests => # XXX Recalculate this later.
 #        89
 #    +   (  9 * scalar @concrete_exceptions  )
@@ -133,13 +133,11 @@ isa_ok($processor, 'Perl::ToPerl6::OptionsProcessor');
 use_ok('Perl::ToPerl6::Transformer') or BAIL_OUT(q<Can't continue.>);
 can_ok('Perl::ToPerl6::Transformer', 'add_themes');
 can_ok('Perl::ToPerl6::Transformer', 'applies_to');
-can_ok('Perl::ToPerl6::Transformer', 'default_maximum_transformations_per_document');
 can_ok('Perl::ToPerl6::Transformer', 'default_necessity');
 can_ok('Perl::ToPerl6::Transformer', 'default_themes');
 can_ok('Perl::ToPerl6::Transformer', 'get_abstract');
 can_ok('Perl::ToPerl6::Transformer', 'get_format');
 can_ok('Perl::ToPerl6::Transformer', 'get_long_name');
-can_ok('Perl::ToPerl6::Transformer', 'get_maximum_transformations_per_document');
 can_ok('Perl::ToPerl6::Transformer', 'get_parameters');
 can_ok('Perl::ToPerl6::Transformer', 'get_raw_abstract');
 can_ok('Perl::ToPerl6::Transformer', 'get_necessity');
@@ -152,7 +150,6 @@ can_ok('Perl::ToPerl6::Transformer', 'new_parameter_value_exception');
 can_ok('Perl::ToPerl6::Transformer', 'parameter_metadata_available');
 can_ok('Perl::ToPerl6::Transformer', 'prepare_to_scan_document');
 can_ok('Perl::ToPerl6::Transformer', 'set_format');
-can_ok('Perl::ToPerl6::Transformer', 'set_maximum_transformations_per_document');
 can_ok('Perl::ToPerl6::Transformer', 'set_necessity');
 can_ok('Perl::ToPerl6::Transformer', 'set_themes');
 can_ok('Perl::ToPerl6::Transformer', 'throw_parameter_value_exception');

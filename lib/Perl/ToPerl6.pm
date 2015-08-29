@@ -177,9 +177,6 @@ sub _transform {
 
     return if not $transformer->prepare_to_scan_document($doc);
 
-    my $maximum_transformations = $transformer->get_maximum_transformations_per_document();
-    return if defined $maximum_transformations && $maximum_transformations == 0;
-
     my @transformations = ();
 
   TYPE:
@@ -210,7 +207,6 @@ sub _transform {
                 }
 
                 push @transformations, $transformation;
-                last TYPE if defined $maximum_transformations and @transformations >= $maximum_transformations;
             }
         }
     }
@@ -568,7 +564,6 @@ The remainder of the configuration file is a series of blocks like this:
     necessity = 1
     set_themes = foo bar
     add_themes = baz
-    maximum_transformations_per_document = 57
     arg1 = value1
     arg2 = value2
 
@@ -604,12 +599,6 @@ information.
 C<add_themes> appends to the default themes for this Transformer.  The argument
 is a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See L<"POLICY THEMES"> for more information.
-
-C<maximum_transformations_per_document> limits the number of Transformations
-the Transformer will return for a given document.  Some Transformers have a
-default limit; see the documentation for the individual Transformers to see
-whether there is one.  To force a Transformer to not have a limit, specify
-"no_limit" or the empty string for the value of this parameter.
 
 The remaining key-value pairs are configuration parameters that will be passed
 into the constructor for that Transformer.  The constructors for most
@@ -912,8 +901,6 @@ Perl::ToPerl6::Transformer, please submit them at L<https://github.com/Perl-ToPe
 
 Adam Kennedy - For creating L<PPI>, the heart and soul of L<Perl::ToPerl6>.
 
-Damian Conway - For writing B<Perl Best Practices>, finally :)
-
 Chris Dolan - For contributing the best features and Transformer modules.
 
 Andy Lester - Wise sage and master of all-things-testing.
@@ -921,8 +908,6 @@ Andy Lester - Wise sage and master of all-things-testing.
 Elliot Shank - The self-proclaimed quality freak.
 
 Giuseppe Maxia - For all the great ideas and positive encouragement.
-
-and Sharon, my wife - For putting up with my all-night code sessions.
 
 Thanks also to the Perl Foundation for providing a grant to support Chris
 Dolan's project to implement twenty PBP transformers.

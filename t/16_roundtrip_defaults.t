@@ -246,11 +246,6 @@ SKIP: {
             'transformer names match',
         );
         is(
-            $derived_transformer->get_maximum_transformations_per_document(),
-            $default_transformer->get_maximum_transformations_per_document(),
-            $default_transformer->get_short_name() . ' maximum transformations per document match',
-        );
-        is(
             $derived_transformer->get_necessity(),
             $default_transformer->get_necessity(),
             $default_transformer->get_short_name() . ' severities match',

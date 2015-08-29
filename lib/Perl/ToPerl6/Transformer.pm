@@ -145,8 +145,6 @@ sub __set_base_parameters {
     my $config = $self->__get_config();
     my $errors = Perl::ToPerl6::Exception::AggregateConfiguration->new();
 
-    $self->_set_maximum_transformations_per_document($errors);
-
     my $user_necessity = $config->get_necessity();
     if ( defined $user_necessity ) {
         my $normalized_necessity = necessity_to_number( $user_necessity );
@@ -168,52 +166,6 @@ sub __set_base_parameters {
     if ( $errors->has_exceptions() ) {
         $errors->rethrow();
     }
-
-    return;
-}
-
-#-----------------------------------------------------------------------------
-
-sub _set_maximum_transformations_per_document {
-    my ($self, $errors) = @_;
-
-    my $config = $self->__get_config();
-
-    if ( $config->is_maximum_transformations_per_document_unlimited() ) {
-        return;
-    }
-
-    my $user_maximum_transformations =
-        $config->get_maximum_transformations_per_document();
-
-    if ( not is_integer($user_maximum_transformations) ) {
-        $errors->add_exception(
-            new_parameter_value_exception(
-                'maximum_transformations_per_document',
-                $user_maximum_transformations,
-                undef,
-                "does not look like an integer.\n"
-            )
-        );
-
-        return;
-    }
-    elsif ( $user_maximum_transformations < 0 ) {
-        $errors->add_exception(
-            new_parameter_value_exception(
-                'maximum_transformations_per_document',
-                $user_maximum_transformations,
-                undef,
-                "is not greater than or equal to zero.\n"
-            )
-        );
-
-        return;
-    }
-
-    $self->set_maximum_transformations_per_document(
-        $user_maximum_transformations
-    );
 
     return;
 }
@@ -273,34 +225,6 @@ sub __set_enabled {
 
 sub applies_to {
     return qw(PPI::Element);
-}
-
-#-----------------------------------------------------------------------------
-
-sub set_maximum_transformations_per_document {
-    my ($self, $maximum_transformations_per_document) = @_;
-
-    $self->{_maximum_transformations_per_document} =
-        $maximum_transformations_per_document;
-
-    return $self;
-}
-
-#-----------------------------------------------------------------------------
-
-sub get_maximum_transformations_per_document {
-    my ($self) = @_;
-
-    return
-        exists $self->{_maximum_transformations_per_document}
-            ? $self->{_maximum_transformations_per_document}
-            : $self->default_maximum_transformations_per_document();
-}
-
-#-----------------------------------------------------------------------------
-
-sub default_maximum_transformations_per_document {
-    return;
 }
 
 #-----------------------------------------------------------------------------
@@ -458,8 +382,6 @@ sub to_string {
          's' => sub { $self->get_necessity() },
          'T' => sub { join $SPACE, $self->default_themes() },
          't' => sub { join $SPACE, $self->get_themes() },
-         'V' => sub { dor( $self->default_maximum_transformations_per_document(), $NO_LIMIT ) },
-         'v' => sub { dor( $self->get_maximum_transformations_per_document(), $NO_LIMIT ) },
     );
     return stringf(get_format(), %fspec);
 }
@@ -640,27 +562,6 @@ Returns a list of the names of PPI classes that this Transformer cares
 about.  By default, the result is C<PPI::Element>.  Overriding this
 method in Transformer subclasses should lead to significant performance
 increases.
-
-
-=item C< default_maximum_transformations_per_document() >
-
-Returns the default maximum number of transformations for this transformer to
-report per document.  By default, this not defined, but subclasses may
-override this.
-
-
-=item C< get_maximum_transformations_per_document() >
-
-Returns the maximum number of transformations this transformer will report for a
-single document.  If this is not defined, then there is no limit.  If
-L</set_maximum_transformations_per_document()> has not been invoked, then
-L</default_maximum_transformations_per_document()> is returned.
-
-
-=item C< set_maximum_transformations_per_document() >
-
-Specify the maximum transformations that this transformer should report for a
-document.
 
 
 =item C< default_necessity() >
@@ -847,16 +748,6 @@ The default themes for the transformer.
 =item C<%t>
 
 The current themes for the transformer.
-
-
-=item C<%V>
-
-The default maximum number of transformations per document of the transformer.
-
-
-=item C<%v>
-
-The current maximum number of transformations per document of the transformer.
 
 
 =back

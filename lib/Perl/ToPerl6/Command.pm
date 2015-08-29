@@ -29,9 +29,7 @@ use Exporter 'import';
 
 Readonly::Array our @EXPORT_OK => qw< run >;
 
-Readonly::Hash our %EXPORT_TAGS => (
-    all             => [ @EXPORT_OK ],
-);
+Readonly::Hash our %EXPORT_TAGS => ( all => [ @EXPORT_OK ] );
 
 #-----------------------------------------------------------------------------
 
@@ -39,8 +37,7 @@ Readonly::Scalar my $DEFAULT_VIOLATIONS_FOR_TOP => 20;
 
 Readonly::Scalar my $EXIT_SUCCESS           => 0;
 Readonly::Scalar my $EXIT_NO_FILES          => 1;
-Readonly::Scalar my $EXIT_HAD_VIOLATIONS    => 2;
-Readonly::Scalar my $EXIT_HAD_FILE_PROBLEMS => 3;
+Readonly::Scalar my $EXIT_HAD_FILE_PROBLEMS => 2;
 
 #-----------------------------------------------------------------------------
 
@@ -58,14 +55,13 @@ sub _out {
 #-----------------------------------------------------------------------------
 
 sub run {
-    my %options    = _get_options();
-    @files         = _get_input(@ARGV);
+    my %options = _get_options();
+    @files      = _get_input(@ARGV);
 
     my ($transformations, $had_error_in_file) = _transform(\%options, @files);
 
     return $EXIT_HAD_FILE_PROBLEMS  if $had_error_in_file;
     return $EXIT_NO_FILES           if not defined $transformations;
-    return $EXIT_HAD_VIOLATIONS     if $transformations;
 
     return $EXIT_SUCCESS;
 }
