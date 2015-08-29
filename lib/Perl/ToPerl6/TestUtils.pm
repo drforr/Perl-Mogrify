@@ -642,15 +642,6 @@ Note that nowhere within the F<.run> file itself do you specify the
 transformer that you're testing.  That's implicit within the filename.
 
 
-=head1 BUGS AND CAVEATS AND TODO ITEMS
-
-Test that we have a t/*/*.run for each lib/*/*.pm
-
-Allow us to specify the nature of the failures, and which one.  If
-there are 15 lines of code, and six of them fail, how do we know
-they're the right six?
-
-
 =head1 AUTHOR
 
 Chris Dolan <cdolan@cpan.org>

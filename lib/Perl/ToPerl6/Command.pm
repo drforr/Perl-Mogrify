@@ -361,25 +361,6 @@ sub _report_statistics {
     _out sprintf "%*s %s.\n", $width, $subroutines, 'subroutines/methods';
     _out sprintf "%*s %s.\n", $width, $statements, 'statements';
 
-    my $lines_of_blank = _commaify( $statistics->lines_of_blank() );
-    my $lines_of_comment = _commaify( $statistics->lines_of_comment() );
-    my $lines_of_data = _commaify( $statistics->lines_of_data() );
-    my $lines_of_perl = _commaify( $statistics->lines_of_perl() );
-    my $lines_of_pod = _commaify( $statistics->lines_of_pod() );
-
-    $width =
-        max map { length }
-            $lines_of_blank, $lines_of_comment, $lines_of_data,
-            $lines_of_perl,  $lines_of_pod;
-    _out sprintf "\n%s %s:\n",            $lines, 'lines, consisting of';
-    _out sprintf "    %*s %s.\n", $width, $lines_of_blank, 'blank lines';
-    _out sprintf "    %*s %s.\n", $width, $lines_of_comment, 'comment lines';
-    _out sprintf "    %*s %s.\n", $width, $lines_of_data, 'data lines';
-    _out sprintf "    %*s %s.\n", $width, $lines_of_perl, 'lines of Perl code';
-    _out sprintf "    %*s %s.\n", $width, $lines_of_pod, 'lines of POD';
-
-    _out "\n";
-
     _out _commaify($statistics->total_transformations()), " transformations.\n";
 
     my $transformations_per_file = $statistics->transformations_per_file();
