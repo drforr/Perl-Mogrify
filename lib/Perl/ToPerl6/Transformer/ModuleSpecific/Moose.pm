@@ -28,6 +28,7 @@ sub applies_to           { return 'PPI::Document'              }
 #-----------------------------------------------------------------------------
 
 sub ppi_is_fat_comma {
+    $_[1] and 
     $_[1]->isa('PPI::Token::Operator') and
     $_[1]->content eq '=>';
 }
@@ -48,62 +49,93 @@ sub moose_has_attribute {
     # ----V
     # C<< has x => (( is => 'rw', isa => 'Int' )) >>
     #
-    return unless $head->isa('PPI::Token::Word') and
-                  $head->content eq 'has';
     $head = $head->snext_sibling;
 
     # --------V
-    # C<< has x => (( is => 'rw', isa => 'Int' )) >>
+    # C<< has x   => (( is => 'rw', isa => 'Int' )) >>
+    # C<< has 'x' => (( is => 'rw', isa => 'Int' )) >>
     #
-    return unless $head->isa('PPI::Token::Word');
-    my $name = $head->content;
-    $head = $head->snext_sibling;
+    my $name;
+    if ( $head->isa('PPI::Token::Word') ) {
+        $name = $head->content;
+        $head = $head->snext_sibling;
+    }
+    elsif ( $head->isa('PPI::Token::Quote') ) {
+        $name = $head->string;
+        $head = $head->snext_sibling;
+    }
+    else {
+        return;
+    }
 
     my $attributes;
 
     # ----------V
     # C<< has x => (( is => 'rw', isa => 'Int' )) >>
+    # C<< has x ,  (( is => 'rw', isa => 'Int' )) >>
     #
-    return unless ppi_is_fat_comma(undef,$head);
+    return unless ppi_is_fat_comma(undef,$head) or
+                  ppi_is_comma(undef,$head);
     $head = $head->snext_sibling;
 
     # -------------V
     # C<< has x => (( is => 'rw', isa => 'Int' )) >>
     #
-    return unless $head->isa('PPI::Structure::List') and
-                  $head->start->content eq '(';
-    $head = $head->schild(0);
+    if ( $head->isa('PPI::Structure::List') and
+         $head->start->content eq '(' ) {
+        $head = $head->schild(0);
+    }
 
     # --------------V
     # C<< has x => (( is => 'rw', isa => 'Int' )) >>
     #
-    return unless $head->isa('PPI::Statement::Expression');
-    $head = $head->schild(0);
+    if ( $head->isa('PPI::Statement::Expression') ) {
+        $head = $head->schild(0);
+    }
 
     while ( $head ) {
         # ----------------V
         # C<< has x => (( is => 'rw' )) >>
+        # C<< has x => (( 'is' , 'rw' )) >>
         #
-        return unless $head->isa('PPI::Token::Word');
-        my $curr_attribute = $head->content;
-        $head = $head->snext_sibling;
+        my $key;
+        if ( $head->isa('PPI::Token::Word') ) {
+            $key = $head->content;
+            $head = $head->snext_sibling;
+        }
+        elsif ( $head->isa('PPI::Token::Quote') ) {
+            $key = $head->string;
+            $head = $head->snext_sibling;
+        }
+        else {
+            warn "Unknown term >" . $head->content . "< found while processing Moose attribute, please tell the author.";
+            return;
+        }
 
         # -------------------V
         # C<< has x => (( is => 'rw' )) >>
+        # C<< has x => (( 'is' , 'rw' )) >>
         #
-        return unless ppi_is_fat_comma(undef,$head);
+        return unless ppi_is_fat_comma(undef,$head) or
+                      ppi_is_comma(undef,$head);
         $head = $head->snext_sibling;
 
         # ----------------------V
         # C<< has x => (( is => 'rw' )) >>
         #
-        $attributes->{$curr_attribute} = $head->string;
+        if ( $key eq 'default' ) {
+            $attributes->{$key} = $head->clone;
+        }
+        else {
+            $attributes->{$key} = $head->string;
+        }
         $head = $head->snext_sibling;
 
         # --------------------------V
         # C<< has x => (( is => 'rw', isa => 'Int' )) >>
         #
-        last unless ppi_is_comma(undef,$head);
+        last unless ppi_is_comma(undef,$head) or
+                    ppi_is_fat_comma(undef,$head);
         $head = $head->snext_sibling;
     }
 
@@ -142,6 +174,18 @@ sub make_perl6_attribute {
         $statement->add_element(
             PPI::Token::Word->new('rw')
         );
+    }
+
+    # If we have a default attribute, add that here.
+    #
+    if ( $attributes->{default} ) {
+        $statement->add_element( PPI::Token::Whitespace->new(' ') );
+        $statement->add_element(
+            PPI::Token::Operator->new('=')
+        );
+        $statement->add_element( PPI::Token::Whitespace->new(' ') );
+        $statement->add_element( $attributes->{default} );
+
     }
     $statement->add_element(
         PPI::Token::Structure->new(';')
@@ -187,7 +231,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Transformer::Instances::RewriteCreation - Indirect object notation no longer allowed.
+Perl::ToPerl6::Transformer::ModuleSpecific::Moose - Add Perl6-style class attributes
 
 
 =head1 AFFILIATION
@@ -198,11 +242,18 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 no longer supports Perl5-style indirect object notation.
+Perl6 uses a similar syntax to L<Moose|Moose>'s 'has' declaration style. This module attempts to convert basic Moose C<< has x => ( isa => 'Int', is => 'ro' ) >> declarations to C< has Int $.x; >.
 
-  new Foo(); --> Foo.new();
+  has x => ( is => 'rw', isa => 'Int', default => 42 );
+  --> has Int $.x is rw = 42;
 
-Transforms 'new' statements outside of comments, heredocs, strings and POD.
+Eventually will do:
+
+  $self->x(3); --> $.x = 3;
+
+Currently doesn't comment out the old declarations, as they could be multiline. And I'm lazy :)
+
+Transforms 'has' statements outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 
