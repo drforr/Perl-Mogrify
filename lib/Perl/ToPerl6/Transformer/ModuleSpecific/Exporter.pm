@@ -15,15 +15,15 @@ use base 'Perl::ToPerl6::Transformer';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform 'new Foo()' to 'Foo->new()'};
-Readonly::Scalar my $EXPL => q{Transform 'new Foo()' to 'Foo->new()'};
+Readonly::Scalar my $DESC => q{Add 'is export' and 'is export(:tag)' declarations to subroutines};
+Readonly::Scalar my $EXPL => q{Add 'is export' and 'is export(:tag)' declarations to subroutines};
 
 #-----------------------------------------------------------------------------
 
 sub run_before           { return 'Operators::FormatOperators' }
 sub supported_parameters { return ()                           }
 sub default_necessity    { return $NECESSITY_HIGHEST           }
-sub default_themes       { return qw( core )                   }
+sub default_themes       { return qw( tweaks )                 }
 sub applies_to           { return 'PPI::Document'              }
 
 #-----------------------------------------------------------------------------
@@ -109,26 +109,6 @@ sub transform {
         insert_trailing_whitespace($sub->schild(1));
     }
 
-#    my $token = $elem->clone;
-#    if ( $elem->snext_sibling->snext_sibling->isa('PPI::Token::Quote') ) {
-#        my $new_list = make_ppi_structure_list;
-#        my $new_statement = PPI::Statement->new;
-#        $new_list->add_element($new_statement);
-#        $new_statement->add_element(
-#            $elem->snext_sibling->snext_sibling->clone
-#        );
-#
-#        while ( $token and $token->next_sibling ) {
-#            last if $token->content eq ',';
-#            $new_statement->add_element($token->clone);
-#            $token = $token->next_sibling;
-#        }
-#        $elem->snext_sibling->snext_sibling->remove;
-#        $elem->snext_sibling->insert_after($new_list);
-#        $elem->snext_sibling->snext_sibling->next_sibling->remove if
-#            $elem->snext_sibling->snext_sibling->next_sibling->isa('PPI::Token::Whitespace');
-#    }
-
     return $self->transformation( $DESC, $EXPL, $elem );
 }
 
@@ -142,7 +122,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Transformer::Instances::RewriteCreation - Indirect object notation no longer allowed.
+Perl::ToPerl6::Transformer::ModuleSpecific::Exporter - Replace EXPORT variables with 'is export' notation
 
 
 =head1 AFFILIATION
@@ -153,11 +133,11 @@ distribution.
 
 =head1 DESCRIPTION
 
-Perl6 no longer supports Perl5-style indirect object notation.
+Perl6 now has a built-in 'is export' feature for exporting functions.
 
-  new Foo(); --> Foo.new();
+  @EXPORT = qw( foo ); sub foo { } --> sub foo is export(:MANDATORY)
 
-Transforms 'new' statements outside of comments, heredocs, strings and POD.
+Transforms subroutines outside of comments, heredocs, strings and POD.
 
 =head1 CONFIGURATION
 

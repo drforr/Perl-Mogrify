@@ -458,7 +458,9 @@ sub remove_trailing_whitespace {
     my ($head) = @_;
     return unless $head->next_sibling;
     return unless $head->next_sibling->isa('PPI::Token::Whitespace');
+    my $white = $head->next_sibling->clone;
     $head->next_sibling->remove;
+    return $white;
 }
 
 #-----------------------------------------------------------------------------
@@ -479,7 +481,9 @@ sub remove_leading_whitespace {
     my ($head) = @_;
     return unless $head->previous_sibling;
     return unless $head->previous_sibling->isa('PPI::Token::Whitespace');
+    my $white = $head->previous_sibling->clone;
     $head->previous_sibling->remove;
+    return $white;
 }
 
 #-----------------------------------------------------------------------------

@@ -85,11 +85,7 @@ sub transform {
         $elem->schild(1)->delete;
     }
 
-    my $whitespace;
-    if ( $elem->schild(1)->next_sibling->isa('PPI::Token::Whitespace') ) {
-        $whitespace = $elem->schild(1)->next_sibling->clone;
-        $elem->schild(1)->next_sibling->remove;
-    }
+    my $whitespace = remove_trailing_whitespace($elem->schild(1));
     my $loop_variable = $elem->schild(1)->clone;
     $elem->schild(1)->remove;
 
