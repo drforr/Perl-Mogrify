@@ -10,8 +10,6 @@ use Scalar::Util qw< blessed readonly looks_like_number >;
 
 use Exporter 'import';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 our @EXPORT_OK = qw(

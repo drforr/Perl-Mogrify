@@ -22,8 +22,6 @@ use Perl::ToPerl6::Exception::Fatal::Internal qw{ &throw_internal };
 use Perl::ToPerl6::Utils qw{ :severities :data_conversion transformer_long_name };
 use Perl::ToPerl6::TransformerFactory (-test => 1);
 
-our $VERSION = '0.03';
-
 Readonly::Array our @EXPORT_OK => qw(
     ptransform ptransform_with_transformations
     transform  transform_with_transformations

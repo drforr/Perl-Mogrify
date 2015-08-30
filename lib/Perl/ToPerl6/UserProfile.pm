@@ -16,8 +16,6 @@ use Perl::ToPerl6::Exception::Fatal::Internal qw{ throw_internal };
 use Perl::ToPerl6::Exception::Configuration::Generic qw{ throw_generic };
 use Perl::ToPerl6::TransformerConfig;
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub new {

@@ -17,8 +17,6 @@ use Perl::ToPerl6::Utils::Constants qw<
     >;
 use Perl::ToPerl6::Utils::DataConversion qw< dor >;
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub new {

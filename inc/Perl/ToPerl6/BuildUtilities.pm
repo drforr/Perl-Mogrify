@@ -6,8 +6,6 @@ use warnings;
 
 use English q<-no_match_vars>;
 
-our $VERSION = '0.031';
-
 use Exporter 'import';
 
 our @EXPORT_OK = qw<

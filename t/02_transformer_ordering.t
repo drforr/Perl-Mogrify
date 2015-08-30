@@ -10,10 +10,6 @@ use Test::More tests => 2;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.03';
-
-#-----------------------------------------------------------------------------
-
 # Choose two packages tha are required to run in a certain order:
 #
 # RewriteMatchVariables changes $N to $N-1.

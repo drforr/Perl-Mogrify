@@ -12,10 +12,6 @@ use Perl::ToPerl6::TestUtils qw(transform);
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 # Configure ToPerl6 not to load certain transformers.  This

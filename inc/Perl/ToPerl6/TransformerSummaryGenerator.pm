@@ -20,10 +20,6 @@ use Exception::Class ();  # Must be after P::C::Exception::*
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.031';
-
-#-----------------------------------------------------------------------------
-
 our @EXPORT_OK = qw< generate_transformer_summary >;
 
 #-----------------------------------------------------------------------------
@@ -107,7 +103,7 @@ print {$pod_file} <<'END_FOOTER';
 
 =head1 VERSION
 
-This is part of L<Perl::ToPerl6|Perl::ToPerl6> version 0.031
+This is part of L<Perl::ToPerl6|Perl::ToPerl6> version 0.040
 
 
 =head1 AUTHOR

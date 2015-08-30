@@ -23,10 +23,6 @@ use Perl::ToPerl6::TestUtils qw<
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 use Exporter 'import';
 
 Readonly::Array our @EXPORT_OK   => qw< all_transformers_ok transform_ok >;

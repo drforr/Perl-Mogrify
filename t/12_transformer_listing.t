@@ -14,10 +14,6 @@ use Test::More;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 my $profile = Perl::ToPerl6::UserProfile->new( -profile => 'NONE' );
 my @transformer_names = Perl::ToPerl6::TransformerFactory::site_transformer_names();
 my $factory = Perl::ToPerl6::TransformerFactory->new( -profile => $profile );

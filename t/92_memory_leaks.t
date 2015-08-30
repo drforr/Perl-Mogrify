@@ -18,10 +18,6 @@ use Test::More; #plan set below
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 eval 'use Test::Memory::Cycle; 1'

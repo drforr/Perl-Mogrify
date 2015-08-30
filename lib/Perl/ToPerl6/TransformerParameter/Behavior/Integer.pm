@@ -8,8 +8,6 @@ use Perl::ToPerl6::Utils qw{ :characters };
 
 use base qw{ Perl::ToPerl6::TransformerParameter::Behavior };
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub initialize_parameter {

@@ -9,8 +9,6 @@ use Perl::ToPerl6::Utils qw{ :severities };
 
 use base 'Perl::ToPerl6::Transformer';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $DESC => q{Add trailing 0 after decimal point};

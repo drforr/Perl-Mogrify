@@ -40,8 +40,6 @@ use Perl::ToPerl6::Transformation qw<>;
 
 use Exception::Class;   # this must come after "use P::C::Exception::*"
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 Readonly::Scalar my $NO_LIMIT => 'no_limit';

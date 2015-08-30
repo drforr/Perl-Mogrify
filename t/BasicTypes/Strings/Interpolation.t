@@ -30,8 +30,6 @@ use Test::Perl::ToPerl6::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
 transform_ok( 'BasicTypes::Strings::Interpolation', *DATA );
 
 __DATA__

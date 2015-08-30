@@ -18,10 +18,6 @@ use Perl::ToPerl6::Utils::Constants qw< $_MODULE_VERSION_TERM_ANSICOLOR >;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 my @color_necessity_params;
 my $skip_color_necessity =
     eval {

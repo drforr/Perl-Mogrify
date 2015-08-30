@@ -10,8 +10,6 @@ use Perl::ToPerl6::Transformer qw();
 
 use overload ( q<""> => 'to_string' );
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub new {

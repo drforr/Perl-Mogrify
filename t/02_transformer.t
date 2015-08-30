@@ -11,10 +11,6 @@ use Test::More tests => 20;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 # Perl::ToPerl6::Transformer is an abstract class, so it can't be instantiated
 # directly.  So we test it by declaring test classes that inherit from it.
 

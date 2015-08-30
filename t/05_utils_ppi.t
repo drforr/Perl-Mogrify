@@ -13,8 +13,6 @@ use Test::More tests => 14;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
 can_ok('main', 'is_ppi_token_word');
 
 ok !is_ppi_token_word(), 'Undef fails correctly';

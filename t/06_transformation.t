@@ -18,10 +18,6 @@ use Test::More tests => 67;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 use lib catdir( qw< t 06_transformation.d lib > );
 
 use TransformationTest;   # this is solely to test the import() method; has diagnostics

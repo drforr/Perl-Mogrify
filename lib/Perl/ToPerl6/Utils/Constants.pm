@@ -9,8 +9,6 @@ use Perl::ToPerl6::Utils qw{ $EMPTY hashify };
 
 use Exporter 'import';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 our @EXPORT_OK = qw{

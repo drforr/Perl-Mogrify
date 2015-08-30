@@ -6,8 +6,6 @@ use warnings;
 
 use Perl::ToPerl6::Utils qw{ &transformer_short_name };
 
-our $VERSION = '0.031';
-
 #-----------------------------------------------------------------------------
 
 use Exception::Class (

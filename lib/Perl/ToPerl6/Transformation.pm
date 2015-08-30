@@ -22,9 +22,6 @@ use Perl::ToPerl6::Utils::POD qw<
 >;
 use Perl::ToPerl6::Exception::Fatal::Internal qw< throw_internal >;
 
-our $VERSION = '0.03';
-
-
 Readonly::Scalar my $LOCATION_LINE_NUMBER               => 0;
 Readonly::Scalar my $LOCATION_COLUMN_NUMBER             => 1;
 Readonly::Scalar my $LOCATION_VISUAL_COLUMN_NUMBER      => 2;

@@ -16,10 +16,6 @@ use Test::More tests => 61;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 Readonly::Scalar my $EXCEPTION_MESSAGE_REGEX =>
     qr<malformed [ ] name [ ] section>xmsi;
 

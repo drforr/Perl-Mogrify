@@ -15,10 +15,6 @@ use Test::More;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.02';
-
-#-----------------------------------------------------------------------------
-
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();
 
 my @bundled_transformer_names = bundled_transformer_names();

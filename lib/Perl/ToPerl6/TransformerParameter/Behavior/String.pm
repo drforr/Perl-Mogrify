@@ -8,8 +8,6 @@ use Perl::ToPerl6::Utils;
 
 use base qw{ Perl::ToPerl6::TransformerParameter::Behavior };
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub _parse {

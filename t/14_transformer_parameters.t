@@ -14,10 +14,6 @@ use Perl::ToPerl6::TestUtils qw(bundled_transformer_names);
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 use Test::More; #plan set below!
 
 Perl::ToPerl6::TestUtils::block_perlmogrifyrc();

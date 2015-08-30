@@ -17,10 +17,6 @@ use Perl::ToPerl6::Exception::Configuration::Option::Global::ParameterValue
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.03';
-
-#-----------------------------------------------------------------------------
-
 Readonly::Array our @EXPORT_OK => qw{
     $RULE_INVALID_CHARACTER_REGEX
     cook_rule

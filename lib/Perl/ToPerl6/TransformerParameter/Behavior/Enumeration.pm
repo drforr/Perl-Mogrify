@@ -10,8 +10,6 @@ use Perl::ToPerl6::Utils qw{ :characters &words_from_string &hashify };
 
 use base qw{ Perl::ToPerl6::TransformerParameter::Behavior };
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub initialize_parameter {

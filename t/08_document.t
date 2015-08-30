@@ -19,10 +19,6 @@ use Test::More tests => 43;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 can_ok('Perl::ToPerl6::Document', 'new');
 can_ok('Perl::ToPerl6::Document', 'filename');
 can_ok('Perl::ToPerl6::Document', 'find');

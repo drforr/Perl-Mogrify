@@ -9,8 +9,6 @@ use Perl::ToPerl6::Utils qw{ :characters :booleans };
 
 use Exporter 'import';
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 Readonly::Array our @EXPORT_OK => qw(

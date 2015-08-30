@@ -11,8 +11,6 @@ use Perl::ToPerl6::Transformer qw{};
 use Perl::ToPerl6::Utils qw{ :characters };
 use overload ( q{""} => 'to_string' );
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub new {

@@ -10,10 +10,6 @@ use Test::More tests => 1;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
-#-----------------------------------------------------------------------------
-
 my $perlmogrify = File::Spec->catfile( qw(blib script perlmogrify) );
 if (not -e $perlmogrify) {
     $perlmogrify = File::Spec->catfile( qw(bin perlmogrify) )

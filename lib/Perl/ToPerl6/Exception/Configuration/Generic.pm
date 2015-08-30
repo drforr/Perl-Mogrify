@@ -6,8 +6,6 @@ use warnings;
 
 use Readonly;
 
-our $VERSION = '0.031';
-
 #-----------------------------------------------------------------------------
 
 use Exception::Class (

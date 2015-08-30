@@ -4,8 +4,6 @@ use 5.006001;
 use strict;
 use warnings;
 
-our $VERSION = '0.031';
-
 #-----------------------------------------------------------------------------
 
 use Perl::ToPerl6::Exception::Fatal::Internal;

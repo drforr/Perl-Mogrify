@@ -5,8 +5,6 @@ use 5.006001;
 use strict;
 use warnings;
 
-our $VERSION = '0.031';
-
 use Carp;
 use English qw< $OS_ERROR -no_match_vars >;
 

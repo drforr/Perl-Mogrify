@@ -23,8 +23,6 @@ use Perl::ToPerl6::TransformerParameter::Behavior::StringList;
 use Perl::ToPerl6::Utils qw{ :characters &interpolate };
 use Perl::ToPerl6::Utils::DataConversion qw{ &defined_or_empty };
 
-our $VERSION = '0.03';
-
 Readonly::Scalar our $NO_DESCRIPTION_AVAILABLE => 'No description available.';
 
 #-----------------------------------------------------------------------------

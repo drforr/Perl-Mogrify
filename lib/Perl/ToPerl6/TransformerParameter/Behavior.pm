@@ -6,8 +6,6 @@ use warnings;
 
 use Perl::ToPerl6::Utils qw{ :characters };
 
-our $VERSION = '0.03';
-
 #-----------------------------------------------------------------------------
 
 sub new {

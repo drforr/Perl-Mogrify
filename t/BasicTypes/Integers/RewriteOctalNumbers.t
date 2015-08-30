@@ -10,8 +10,6 @@ use Test::Perl::ToPerl6::Transformer qw< transform_ok >;
 
 #-----------------------------------------------------------------------------
 
-our $VERSION = '0.01';
-
 transform_ok( 'BasicTypes::Integers::RewriteOctalNumbers', *DATA );
 
 __DATA__
