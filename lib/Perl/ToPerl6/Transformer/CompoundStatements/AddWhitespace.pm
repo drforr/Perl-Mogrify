@@ -9,6 +9,7 @@ use Perl::ToPerl6::Utils qw{ :severities };
 use Perl::ToPerl6::Utils::PPI qw{
     is_ppi_statement_compound
     is_ppi_token_word
+    insert_trailing_whitespace
 };
 
 use base 'Perl::ToPerl6::Transformer';
@@ -76,11 +77,7 @@ sub transform {
 
     for my $child ( $elem->schildren ) {
         next unless is_ppi_token_word($child, %map);
-        next if $child->next_sibling and
-                $child->next_sibling->isa('PPI::Token::Whitespace');
-        $child->insert_after(
-            PPI::Token::Whitespace->new(' ')
-        );
+        insert_trailing_whitespace($child);
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

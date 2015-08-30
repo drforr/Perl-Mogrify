@@ -6,7 +6,10 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_token_word
+    insert_trailing_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -45,9 +48,7 @@ sub applies_to           {
 sub transform {
     my ($self, $elem, $doc) = @_;
 
-    $elem->insert_after(
-        PPI::Token::Whitespace->new(' ')
-    );
+    insert_trailing_whitespace($elem);
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

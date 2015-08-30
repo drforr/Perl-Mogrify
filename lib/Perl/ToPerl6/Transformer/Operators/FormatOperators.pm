@@ -6,7 +6,13 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_operator };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_token_operator
+    remove_trailing_whitespace
+    insert_trailing_whitespace
+    remove_leading_whitespace
+    insert_leading_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -149,27 +155,15 @@ $elem->set_content('fff XXX');
     }
 
     if ( $elem->content eq '.' ) {
-        $elem->next_sibling->remove if
-            $elem->next_sibling and
-            $elem->next_sibling->isa('PPI::Token::Whitespace');
-        $elem->previous_sibling->remove if
-            $elem->previous_sibling and
-            $elem->previous_sibling->isa('PPI::Token::Whitespace');
+        remove_trailing_whitespace($elem);
+        remove_leading_whitespace($elem);
     }
 
-    if ( $before{$elem->content} and
-         $elem->previous_sibling and
-         not( $elem->previous_sibling->isa('PPI::Token::Whitespace') ) ) {
-        $elem->insert_before(
-            PPI::Token::Whitespace->new(' ')
-        );
+    if ( $before{$elem->content} ) {
+        insert_leading_whitespace($elem);
     }
-    elsif ( $after{$elem->content} and
-         $elem->next_sibling and
-         not( $elem->next_sibling->isa('PPI::Token::Whitespace') ) ) {
-        $elem->insert_after(
-            PPI::Token::Whitespace->new(' ')
-        );
+    elsif ( $after{$elem->content} ) {
+        insert_trailing_whitespace($elem);
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

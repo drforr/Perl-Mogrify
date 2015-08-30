@@ -6,14 +6,16 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
+use Perl::ToPerl6::Utils::PPI qw{
+    insert_trailing_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform 'if()' to 'if ()'};
-Readonly::Scalar my $EXPL =>
-    q{if(), elsif() and unless() need whitespace in order to not be interpreted as function calls};
+Readonly::Scalar my $DESC => q{Transform C-style 'for()' to 'loop ()'};
+Readonly::Scalar my $EXPL => q{C-style for() is now 'loop'};
 
 #-----------------------------------------------------------------------------
 
@@ -108,11 +110,7 @@ sub transform {
 
     $elem->schild(0)->set_content('loop');
 
-    if ( !$elem->child(1)->isa('PPI::Token::Whitespace') ) {
-        $elem->schild(0)->insert_after(
-            PPI::Token::Whitespace->new(' ')
-        );
-    }
+    insert_trailing_whitespace($elem->schild(0));
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

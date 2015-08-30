@@ -52,7 +52,7 @@ __END__
 
 =head1 NAME
 
-Perl::ToPerl6::Transformer::Buiiltins::AddWhitespace - Format my(), our(), print()
+Perl::ToPerl6::Transformer::Buiiltins::Rename - Format my(), our(), print()
 
 
 =head1 AFFILIATION

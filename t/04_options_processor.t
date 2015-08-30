@@ -10,11 +10,7 @@ use Perl::ToPerl6::OptionsProcessor;
 use Perl::ToPerl6::Utils qw< :booleans >;
 use Perl::ToPerl6::Utils::Constants qw< :color_necessity >;
 
-use Test::More tests => 58;
-
-#-----------------------------------------------------------------------------
-
-our $VERSION = '0.01';
+use Test::More tests => 56;
 
 #-----------------------------------------------------------------------------
 

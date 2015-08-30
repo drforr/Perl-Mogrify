@@ -6,7 +6,10 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word make_ppi_structure_block };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_token_word
+    replace_remainder_with_block
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -37,6 +40,11 @@ sub applies_to           {
 
 #-----------------------------------------------------------------------------
 
+sub _is_end_of_expression {
+    $_[1]->isa('PPI::Token::Operator') and
+    $_[1]->content eq ',';
+}
+
 sub transform {
     my ($self, $elem, $doc) = @_;
 
@@ -53,33 +61,13 @@ sub transform {
          $token->start eq '{' and
          $token->finish and
          $token->finish eq '}' ) {
-        return if $token->snext_sibling and
-                  $token->snext_sibling->isa('PPI::Token::Operator') and
-                  $token->snext_sibling->content eq ',';
+         return if $token->snext_sibling and
+                _is_end_of_expression(undef,$token->snext_sibling);
         my $comma = PPI::Token::Operator->new(',');
         $token->insert_after( $comma );
     }
     else {
-        my $point = $token;
-
-        my $new_block = make_ppi_structure_block;
-        my $new_statement = PPI::Statement->new;
-        $new_block->add_element($new_statement);
-
-        while ( $token and $token->next_sibling ) {
-            last if $token->content eq ',';
-            $new_statement->add_element($token->clone);
-            $token = $token->next_sibling;
-        }
-
-        $point->insert_before($new_block);
-        while ( $point and
-                not ( $point->isa('PPI::Token::Operator') and
-                      $point->content eq ',' ) ) {
-            my $temp = $point->next_sibling;
-            $point->remove;
-            $point = $temp;
-        }
+        replace_remainder_with_block($token, \&_is_end_of_expression );
     }
 
     return $self->transformation( $DESC, $EXPL, $elem );

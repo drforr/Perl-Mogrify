@@ -11,13 +11,20 @@ use base 'Perl::ToPerl6::Transformer';
 
 #-----------------------------------------------------------------------------
 
-Readonly::Scalar my $DESC => q{Transform %x{a} to %x{'a'}};
+Readonly::Scalar my $DESC => q{Transform %x{a} to %x{'a'} depending upon mode};
 Readonly::Scalar my $EXPL =>
     q{Perl6 assumes that braces are code blocks, so any content must be compilable};
 
 #-----------------------------------------------------------------------------
 
-sub supported_parameters { return ()                 }
+sub supported_parameters {
+    return ( {
+        name           => 'perl6_mode',
+        description    => q{Controls whether <> or {''} are used},
+        default_string => 0,
+        behavior       => 'boolean'
+    } )
+}
 sub default_necessity    { return $NECESSITY_HIGHEST }
 sub default_themes       { return qw( core )         }
 sub applies_to           {
@@ -41,16 +48,22 @@ sub transform {
             $token->isa('PPI::Structure::Subscript') ) {
         if ( $token->start and
              $token->start->content eq '{' ) {
-            my $bareword = $token->schild(0)->schild(0);
-            my $old_content = $bareword->content;
-            $old_content =~ s{'}{\\'}g;
-    
-            my $new_content = "'" . $old_content . "'";
-    
-            $bareword->insert_after(
-                PPI::Token::Quote::Single->new($new_content)
-            );
-            $bareword->delete;
+            if ( $self->{_perl6_mode} ) {
+                $token->start->set_content('<');
+                $token->finish->set_content('>');
+            }
+            else {
+                 my $bareword = $token->schild(0)->schild(0);
+                 my $old_content = $bareword->content;
+                 $old_content =~ s{'}{\\'}g;
+             
+                 my $new_content = "'" . $old_content . "'";
+             
+                 $bareword->insert_after(
+                     PPI::Token::Quote::Single->new($new_content)
+                 );
+                 $bareword->delete;
+            }
         }
         $token = $token->snext_sibling;
     }
@@ -84,7 +97,7 @@ Anything enclosed in braces should be compilable code in Perl6, and unfortunatel
   %foo{a} --> %foo{'a'}
   %foo{'a'} --> %foo{'a'}
 
-Using angle brackets as in C<< %foo<a> >> would be more Perl6 style, but this is a change that most people will immediately understand.
+The transformer also supports a C<perl6_mode> option, which replaces C<%foo{a}> with C<< %foo<a> >> style "pointy blocks". The default, though, is to a more perl5ish style.
 
 Transforms variables outside of comments, heredocs, strings and POD.
 

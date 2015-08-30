@@ -6,6 +6,10 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
+use Perl::ToPerl6::Utils::PPI qw{
+    insert_leading_whitespace
+    remove_trailing_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -42,8 +46,7 @@ sub transform {
          $current->content =~ m{^Readonly} ) {
 
         $current->set_content('constant');
-        $current->next_sibling->delete if
-            $current->next_sibling->isa('PPI::Token::Whitespace');
+        remove_trailing_whitespace($current);
 
         $current = $current->snext_sibling;
 
@@ -52,9 +55,7 @@ sub transform {
                 PPI::Token::Word->new($current->content)
             );
 
-            $head->insert_before(
-                PPI::Token::Whitespace->new(' ')
-            );
+            insert_leading_whitespace($head);
 
             my $temp = $current;
             $current = $current->snext_sibling;
@@ -82,9 +83,7 @@ sub transform {
         }
         $current->set_content('=');
 
-        if ( $head->next_sibling->isa('PPI::Token::Whitespace') ) {
-            $head->next_sibling->remove;
-        }
+        remove_trailing_whitespace($head);
         $head->remove;
     }
 

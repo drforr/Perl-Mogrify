@@ -6,7 +6,10 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_token_word
+    remove_trailing_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -49,9 +52,7 @@ sub transform {
             PPI::Token::Word->new(':delete')
         );
         $elem->snext_sibling->snext_sibling->set_content('.');
-        $elem->next_sibling->delete if
-            $elem->next_sibling and
-            $elem->next_sibling->isa('PPI::Token::Whitespace');
+        remove_trailing_whitespace($elem);
         $elem->remove;
     }
     elsif ( $elem->snext_sibling and
@@ -61,9 +62,7 @@ sub transform {
         $elem->snext_sibling->snext_sibling->insert_after(
             PPI::Token::Word->new(':delete')
         );
-        $elem->next_sibling->delete if
-            $elem->next_sibling and
-            $elem->next_sibling->isa('PPI::Token::Whitespace');
+        remove_trailing_whitespace($elem);
         $elem->remove;
     }
     else {

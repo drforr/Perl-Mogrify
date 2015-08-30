@@ -6,7 +6,12 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word dscanf make_ppi_structure_list };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_token_word
+    dscanf
+    make_ppi_structure_list
+    remove_trailing_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -52,15 +57,13 @@ sub transform {
         }
         $elem->snext_sibling->snext_sibling->remove;
         $elem->snext_sibling->insert_after($new_list);
-        $elem->snext_sibling->snext_sibling->next_sibling->remove if
-            $elem->snext_sibling->snext_sibling->next_sibling->isa('PPI::Token::Whitespace');
+        remove_trailing_whitespace($elem->snext_sibling->snext_sibling);
     }
     $elem->snext_sibling->insert_after($token);
     $elem->snext_sibling->insert_after(
         PPI::Token::Operator->new('->')
     );
-    $elem->next_sibling->delete() if
-        $elem->next_sibling->isa('PPI::Token::Whitespace');
+    remove_trailing_whitespace($elem);
     $elem->delete;
 
     return $self->transformation( $DESC, $EXPL, $elem );

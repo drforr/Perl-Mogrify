@@ -6,7 +6,11 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_token_word make_ppi_structure_list };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_token_word
+    remove_trailing_whitespace
+    replace_remainder_with_list
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -70,22 +74,12 @@ my %operator = (
 );
 
 sub _is_end_of_print_expression {
-    my $elem = shift;
-    return 1 if $elem->isa('PPI::Token::Structure') and
-                $elem->content eq ';';
-    return 1 if $elem->isa('PPI::Token::Word') and
-                exists $postfix_modifier{$elem->content};
-    return 1 if $elem->isa('PPI::Token::Operator') and
-                exists $operator{$elem->content};
-    return;
-}
-
-sub _is_almost_end_of_print_expression {
-    my $elem = shift;
-    return 1 if _is_end_of_print_expression($elem) or
-                $elem->isa('PPI::Token::Whitespace') and
-                _is_end_of_print_expression($elem->snext_sibling);
-    return;
+    ( $_[1]->isa('PPI::Token::Structure') and
+      $_[1]->content eq ';' ) or
+    ( $_[1]->isa('PPI::Token::Word') and
+      exists $postfix_modifier{$_[1]->content} ) or
+    ( $_[1]->isa('PPI::Token::Operator') and
+      exists $operator{$_[1]->content} )
 }
 
 sub transform {
@@ -94,40 +88,25 @@ sub transform {
                   $elem->snext_sibling->snext_sibling;
 
     my $token = $elem->snext_sibling->snext_sibling;
+    replace_remainder_with_list(
+        $token, sub {
+            _is_end_of_print_expression(@_) or
+            $_[1]->isa('PPI::Token::Whitespace') and
+            _is_end_of_print_expression(undef,$_[1]->snext_sibling);
+        }
+    );
 
-    my $point = $token;
+    remove_trailing_whitespace($elem);
 
-    my $new_list = make_ppi_structure_list;
-    my $new_statement = PPI::Statement->new;
-    $new_list->add_element($new_statement);
-
-    while ( $token and $token->next_sibling ) {
-        last if _is_almost_end_of_print_expression($token);
-        $new_statement->add_element($token->clone);
-        $token = $token->next_sibling;
-    }
-
-    $point->insert_before($new_list);
-    while ( $point and
-            not _is_almost_end_of_print_expression($point) ) {
-        my $temp = $point->next_sibling;
-        $point->remove;
-        $point = $temp;
-    }
-
-    if ( $elem->next_sibling->isa('PPI::Token::Whitespace') ) {
-        $elem->next_sibling->remove;
-    }
     my $filehandle_variable = $elem->snext_sibling->clone;
     $elem->snext_sibling->remove;
-    if ( $elem->next_sibling->isa('PPI::Token::Whitespace') ) {
-        $elem->next_sibling->remove;
-    }
+
+    remove_trailing_whitespace($elem);
+
     $elem->insert_before($filehandle_variable);
     $elem->insert_before(
         PPI::Token::Operator->new('.')
     );
-#print "[".$doc->content."]\n";
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

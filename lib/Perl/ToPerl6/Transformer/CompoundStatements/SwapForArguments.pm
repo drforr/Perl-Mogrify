@@ -6,7 +6,11 @@ use warnings;
 use Readonly;
 
 use Perl::ToPerl6::Utils qw{ :severities };
-use Perl::ToPerl6::Utils::PPI qw{ is_ppi_statement_compound };
+use Perl::ToPerl6::Utils::PPI qw{
+    is_ppi_statement_compound
+    insert_trailing_whitespace
+    remove_trailing_whitespace
+};
 
 use base 'Perl::ToPerl6::Transformer';
 
@@ -77,9 +81,7 @@ sub transform {
     # [ q{for}, q{ }, q{(@x)}, q{ }, q{->}, q{ }, q{$x} ]
     #
     if ( $scope_map{$elem->schild(1)->content} ) {
-        if ( $elem->schild(1)->next_sibling->isa('PPI::Token::Whitespace') ) {
-            $elem->schild(1)->next_sibling->remove;
-        }
+        remove_trailing_whitespace($elem->schild(1));
         $elem->schild(1)->delete;
     }
 
@@ -94,15 +96,11 @@ sub transform {
     $elem->schild(1)->insert_after(
         $loop_variable
     );
-    $elem->schild(1)->insert_after(
-        PPI::Token::Whitespace->new(' ')
-    );
+    insert_trailing_whitespace($elem->schild(1));
     $elem->schild(1)->insert_after(
         PPI::Token::Operator->new('->')
     );
-    $elem->schild(1)->insert_after(
-        PPI::Token::Whitespace->new(' ')
-    );
+    insert_trailing_whitespace($elem->schild(1));
 
     return $self->transformation( $DESC, $EXPL, $elem );
 }

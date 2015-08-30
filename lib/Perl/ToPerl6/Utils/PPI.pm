@@ -36,10 +36,26 @@ our @EXPORT_OK = qw(
 
     is_ppi_token_quotelike_words_like
 
+    ppi_list_elements
+
     set_string
 
     make_ppi_structure_list
     make_ppi_structure_block
+
+    build_ppi_structure_block_from
+    build_ppi_structure_list_from
+
+    remove_expression_remainder
+
+    remove_trailing_whitespace
+    insert_trailing_whitespace
+
+    remove_leading_whitespace
+    insert_leading_whitespace
+
+    replace_remainder_with_block
+    replace_remainder_with_list
 );
 
 our %EXPORT_TAGS = (
@@ -243,6 +259,34 @@ sub is_ppi_token_quotelike_words_like {
 
 #-----------------------------------------------------------------------------
 
+sub _ppi_list_elements {
+    my ($elem) = @_;
+    my @elements;
+    for my $_elem ( $elem->schildren ) {
+        if ( $_elem->isa('PPI::Token::Quote') ) {
+            push @elements, $_elem->string;
+        }
+        elsif ( $_elem->isa('PPI::Structure::List') and
+                $_elem->schildren ) {
+            push @elements, _ppi_list_elements($_elem->schild(0));
+        }
+    }
+    return @elements;
+}
+
+sub ppi_list_elements {
+    my ($elem) = @_;
+    return $elem->literal if $elem->isa('PPI::Token::QuoteLike::Words');
+
+    if ( $elem->isa('PPI::Structure::List') and
+         $elem->schild(0) and
+         $elem->schild(0)->isa('PPI::Statement::Expression') ) {
+        return _ppi_list_elements($elem->schild(0));
+    }
+}
+
+#-----------------------------------------------------------------------------
+
 sub is_module_name {
     my $element = shift;
 
@@ -357,6 +401,116 @@ sub make_ppi_structure_list {
     $new_list->{finish} = PPI::Token::Structure->new(')');
 
     return $new_list;
+}
+
+#-----------------------------------------------------------------------------
+
+sub build_ppi_structure_block_from {
+    my ($head, $terminator_test) = @_;
+
+    my $new_block = make_ppi_structure_block;
+    my $new_statement = PPI::Statement->new;
+
+    while ( $head and $head->next_sibling ) {
+        last if $terminator_test->(undef,$head);
+
+        $new_statement->add_element($head->clone);
+        $head = $head->next_sibling;
+    }
+
+    $new_block->add_element($new_statement);
+    return $new_block;
+}
+
+#-----------------------------------------------------------------------------
+
+sub build_ppi_structure_list_from {
+    my ($head, $terminator_test) = @_;
+
+    my $new_list = make_ppi_structure_list;
+    my $new_statement = PPI::Statement->new;
+
+    while ( $head and $head->next_sibling ) {
+        last if $terminator_test->(undef,$head);
+
+        $new_statement->add_element($head->clone);
+        $head = $head->next_sibling;
+    }
+
+    $new_list->add_element($new_statement);
+    return $new_list;
+}
+
+#-----------------------------------------------------------------------------
+
+sub remove_expression_remainder {
+    my ($head, $callback) = @_;
+    while ( $head and not $callback->(undef,$head) ) {
+        my $temp = $head->next_sibling;
+        $head->remove;
+        $head = $temp;
+    }
+}
+
+#-----------------------------------------------------------------------------
+
+sub remove_trailing_whitespace {
+    my ($head) = @_;
+    return unless $head->next_sibling;
+    return unless $head->next_sibling->isa('PPI::Token::Whitespace');
+    $head->next_sibling->remove;
+}
+
+#-----------------------------------------------------------------------------
+
+sub insert_trailing_whitespace {
+    my ($head, $optional_whitespace) = @_;
+    $optional_whitespace = ' ' unless defined $optional_whitespace;
+    return if $head->next_sibling and
+              $head->next_sibling->isa('PPI::Token::Whitespace');
+    $head->insert_after(
+        PPI::Token::Whitespace->new($optional_whitespace)
+    );
+}
+
+#-----------------------------------------------------------------------------
+
+sub remove_leading_whitespace {
+    my ($head) = @_;
+    return unless $head->previous_sibling;
+    return unless $head->previous_sibling->isa('PPI::Token::Whitespace');
+    $head->previous_sibling->remove;
+}
+
+#-----------------------------------------------------------------------------
+
+sub insert_leading_whitespace {
+    my ($head, $optional_whitespace) = @_;
+    $optional_whitespace = ' ' unless defined $optional_whitespace;
+    return if $head->previous_sibling and
+              $head->previous_sibling->isa('PPI::Token::Whitespace');
+    $head->insert_before(
+        PPI::Token::Whitespace->new($optional_whitespace)
+    );
+} 
+#-----------------------------------------------------------------------------
+
+sub replace_remainder_with_block {
+    my ($head, $callback) = @_;
+    my $new_block = build_ppi_structure_block_from( $head, $callback );
+
+    $head->insert_before($new_block);
+    remove_expression_remainder( $head, $callback );
+}
+
+#-----------------------------------------------------------------------------
+
+sub replace_remainder_with_list {
+    my ($head, $callback) = @_;
+    my $new_list = build_ppi_structure_list_from( $head, $callback );
+
+    $head->insert_before($new_list);
+    remove_expression_remainder( $head, $callback );
 }
 
 #-----------------------------------------------------------------------------
