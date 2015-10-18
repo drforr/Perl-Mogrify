@@ -23,10 +23,39 @@ my $builder = Perl::ToPerl6::Module::Build->new(
     sign                => 0,
 
     requires            => {
-        'YAML' => '0',
+        'B::Keywords'           => '0',
+#        'Carp'                  => '0', # In core
+        'Config::Tiny'          => '0',
+#        'Cwd'                   => '0', # In core
+#        'English'               => '0', # In core
+        'Exception::Class'      => '0',
+        'Exporter'              => '0',
+#        'File::Basename'        => '0', # In core
+#        'File::Find'            => '0', # In core
+#        'File::Path'            => '0', # In core
+#        'File::Spec'            => '0', # In core
+#        'File::Spec::Functions' => '0', # In core
+#        'File::Spec::Unix'      => '0', # In core
+#        'File::Temp'            => '0', # In core
+        'IO::String'            => '0',
+        'Module::Build'         => '0',
+        'Pod::PlainText'        => '0',
+#        'Pod::Select'           => '0', # In core
+#        'Scalar::Util'          => '0', # In core
+#        'Getopt::Long'          => '0', # In core
+#        'Pod::Usage'            => '0', # In core
+        'PPI'                   => '0',
+        'PPIx::Regexp'          => '0',
+        'PPIx::Utilities'       => '0',
+        'Readonly'              => '0',
+        'String::Format'        => '0',
+        'Text::Balanced'        => '0',
+        'YAML'                  => '0',
+        'Test::Builder'         => '0',
+        'Test::Deep'            => '0',
+        'Test::More'            => '0',
     },
     build_requires      => {
-        'YAML' => '0',
     },
 
     # Don't require a developer version of Module::Build, even if the
