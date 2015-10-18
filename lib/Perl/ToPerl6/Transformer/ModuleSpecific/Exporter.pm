@@ -75,7 +75,7 @@ sub transform {
 
     my $subs = $doc->find('PPI::Statement::Sub');
 
-    if ( @$export ) {
+    if ( $export && @$export ) {
         for my $_elem ( @$export ) {
             for ( ppi_rhs_list_values($_elem) ) {
                 push @{ $subroutine_tags->{$_} }, 'MANDATORY'
