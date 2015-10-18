@@ -101,6 +101,7 @@ sub _init {
 
     $self->_validate_and_save_verbosity($args{-verbose}, $errors);
     $self->_validate_and_save_necessity($args{-necessity}, $errors);
+    $self->_validate_and_save_suggest($args{-suggest}, $errors);
     $self->_validate_and_save_detail($args{-detail}, $errors);
     $self->_validate_and_save_top($args{-top}, $errors);
     $self->_validate_and_save_theme($args{-theme}, $errors);
@@ -676,6 +677,65 @@ sub _validate_and_save_pager {
 
 #-----------------------------------------------------------------------------
 
+sub _validate_and_save_suggest {
+    my ($self, $args_value, $errors) = @_;
+
+    my $option_name;
+    my $source;
+    my $suggest;
+
+    if ($args_value) {
+        $option_name = '-suggest';
+        $suggest = $args_value;
+    }
+    else {
+        $option_name = 'suggest';
+
+        my $profile = $self->_profile();
+        $source = $profile->source();
+        $suggest = $profile->options_processor()->suggest();
+    }
+
+    if ( is_integer($suggest) ) {
+        if (
+            $suggest >= $NECESSITY_LOWEST and $suggest <= $NECESSITY_HIGHEST
+        ) {
+            $self->{_suggest} = $suggest;
+        }
+        else {
+            $errors->add_exception(
+                $self->_new_global_value_exception(
+                    option_name     => $option_name,
+                    option_value    => $suggest,
+                    source          => $source,
+                    message_suffix  =>
+                        "is not between $NECESSITY_LOWEST (low) and $NECESSITY_HIGHEST (high).",
+                )
+            );
+        }
+    }
+    elsif ( not any { $_ eq lc $suggest } @NECESSITY_NAMES ) {
+        $errors->add_exception(
+            $self->_new_global_value_exception(
+                option_name     => $option_name,
+                option_value    => $suggest,
+                source          => $source,
+                message_suffix  =>
+                    q{is not one of the valid necessity names: "}
+                        . join (q{", "}, @NECESSITY_NAMES)
+                        . q{".},
+            )
+        );
+    }
+    else {
+        $self->{_suggest} = necessity_to_number($suggest);
+    }
+
+    return;
+}
+
+#-----------------------------------------------------------------------------
+
 sub _validate_and_save_detail {
     my ($self, $args_value, $errors) = @_;
 
@@ -838,6 +898,13 @@ sub transformers {
 sub exclude {
     my ($self) = @_;
     return @{ $self->{_exclude} };
+}
+
+#-----------------------------------------------------------------------------
+
+sub suggest {
+    my ($self) = @_;
+    return $self->{_suggest};
 }
 
 #-----------------------------------------------------------------------------
@@ -1083,6 +1150,11 @@ Returns the value of the C<-exclude> attribute for this Config.
 Returns the value of the C<-include> attribute for this Config.
 
 
+=item C< suggest() >
+
+Returns the value of the C<-suggest> attribute for this Config.
+
+
 =item C< detail() >
 
 Returns the value of the C<-detail> attribute for this Config.
@@ -1233,6 +1305,7 @@ corresponding Perl::ToPerl6 constructor argument.
     necessity  = 3                                     #Integer from 1 to 5
     in_place  = 0                                     #Zero or One
     only      = 1                                     #Zero or One
+    suggest   = 0                                     #Integer from 1 to 5
     detail    = 0                                     #Integer from 1 to 5
     force     = 0                                     #Zero or One
     verbose   = 4                                     #Integer or format spec

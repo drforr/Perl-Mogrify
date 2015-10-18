@@ -446,10 +446,9 @@ Perl::ToPerl6::Transformer is the abstract base class for all Transformer
 objects.  If you're developing your own Transformers, your job is to
 implement and override its methods in a subclass.  To work with the
 L<Perl::ToPerl6|Perl::ToPerl6> engine, your implementation must behave
-as described below.  For a detailed explanation on how to make new
-Transformer modules, please see the
-L<Perl::ToPerl6::DEVELOPER|Perl::ToPerl6::DEVELOPER> document included
-in this distribution.
+as described below.  For a detailed explanation on how to make new Transformer
+modules, please see the L<Perl::ToPerl6::DEVELOPER|Perl::ToPerl6::DEVELOPER>
+document included in this distribution.
 
 
 =head1 INTERFACE SUPPORT

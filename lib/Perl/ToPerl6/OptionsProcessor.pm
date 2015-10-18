@@ -48,8 +48,9 @@ sub _init {
     $self->{_profile_strictness} =
         dor(delete $args{'profile-strictness'}, $PROFILE_STRICTNESS_DEFAULT);
     $self->{_single_transformer}   = dor(delete $args{'single-transformer'},    $EMPTY);
-    $self->{_necessity}        = dor(delete $args{necessity},           $NECESSITY_HIGHEST);
-    $self->{_detail}           = dor(delete $args{detail},           $NECESSITY_LOWEST + 1);
+    $self->{_necessity}        = dor(delete $args{necessity},         $NECESSITY_HIGHEST);
+    $self->{_suggest}          = dor(delete $args{suggest},           $NECESSITY_LOWEST + 1);
+    $self->{_detail}           = dor(delete $args{detail},            $NECESSITY_LOWEST + 1);
     $self->{_theme}           = dor(delete $args{theme},              $EMPTY);
     $self->{_top}             = dor(delete $args{top},                $FALSE);
     $self->{_verbose}         = dor(delete $args{verbose},            $DEFAULT_VERBOSITY);
@@ -204,6 +205,13 @@ sub pager {
 
 #-----------------------------------------------------------------------------
 
+sub suggest {
+    my ($self) = @_;
+    return $self->{_suggest};
+}
+
+#-----------------------------------------------------------------------------
+
 sub detail {
     my ($self) = @_;
     return $self->{_detail};
@@ -320,6 +328,11 @@ Returns a reference to a list of the default exclusion patterns.  If
 onto by
 L<Perl::ToPerl6::TransformeryParameter|Perl::ToPerl6::TransformerParameter>.  there
 are no default exclusion patterns, then the list will be empty.
+
+
+=item C< suggest() >
+
+Returns the default value of the C<suggest> setting (0, 1..5)
 
 
 =item C< detail() >

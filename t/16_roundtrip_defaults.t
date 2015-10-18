@@ -35,7 +35,7 @@ foreach my $transformer (@default_transformers) {
         $transformer_test_count += scalar @{$transformer->get_parameters()};
     }
 }
-my $test_count = 20 + $transformer_test_count;
+my $test_count = 21 + $transformer_test_count;
 plan tests => $test_count;
 
 #-----------------------------------------------------------------------------
@@ -87,6 +87,14 @@ is(
     $derived_configuration->force(),
     $default_configuration->force(),
     'force',
+);
+
+#-----------------------------------------------------------------------------
+
+is(
+    $derived_configuration->suggest(),
+    $default_configuration->suggest(),
+    'suggest',
 );
 
 #-----------------------------------------------------------------------------

@@ -52,7 +52,7 @@ my $total_transformers   = scalar @names_of_transformers_willing_to_work;
                 ->all_transformers_enabled_or_not();
 
 #    plan tests => 93 + $all_transformer_count - (129-88); # XXX Look into this later
-plan tests => 86;
+plan tests => 90;
 diag("XXX Fix the transformer count later");
 }
 
@@ -188,14 +188,16 @@ SKIP: {
     is_deeply([$c->include()], [ qw(CodeLayout Modules) ],
               'user default include from file' );
 
-    is($c->force(),    1,  'user default force from file'     );
-    is($c->in_place(), 0,  'user default in-place from file'  );
-    is($c->detail(),   2,  'user default detail from file'  );
-    is($c->only(),     1,  'user default only from file'      );
-    is($c->necessity(), 3,  'user default necessity from file'  );
-    is($c->theme()->rule(),    'danger || risky && ! pbp',  'user default theme from file');
-    is($c->top(),      50, 'user default top from file'       );
-    is($c->verbose(),  5,  'user default verbose from file'   );
+    is($c->force(),         1,  'user default force from file'     );
+    is($c->in_place(),      0,  'user default in-place from file'  );
+    is($c->suggest(),       2,  'user default suggest from file'   );
+    is($c->detail(),        2,  'user default detail from file'    );
+    is($c->only(),          1,  'user default only from file'      );
+    is($c->necessity(),     3,  'user default necessity from file' );
+    is($c->theme()->rule(), 'danger || risky && ! pbp',
+                            'user default theme from file');
+    is($c->top(),           50, 'user default top from file'     );
+    is($c->verbose(),       5,  'user default verbose from file' );
 
     is($c->color_necessity_highest(), 'bold red underline',
                         'user default color-necessity-highest from file');
@@ -296,6 +298,7 @@ SKIP: {
         -verbose
         -theme
         -necessity
+        -suggest
         -detail
         -in-place
         -only
@@ -317,9 +320,10 @@ SKIP: {
     $c = Perl::ToPerl6::Config->new( %undef_args );
     is( $c->force(),            0,      'Undefined -force');
     is( $c->in_place(),         0,      'Undefined -in-place');
+    is( $c->suggest(),          2,      'Undefined -suggest');
     is( $c->detail(),           2,      'Undefined -detail');
     is( $c->only(),             0,      'Undefined -only');
-    is( $c->necessity(),         5,      'Undefined -necessity');
+    is( $c->necessity(),        5,      'Undefined -necessity');
     is( $c->theme()->rule(),    q{},    'Undefined -theme');
     is( $c->top(),              0,      'Undefined -top');
     is( $c->color(),            $color, 'Undefined -color');
@@ -352,6 +356,7 @@ SKIP: {
     $c = Perl::ToPerl6::Config->new( %zero_args );
     is( $c->force(),               0,      'zero -force');
     is( $c->in_place(),            0,      'zero -in-place');
+    is( $c->suggest(),             2,      'zero -suggest');
     is( $c->detail(),              2,      'zero -detail');
     is( $c->only(),                0,      'zero -only');
     is( $c->necessity(),           1,      'zero -necessity');
@@ -365,6 +370,7 @@ SKIP: {
     $c = Perl::ToPerl6::Config->new( %empty_args );
     is( $c->force(),                  0,      'empty -force');
     is( $c->in_place(),               0,      'empty -in-place');
+    is( $c->suggest(),                2,      'empty -suggest');
     is( $c->detail(),                 2,      'empty -detail');
     is( $c->only(),                   0,      'empty -only');
     is( $c->necessity(),              1,      'empty -necessity');

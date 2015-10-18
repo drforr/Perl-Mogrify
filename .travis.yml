@@ -9,6 +9,5 @@ perl:
    - "5.10"
 
 script:
-   - export HARNESS_OPTIONS='j:c'
    - perl Build.PL
    - ./Build test

@@ -80,6 +80,11 @@ sub to_string {
     $prototype .= "\n";
 
     $prototype .= $prefix;
+    $prototype .= q{suggest = };
+    $prototype .= $configuration->suggest();
+    $prototype .= "\n";
+
+    $prototype .= $prefix;
     $prototype .= q{detail = };
     $prototype .= $configuration->detail();
     $prototype .= "\n";

@@ -45,6 +45,7 @@ C<perlmogrify> - Command-line interface to transform Perl source.
               [--top [ number ]] [--theme expression] [--include pattern]
               [--exclude pattern] [{-s | --single-transformer} pattern]
               [--in-place]
+              [--suggest]
               [--detail number]
               [--only | --noonly] [--profile-strictness {warn|fatal|quiet}]
               [--force | --noforce] [--statistics] [--statistics-only]
@@ -282,6 +283,12 @@ set the default value for this option in your F<.perlmogrifyrc> file.  NOTE: Be
 careful not to put one of the necessity shortcut options immediately after the
 C<--top> flag or C<perlmogrify> will interpret it as the number of
 transformations to report.
+
+=item C<--suggest [ N ]>
+
+Directs C<perlmogrify> to suggest a more idiomatic perl6 alternative while it
+is mogrifying your code. If C<N> is not specified, it defaults to 1. You can
+set the default value for this option in your F<.perlmogrifyrc> file.
 
 =item C<--detail [ N ]>
 
@@ -550,6 +557,7 @@ command-line argument.
     only       = 1                                     #Zero or One
     in-place   = 0                                     #Zero or One
     force      = 0                                     #Zero or One
+    suggest    = 0                                     #Integer
     detail     = 0                                     #Integer
     verbose    = 4                                     #Integer or format spec
     top        = 50                                    #A positive integer
@@ -594,9 +602,10 @@ is a string of one or more whitespace-delimited words. Themes are case-
 insensitive.  See L<"TRANSFORMER THEMES"> for more information.
 
 The remaining key-value pairs are configuration parameters that will be passed
-into the constructor of that Transformer.  The constructors for most Transformer modules
-do not support arguments, and those that do should have reasonable defaults.
-See the documentation on the appropriate Transformer module for more details.
+into the constructor of that Transformer.  The constructors for most
+Transformer modules do not support arguments, and those that do should have
+reasonable defaults.  See the documentation on the appropriate Transformer
+module for more details.
 
 Instead of redefining the necessity for a given Transformer, you can completely
 disable a Transformer by prepending a '-' to the name of the module in your
@@ -660,11 +669,11 @@ distribution as F<examples/perlmogrifyrc-conway>.
 
 =head1 THE POLICIES
 
-A large number of Transformer modules are distributed with Perl::ToPerl6. They are
-described briefly in the companion document L<Perl::ToPerl6::TransformerSummary> and
-in more detail in the individual modules themselves.  Say C<"perlmogrify --doc
-PATTERN"> to see the perldoc for all Transformer modules that match the regex
-C<m/PATTERN/ixms>
+A large number of Transformer modules are distributed with Perl::ToPerl6. They
+are described briefly in the companion document
+L<Perl::ToPerl6::TransformerSummary> and in more detail in the individual
+modules themselves.  Say C<"perlmogrify --doc PATTERN"> to see the perldoc for
+all Transformer modules that match the regex C<m/PATTERN/ixms>
 
 There are a number of distributions of additional transformers on CPAN. If
 L<Perl::ToPerl6> doesn't contain a transformer that you want, someone may have

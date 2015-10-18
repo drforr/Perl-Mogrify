@@ -27,6 +27,12 @@ exclude = Array Variables
 include   = CodeLayout Modules
 
 #-----------------------------------------------------------------------------
+# suggest: Directs Perl::ToPerl6 to suggest more or less idiomatic Perl6 code.
+# The default is 1. If defined, this should be a suggestion level from 1 to 5.
+
+suggest = 2
+
+#-----------------------------------------------------------------------------
 # detail: Directs Perl::ToPerl6 to report more or less detail on the
 # transformation being made in the source code. The default is 0. If defined,
 # this should be a necessity level from 1 to 5.

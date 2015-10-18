@@ -10,7 +10,7 @@ use Perl::ToPerl6::OptionsProcessor;
 use Perl::ToPerl6::Utils qw< :booleans >;
 use Perl::ToPerl6::Utils::Constants qw< :color_necessity >;
 
-use Test::More tests => 56;
+use Test::More tests => 58;
 
 #-----------------------------------------------------------------------------
 
@@ -19,18 +19,19 @@ use Test::More tests => 56;
     my $color = -t *STDOUT ? $TRUE : $FALSE;
 
     my $processor = Perl::ToPerl6::OptionsProcessor->new();
-    is($processor->force(),    0,           'native default force');
-    is($processor->in_place(), 0,           'native default in-place');
-    is($processor->detail(),   2,           'native default detail');
-    is($processor->only(),     0,           'native default only');
-    is($processor->necessity(), 5,           'native default necessity');
-    is($processor->theme(),    q{},         'native default theme');
-    is($processor->top(),      0,           'native default top');
-    is($processor->color(),    $color,      'native default color');
-    is($processor->pager(),    q{},         'native default pager');
-    is($processor->verbose(),  4,           'native default verbose');
-    is_deeply($processor->include(), [],    'native default include');
-    is_deeply($processor->exclude(), [],    'native default exclude');
+    is($processor->force(),          0,      'native default force');
+    is($processor->in_place(),       0,      'native default in-place');
+    is($processor->suggest(),        2,      'native default suggest');
+    is($processor->detail(),         2,      'native default detail');
+    is($processor->only(),           0,      'native default only');
+    is($processor->necessity(),      5,      'native default necessity');
+    is($processor->theme(),          q{},    'native default theme');
+    is($processor->top(),            0,      'native default top');
+    is($processor->color(),          $color, 'native default color');
+    is($processor->pager(),          q{},    'native default pager');
+    is($processor->verbose(),        4,      'native default verbose');
+    is_deeply($processor->include(), [],     'native default include');
+    is_deeply($processor->exclude(), [],     'native default exclude');
     is($processor->color_necessity_highest(),
                                $PROFILE_COLOR_NECESSITY_HIGHEST_DEFAULT,
                                'native default color-necessity-highest');
@@ -54,37 +55,39 @@ use Test::More tests => 56;
 
 {
     my %user_defaults = (
-         force                    => 1,
-         'in-place'               => 0,
-         detail                   => 0,
-         only                     => 1,
-         necessity                => 4,
-         theme                    => 'pbp',
-         top                      => 50,
-         color                    => $FALSE,
-         pager                    => 'less',
-         verbose                  => 7,
-         include                  => 'foo bar',
-         exclude                  => 'baz nuts',
+         force                     => 1,
+         'in-place'                => 0,
+         suggest                   => 0,
+         detail                    => 0,
+         only                      => 1,
+         necessity                 => 4,
+         theme                     => 'pbp',
+         top                       => 50,
+         color                     => $FALSE,
+         pager                     => 'less',
+         verbose                   => 7,
+         include                   => 'foo bar',
+         exclude                   => 'baz nuts',
          'color-necessity-highest' => 'chartreuse',
          'color-necessity-high'    => 'fuschia',
          'color-necessity-medium'  => 'blue',
          'color-necessity-low'     => 'gray',
          'color-necessity-lowest'  => 'scots tartan',
-         'program-extensions'     => '.PL .pl .t',
+         'program-extensions'      => '.PL .pl .t',
     );
 
     my $processor = Perl::ToPerl6::OptionsProcessor->new( %user_defaults );
-    is($processor->force(),    1,             'user default force');
-    is($processor->in_place(), 0,             'user default in_place');
-    is($processor->detail(),   0,             'user default detail');
-    is($processor->only(),     1,             'user default only');
+    is($processor->force(),     1,             'user default force');
+    is($processor->in_place(),  0,             'user default in_place');
+    is($processor->suggest(),   0,             'user default suggest');
+    is($processor->detail(),    0,             'user default detail');
+    is($processor->only(),      1,             'user default only');
     is($processor->necessity(), 4,             'user default necessity');
-    is($processor->theme(),    'pbp',         'user default theme');
-    is($processor->top(),      50,            'user default top');
-    is($processor->color(),    $FALSE,        'user default color');
-    is($processor->pager(),    'less',        'user default pager');
-    is($processor->verbose(),  7,             'user default verbose');
+    is($processor->theme(),     'pbp',         'user default theme');
+    is($processor->top(),       50,            'user default top');
+    is($processor->color(),     $FALSE,        'user default color');
+    is($processor->pager(),     'less',        'user default pager');
+    is($processor->verbose(),   7,             'user default verbose');
     is_deeply($processor->include(),
               [ qw(foo bar) ], 'user default include');
     is_deeply($processor->exclude(),

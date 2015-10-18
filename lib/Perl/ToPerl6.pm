@@ -297,7 +297,7 @@ through a deprecation cycle.
 
 =over
 
-=item C<< new( [ -profile => $FILE, -necessity => $N, -detail => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -mogrification-fatal => $B) >>
+=item C<< new( [ -profile => $FILE, -necessity => $N, -suggest => $N, -detail => $N, -theme => $string, -include => \@PATTERNS, -exclude => \@PATTERNS, -top => $N, -in_place => $B, -only => $B, -profile-strictness => $PROFILE_STRICTNESS_{WARN|FATAL|QUIET}, -force => $B, -verbose => $N ], -color => $B, -pager => $string, -mogrification-fatal => $B) >>
 
 =item C<< new() >>
 
@@ -414,6 +414,11 @@ only C<warn>s about profiles referring to non-existent Transformers, but this
 value makes this situation fatal.  Correspondingly,
 L<Perl::ToPerl6::Utils::Constants/"$PROFILE_STRICTNESS_QUIET"> makes
 Perl::ToPerl6 shut up about these things.
+
+B<-suggest> can be an integer (from 0 to 5). If set to a non-zero value, all
+transformations of a necessity equal to or B<less> than B<-suggest> will
+suggest more idiomatic Perl6 alternatives.  You can set the default value for
+this option in your F<.perlmogrifyrc> file.
 
 B<-detail> can be an integer (from 0 to 5). If set to a non-zero value, all
 transformations of a necessity equal to or B<less> than B<-detail> will be
@@ -550,6 +555,7 @@ constructor argument.
     in_place   = 0                                     #Zero or One
     only       = 1                                     #Zero or One
     force      = 0                                     #Zero or One
+    suggest    = 0                                     #Integer or named level
     detail     = 0                                     #Integer or named level
     verbose    = 4                                     #Integer or format spec
     top        = 50                                    #A positive integer
@@ -663,11 +669,11 @@ distribution as F<examples/perlmogrifyrc-conway>.
 
 =head1 THE POLICIES
 
-A large number of Transformer modules are distributed with Perl::ToPerl6. They are
-described briefly in the companion document L<Perl::ToPerl6::TransformerSummary> and
-in more detail in the individual modules themselves.  Say C<"perlmogrify -doc
-PATTERN"> to see the perldoc for all Transformer modules that match the regex
-C<m/PATTERN/ixms>
+A large number of Transformer modules are distributed with Perl::ToPerl6. They
+are described briefly in the companion document
+L<Perl::ToPerl6::TransformerSummary> and in more detail in the individual
+modules themselves.  Say C<"perlmogrify -doc PATTERN"> to see the perldoc for
+all Transformer modules that match the regex C<m/PATTERN/ixms>
 
 There are a number of distributions of additional transformers on CPAN. If
 L<Perl::ToPerl6> doesn't contain a transformer that you want, some one may have
