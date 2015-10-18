@@ -9,15 +9,7 @@ use Module::Build 0.4200;
 
 use lib 'inc';
 
-use Perl::ToPerl6::BuildUtilities qw<
-    required_module_versions
-    build_required_module_versions
-    emit_tar_warning_if_necessary
->;
 use Perl::ToPerl6::Module::Build;
-
-
-emit_tar_warning_if_necessary();
 
 
 my $builder = Perl::ToPerl6::Module::Build->new(
@@ -30,8 +22,12 @@ my $builder = Perl::ToPerl6::Module::Build->new(
     create_packlist     => 1,
     sign                => 0,
 
-    requires            => { required_module_versions() },
-    build_requires      => { build_required_module_versions() },
+    requires            => {
+        'YAML' => '0',
+    },
+    build_requires      => {
+        'YAML' => '0',
+    },
 
     # Don't require a developer version of Module::Build, even if the
     # distribution tarball was created with one.  (Oops.)
